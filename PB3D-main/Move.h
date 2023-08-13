@@ -1235,8 +1235,8 @@ private:
   
   //----------------------------------------------------------------------------
   // MOVE OBJ - Motor Speed Variables in mm/s (millimeters per second)
-  float _defForwardSpeed = 300.0;
-  float _defBackSpeed = -250.0;
+  float _defForwardSpeed = 350.0;
+  float _defBackSpeed = -225.0;
   float _defTurnSpeed = 250.0;
   float _defTurnSpeedDiff = 0.75*_defTurnSpeed;
   

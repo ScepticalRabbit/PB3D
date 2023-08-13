@@ -699,7 +699,7 @@ private:
   bool _isEnabled = true;
   bool _collisionFlag = false;
   bool _collisionUSFlag = false;
-  uint16_t _halfBodyLengMM = 90;
+  uint16_t _halfBodyLengMM = 80;
 
   byte _collisionNervSys = B00000000;
   bool _collisionBumperFlag = false;
@@ -734,8 +734,8 @@ private:
   // COLLISION OBJ - LASER SENSOR VARIABLES
   uint16_t _resetDelay = 100;
   int16_t _LSRColDistClose = _halfBodyLengMM;  // mm
-  int16_t _LSRColDistFar = 2*_halfBodyLengMM;   // mm
-  int16_t _LSRColDistSlowD = 4*_halfBodyLengMM; // mm
+  int16_t _LSRColDistFar = 120; //2*_halfBodyLengMM;   // mm
+  int16_t _LSRColDistSlowD = 240; //4*_halfBodyLengMM; // mm
   int16_t _LSRColDistLim = 40;    // mm  
   int16_t _LSRAltDist = 80;       // mm
   bool _collisionLSRFlagL = false;

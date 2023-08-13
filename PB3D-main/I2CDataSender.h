@@ -23,7 +23,7 @@ Date Edited:  11th Dec. 2022
 #define NERVSYS_ADDR 9
 
 // Debug flags
-#define I2CDATASENDER_DEBUG_PRINT
+//#define I2CDATASENDER_DEBUG_PRINT
 
 //----------------------------------------------------------------------------
 // CLASS

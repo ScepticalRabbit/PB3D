@@ -1,15 +1,9 @@
 //-----------------------------------------------------------------------------
-// PB3D - Follower Board - Bumpers and RF Transmitter
+// PB3D - Sub-Board - Bumpers and RF Transmitter
 // Author: Lloyd Fletcher
 // Version: v0.5b
 // Date Created: 23rd May 2021
-// Date Edited: 11th Dec 2022
 //-----------------------------------------------------------------------------
-/* 
- *  10th Dec 2022: added RF chip code
-*/ 
-//-----------------------------------------------------------------------------
-
 #include <Wire.h>
 #include "RFDataSenderTX.h"
 #include "Timer.h"

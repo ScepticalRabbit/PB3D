@@ -7,7 +7,6 @@ TODO
 
 Author: Lloyd Fletcher
 Date Created: 10th Dec. 2022
-Date Edited:  10th Dec. 2022
 */
 
 #ifndef RFDATALOGGERRX_H

@@ -3,37 +3,6 @@
 // Author: Lloyd Fletcher
 // Version: v0.29nw (new wheels)
 // Date Created: 23rd May 2021
-// Date Edited: 10th Jan 2023
-//-----------------------------------------------------------------------------
-// Edit List
-/* 
- *  Edited: 26th March 2022 - Added I2C multiplexer, light sensors and TaskFindLight class
- *  Edited: 31st March 2022 - Continued work on TaskFindLight added to main task class
- *  Edited: 8th April 2022 - First test of TaskFindLight with no gradient - it works!
- *  Edited: 9th April 2022 - Tweaked moveToAngle got it working for 'lookAround' function
- *  Edited: 16th April 2022 - Updated collision escape to skip reverse with ranged sensors
- *  Edited: 18th April 2022 - Significant updates to TaskDance, randomisation and new moves 
- *  Edited: 19th April 2022 - Updates to TaskPickedUp, tweaked collision missfires on range sensors
- *  Edited: 20th April 2022 - Finished TaskFindLight with time gradient 
- *  Edited: 25th April 2022 - Finished TaskFindSound finished with new analog sensors
- *  Edited: 27th April 2022 - Updated Task probability generation and links to moods
- *  Edited: 28th April 2022 - Continued work on function for taking measurements when looking around
- *  Edited: 3rd/4th May 2022 - Continued work on TaskPounce
- *  Edited: 6th May 2022 - Continued work on TaskPounce 
- *  Edited: 11th June 2022 - Updated light sensor code for new version of VEML7700
- *  Edited: 14th June 2022 - Added encoder count limit to the pounce/run function
- *  Edited: 26th June 2022 - Modified mood class to add pos/neg mood and mood score
- *  Edited: 11th Dec 2022 - Started to add data logger class
- *  Edited: 17th Dec 2022 - Completed data logger class
- *  Edited: 23rd Dec 2022 - Added IMU class for orientation sensor
- *  Edited: 24th Dec 2022 - Added navigation class to find X,Y pos wrt init pos
- *  Edited: 27th Dec 2022 - Created 'StateData.h' to copy across to all dirs
- *  Edited: 1st Jan 2023 - v0.28 started major update to collision avoidance
- *                       - updated collision object to manage escape function not move 
- *  Edited: 7th Jan 2023 - updated PIDs to be true PID controllers, updated speed smoothing                         
- *                       - updated collision avoidance to use new controlled movement 
- *  Edited: 10th Jan 2023 - Continued update of collision avoidance, v0.29nw                    
- */ 
 //-----------------------------------------------------------------------------
 
 // Arduino Libraries
@@ -78,10 +47,10 @@
 
 // Debugging - Codes
 bool _debug_collisionOff = false;
-bool _debug_forceMood = false;
+bool _debug_forceMood = true;
 int8_t _debug_moodCode = MOOD_NEUTRAL;
-bool _debug_forceTask = false;
-int8_t _debug_taskCode = TASK_FINDHUMAN;
+bool _debug_forceTask = true;
+int8_t _debug_taskCode = TASK_EXPLORE;
 bool _debug_forceMove = false;
 int8_t _debug_moveType = MOVE_C_CIRCLE;
 
@@ -327,7 +296,7 @@ void loop(){
   // TEST CODE - SENSOR REPORTS
   if(_test_reportTimer.finished()){
     _test_reportTimer.start(_test_reportTime);
-    //DEBUG_PrintAllRanges();
+    DEBUG_PrintAllRanges();
     //DEBUG_PrintLightSens();
   }
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
