@@ -13,5 +13,13 @@ PB3D is a 3D printed pet robot based on arduino.
 
 ## CAD Work Plan
 -----------------------------------------------------------
-- Make base plate have mount holes for shell
+
+### Version 4 Updates
+- Larger ball castor?
+
+### Version 4 Fixes
+- Base Plate: mount holes for shell
+- Base Plate: middle stiffener interferes with ball cast mount
+
+
 
