@@ -7,6 +7,8 @@ PB3D is a 3D printed pet robot based on arduino.
 
 ### Collision Avoidance
 - Debug and test new collision avoidance algorithms
+- Test lasers under different conditions
+- Test lasers for accurate ranging time
 
 ### Movement
 - Add smooth accelerate to speed and coast to stop
@@ -15,11 +17,14 @@ PB3D is a 3D printed pet robot based on arduino.
 -----------------------------------------------------------
 
 ### Version 4 Updates
-- Larger ball castor?
+- Wheels: 3D printed wheel hubs, need hub D shaft interface test for tolerances
+- Ball Castor: Larger ball castor?
+- Laser Cones: make cone wider
 
 ### Version 4 Fixes
-- Base Plate: mount holes for shell
-- Base Plate: middle stiffener interferes with ball cast mount
+- Motors: check clearance for new motors
+- Laser Cones: clearance for on/off pin
+- Bumper: make thicker
 
 
 
