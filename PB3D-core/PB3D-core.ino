@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// PB3D MAIN PROGRAM
+// PB3D CORE PROGRAM
 // Author: Lloyd Fletcher
 // Version: v0.30nw (new wheels)
 //-----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ CollisionManager collisionObj = CollisionManager(&moodObj,&taskObj,&moveObj,&ult
 Speaker speakerObj = Speaker();
 PatSensor patSensorObj = PatSensor();
 Tail tailObj = Tail();
-IMU IMUObj = IMU();
+SensorIMU IMUObj = SensorIMU();
 Navigation navObj = Navigation(&encoderL,&encoderR,&IMUObj);
 I2CDataSender senderObj = I2CDataSender(&collisionObj,&moodObj,&taskObj,&moveObj,&IMUObj,&navObj);
 

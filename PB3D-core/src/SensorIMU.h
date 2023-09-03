@@ -1,15 +1,13 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS: IMU
+// CLASS: SensorIMU
 //---------------------------------------------------------------------------
 /*
 Author: Lloyd Fletcher
-Date Created: 22nd December 2022
-Date Edited:  22nd December 2022 
 */
 
-#ifndef IMU_H
-#define IMU_H
+#ifndef SENSORIMU_H
+#define SENSORIMU_H
 
 #include <Adafruit_Sensor_Calibration.h>
 #include <Adafruit_AHRS.h>
@@ -22,11 +20,11 @@ Date Edited:  22nd December 2022
 //#define IMU_DEBUG_RAW_OUTPUT
 //#define IMU_DEBUG_ANGLES
 
-class IMU{
+class SensorIMU{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR
-  IMU(){
+  SensorIMU(){
   }
 
   //---------------------------------------------------------------------------
