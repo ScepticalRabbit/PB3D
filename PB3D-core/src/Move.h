@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS - MOVE
+// CLASS: MOVE
 //----------------------------------------------------------------------------
 /*
 The task class is part of the PetBot (PB) program. It used to...
@@ -64,7 +64,7 @@ public:
   }
   
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop  
+  // BEGIN: called during SETUP  
   void begin(){
     // Start the motor shield object 
     _AFMS->begin();  // create with the default frequency 1.6KHz

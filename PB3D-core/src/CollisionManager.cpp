@@ -18,7 +18,7 @@ CollisionManager::CollisionManager(Mood* inMood, Task* inTask, Move* inMove, Ult
 }
 
 //-----------------------------------------------------------------------------
-// BEGIN: called during setup function before main loop
+// BEGIN: called during SETUP
 //-----------------------------------------------------------------------------
 void CollisionManager::begin(){
     // Start the ultrasonic timer  
@@ -32,7 +32,7 @@ void CollisionManager::begin(){
 }
 
 //-----------------------------------------------------------------------------
-// UPDATE: called during every iteration of the main loop
+// UPDATE: called during LOOP
 //-----------------------------------------------------------------------------
 void CollisionManager::update(){
     //uint32_t startTime = micros(); 
@@ -45,18 +45,18 @@ void CollisionManager::update(){
     // COLLISION SENSOR: Run ultrasonic ranging, based on update time interval
     if(_USTimer.finished()){  
         _USTimer.start(_USUpdateTime);
-        checkUS();
+        _updateUSRanger();
     }
 
     // COLLISION SENSOR: Run laser ranging   
-    checkAltLSR();      // Timing handled internally
-    checkColLSRs();     // Timing handled internally
-    checkUpDownLSRs();  // Timing handled internally
+    _updateAltLSR();      // Timing handled internally
+    _updateColLSRs();     // Timing handled internally
+    _updateUpDownLSRs();  // Timing handled internally
 
     // COLLISION SENSOR: Bumper Switches slaved to Nervous System
     if(_BMPRTimer.finished()){
         _BMPRTimer.start(_BMPRUpdateTime);
-        checkNervSys();
+        _updateBumpers();
     }
 
     // COLLISION ACTION
@@ -86,7 +86,29 @@ void CollisionManager::update(){
 }
 
 //-----------------------------------------------------------------------------
-void CollisionManager::checkUS(){  
+void CollisionManager::setEscapeStart(){   
+    _updateCheckVec();    // Check all collision sensors - used for decision tree
+    _escaper.updateEscapeDecision(_checkVec);  // This is the decision tree
+}
+
+//-----------------------------------------------------------------------------
+void CollisionManager::escape(){
+    _escaper.escape();
+}
+
+//-----------------------------------------------------------------------------
+bool CollisionManager::getEscapeFlag(){
+    return _escaper.getEscapeFlag();
+}
+
+//-----------------------------------------------------------------------------
+int8_t CollisionManager::getEscapeTurn(){
+    _updateCheckVec();    // Check all collision sensors - used for decision tree
+    return _escaper.getEscapeTurn(_checkVec);
+}
+
+//-----------------------------------------------------------------------------
+void CollisionManager::_updateUSRanger(){  
     _USSensRange = _ultrasonicSens->MeasureInCentimeters();
     if(_USSensRange <= _USColDistLim){_USSensRange = 400;}
 
@@ -101,7 +123,7 @@ void CollisionManager::checkUS(){
 }
 
 //-----------------------------------------------------------------------------
-void CollisionManager::checkNervSys(){
+void CollisionManager::_updateBumpers(){
     // Request a byte worth of digital pins from the follower Xiao
     Wire.requestFrom(ADDR_NERVSYS,1);
     // Read a byte from the follower
@@ -134,7 +156,7 @@ void CollisionManager::checkNervSys(){
 }
 
 //-----------------------------------------------------------------------------
-void CollisionManager::checkColLSRs(){
+void CollisionManager::_updateColLSRs(){
     if(!_LSRLOn || !_LSRROn){return;}
 
     // Start ranging
@@ -186,7 +208,7 @@ void CollisionManager::checkColLSRs(){
 }
 
 //-----------------------------------------------------------------------------
-void CollisionManager::checkAltLSR() {
+void CollisionManager::_updateAltLSR() {
     // Start ranging
     if(_altLSRTimer.finished()){
         _altLSRTimer.start(_altLSRUpdateTime);
@@ -210,7 +232,7 @@ void CollisionManager::checkAltLSR() {
 }
 
 //-----------------------------------------------------------------------------
-void CollisionManager::checkUpDownLSRs(){
+void CollisionManager::_updateUpDownLSRs(){
     if(!_LSRUOn || !_LSRDOn){return;}
 
     // Start ranging
@@ -262,28 +284,6 @@ void CollisionManager::checkUpDownLSRs(){
         }
         }
     }
-}
-
-//-----------------------------------------------------------------------------
-void CollisionManager::setEscapeStart(){   
-    _updateCheckVec();    // Check all collision sensors - used for decision tree
-    _escaper.updateEscapeDecision(_checkVec);  // This is the decision tree
-}
-
-//-----------------------------------------------------------------------------
-void CollisionManager::escape(){
-    _escaper.escape();
-}
-
-//-----------------------------------------------------------------------------
-bool CollisionManager::getEscapeFlag(){
-    return _escaper.getEscapeFlag();
-}
-
-//-----------------------------------------------------------------------------
-int8_t CollisionManager::getEscapeTurn(){
-    _updateCheckVec();    // Check all collision sensors - used for decision tree
-    return _escaper.getEscapeTurn(_checkVec);
 }
 
 //---------------------------------------------------------------------------

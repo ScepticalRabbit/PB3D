@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3! 
-// CLASS - TASKTANTRUM
+// CLASS: TASKTANTRUM
 //---------------------------------------------------------------------------
 /*
 The task ? class is part of the PetBot (PB) program. It is used to...
@@ -33,7 +33,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
   }
   

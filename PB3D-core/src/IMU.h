@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS - IMU
+// CLASS: IMU
 //---------------------------------------------------------------------------
 /*
 Author: Lloyd Fletcher
@@ -30,7 +30,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     if (!_cal.begin()) {
       Serial.println(F("IMU: Failed to init calib helper."));
@@ -56,7 +56,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every iteration of the main loop
+  // UPDATE: called during LOOP
   void update(){
     if(!_isEnabled){return;}
 

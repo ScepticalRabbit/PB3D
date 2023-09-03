@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS - MOOD
+// CLASS: MOOD
 //---------------------------------------------------------------------------
 /*
 The mood class is part of the PetBot (PB) program. It controls what mood PB3D 
@@ -40,7 +40,7 @@ public:
   }
   
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     // Generate a probability, start the mood timer and set the mood
     _moodPc = random(0,100); // NOTE: random num between (min,max-1)
@@ -49,7 +49,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every iteration of the main loop
+  // UPDATE: called during LOOP
   void update(){
     if(_moodTimer.finished()){
       // Randomly update mood score before generating new mood
@@ -91,7 +91,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // GET,SET,RESET
+  // Get, set and reset
   void setMood(int16_t moodIn){
     if(moodIn != _moodCode){
       _setMood(moodIn);

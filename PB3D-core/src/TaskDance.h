@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS - TASKDANCE
+// CLASS: TASKDANCE
 //---------------------------------------------------------------------------
 /*
 The task ? class is part of the PetBot (PB) program. It is used to...
@@ -41,14 +41,14 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     _danceStartFlag = true;
     _timerObj.start(0);    
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every loop
+  // UPDATE: called during every loop
   void update(){
     // Get new task flag reset after first main loop update
     if(_taskObj->getNewTaskFlag()){
@@ -126,7 +126,7 @@ public:
 
 
   //---------------------------------------------------------------------------
-  // GET,SET,RESET
+  // Get, set and reset
   float getDanceBarMs(){return _danceBarMs;}
   uint32_t getDuration(){return _danceDuration;}
   void setStartFlag(bool inFlag){_danceStartFlag = inFlag;}

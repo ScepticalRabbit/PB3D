@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS - FIND SOUND
+// CLASS: FIND SOUND
 //---------------------------------------------------------------------------
 /*
 The task ? class is part of the PetBot (PB) program. It is used to...
@@ -43,7 +43,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     // Send the byte flag back
     Wire.beginTransmission(ADDR_FOLLBOARD);
@@ -58,7 +58,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during each loop to update variables
+  // UPDATE: called during each loop to update variables
   void update(){
     // If the sensor wasn't found then do nothing
     if(!_isEnabled){return;}

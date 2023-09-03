@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS - PAUSE
+// CLASS: PAUSE
 //---------------------------------------------------------------------------
 /*
 The task ? class is part of the PetBot (PB) program. It is used to...
@@ -31,7 +31,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     _pauseTimer.start(0);
   }

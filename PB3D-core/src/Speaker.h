@@ -1,20 +1,18 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS - SPEAKER
+// CLASS: SPEAKER
 //---------------------------------------------------------------------------
 /*
-The task class is part of the PetBot (PB) program. It used to...
+The speaker class is part of the PetBot (PB) program.
 
 Author: Lloyd Fletcher
-Date Created: 19th February 2021
-Date Edited:  2nd October 2021 - Started integration with PB3D 
 */
 
 #ifndef SPEAKER_H
 #define SPEAKER_H
 
 #include "Timer.h"
-#include "Notes.h"
+#include "MusicNotes.h"
 
 #define SPEAKER_POUT A0
 
@@ -38,7 +36,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     // NOTE: see adafruit guidance about metro M4 dac here:
     // https://learn.adafruit.com/adafruit-metro-m4-express-featuring-atsamd51/adapting-sketches-to-m0
@@ -56,7 +54,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every iteration of the main loop
+  // UPDATE: called during LOOP
   void update(){
     // If the current sound has ended increment to play the next one
     if(_soundCount == SOUND_END){

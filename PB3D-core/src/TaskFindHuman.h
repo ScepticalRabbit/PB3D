@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS - FINDHUMAN
+// CLASS: FINDHUMAN
 //---------------------------------------------------------------------------
 /*
 The task ? class is part of the PetBot (PB) program. It is used to...
@@ -35,7 +35,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     delay(500);
     _presDetector = PresenceDetector(_movementSensor, _sensitivityPresence, _sensitivityMovement, _detectInterval);
@@ -49,7 +49,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every iteration of the main loop
+  // UPDATE: called during LOOP
   void update(){
     // If the human presence sensor wasn't found then do nothing
     if(!_isEnabled){

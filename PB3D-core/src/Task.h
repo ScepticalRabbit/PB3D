@@ -1,20 +1,17 @@
 //---------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS - TASK
+// CLASS: TASK
 //---------------------------------------------------------------------------
 /*
 The task class is part of the PetBot (PB) program. 
 
 Author: Lloyd Fletcher
-Date Created: 28th Aug. 2021
-Date Edited:  28th Aug. 2021
 */
 
 #ifndef TASK_H
 #define TASK_H
 
 #include <Arduino.h>
-//#include <Adafruit_NeoPixel.h> // RGB LEDs
 #include <Adafruit_NeoPixel_ZeroDMA.h>
 #include "Mood.h"
 #include "Timer.h"
@@ -38,12 +35,14 @@ class Task{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
+  //---------------------------------------------------------------------------
   Task(Adafruit_NeoPixel_ZeroDMA* RGBLEDs){
     _taskLEDs = RGBLEDs;
   }
   
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
+  //---------------------------------------------------------------------------
   void begin(){
     // Generate a probability, start the task timer and set the task
     _taskPc = random(0,100); // NOTE: random num between (min,max-1)
@@ -52,7 +51,8 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every iteration of the main loop
+  // UPDATE: called during LOOP
+  //---------------------------------------------------------------------------
   void update(){
     if(_taskTimer.finished()){
       _update();
@@ -64,7 +64,8 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // GET,SET,RESET
+  // Get, set and reset
+  //---------------------------------------------------------------------------
   // Default setTask function uses default task durations
   void setTask(int8_t taskIn){
     if(taskIn != _taskCode){
@@ -204,6 +205,7 @@ public:
 
   //------------------------------------------------------------------------
   // TASK LED FUNCTIONS
+  //---------------------------------------------------------------------------
   void taskLEDCollision(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));

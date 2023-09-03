@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS - TIMER
+// CLASS: TIMER
 //-----------------------------------------------------------------------------
 /*
 The timer class is part of the PetBot (PB) program. It used to time the 

@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS - Filter Low Pass
+// CLASS: Filter Low Pass
 //---------------------------------------------------------------------------
 /*
 This class is part of the PetBot (PB) program. It is a moving average filter
@@ -50,7 +50,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     _filtTimer.start(0);
   }

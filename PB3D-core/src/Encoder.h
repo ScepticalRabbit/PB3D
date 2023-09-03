@@ -1,13 +1,11 @@
 //---------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS - Encoder
+// CLASS: Encoder
 //---------------------------------------------------------------------------
 /*
 The encoder class is part of the PetBot (PB) program.
 
 Author: Lloyd Fletcher
-Date Created: 29th Aug. 2021
-Date Edited:  29th Aug. 2021 
 */
 
 #ifndef ENCODER_H
@@ -28,7 +26,8 @@ public:
   }
   
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
+  //---------------------------------------------------------------------------
   void begin(){
     pinMode(_pinA, INPUT);
     pinMode(_pinB, INPUT);
@@ -38,8 +37,8 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every iteration of the main loop
-  
+  // UPDATE: called during LOOP
+  //---------------------------------------------------------------------------
   // Update for the right encoder '!='
   void updateNEQ(){
     if(digitalRead(_pinA) != digitalRead(_pinB)){
@@ -64,17 +63,11 @@ public:
     } 
   }
 
-  int32_t getCount(){
-    return _encCountCurr;
-  }
-
-  void setCount(int32_t inCount){
-    _encCountCurr = inCount;
-  }
-
-  char getDir(){
-    return _encDirCode;
-  }
+  //---------------------------------------------------------------------------
+  // Get, set and reset
+  int32_t getCount(){return _encCountCurr;}
+  void setCount(int32_t inCount){_encCountCurr = inCount;}
+  char getDir(){return _encDirCode;}
 
   //-------------------------------------------------------------------------
   // SPEED CALCULATION FUNCTIONS

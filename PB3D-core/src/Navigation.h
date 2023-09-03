@@ -1,13 +1,11 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS - NAVIGATION
+// CLASS: NAVIGATION
 //---------------------------------------------------------------------------
 /*
 The ? class is part of the PetBot (PB) program. It is used to...
 
 Author: Lloyd Fletcher
-Date Created: 23rd December 2022
-Date Edited:  23rd December 2022 
 */
 
 #ifndef NAVIGATION_H
@@ -31,7 +29,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     if(!_IMUObj->getEnabledFlag()){
       Serial.println(F("NAV: IMU disabled, navigation disabled."));
@@ -44,7 +42,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every iteration of the main loop
+  // UPDATE: called during LOOP
   void update(){
     if(!_isEnabled){return;}
 

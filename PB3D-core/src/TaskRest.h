@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3! 
-// CLASS - TASKREST
+// CLASS: TASKREST
 //---------------------------------------------------------------------------
 /*
 The task ? class is part of the PetBot (PB) program. It is used to...
@@ -30,13 +30,13 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     _timerObj.start(0);
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every iteration of the main loop
+  // UPDATE: called during LOOP
   void update(){
     // If the task has changed then modify other classes as needed
     if(_taskObj->getNewTaskFlag()){

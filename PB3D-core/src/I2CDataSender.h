@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS - I2CDataSender
+// CLASS: I2CDataSender
 //-----------------------------------------------------------------------------
 /*
 TODO
@@ -41,7 +41,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     _initStateData(&_currState);
     _updateStateData(&_currState);
@@ -56,7 +56,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every iteration of the main loop
+  // UPDATE: called during LOOP
   void update(){
     if(!_isEnabled){return;}
 

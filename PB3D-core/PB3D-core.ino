@@ -1,8 +1,7 @@
 //-----------------------------------------------------------------------------
 // PB3D MAIN PROGRAM
 // Author: Lloyd Fletcher
-// Version: v0.29nw (new wheels)
-// Date Created: 23rd May 2021
+// Version: v0.30nw (new wheels)
 //-----------------------------------------------------------------------------
 
 // Arduino Libraries

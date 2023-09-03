@@ -3,7 +3,8 @@
 // CLASS: CollisionManager
 //---------------------------------------------------------------------------
 /*
-The collision class is part of the PetBot (PB) program.
+The collision manager class is part of the PetBot (PB) program. It handles 
+all obstacle avoidance behaviours and the sensors used to detect obstacles.
 
 Author: Lloyd Fletcher
 */
@@ -18,6 +19,7 @@ Author: Lloyd Fletcher
 #include "Task.h"
 #include "Timer.h"
 
+// Helper classes
 #include "CollisionEscaper.h"
 
 //-----------------------------------------------------------------------------
@@ -26,12 +28,6 @@ Author: Lloyd Fletcher
 // Collision flags and sub-board address
 #define ADDR_NERVSYS 9 
 #define COLL_USSENS 7
-
-// #define ESCAPE_NOREV 1
-// #define ESCAPE_REV 0
-// #define COLL_SLOWD 1
-// #define COLL_FAR 2
-// #define COLL_CLOSE 3
 
 // Define addresses for all laser sensors
 #define ADDR_LSR_L 0x31
@@ -71,23 +67,14 @@ public:
   CollisionManager(Mood* inMood, Task* inTask, Move* inMove, Ultrasonic* ultrasonicSens);
 
   //---------------------------------------------------------------------------
-  // BEGIN: called during setup function before main loop
+  // BEGIN: called during SETUP 
   //---------------------------------------------------------------------------
   void begin();
 
   //---------------------------------------------------------------------------
-  // UPDATE: called during every iteration of the main loop
+  // UPDATE: called during LOOP 
   //---------------------------------------------------------------------------
   void update();
-
-  //---------------------------------------------------------------------------
-  // Check collision detection sensors
-  //---------------------------------------------------------------------------
-  void checkUS();
-  void checkNervSys();
-  void checkColLSRs();
-  void checkAltLSR();
-  void checkUpDownLSRs();
 
   //---------------------------------------------------------------------------
   // Get, set and reset
@@ -122,7 +109,6 @@ public:
   int16_t getLSRRangeD(){return _LSRRangeD;}
   lastCollision_t* getLastCollision(){return &_lastCol;}
 
-  
   void resetFlags(){
     _collisionFlag = false;
     _collisionUSFlag = false;
@@ -143,6 +129,15 @@ public:
   int8_t getEscapeTurn();
 
 private:
+  //---------------------------------------------------------------------------
+  // Check collision detection sensors
+  //---------------------------------------------------------------------------
+  void _updateUSRanger();
+  void _updateBumpers();
+  void _updateColLSRs();
+  void _updateAltLSR();
+  void _updateUpDownLSRs();
+
   //---------------------------------------------------------------------------
   // Check all ranges and escape decision tree
   //---------------------------------------------------------------------------
@@ -257,14 +252,6 @@ private:
 
   // I2C send byte 
   byte _toSend = B00000000;
-
-  // Collision escape variables
-  // uint8_t _escapeCount = 3;
-  // float _escapeAngle = 45.0;
-  // float _escapeDist = 180.0;
-  // const static uint8_t _escapeNumSteps = 3;
-  // float _defModTurn = 45.0, _defHardTurn = 90.0;
-  // float _defRevDist = -180.0;
 
   // Data structure for info on last collision
   lastCollision_t _lastCol;

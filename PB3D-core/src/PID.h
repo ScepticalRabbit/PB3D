@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS - PID
+// CLASS: PID
 //---------------------------------------------------------------------------
 /*
 The PID class is part of the PetBot (PB) program. It used to...
@@ -46,13 +46,13 @@ public:
   }
   
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
+  // BEGIN: called during SETUP
   void begin(){
     _pidTimer.start(0);  
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every iteration of the main loop
+  // UPDATE: called during LOOP
   
   // This version directly returns the output, useful for position control
   void update(double input){
@@ -85,7 +85,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // GET,SET,RESET
+  // Get, set and reset
   double getOutput(){
     return _output;
   }
