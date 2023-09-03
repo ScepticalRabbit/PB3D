@@ -16,7 +16,7 @@ Date Edited:  12th December 2021
 #include <Wire.h> // I2C
 #include <Seeed_CY8C401XX.h> // Capcitive Touch Sensor
 #include "Mood.h"
-#include "Collision.h" 
+#include "CollisionManager.h" 
 #include "Task.h"
 #include "Move.h"
 #include "Timer.h"
@@ -32,7 +32,7 @@ class TaskPickedUp{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPickedUp(Collision* inCollision, Mood* inMood, Task* inTask, Move* inMove, 
+  TaskPickedUp(CollisionManager* inCollision, Mood* inMood, Task* inTask, Move* inMove, 
                Speaker* inSpeaker, PatSensor* inPatSens){
     _collisionObj = inCollision;
     _moodObj = inMood;
@@ -283,7 +283,7 @@ public:
 
 private:
   // MAIN OBJECT POINTERS
-  Collision* _collisionObj;
+  CollisionManager* _collisionObj;
   Mood* _moodObj;
   Task* _taskObj;
   Move* _moveObj;

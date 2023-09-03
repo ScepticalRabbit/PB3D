@@ -14,7 +14,7 @@ Date Edited:  12th December 2021
 #define TASKPAUSE_H
 
 #include <Wire.h> // I2C
-#include "Collision.h" 
+#include "CollisionManager.h" 
 #include "Task.h"
 #include "Move.h"
 #include "Timer.h"
@@ -23,7 +23,7 @@ class TaskPause{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPause(Collision* inCollision, Task* inTask, Move* inMove, Speaker* inSpeaker){
+  TaskPause(CollisionManager* inCollision, Task* inTask, Move* inMove, Speaker* inSpeaker){
     _collisionObj = inCollision;
     _taskObj = inTask;
     _moveObj = inMove;
@@ -64,7 +64,7 @@ public:
 
 private:
   // MAIN OBJECT POINTERS
-  Collision* _collisionObj;
+  CollisionManager* _collisionObj;
   Mood* _moodObj;
   Task* _taskObj;
   Move* _moveObj;

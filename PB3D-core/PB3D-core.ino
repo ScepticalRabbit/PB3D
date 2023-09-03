@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------------
 
 // Arduino Libraries
+#include <Arduino.h>
 #include <Wire.h>
 
 // External Classes - Sensor and Module Libraries
@@ -14,32 +15,32 @@
 #include <Ultrasonic.h> // Grove ultrasonic sensor
 
 // Internal Classes - Basic Functions
-#include "Collision.h"
-#include "Encoder.h"
-#include "FilterLowPass.h"
-#include "FilterMovAvg.h"
-#include "Mood.h"
-#include "Move.h"
-#include "PatSensor.h"
-#include "PID.h"
-#include "Speaker.h"
-#include "Tail.h"
-#include "Task.h"
-#include "Timer.h"
-#include "I2CDataSender.h"
-#include "IMU.h"
-#include "Navigation.h"
+#include "src/CollisionManager.h"
+#include "src/Encoder.h"
+#include "src/FilterLowPass.h"
+#include "src/FilterMovAvg.h"
+#include "src/Mood.h"
+#include "src/Move.h"
+#include "src/PatSensor.h"
+#include "src/PID.h"
+#include "src/Speaker.h"
+#include "src/Tail.h"
+#include "src/Task.h"
+#include "src/Timer.h"
+#include "src/I2CDataSender.h"
+#include "src/IMU.h"
+#include "src/Navigation.h"
 // Internal Classes - Tasks
-#include "TaskDance.h"
-#include "TaskRest.h"
-#include "TaskTantrum.h"
-#include "TaskInteract.h"
-#include "TaskFindHuman.h"
-#include "TaskFindLight.h"
-#include "TaskFindSound.h"
-#include "TaskPickedUp.h"
-#include "TaskPounce.h"
-#include "TaskPause.h"
+#include "src/TaskDance.h"
+#include "src/TaskRest.h"
+#include "src/TaskTantrum.h"
+#include "src/TaskInteract.h"
+#include "src/TaskFindHuman.h"
+#include "src/TaskFindLight.h"
+#include "src/TaskFindSound.h"
+#include "src/TaskPickedUp.h"
+#include "src/TaskPounce.h"
+#include "src/TaskPause.h"
 
 //-----------------------------------------------------------------------------
 // VARIABLES
@@ -108,7 +109,7 @@ Encoder encoderR = Encoder(encPinAR,encPinBR);
 Move moveObj = Move(&AFMS,&encoderL,&encoderR);
 Mood moodObj = Mood(&leds);
 Task taskObj = Task(&leds);
-Collision collisionObj = Collision(&moodObj,&taskObj,&moveObj,&ultrasonicSens);
+CollisionManager collisionObj = CollisionManager(&moodObj,&taskObj,&moveObj,&ultrasonicSens);
 
 // Sensors, Actuators and Comms
 Speaker speakerObj = Speaker();

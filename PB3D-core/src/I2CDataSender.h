@@ -14,6 +14,7 @@ Date Edited:  11th Dec. 2022
 #define I2CDATASENDER_H
 
 #include <Wire.h>
+#include "CollisionManager.h"
 #include "Timer.h"
 #include "IMU.h"
 #include "Navigation.h"
@@ -29,7 +30,7 @@ Date Edited:  11th Dec. 2022
 // CLASS
 class I2CDataSender{
 public:
-  I2CDataSender(Collision* inCollision, Mood* inMood, Task* inTask, Move* inMove,
+  I2CDataSender(CollisionManager* inCollision, Mood* inMood, Task* inTask, Move* inMove,
                 IMU* inIMU, Navigation* inNav){
     _collisionObj = inCollision;
     _moodObj = inMood;
@@ -164,7 +165,7 @@ private:
 
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
-  Collision* _collisionObj;
+  CollisionManager* _collisionObj;
   Mood* _moodObj;
   Task* _taskObj;
   Move* _moveObj;
