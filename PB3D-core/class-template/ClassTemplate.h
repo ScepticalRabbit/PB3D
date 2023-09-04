@@ -1,18 +1,17 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS - TEMPLATE
+// CLASS: TEMPLATE
 //---------------------------------------------------------------------------
 /*
-The task ? class is part of the PetBot (PB) program. It is used to...
+The task X class is part of the PetBot (PB) program. It is used to...
 
 Author: Lloyd Fletcher
-Date Created: 19th December 2021
-Date Edited:  19th December 2021 
 */
 
 #ifndef CLASSTEMP_H
 #define CLASSTEMP_H
 
+#include <Arduino.h>
 #include <Wire.h> // I2C
 #include "Collision.h" 
 #include "Task.h"
@@ -20,68 +19,52 @@ Date Edited:  19th December 2021
 #include "Timer.h"
 #include "Speaker.h"
 
+//---------------------------------------------------------------------------
+// CLASS TEMPLATE: 
+//---------------------------------------------------------------------------
 class ClassTemplate{
 public:
   //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
+  // CONSTRUCTOR: pass in pointers to main objects and other sensors
+  //---------------------------------------------------------------------------
   ClassTemplate(Collision* inCollision, Mood* inMood, Task* inTask, Move* inMove, 
-                Speaker* inSpeaker){
-    _collisionObj = inCollision;
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
-    _speakerObj = inSpeaker;
-  }
+                Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
-  // BEGIN - called during setup function before main loop
-  void begin(){
-
-  }
+  // BEGIN: called during SETUP
+  //---------------------------------------------------------------------------
+  void begin();
 
   //---------------------------------------------------------------------------
-  // UPDATE - called during every iteration of the main loop
-  void update(){
-    if(!_isEnabled){return;}
-
-    if(_taskObj->getNewTaskFlag()){
-      _startFlag = true;
-    }
-
-  }
+  // UPDATE: called during LOOP
+  //---------------------------------------------------------------------------
+  void update();
 
   //---------------------------------------------------------------------------
-  // DOSOMETHING - called during the main during decision tree
-  void doSomething(){
-    if(!_isEnabled){return;}
-
-    if(_startFlag){
-      _startFlag = false;
-    }
-
-  }
+  // DOSOMETHING - called during the main during decision tree 
+  //---------------------------------------------------------------------------
+  void doSomething();
 
   //---------------------------------------------------------------------------
-  // GET FUNCTIONS
+  // Get, set and reset
   bool getEnabledFlag(){return _isEnabled;}
-
-  //---------------------------------------------------------------------------
-  // SET FUNCTIONS
   void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
-  Collision* _collisionObj;
-  Mood* _moodObj;
-  Task* _taskObj;
-  Move* _moveObj;
-  Speaker* _speakerObj;
+  //---------------------------------------------------------------------------
+  Collision* _collisionObj = NULL;
+  Mood* _moodObj = NULL;
+  Task* _taskObj = NULL;
+  Move* _moveObj = NULL;
+  Speaker* _speakerObj = NULL;
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
+  //---------------------------------------------------------------------------
   bool _isEnabled = true;
   bool _startFlag = true;
 
 };
-#endif //
+#endif 

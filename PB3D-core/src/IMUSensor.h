@@ -20,11 +20,11 @@ Author: Lloyd Fletcher
 //#define IMU_DEBUG_RAW_OUTPUT
 //#define IMU_DEBUG_ANGLES
 
-class SensorIMU{
+class IMUSensor{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR
-  SensorIMU(){
+  IMUSensor(){
   }
 
   //---------------------------------------------------------------------------

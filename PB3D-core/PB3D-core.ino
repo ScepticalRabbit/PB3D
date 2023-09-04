@@ -27,7 +27,7 @@
 #include "src/Task.h"
 #include "src/Timer.h"
 #include "src/I2CDataSender.h"
-#include "src/IMU.h"
+#include "src/SensorIMU.h"
 #include "src/Navigation.h"
 // Internal Classes - Tasks
 #include "src/TaskDance.h"
@@ -114,7 +114,7 @@ CollisionManager collisionObj = CollisionManager(&moodObj,&taskObj,&moveObj,&ult
 Speaker speakerObj = Speaker();
 PatSensor patSensorObj = PatSensor();
 Tail tailObj = Tail();
-SensorIMU IMUObj = SensorIMU();
+IMUSensor IMUObj = IMUSensor();
 Navigation navObj = Navigation(&encoderL,&encoderR,&IMUObj);
 I2CDataSender senderObj = I2CDataSender(&collisionObj,&moodObj,&taskObj,&moveObj,&IMUObj,&navObj);
 

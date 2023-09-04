@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS: PatSensor.h
+// CLASS: PatSensor
 //---------------------------------------------------------------------------
 /*
 The task ? class is part of the PetBot (PB) program. It is used to...
@@ -23,8 +23,7 @@ class PatSensor{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  PatSensor(){
-  }
+  PatSensor(){}
 
   //---------------------------------------------------------------------------
   // BEGIN: called during SETUP

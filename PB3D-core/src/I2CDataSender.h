@@ -16,7 +16,7 @@ Date Edited:  11th Dec. 2022
 #include <Wire.h>
 #include "CollisionManager.h"
 #include "Timer.h"
-#include "IMU.h"
+#include "SensorIMU.h"
 #include "Navigation.h"
 #include "StateData.h"
 
@@ -31,7 +31,7 @@ Date Edited:  11th Dec. 2022
 class I2CDataSender{
 public:
   I2CDataSender(CollisionManager* inCollision, Mood* inMood, Task* inTask, Move* inMove,
-                IMU* inIMU, Navigation* inNav){
+                IMUSensor* inIMU, Navigation* inNav){
     _collisionObj = inCollision;
     _moodObj = inMood;
     _taskObj = inTask;
@@ -165,13 +165,13 @@ private:
 
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
-  CollisionManager* _collisionObj;
-  Mood* _moodObj;
-  Task* _taskObj;
-  Move* _moveObj;
-  IMU* _IMUObj;
-  Navigation* _navObj;
-  lastCollision_t* _lastCol;
+  CollisionManager* _collisionObj = NULL;
+  Mood* _moodObj = NULL;
+  Task* _taskObj = NULL;
+  Move* _moveObj = NULL;
+  IMUSensor* _IMUObj = NULL;
+  Navigation* _navObj = NULL;
+  lastCollision_t* _lastCol = NULL;
   
   //---------------------------------------------------------------------------
   // CLASS VARIABLES 

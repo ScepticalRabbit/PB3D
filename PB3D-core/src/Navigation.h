@@ -13,7 +13,7 @@ Author: Lloyd Fletcher
 
 #include "Timer.h"
 #include "Encoder.h"
-#include "IMU.h"
+#include "SensorIMU.h"
 
 //#define NAV_DEBUG_TIMER
 //#define NAV_DEBUG_POS
@@ -22,7 +22,7 @@ class Navigation{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  Navigation(Encoder* encL, Encoder* encR, IMU* inIMU){
+  Navigation(Encoder* encL, Encoder* encR, IMUSensor* inIMU){
     _encoder_L = encL;
     _encoder_R = encR;
     _IMUObj = inIMU;
@@ -114,7 +114,7 @@ private:
   // Navigation Objects - Encoders and IMU
   Encoder* _encoder_L;
   Encoder* _encoder_R;
-  IMU* _IMUObj;
+  IMUSensor* _IMUObj;
 
   // Navigation Variables
   int16_t _navUpdateTime = 20; 
