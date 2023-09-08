@@ -13,7 +13,7 @@ Author: Lloyd Fletcher
 
 #include "Timer.h"
 #include "Encoder.h"
-#include "SensorIMU.h"
+#include "IMUSensor.h"
 
 //#define NAV_DEBUG_TIMER
 //#define NAV_DEBUG_POS

@@ -16,7 +16,7 @@ Date Edited:  11th Dec. 2022
 #include <Wire.h>
 #include "CollisionManager.h"
 #include "Timer.h"
-#include "SensorIMU.h"
+#include "IMUSensor.h"
 #include "Navigation.h"
 #include "StateData.h"
 

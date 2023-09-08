@@ -1,4 +1,5 @@
 #include "CollisionEscaper.h"
+#include "CollisionFlags.h"
 
 //-----------------------------------------------------------------------------
 void CollisionEscaper::setMoveObj(Move* inMove){
@@ -106,7 +107,6 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
 
 //-----------------------------------------------------------------------------
 void CollisionEscaper::setEscapeStart(uint8_t checkVec[]){   
-    //_updateCheckVec();    // Check all collision sensors - used for decision tree
     updateEscapeDecision(checkVec);  // This is the decision tree
 }
 

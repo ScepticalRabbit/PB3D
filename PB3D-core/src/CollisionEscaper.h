@@ -5,9 +5,7 @@
 
 #define ESCAPE_NOREV 1
 #define ESCAPE_REV 0
-#define COLL_SLOWD 1
-#define COLL_FAR 2
-#define COLL_CLOSE 3
+
 
 class CollisionEscaper{
     public:

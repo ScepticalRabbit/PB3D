@@ -20,7 +20,9 @@ Author: Lloyd Fletcher
 #include "Timer.h"
 
 // Helper classes
+#include "CollisionFlags.h"
 #include "CollisionEscaper.h"
+#include "LaserManager.h"
 
 //-----------------------------------------------------------------------------
 // DEFINITIONS

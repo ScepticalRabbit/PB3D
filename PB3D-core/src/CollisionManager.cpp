@@ -23,12 +23,10 @@ CollisionManager::CollisionManager(Mood* inMood, Task* inTask, Move* inMove, Ult
 void CollisionManager::begin(){
     // Start the ultrasonic timer  
     _USTimer.start(0);
-    _colLSRTimer.start(0);
-    _altLSRTimer.start(0);
-    _upDownLSRTimer.start(0);
     _BMPRTimer.start(0);
-    _slowDownTimer.start(0);    
-    _setLSRAddrs();
+    _slowDownTimer.start(0);
+
+    _laserManager.begin();    
 }
 
 //-----------------------------------------------------------------------------
@@ -48,10 +46,8 @@ void CollisionManager::update(){
         _updateUSRanger();
     }
 
-    // COLLISION SENSOR: Run laser ranging   
-    _updateAltLSR();      // Timing handled internally
-    _updateColLSRs();     // Timing handled internally
-    _updateUpDownLSRs();  // Timing handled internally
+    // COLLISION SENSOR: Run laser ranging
+    _laserManager.update();   
 
     // COLLISION SENSOR: Bumper Switches slaved to Nervous System
     if(_BMPRTimer.finished()){
@@ -155,137 +151,6 @@ void CollisionManager::_updateBumpers(){
     }
 }
 
-//-----------------------------------------------------------------------------
-void CollisionManager::_updateColLSRs(){
-    if(!_LSRLOn || !_LSRROn){return;}
-
-    // Start ranging
-    if(_colLSRTimer.finished()){
-        _colLSRTimer.start(_colLSRUpdateTime);
-        _laserL.startRange();
-        _laserR.startRange();
-        _LSRFlagL = false;
-        _LSRFlagR = false;
-    }
-
-    // Check if ranging complete and if so read the range
-    if(_laserL.isRangeComplete() && !_LSRFlagL){
-        _LSRRangeL = _laserL.readRangeResult();
-        if(_LSRRangeL <= _LSRColDistLim){_LSRRangeL = 9999;}
-        
-        _LSRL_TO = _laserL.timeoutOccurred();
-        _LSRFlagL = true;
-
-        if(!_LSRL_TO){
-        if(_LSRRangeL <= _LSRColDistClose){
-            _collisionLSRFlagL = true;
-            _collisionFlag = true;
-        }
-        else if(_LSRRangeL <= _LSRColDistFar){
-            _collisionLSRFlagL = true;
-            _collisionFlag = true;  
-        }
-        }
-    }
-    if(_laserR.isRangeComplete() && !_LSRFlagR){
-        _LSRRangeR = _laserR.readRangeResult();
-        if(_LSRRangeR <= _LSRColDistLim){_LSRRangeR = 9999;}
-        
-        _LSRR_TO = _laserR.timeoutOccurred();
-        _LSRFlagR = true;
-
-        if(!_LSRR_TO){
-        if(_LSRRangeR <= _LSRColDistClose){
-            _collisionLSRFlagR = true;
-            _collisionFlag = true;
-        }
-        else if(_LSRRangeR <= _LSRColDistFar){
-            _collisionLSRFlagR = true;
-            _collisionFlag = true;
-        }
-        }
-    }
-}
-
-//-----------------------------------------------------------------------------
-void CollisionManager::_updateAltLSR() {
-    // Start ranging
-    if(_altLSRTimer.finished()){
-        _altLSRTimer.start(_altLSRUpdateTime);
-        _laserA.startRange();
-        _LSRFlagA = false;
-    }
-
-    // Check if ranging complete and if so read the range
-    if(_laserA.isRangeComplete() && !_LSRFlagA){
-        _LSRRangeA = _laserA.readRangeResult();
-        _LSRA_TO = _laserL.timeoutOccurred();
-        _LSRFlagA = true;
-
-        if((_LSRRangeA >= _LSRAltDist) && !_LSRA_TO){
-        _collisionLSRFlagB = true;
-        }
-        else{
-        _collisionLSRFlagB = false;
-        }
-    }
-}
-
-//-----------------------------------------------------------------------------
-void CollisionManager::_updateUpDownLSRs(){
-    if(!_LSRUOn || !_LSRDOn){return;}
-
-    // Start ranging
-    if(_upDownLSRTimer.finished()){
-        _upDownLSRTimer.start(_upDownLSRUpdateTime);
-        _laserU.startRange();
-        _laserD.startRange();
-        _LSRFlagU = false;
-        _LSRFlagD = false;
-    }
-
-    // Read laser ranges
-    if(_laserU.isRangeComplete() && !_LSRFlagU){
-        _LSRRangeU = _laserU.readRangeResult();
-        if(_LSRRangeU <= _LSRUpDistLim){_LSRRangeU = 9999;}
-        
-        _LSRU_TO = _laserU.timeoutOccurred();
-        _LSRFlagU = true;
-
-        if(!_LSRU_TO){
-        if(_LSRRangeU <= _LSRUpDistClose){
-            _collisionLSRFlagU = true;
-            _collisionFlag = true;
-        }
-        else if(_LSRRangeU <= _LSRUpDistFar){
-            _collisionLSRFlagU = true;
-            _collisionFlag = true;  
-        }
-        }
-    }
-
-    if(_laserD.isRangeComplete() && !_LSRFlagD){
-        _LSRRangeD = _laserD.readRangeResult();
-        if(_LSRRangeD <= _LSRDownColDistLim || _LSRRangeD >= _LSRDownCliffDistLim){
-        _LSRRangeD = _LSRDownDistCent;
-        }
-        
-        _LSRD_TO = _laserD.timeoutOccurred();
-        _LSRFlagD = true;
-
-        if(!_LSRD_TO){
-        if((_LSRRangeD <= _LSRDownColDistClose)||(_LSRRangeD >= _LSRDownCliffDistClose)){
-            _collisionLSRFlagD = true;
-            _collisionFlag = true; 
-        }
-        else if((_LSRRangeD <= _LSRDownColDistFar)||(_LSRRangeD >= _LSRDownCliffDistFar)){
-            _collisionLSRFlagD = true;
-            _collisionFlag = true;
-        }
-        }
-    }
-}
-
 //---------------------------------------------------------------------------
 bool CollisionManager::_updateCheckVec(){
     // uint8_t _checkVec[7] = {BL,BR,US,LL,LR,LU,LD}
@@ -304,28 +169,13 @@ bool CollisionManager::_updateCheckVec(){
     else{_checkVec[2] = 0;}
 
     // Laser - Left
-    if(_LSRRangeL <= _LSRColDistClose){_checkVec[3] = COLL_CLOSE;}
-    else if(_LSRRangeL <= _LSRColDistFar){_checkVec[3] = COLL_FAR;}
-    else if(_LSRRangeL <= _LSRColDistSlowD){_checkVec[3] = COLL_SLOWD;} 
-    else{_checkVec[3] = 0;}
-
+    _checkVec[3] = _laserManager.getColCodeL();
     // Laser - Right
-    if(_LSRRangeR <= _LSRColDistClose){_checkVec[4] = COLL_CLOSE;}
-    else if(_LSRRangeR <= _LSRColDistFar){_checkVec[4] = COLL_FAR;}
-    else if(_LSRRangeR <= _LSRColDistSlowD){_checkVec[4] = COLL_SLOWD;}
-    else{_checkVec[4] = 0;}
-
+    _checkVec[4] = _laserManager.getColCodeR();
     // Laser - Up Angle
-    if(_LSRRangeU <= _LSRUpDistClose){_checkVec[5] = COLL_CLOSE;}
-    else if(_LSRRangeU <= _LSRUpDistFar){_checkVec[5] = COLL_FAR;}
-    else{_checkVec[5] = 0;}
-
+    _checkVec[5] = _laserManager.getColCodeU();
     // Laser - Down Angle - TODO, fix this so we know which is which
-    if(_LSRRangeD >= _LSRDownCliffDistClose){_checkVec[6] = COLL_CLOSE;}
-    else if(_LSRRangeD <= _LSRDownColDistClose){_checkVec[6] = COLL_CLOSE;}
-    else if(_LSRRangeD <= _LSRDownColDistFar){_checkVec[6] = COLL_FAR;}
-    else if(_LSRRangeD >= _LSRDownCliffDistFar){_checkVec[6] = COLL_FAR;}
-    else{_checkVec[6] = 0;}
+    _checkVec[6] = _laserManager.getColCodeD();
 
     // If anything is tripped set this flag true
     _checkAllFlag = false; 
@@ -384,6 +234,7 @@ void CollisionManager::_updateEscapeDecision(){
 void CollisionManager::_initLSR(byte sendByte, Adafruit_VL53L0X* LSRObj, bool* LSROn,
             uint8_t LSRAddr,char LSRStr){
     _sendByteWithI2C(sendByte);
+
     delay(_resetDelay);
     if(!LSRObj->begin(LSRAddr)){
         Serial.print(F("COLLISION: FAILED to init laser "));

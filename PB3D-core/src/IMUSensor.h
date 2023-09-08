@@ -1,13 +1,13 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS: SensorIMU
+// CLASS: IMUSensor
 //---------------------------------------------------------------------------
 /*
 Author: Lloyd Fletcher
 */
 
-#ifndef SENSORIMU_H
-#define SENSORIMU_H
+#ifndef IMUSENSOR_H
+#define IMUSENSOR_H
 
 #include <Adafruit_Sensor_Calibration.h>
 #include <Adafruit_AHRS.h>

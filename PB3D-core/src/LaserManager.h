@@ -13,10 +13,23 @@ Author: Lloyd Fletcher
 // Core libraries
 #include <Arduino.h>
 #include <Wire.h>
-// External libraires
-#include "Adafruit_VL53L0X.h"
+
 // Internal libraries
 #include "Timer.h"
+#include "LaserRanger.h"
+#include "CollisionFlags.h"
+
+// Definitions
+// Address for digital out 
+#ifndef ADDR_FOLLBOARD
+  #define ADDR_FOLLBOARD 0x11
+#endif
+// Addresses for lasers on I2C
+#define ADDR_LSR_L 0x31
+#define ADDR_LSR_R 0x32
+#define ADDR_LSR_A 0x33
+#define ADDR_LSR_U 0x34
+#define ADDR_LSR_D 0x35
 
 class LaserManager{
 public:
@@ -38,60 +51,72 @@ public:
     //---------------------------------------------------------------------------
     // Get, set and reset
     //---------------------------------------------------------------------------
+    int16_t getRangeL(){return _laserL.getRange();}
+    int16_t getRangeR(){return _laserR.getRange();}
+    int16_t getRangeA(){return _laserA.getRange();}
+    int16_t getRangeU(){return _laserU.getRange();}
+    int16_t getRangeD(){return _laserD.getRange();}
+
+    uint8_t getColCodeL();
+    uint8_t getColCodeR();
+    uint8_t getColCodeU();
+    uint8_t getColCodeD();
 
 private:
     //---------------------------------------------------------------------------
-    // LASER INIT: set all I2C addresses
+    // HELPER Functions
     //---------------------------------------------------------------------------
-    void _initLSR(byte sendByte, Adafruit_VL53L0X* LSRObj, bool* LSROn,
-                    uint8_t LSRAddr,char LSRStr);
-    void _setLSRAddrs();
+    void _sendByteWithI2C(uint8_t sendAddr, byte sendByte);
+    void _updateColLSRs();
+    void _updateAltLSR();
+    void _updateUpDownLSRs();
+
+    uint8_t _getColCode(LaserRanger* laser,
+                    int16_t colClose,int16_t colFar);    
+    uint8_t _getColCode(LaserRanger* laser,
+                    int16_t colClose,int16_t colFar,int16_t colSlowDown);    
+    uint8_t _getColCode(LaserRanger* laser,
+                    int16_t colClose,int16_t colFar,
+                    int16_t cliffClose, int16_t cliffFar);
     
     
     //---------------------------------------------------------------------------
     // CLASS VARIABLES
     //---------------------------------------------------------------------------
-    // Objects for the laser ranger vl53l0x
-    Adafruit_VL53L0X _laserL = Adafruit_VL53L0X();
-    Adafruit_VL53L0X _laserR = Adafruit_VL53L0X();
-    Adafruit_VL53L0X _laserA = Adafruit_VL53L0X();
-    Adafruit_VL53L0X _laserU = Adafruit_VL53L0X();
-    Adafruit_VL53L0X _laserD = Adafruit_VL53L0X();
+    // Objects for the laser rangers
+    LaserRanger _laserL = LaserRanger(ADDR_LSR_L,'L');
+    LaserRanger _laserR = LaserRanger(ADDR_LSR_R,'R');
+    LaserRanger _laserA = LaserRanger(ADDR_LSR_A,'A');
+    LaserRanger _laserU = LaserRanger(ADDR_LSR_U,'U');
+    LaserRanger _laserD = LaserRanger(ADDR_LSR_D,'D');
 
     // LASER ranger variables
     uint16_t _halfBodyLengMM = 80;
     uint16_t _resetDelay = 100;
-    int16_t _LSRColDistClose = _halfBodyLengMM;  // mm
-    int16_t _LSRColDistFar = 120;   // mm
-    int16_t _LSRColDistSlowD = 240; // mm
-    int16_t _LSRColDistLim = 40;    // mm  
-    int16_t _LSRAltDist = 80;       // mm
-    bool _collisionLSRFlagL = false;
-    bool _collisionLSRFlagR = false;
-    bool _collisionLSRFlagB = false;
+    byte _toSend = B00000000;
+
+    int16_t _colDistClose = _halfBodyLengMM;  // mm
+    int16_t _colDistFar = 120;   // mm
+    int16_t _colDistSlowD = 240; // mm
+    int16_t _colDistLim = 40;    // mm  
+    int16_t _altDist = 80;       // mm
+    // bool _collisionLSRFlagL = false;
+    // bool _collisionLSRFlagR = false;
+    // bool _collisionLSRFlagB = false;
 
     // LSR - UP - DONT CHANGE!!!
-    int16_t _LSRUpDistFar = 220;    // mm
-    int16_t _LSRUpDistClose = 180;   // mm
-    int16_t _LSRUpDistLim = 40;     // mm  
+    int16_t _upColDistFar = 220;    // mm
+    int16_t _upColDistClose = 180;   // mm
+    int16_t _upColDistLim = 40;     // mm  
     // LSR- DWN - DONT CHANGE!!!
-    int16_t _LSRDownCliffDistFar = 170, _LSRDownColDistFar = 90;     // mm
-    int16_t _LSRDownCliffDistClose = 160, _LSRDownColDistClose = 70;   // mm
-    int16_t _LSRDownCliffDistLim = 2000, _LSRDownColDistLim = 20;       // mm
-    int16_t _LSRDownDistCent = 120; // actually measured closer to 145mm
-    bool _collisionLSRFlagU = false, _collisionLSRFlagD = false;
+    int16_t _downCliffDistFar = 170, _downColDistFar = 90;     // mm
+    int16_t _downCliffDistClose = 160, _downColDistClose = 70;   // mm
+    int16_t _downCliffDistLim = 2000, _downColDistLim = 20;       // mm
+    int16_t _downDistCent = 120; // actually measured closer to 145mm
+    
+    //bool _collisionLSRFlagU = false, _collisionLSRFlagD = false;
 
-    // Actual range values in mm
-    bool _LSRLOn = false, _LSRROn = false, _LSRAOn = false;
-    int16_t _LSRRangeL=0, _LSRRangeR=0, _LSRRangeA=0; //mm
-    bool _LSRFlagL=false, _LSRFlagR=false, _LSRFlagA=false;
-    bool _LSRL_TO=false, _LSRR_TO=false, _LSRA_TO=false;
-
-    bool _LSRUOn = false, _LSRDOn = false;
-    int16_t _LSRRangeU=0, _LSRRangeD=0; //mm
-    bool _LSRFlagU=false, _LSRFlagD=false;
-    bool _LSRU_TO=false, _LSRD_TO=false;
-
+    // Timers
     uint16_t _colLSRUpdateTime = 101;
     Timer _colLSRTimer = Timer();
     uint16_t _altLSRUpdateTime = 101;
