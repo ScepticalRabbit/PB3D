@@ -47,6 +47,7 @@ public:
     void setEnabled(bool inFlag){_isEnabled = inFlag;}
     int16_t getRange(){return _range;}
     char getDescriptor(){return _descriptor;}
+    void setRangeLim(int16_t inLim){_rangeLim = inLim;}
 
 private:
     //---------------------------------------------------------------------------
@@ -59,7 +60,7 @@ private:
 
     const uint16_t _resetDelay = 100;
     uint8_t _address = 0;
-    int16_t _range = 0;
+    int16_t _range = -1;
     uint8_t _initNum = 0;
     char _descriptor = 'X';
 
@@ -67,5 +68,6 @@ private:
     bool _rangeTimeout = false;
     bool _rangeFlag = false;
     int16_t _rangeLim = 40;
+    int16_t _rangeMax = 2000;
 };
 #endif 

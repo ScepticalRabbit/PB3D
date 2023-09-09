@@ -48,6 +48,7 @@ void LaserManager::begin(){
     _sendByteWithI2C(ADDR_FOLLBOARD,_toSend);
     delay(_resetDelay);
     _laserA.begin();
+    _laserA.setRangeLim(0);
 
     // Activate fourth laser sensor
     _toSend = B00011110;
@@ -156,6 +157,8 @@ void LaserManager::_updateUpDownLSRs(){
 uint8_t LaserManager::_getColCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar){
 
+    if(laser->getRange() < 0 ){return DANGER_NONE;}
+
     if(laser->getRange() <= colClose){return DANGER_CLOSE;}
     else if(laser->getRange() <= colFar){return DANGER_FAR;}
     else{return DANGER_NONE;}       
@@ -164,6 +167,8 @@ uint8_t LaserManager::_getColCode(LaserSensor* laser,
 //-----------------------------------------------------------------------------
 uint8_t LaserManager::_getColCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar,int16_t colSlowDown){
+
+    if(laser->getRange() < 0 ){return DANGER_NONE;}
 
     if(laser->getRange() <= colClose){return DANGER_CLOSE;}
     else if(laser->getRange() <= colFar){return DANGER_FAR;}
@@ -174,6 +179,8 @@ uint8_t LaserManager::_getColCode(LaserSensor* laser,
 //-----------------------------------------------------------------------------
 uint8_t LaserManager::_getCliffCode(LaserSensor* laser,
         int16_t cliffClose,int16_t cliffFar){
+    
+    if(laser->getRange() < 0 ){return DANGER_NONE;}
 
     if(laser->getRange() >= cliffClose){return DANGER_FAR;}
     else if(laser->getRange() >= cliffFar){return DANGER_CLOSE;}
@@ -185,6 +192,8 @@ uint8_t LaserManager::_getColCliffCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar,
         int16_t cliffClose, int16_t cliffFar){
     
+    if(laser->getRange() < 0 ){return DANGER_NONE;}
+
     if(laser->getRange() >= cliffClose){return DANGER_FAR;}
     else if(laser->getRange() <= colClose){return DANGER_CLOSE;}
     else if(laser->getRange() <= colFar){return DANGER_FAR;}

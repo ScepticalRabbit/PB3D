@@ -1,12 +1,11 @@
 #ifndef COLLISIONESCAPER_H
 #define COLLISIONESCAPER_H
 
-#include "Move.h"
+#include "MoveManager.h"
 #include "CollisionDangerFlags.h"
 
 #define ESCAPE_NOREV 1
 #define ESCAPE_REV 0
-
 
 class CollisionEscaper{
     public:

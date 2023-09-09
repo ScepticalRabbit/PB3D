@@ -101,7 +101,8 @@ private:
     int16_t _colDistClose = _halfBodyLengMM;  // mm
     int16_t _colDistFar = 120;   // mm
     int16_t _colDistSlowD = 240; // mm
-    int16_t _colDistLim = 40;    // mm  
+    int16_t _colDistLim = 40;    // mm 
+    int16_t _altDistLim = 0;     // mm 
     int16_t _altDistClose = 80;  // mm
     int16_t _altDistFar = 180;   // mm
 
@@ -113,7 +114,7 @@ private:
     int16_t _downCliffDistFar = 170, _downColDistFar = 90;     // mm
     int16_t _downCliffDistClose = 160, _downColDistClose = 70;   // mm
     int16_t _downCliffDistLim = 2000, _downColDistLim = 20;       // mm
-    int16_t _downDistCent = 120; // actually measured closer to 145mm
+    int16_t _downDistCent = 120; // actually measured closer to 125mm
     
     //bool _collisionLSRFlagU = false, _collisionLSRFlagD = false;
 

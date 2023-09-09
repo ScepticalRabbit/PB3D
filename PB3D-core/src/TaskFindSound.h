@@ -14,9 +14,9 @@ Date Edited:  26th April 2022
 #define TASKFINDSOUND_H
 
 #include <Wire.h> // I2C 
-#include "Mood.h"
+#include "MoodManager.h"
 #include "Task.h"
-#include "Move.h"
+#include "MoveManager.h"
 #include "Timer.h"
 
 // Define follower Xiao I2C Address
@@ -35,7 +35,7 @@ class TaskFindSound{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskFindSound(Mood* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker){
+  TaskFindSound(MoodManager* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker){
     _moodObj = inMood;
     _taskObj = inTask;
     _moveObj = inMove;
@@ -217,7 +217,7 @@ private:
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
   // Main Object Pointers
-  Mood* _moodObj;
+  MoodManager* _moodObj;
   Task* _taskObj;
   Move* _moveObj;
   Speaker* _speakerObj;

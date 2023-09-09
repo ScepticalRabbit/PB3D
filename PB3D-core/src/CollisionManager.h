@@ -12,10 +12,8 @@ Author: Lloyd Fletcher
 #define COLLISIONMANAGER_H
 
 #include <Arduino.h>
-#include "Ultrasonic.h"
-#include "Adafruit_VL53L0X.h"
-#include "Mood.h"
-#include "Move.h"
+#include "MoodManager.h"
+#include "MoveManager.h"
 #include "Task.h"
 #include "Timer.h"
 
@@ -35,16 +33,16 @@ Author: Lloyd Fletcher
 #endif
 
 // DEBUG Flags
-//#define COLL_DEBUG_DECISIONTREE
+#define COLL_DEBUG_DECISIONTREE
 
 //-----------------------------------------------------------------------------
 // LAST COLLISION: data structure
 //-----------------------------------------------------------------------------
 struct lastCollision_t{
   uint8_t checkVec[7] = {0,0,0,0,0,0,0}; 
-  uint16_t USRange = 0;
-  uint16_t LSRRangeL = 0,LSRRangeR = 0;
-  uint16_t LSRRangeU = 0,LSRRangeD = 0;
+  int16_t USRange = 0;
+  int16_t LSRRangeL = 0,LSRRangeR = 0;
+  int16_t LSRRangeU = 0,LSRRangeD = 0;
   uint8_t escCount = 0; 
   float escDist = 0.0, escAng = 0.0;
 };
@@ -57,7 +55,7 @@ public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
   //---------------------------------------------------------------------------
-  CollisionManager(Mood* inMood, Task* inTask, Move* inMove);
+  CollisionManager(MoodManager* inMood, Task* inTask, Move* inMove);
 
   //---------------------------------------------------------------------------
   // BEGIN: called during SETUP 
@@ -95,6 +93,8 @@ public:
   int16_t getLSRRangeD(){return _laserManager.getRangeD();}
   lastCollision_t* getLastCollision(){return &_lastCol;}
 
+  uint8_t getColCheck(uint8_t pos){return _checkVec[pos];}
+
   bool getAltFlag();
   void resetFlags();
 
@@ -108,11 +108,6 @@ public:
 
 private:
   //---------------------------------------------------------------------------
-  // Check collision detection sensors
-  //---------------------------------------------------------------------------
-  //void _updateUSRanger();
-
-  //---------------------------------------------------------------------------
   // Check all ranges and escape decision tree
   //---------------------------------------------------------------------------
   void _updateCheckVec();
@@ -122,10 +117,9 @@ private:
   // CLASS VARIABLES
   //---------------------------------------------------------------------------
   // Main object and sensor pointers
-  Mood* _moodObj = NULL;
+  MoodManager* _moodObj = NULL;
   Task* _taskObj = NULL;
   Move* _moveObj = NULL;
-  Ultrasonic* _ultrasonicSens = NULL;
   
   // Collision management variables
   bool _isEnabled = true;
@@ -133,14 +127,11 @@ private:
   bool _collisionSlowDown = false;
 
   uint16_t _halfBodyLengMM = 80;
-
-  //bool _collisionUSFlag = false;  
-  
   bool _collisionBeepBeepFlag = false;
   uint16_t _collisionCount = 0;
 
   // Helper Objects
-  CollisionEscaper _escaper;
+  CollisionEscaper _escaper = CollisionEscaper();
   LaserManager _laserManager = LaserManager();
   UltrasonicSensor _ultrasonicRanger = UltrasonicSensor();
   BumperSensor _bumpers = BumperSensor();

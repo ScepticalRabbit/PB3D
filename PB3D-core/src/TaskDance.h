@@ -14,9 +14,9 @@ Date Edited:  2nd Oct 2021 - PB3D
 #define TASKDANCE_H
 
 #include <Arduino.h>
-#include "Mood.h"
+#include "MoodManager.h"
 #include "Task.h"
-#include "Move.h"
+#include "MoveManager.h"
 #include "Timer.h"
 
 #define DANCE_STOP 0
@@ -33,7 +33,7 @@ class TaskDance{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskDance(Mood* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker){
+  TaskDance(MoodManager* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker){
     _moodObj = inMood;
     _taskObj = inTask;
     _moveObj = inMove;
@@ -242,7 +242,7 @@ private:
   
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
-  Mood* _moodObj;
+  MoodManager* _moodObj;
   Task* _taskObj;
   Move* _moveObj;
   Speaker* _speakerObj;

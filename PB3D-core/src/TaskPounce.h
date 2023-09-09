@@ -14,10 +14,10 @@ Date Edited:  29th April 2022
 #define TASKPOUNCE_H
 
 #include <Wire.h> // I2C
-#include "Mood.h"
+#include "MoodManager.h"
 #include "CollisionManager.h" 
 #include "Task.h"
-#include "Move.h"
+#include "MoveManager.h"
 #include "Timer.h"
 #include "Speaker.h"
 
@@ -30,7 +30,7 @@ class TaskPounce{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPounce(CollisionManager* inCollision, Mood* inMood, Task* inTask, Move* inMove, 
+  TaskPounce(CollisionManager* inCollision, MoodManager* inMood, Task* inTask, Move* inMove, 
              Speaker* inSpeaker){
     _collisionObj = inCollision;
     _moodObj = inMood;
@@ -430,7 +430,7 @@ private:
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
   CollisionManager* _collisionObj;
-  Mood* _moodObj;
+  MoodManager* _moodObj;
   Task* _taskObj;
   Move* _moveObj;
   Speaker* _speakerObj;

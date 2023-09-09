@@ -8,7 +8,7 @@
 //-----------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
 //-----------------------------------------------------------------------------
-CollisionManager::CollisionManager(Mood* inMood, Task* inTask, Move* inMove){
+CollisionManager::CollisionManager(MoodManager* inMood, Task* inTask, Move* inMove){
     _moodObj = inMood;
     _taskObj = inTask;
     _moveObj = inMove;
@@ -109,7 +109,7 @@ void CollisionManager::resetFlags(){
 //-----------------------------------------------------------------------------
 void CollisionManager::setEscapeStart(){   
     _updateCheckVec();    // Check all collision sensors - used for decision tree
-    _escaper.updateEscapeDecision(_checkVec);  // This is the decision tree
+    _updateEscapeDecision();
 }
 
 //-----------------------------------------------------------------------------
@@ -184,24 +184,31 @@ void CollisionManager::_updateEscapeDecision(){
 
     // Plot debug information
     #if defined(COLL_DEBUG_DECISIONTREE)
-    Serial.println();
-    Serial.println("CheckVec=[BL,BR,US,LL,LR,LU,LD,]");
-    Serial.print("CheckVec=[");
-    for(uint8_t ii=0;ii<_checkNum;ii++){
-        Serial.print(" ");Serial.print(_checkVec[ii]);Serial.print(","); 
-    }
-    Serial.println("]");
-    Serial.print("US="); Serial.print(_USSensRange*10); Serial.print("mm, ");
-    Serial.print("LL="); Serial.print(_LSRRangeL); Serial.print("mm, ");
-    Serial.print("LR="); Serial.print(_LSRRangeR); Serial.print("mm");
-    Serial.println();
-    Serial.print("LU="); Serial.print(_LSRRangeU); Serial.print("mm, ");
-    Serial.print("LD="); Serial.print(_LSRRangeD); Serial.print("mm");
-    Serial.println();
-    Serial.print("Esc,Count="); Serial.print(_lastCol.escCount);
-    Serial.print(", Dist="); Serial.print(_lastCol.escDist);
-    Serial.print(", Angle="); Serial.print(_lastCol.escAng);
-    Serial.println();
+        Serial.println();
+        Serial.println(F("======================================="));
+        
+        Serial.println(F("CheckVec=[BL,BR,US,LL,LR,LU,LD,]"));
+        Serial.print("CheckVec=[");
+        for(uint8_t ii=0;ii<_checkNum;ii++){
+            Serial.print(" ");Serial.print(_checkVec[ii]);Serial.print(","); 
+        }
+        Serial.println("]");
+        Serial.println();
+
+        Serial.print("US= "); Serial.print(_lastCol.USRange); Serial.println(" mm");
+        Serial.print("LL= "); Serial.print(_lastCol.LSRRangeL); Serial.println(" mm");
+        Serial.print("LR= " ); Serial.print(_lastCol.LSRRangeR); Serial.println(" mm");
+        Serial.print("LU= "); Serial.print(_lastCol.LSRRangeU); Serial.println(" mm");
+        Serial.print("LD= "); Serial.print(_lastCol.LSRRangeD); Serial.println(" mm");
+        
+        Serial.println();
+        Serial.print("Esc,Count="); Serial.print(_lastCol.escCount);
+        Serial.print(", Dist="); Serial.print(_lastCol.escDist);
+        Serial.print(", Angle="); Serial.print(_lastCol.escAng);
+        Serial.println();
+        
+        Serial.println(F("======================================="));
+        Serial.println();
     #endif 
 }
 

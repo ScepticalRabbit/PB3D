@@ -15,9 +15,9 @@ Date Edited:  8th October 2021
 
 #include <Wire.h> // I2C 
 #include "Grove_Human_Presence_Sensor.h" // IR presence sensor
-#include "Mood.h"
+#include "MoodManager.h"
 #include "Task.h"
-#include "Move.h"
+#include "MoveManager.h"
 #include "Timer.h"
 #include "TaskInteract.h"
 
@@ -25,7 +25,7 @@ class TaskFindHuman{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskFindHuman(Mood* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker, 
+  TaskFindHuman(MoodManager* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker, 
                 TaskInteract* inTInt){
     _moodObj = inMood;
     _taskObj = inTask;
@@ -173,7 +173,7 @@ private:
   }  
   
   // MAIN OBJECT POINTERS
-  Mood* _moodObj;
+  MoodManager* _moodObj;
   Task* _taskObj;
   Move* _moveObj;
   Speaker* _speakerObj;

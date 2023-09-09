@@ -17,8 +17,8 @@
 #include "src/Encoder.h"
 #include "src/FilterLowPass.h"
 #include "src/FilterMovAvg.h"
-#include "src/Mood.h"
-#include "src/Move.h"
+#include "src/MoodManager.h"
+#include "src/MoveManager.h"
 #include "src/PatSensor.h"
 #include "src/PID.h"
 #include "src/Speaker.h"
@@ -105,7 +105,7 @@ Encoder encoderR = Encoder(encPinAR,encPinBR);
 
 // BASIC CLASSES
 Move moveObj = Move(&AFMS,&encoderL,&encoderR);
-Mood moodObj = Mood(&leds);
+MoodManager moodObj = MoodManager(&leds);
 Task taskObj = Task(&leds);
 CollisionManager collisionObj = CollisionManager(&moodObj,&taskObj,&moveObj);
 
@@ -135,6 +135,7 @@ TaskPause taskPauseObj = TaskPause(&collisionObj,&taskObj,&moveObj,&speakerObj);
 void setup() {
   // Start the serial 
   Serial.begin(115200); 
+  while(!Serial){}
    
   // Initialize I2C communications
   Wire.begin();  // Join I2C bus as leader
@@ -222,6 +223,8 @@ void setup() {
 
   // Final setup - increase I2C clock speed
   Wire.setClock(400000); // 400KHz
+
+  //while(1){}
 }
 
 //---------------------------------------------------------------------------
@@ -295,7 +298,8 @@ void loop(){
   // TEST CODE - SENSOR REPORTS
   if(_test_reportTimer.finished()){
     _test_reportTimer.start(_test_reportTime);
-    DEBUG_PrintAllRanges();
+    //DEBUG_PrintColCheck();
+    //DEBUG_PrintAllRanges();
     //DEBUG_PrintLightSens();
   }
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -317,45 +321,6 @@ void loop(){
   // make this smarter so certain things can re-enable collision avoidance
   if(taskObj.getTask() == TASK_TEST){
     DEBUG_SpeedTest(_test_value,MOVE_B_FORWARD);
-    /*
-    if(_test_pauseTimer.finished()){
-      DEBUG_PlotSpeedMMPS();
-      
-      if(_test_pauseSwitch){
-        _test_pauseSwitch = false;
-        _test_timer.start(_test_time);
-        _test_switch = true;       
-      }
-      
-      if(_test_timer.finished()){
-        if(_test_retest){
-          _test_timer.start(_test_time);
-          _test_count++;
-          if(_test_count >= _test_countLim){
-            _test_count = 0;
-          }
-        }
-        else{
-          _test_switch = false;
-        }
-      }
-        
-      if(_test_count == 1){
-        //moveObj.toDistCtrlSpd(300.0);   
-        moveObj.turnToAngleCtrlSpd(45.0);
-      }
-      else if(_test_count == 2){
-        moveObj.stop();
-      }
-      else if(_test_count == 3){
-        //moveObj.toDistCtrlSpd(-300.0);
-        moveObj.turnToAngleCtrlSpd(-45.0);  
-      }      
-      else{
-        moveObj.stop();
-      }
-    }
-    */
   }
   else if(taskObj.getTask() == TASK_REST){
     taskRestObj.rest();
@@ -691,31 +656,16 @@ void DEBUG_PlotSpeedMMPS(){
   Serial.println();
 }
 
-void DEBUG_PrintColFlags(){
+void DEBUG_PrintColCheck(){
   Serial.println();
-  Serial.println(F("COLLISION FLAGS"));
   Serial.println(F("------------------------------"));
-  Serial.print(F("Bumpers: "));
-  Serial.print(collisionObj.getBumperFlag());
-  Serial.println();
-      
-  Serial.print(F("Ultrasonic: "));
-  //Serial.print(collisionObj.getColUSFlag());
-  Serial.println();
-  
-  Serial.print(F("Lasers: "));
-  Serial.print(F("L="));
-  //Serial.print(collisionObj.getColLSRFlagL());
-  Serial.print(F(",R="));
-  //Serial.print(collisionObj.getColLSRFlagR());
-  Serial.print(F(",B="));
-  //Serial.print(collisionObj.getColLSRFlagB());
-  Serial.println();     
-}
+  Serial.println("CheckVec=[BL,BR,US,LL,LR,LU,LD,]");
+  Serial.print("CheckVec=[");
+  for(uint8_t ii=0;ii<7;ii++){
+      Serial.print(" ");Serial.print(collisionObj.getColCheck(ii));Serial.print(","); 
+  }
+  Serial.println("]");
 
-void DEBUG_PrintAllRanges(){
-  Serial.println();
-  Serial.println(F("------------------------------"));
   Serial.print(F("US: "));
   //Serial.print(collisionObj.getColUSFlag());
   Serial.print(F(" , "));
@@ -749,6 +699,37 @@ void DEBUG_PrintAllRanges(){
   Serial.print(F("LSR,D: "));
   //Serial.print(collisionObj.getColLSRFlagD());
   Serial.print(F(" , "));
+  Serial.print(collisionObj.getLSRRangeD());
+  Serial.println(F(" mm"));
+  
+  Serial.println(F("------------------------------"));
+  Serial.println();   
+}
+
+void DEBUG_PrintAllRanges(){
+  Serial.println();
+  Serial.println(F("------------------------------"));
+  Serial.print(F("US: "));
+  Serial.print(collisionObj.getUSRangeMM());
+  Serial.println(F(" mm"));
+  
+  Serial.print(F("LSR,L: "));
+  Serial.print(collisionObj.getLSRRangeL());
+  Serial.println(F(" mm"));
+  
+  Serial.print(F("LSR,R: "));
+  Serial.print(collisionObj.getLSRRangeR());
+  Serial.println(F(" mm"));
+  
+  Serial.print(F("LSR,A: "));
+  Serial.print(collisionObj.getLSRRangeA());
+  Serial.println(F(" mm"));
+  
+  Serial.print(F("LSR,U: "));
+  Serial.print(collisionObj.getLSRRangeU());
+  Serial.println(F(" mm"));
+  
+  Serial.print(F("LSR,D: "));
   Serial.print(collisionObj.getLSRRangeD());
   Serial.println(F(" mm"));
   

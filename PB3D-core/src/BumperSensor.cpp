@@ -56,10 +56,6 @@ void BumperSensor::update(){
     // If the bumpers are hit too many times decrease mood
     if(_bumperAnyFlag){
         _bumpCount++;
-        if(_bumpCount >= _bumpThres){
-            //_moodObj->decMoodScore();
-            _bumpCount = 0;
-        }
     }
 }
 

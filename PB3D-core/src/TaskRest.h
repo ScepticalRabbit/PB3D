@@ -6,8 +6,6 @@
 The task ? class is part of the PetBot (PB) program. It is used to...
 
 Author: Lloyd Fletcher
-Date Created: 29th Aug 2021
-Date Edited:  29th Aug 2021 
 */
 
 #ifndef TASKREST_H
@@ -15,14 +13,14 @@ Date Edited:  29th Aug 2021
 
 #include <Arduino.h>
 #include "Task.h"
-#include "Move.h"
+#include "MoveManager.h"
 #include "Timer.h"
 
 class TaskRest{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskRest(Mood* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker){
+  TaskRest(MoodManager* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker){
     _moodObj = inMood;
     _taskObj = inTask;
     _moveObj = inMove;
@@ -91,7 +89,7 @@ public:
   
 private:
   // MAIN OBJECT POINTERS
-  Mood* _moodObj;
+  MoodManager* _moodObj;
   Task* _taskObj;
   Move* _moveObj;
   Speaker* _speakerObj;

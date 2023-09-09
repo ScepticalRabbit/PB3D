@@ -13,9 +13,9 @@ Date Edited:  26th March 2022
 #define TASKFINDLIGHT_H
 
 #include <Wire.h> // I2C
-#include "Mood.h"
+#include "MoodManager.h"
 #include "Task.h"
-#include "Move.h"
+#include "MoveManager.h"
 #include "Timer.h"
 #include "Speaker.h"
 #include "PatSensor.h"
@@ -30,7 +30,7 @@ class TaskFindLight{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskFindLight(Mood* inMood, Task* inTask, Move* inMove, 
+  TaskFindLight(MoodManager* inMood, Task* inTask, Move* inMove, 
                 Speaker* inSpeaker, PatSensor* inPatSens){
     _moodObj = inMood;
     _taskObj = inTask;
@@ -216,7 +216,7 @@ private:
 
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
-  Mood* _moodObj;
+  MoodManager* _moodObj;
   Task* _taskObj;
   Move* _moveObj;
   Speaker* _speakerObj;

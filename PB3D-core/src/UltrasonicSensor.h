@@ -60,10 +60,10 @@ private:
     Ultrasonic _ultrasonicRanger = Ultrasonic(COLL_USSENS);
 
     uint16_t _halfBodyLengMM = 80;
-    int16_t _range = 1000;
+    int16_t _range = 2000;
     int16_t _colDistClose = _halfBodyLengMM/10; // cm
-    int16_t _colDistFar = 2*_halfBodyLengMM/10;  // cm  
-    int16_t _colDistSlowD = 4*_halfBodyLengMM/10; // cm
+    int16_t _colDistFar = 2*(_halfBodyLengMM/10);  // cm  
+    int16_t _colDistSlowD = 3*(_halfBodyLengMM/10); // cm
     int16_t _colDistLim = 4;    // cm 
 };
 #endif 

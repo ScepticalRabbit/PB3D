@@ -13,7 +13,7 @@ Author: Lloyd Fletcher
 
 #include <Arduino.h>
 #include <Adafruit_NeoPixel_ZeroDMA.h>
-#include "Mood.h"
+#include "MoodManager.h"
 #include "Timer.h"
 
 // Define task codes

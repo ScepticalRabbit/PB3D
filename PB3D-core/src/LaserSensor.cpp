@@ -45,7 +45,7 @@ bool LaserSensor::updateRange(){
         if(_rangeTimeout){return false;}
 
         _range = _laserObj.readRangeResult();
-        if(_range <= _rangeLim){_range = _rangeLim;}
+        if(_range <= _rangeLim){_range = -1;}
         _rangeFlag = true;
         return true;
     }

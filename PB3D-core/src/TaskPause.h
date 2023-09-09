@@ -16,7 +16,7 @@ Date Edited:  12th December 2021
 #include <Wire.h> // I2C
 #include "CollisionManager.h" 
 #include "Task.h"
-#include "Move.h"
+#include "MoveManager.h"
 #include "Timer.h"
 
 class TaskPause{
@@ -65,7 +65,7 @@ public:
 private:
   // MAIN OBJECT POINTERS
   CollisionManager* _collisionObj;
-  Mood* _moodObj;
+  MoodManager* _moodObj;
   Task* _taskObj;
   Move* _moveObj;
   Speaker* _speakerObj;
