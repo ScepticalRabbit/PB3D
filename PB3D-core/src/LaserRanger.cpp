@@ -50,7 +50,7 @@ bool LaserRanger::updateRange(){
     
     if(_laserObj.isRangeComplete() && !_rangeFlag){
         _rangeTimeout = _laserObj.timeoutOccurred();
-        if(_rangeTimeout){return;}
+        if(_rangeTimeout){return false;}
 
         _range = _laserObj.readRangeResult();
         if(_range <= _rangeLim){_range = -1;}

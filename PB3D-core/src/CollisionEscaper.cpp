@@ -1,5 +1,5 @@
 #include "CollisionEscaper.h"
-#include "CollisionFlags.h"
+#include "CollisionDangerFlags.h"
 
 //-----------------------------------------------------------------------------
 void CollisionEscaper::setMoveObj(Move* inMove){

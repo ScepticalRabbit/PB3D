@@ -17,7 +17,7 @@ Author: Lloyd Fletcher
 // Internal libraries
 #include "Timer.h"
 #include "LaserRanger.h"
-#include "CollisionFlags.h"
+#include "CollisionDangerFlags.h"
 
 // Definitions
 // Address for digital out 
@@ -61,6 +61,7 @@ public:
     uint8_t getColCodeR();
     uint8_t getColCodeU();
     uint8_t getColCodeD();
+    uint8_t getColCodeA();
 
 private:
     //---------------------------------------------------------------------------
@@ -75,7 +76,9 @@ private:
                     int16_t colClose,int16_t colFar);    
     uint8_t _getColCode(LaserRanger* laser,
                     int16_t colClose,int16_t colFar,int16_t colSlowDown);    
-    uint8_t _getColCode(LaserRanger* laser,
+    uint8_t _getCliffCode(LaserRanger* laser,
+                    int16_t cliffClose,int16_t cliffFar);     
+    uint8_t _getColCliffCode(LaserRanger* laser,
                     int16_t colClose,int16_t colFar,
                     int16_t cliffClose, int16_t cliffFar);
     
@@ -99,7 +102,8 @@ private:
     int16_t _colDistFar = 120;   // mm
     int16_t _colDistSlowD = 240; // mm
     int16_t _colDistLim = 40;    // mm  
-    int16_t _altDist = 80;       // mm
+    int16_t _altDistClose = 80;  // mm
+    int16_t _altDistFar = 180;   // mm
     // bool _collisionLSRFlagL = false;
     // bool _collisionLSRFlagR = false;
     // bool _collisionLSRFlagB = false;

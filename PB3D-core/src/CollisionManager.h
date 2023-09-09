@@ -20,7 +20,7 @@ Author: Lloyd Fletcher
 #include "Timer.h"
 
 // Helper classes
-#include "CollisionFlags.h"
+#include "CollisionDangerFlags.h"
 #include "CollisionEscaper.h"
 #include "LaserManager.h"
 
@@ -98,9 +98,10 @@ public:
   // bool getColLSRFlagB(){return _collisionLSRFlagB;}
   // bool getColLSRFlagU(){return _collisionLSRFlagU;}
   // bool getColLSRFlagD(){return _collisionLSRFlagD;}
-  // bool getAltFlag(){return _collisionLSRFlagB;}
+  
   bool getColUSFlag(){return _collisionUSFlag;}
-    
+  
+
   int16_t getUSRange(){return _USSensRange;}
   int16_t getUSRangeMM(){return (_USSensRange*10);}
   int16_t getLSRRangeL(){return _laserManager.getRangeL();}
@@ -110,17 +111,8 @@ public:
   int16_t getLSRRangeD(){return _laserManager.getRangeD();}
   lastCollision_t* getLastCollision(){return &_lastCol;}
 
-  void resetFlags(){
-    _collisionDetected = false;
-
-    _collisionUSFlag = false;
-    _collisionBumperFlag = false;
-    _collisionNervSys = B00000000;
-    _collisionLSRFlagL = false;
-    _collisionLSRFlagR = false;
-    _collisionLSRFlagU = false;
-    _collisionLSRFlagD = false;
-  }
+  bool getAltFlag();
+  void resetFlags();
 
   //---------------------------------------------------------------------------
   // Command forwarding to escaper
@@ -143,7 +135,7 @@ private:
   //---------------------------------------------------------------------------
   // Check all ranges and escape decision tree
   //---------------------------------------------------------------------------
-  bool _updateCheckVec();
+  void _updateCheckVec();
   void _updateEscapeDecision(); // Escape decision tree
 
   //---------------------------------------------------------------------------
@@ -169,17 +161,14 @@ private:
   
   // Collision management variables
   bool _isEnabled = true;
-  bool _collisionDetected = false;
+  bool _collisionDetected = false; // Key flag controlling collision escape
+  bool _collisionSlowDown = false;
 
   uint16_t _halfBodyLengMM = 80;
 
   bool _collisionUSFlag = false;  
   byte _collisionNervSys = B00000000;
   bool _collisionBumperFlag = false;
-  bool _collisionLSRFlagL = false;
-  bool _collisionLSRFlagR = false;
-  bool _collisionLSRFlagU = false;
-  bool _collisionLSRFlagD = false;
 
   bool _collisionBeepBeepFlag = false;
   uint16_t _collisionCount = 0;
@@ -189,10 +178,9 @@ private:
   LaserManager _laserManager = LaserManager();
 
   // Check flags for all collision sensors
-  bool _checkAllFlag = false;
   uint8_t _checkNum = 7;
   uint8_t _checkVec[7] = {0,0,0,0,0,0,0}; //_checkVec[7] = {BL,BR,US,LL,LR,LU,LD}
-  uint16_t _checkAllInt = 101;
+  uint16_t _checkAllInt = 51;
   Timer _checkAllTimer = Timer();
 
   // Time to slow down if sensor tripped

@@ -85,8 +85,23 @@ void CollisionManager::update(){
 // Get, set and reset
 //--------------------------------------------------------------------------- 
 bool CollisionManager::getAltFlag(){
-    if())
+    if(_laserManager.getColCodeA() > DANGER_NONE){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
+
+void CollisionManager::resetFlags(){
+    _collisionDetected = false;
+    _collisionSlowDown = false;
+
+    _collisionUSFlag = false;
+    _collisionBumperFlag = false;
+    _collisionNervSys = B00000000;
+}
+
 
 //-----------------------------------------------------------------------------
 void CollisionManager::setEscapeStart(){   

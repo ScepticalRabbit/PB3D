@@ -4,7 +4,7 @@
 //-----------------------------------------------------------------------------
 #include <Arduino.h>
 #include "LaserManager.h"
-#include "CollisionFlags.h"
+#include "CollisionDangerFlags.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
@@ -132,7 +132,10 @@ void LaserManager::_updateAltLSR() {
         _altLSRTimer.start(_altLSRUpdateTime);
         _laserA.startRange();
     }
-    _laserA.updateRange();
+    
+    if(_laserA.updateRange()){
+
+    }
 }
 
 //-----------------------------------------------------------------------------
