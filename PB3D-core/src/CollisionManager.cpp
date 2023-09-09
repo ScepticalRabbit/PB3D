@@ -55,20 +55,20 @@ void CollisionManager::update(){
         _updateBumpers();
     }
 
-    // COLLISION ACTION
+    // COLLISION DETECTION & DECISION
+    // NOTE: this sets the collision flags that control behaviour! 
     if(_checkAllTimer.finished()){
         _checkAllTimer.start(_checkAllInt);
         _updateCheckVec();
 
-        if(_checkAllFlag && _slowDownTimer.finished()){
-        _slowDownTimer.start(_slowDownInt);
-        _moveObj->setSpeedByColFlag(true);
+        if(_collisionSlowDown && _slowDownTimer.finished()){
+            _slowDownTimer.start(_slowDownInt);
+            _moveObj->setSpeedByColFlag(true);
         }
-        else if(!_checkAllFlag && _slowDownTimer.finished()){
-        _moveObj->setSpeedByColFlag(false); 
+        else if(!_collisionSlowDown && _slowDownTimer.finished()){
+            _moveObj->setSpeedByColFlag(false); 
         }
     }
-
     if(!_slowDownTimer.finished()){
         _moveObj->setSpeedByColFlag(true);
     }
@@ -79,6 +79,13 @@ void CollisionManager::update(){
 
     //uint32_t endTime = micros();
     //Serial.println(endTime-startTime);
+}
+
+//---------------------------------------------------------------------------
+// Get, set and reset
+//--------------------------------------------------------------------------- 
+bool CollisionManager::getAltFlag(){
+    if())
 }
 
 //-----------------------------------------------------------------------------
@@ -109,11 +116,11 @@ void CollisionManager::_updateUSRanger(){
     if(_USSensRange <= _USColDistLim){_USSensRange = 400;}
 
     if(_USSensRange <= _USColDistClose){
-        _collisionFlag = true;
+        _collisionDetected = true;
         _collisionUSFlag = true;
     }
     else if(_USSensRange <= _USColDistFar){
-        _collisionFlag = true;
+        _collisionDetected = true;
         _collisionUSFlag = true;
     }
 }
@@ -132,12 +139,12 @@ void CollisionManager::_updateBumpers(){
 
     if((nervSysFlags & B00000001) == B00000001){
         //Serial.println("Front Left Bumper");
-        _collisionFlag = true;
+        _collisionDetected = true;
         _collisionBumperFlag = true;
     }
     if ((nervSysFlags & B00000010) == B00000010){
         //Serial.println("Front Right Bumper");
-        _collisionFlag = true;
+        _collisionDetected = true;
         _collisionBumperFlag = true;
     }
 
@@ -152,20 +159,20 @@ void CollisionManager::_updateBumpers(){
 }
 
 //---------------------------------------------------------------------------
-bool CollisionManager::_updateCheckVec(){
+void CollisionManager::_updateCheckVec(){
     // uint8_t _checkVec[7] = {BL,BR,US,LL,LR,LU,LD}
     // NOTE: if's have to have most severe case first!
 
     // Bumpers
-    if(((_collisionNervSys & B00000001) == B00000001)){_checkVec[0] = COLL_CLOSE;}
+    if(((_collisionNervSys & B00000001) == B00000001)){_checkVec[0] = DANGER_CLOSE;}
     else{_checkVec[0] = 0;}
-    if(((_collisionNervSys & B00000010) == B00000010)){_checkVec[1] = COLL_CLOSE;}
+    if(((_collisionNervSys & B00000010) == B00000010)){_checkVec[1] = DANGER_CLOSE;}
     else{_checkVec[1] = 0;}
 
     // Ultrasonic Ranger
-    if(_USSensRange <= _USColDistClose){_checkVec[2] = COLL_CLOSE;}
-    else if(_USSensRange <= _USColDistFar){_checkVec[2] = COLL_FAR;}
-    else if(_USSensRange <= _USColDistSlowD){_checkVec[2] = COLL_SLOWD;}
+    if(_USSensRange <= _USColDistClose){_checkVec[2] = DANGER_CLOSE;}
+    else if(_USSensRange <= _USColDistFar){_checkVec[2] = DANGER_FAR;}
+    else if(_USSensRange <= _USColDistSlowD){_checkVec[2] = DANGER_SLOWD;}
     else{_checkVec[2] = 0;}
 
     // Laser - Left
@@ -177,15 +184,17 @@ bool CollisionManager::_updateCheckVec(){
     // Laser - Down Angle - TODO, fix this so we know which is which
     _checkVec[6] = _laserManager.getColCodeD();
 
-    // If anything is tripped set this flag true
-    _checkAllFlag = false; 
+    // If anything is tripped set flags to true
+    _collisionDetected = false;
+    _collisionSlowDown = false; 
     for(uint8_t ii=0;ii<_checkNum;ii++){
-        if(_checkVec[ii] > 0){
-            _checkAllFlag = true;
-            break;
+        if(_checkVec[ii] >= DANGER_SLOWD){
+            _collisionSlowDown = true;
+        }
+        if(_checkVec[ii] >= DANGER_FAR){
+            _collisionDetected = true;
         }
     }
-    return _checkAllFlag;
 }
 
 //-----------------------------------------------------------------------------
@@ -199,10 +208,10 @@ void CollisionManager::_updateEscapeDecision(){
         _lastCol.checkVec[ii] = _checkVec[ii];
     }
     _lastCol.USRange = _USSensRange*10;
-    _lastCol.LSRRangeL = _LSRRangeL;
-    _lastCol.LSRRangeR = _LSRRangeR;
-    _lastCol.LSRRangeU = _LSRRangeU;
-    _lastCol.LSRRangeD = _LSRRangeD;
+    _lastCol.LSRRangeL = _laserManager.getRangeL();
+    _lastCol.LSRRangeR = _laserManager.getRangeR();
+    _lastCol.LSRRangeU = _laserManager.getRangeU();
+    _lastCol.LSRRangeD = _laserManager.getRangeD();
     _lastCol.escCount = _escaper.getEscapeCount();
     _lastCol.escDist = _escaper.getEscapeDist();
     _lastCol.escAng = _escaper.getEscapeAngle();
@@ -230,69 +239,5 @@ void CollisionManager::_updateEscapeDecision(){
     #endif 
 }
 
-//-----------------------------------------------------------------------------
-void CollisionManager::_initLSR(byte sendByte, Adafruit_VL53L0X* LSRObj, bool* LSROn,
-            uint8_t LSRAddr,char LSRStr){
-    _sendByteWithI2C(sendByte);
-
-    delay(_resetDelay);
-    if(!LSRObj->begin(LSRAddr)){
-        Serial.print(F("COLLISION: FAILED to init laser "));
-        Serial.println(LSRStr);
-        *LSROn = false;
-    }
-    else{
-        Serial.print(F("COLLISION: initialised laser "));
-        Serial.println(LSRStr);
-        *LSROn = true;
-    }
-    delay(_resetDelay);
-}
-
-//-----------------------------------------------------------------------------
-void CollisionManager::_setLSRAddrs(){
-    // Reset all laser sensors - set all low
-    _toSend = B00000000;
-    _sendByteWithI2C(_toSend);
-    delay(_resetDelay);
-
-    // Turn on all sensors - set all high
-    _toSend = B00111110;
-    _sendByteWithI2C(_toSend);
-    delay(_resetDelay);
-    char LSRStr = 'L'; 
-
-    // Activate first laser sensor
-    _toSend = B00000010;
-    LSRStr = 'L'; 
-    _initLSR(_toSend,&_laserL,&_LSRLOn,ADDR_LSR_L,LSRStr);
-
-    // Activate second laser sensor
-    _toSend = B00000110;
-    LSRStr = 'R'; 
-    _initLSR(_toSend,&_laserR,&_LSRROn,ADDR_LSR_R,LSRStr);
- 
-    // Activate third laser sensor
-    _toSend = B00001110;
-    LSRStr = 'A'; 
-    _initLSR(_toSend,&_laserA,&_LSRAOn,ADDR_LSR_A,LSRStr);
-
-    // Activate fourth laser sensor
-    _toSend = B00011110;
-    LSRStr = 'U'; 
-    _initLSR(_toSend,&_laserU,&_LSRUOn,ADDR_LSR_U,LSRStr);
-
-    // Activate fifth laser sensor
-    _toSend = B00111110;
-    LSRStr = 'D'; 
-    _initLSR(_toSend,&_laserD,&_LSRDOn,ADDR_LSR_D,LSRStr);
-}
-
-//-----------------------------------------------------------------------------
-void CollisionManager::_sendByteWithI2C(byte inByte){
-    Wire.beginTransmission(ADDR_FOLLBOARD);
-    Wire.write(inByte);
-    Wire.endTransmission();
-}
 
 

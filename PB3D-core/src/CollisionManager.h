@@ -91,28 +91,28 @@ public:
   bool getBeepBeepFlag(){return _collisionBeepBeepFlag;}
   void setBeepBeepFlag(bool inFlag){_collisionBeepBeepFlag = inFlag;}
 
-  bool getDetectFlag(){return _collisionFlag;} 
+  bool getDetectFlag(){return _collisionDetected;} 
   bool getBumperFlag(){return _collisionBumperFlag;}
-  bool getColLSRFlagL(){return _collisionLSRFlagL;}
-  bool getColLSRFlagR(){return _collisionLSRFlagR;}
-  bool getColLSRFlagB(){return _collisionLSRFlagB;}
-  bool getColLSRFlagU(){return _collisionLSRFlagU;}
-  bool getColLSRFlagD(){return _collisionLSRFlagD;}
-  bool getAltFlag(){return _collisionLSRFlagB;}
+  // bool getColLSRFlagL(){return _collisionLSRFlagL;}
+  // bool getColLSRFlagR(){return _collisionLSRFlagR;}
+  // bool getColLSRFlagB(){return _collisionLSRFlagB;}
+  // bool getColLSRFlagU(){return _collisionLSRFlagU;}
+  // bool getColLSRFlagD(){return _collisionLSRFlagD;}
+  // bool getAltFlag(){return _collisionLSRFlagB;}
   bool getColUSFlag(){return _collisionUSFlag;}
     
   int16_t getUSRange(){return _USSensRange;}
   int16_t getUSRangeMM(){return (_USSensRange*10);}
-  int16_t getLSRRangeL(){return _LSRRangeL;}
-  int16_t getLSRRangeR(){return _LSRRangeR;}
-  int16_t getLSRRangeAlt(){return _LSRRangeA;}
-  int16_t getLSRRangeB(){return _LSRRangeA;}  
-  int16_t getLSRRangeU(){return _LSRRangeU;}
-  int16_t getLSRRangeD(){return _LSRRangeD;}
+  int16_t getLSRRangeL(){return _laserManager.getRangeL();}
+  int16_t getLSRRangeR(){return _laserManager.getRangeR();}
+  int16_t getLSRRangeA(){return _laserManager.getRangeA();}
+  int16_t getLSRRangeU(){return _laserManager.getRangeU();}
+  int16_t getLSRRangeD(){return _laserManager.getRangeD();}
   lastCollision_t* getLastCollision(){return &_lastCol;}
 
   void resetFlags(){
-    _collisionFlag = false;
+    _collisionDetected = false;
+
     _collisionUSFlag = false;
     _collisionBumperFlag = false;
     _collisionNervSys = B00000000;
@@ -136,9 +136,9 @@ private:
   //---------------------------------------------------------------------------
   void _updateUSRanger();
   void _updateBumpers();
-  void _updateColLSRs();
-  void _updateAltLSR();
-  void _updateUpDownLSRs();
+  // void _updateColLSRs();
+  // void _updateAltLSR();
+  // void _updateUpDownLSRs();
 
   //---------------------------------------------------------------------------
   // Check all ranges and escape decision tree
@@ -149,14 +149,14 @@ private:
   //---------------------------------------------------------------------------
   // LASER INIT: set all I2C addresses
   //---------------------------------------------------------------------------
-  void _initLSR(byte sendByte, Adafruit_VL53L0X* LSRObj, bool* LSROn,
-                uint8_t LSRAddr,char LSRStr);
-  void _setLSRAddrs();
+  // void _initLSR(byte sendByte, Adafruit_VL53L0X* LSRObj, bool* LSROn,
+  //               uint8_t LSRAddr,char LSRStr);
+  // void _setLSRAddrs();
 
   //---------------------------------------------------------------------------
   // Helper functions
   //---------------------------------------------------------------------------
-  void _sendByteWithI2C(byte inByte);
+  // void _sendByteWithI2C(byte inByte);
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
@@ -169,22 +169,30 @@ private:
   
   // Collision management variables
   bool _isEnabled = true;
-  bool _collisionFlag = false;
-  bool _collisionUSFlag = false;
+  bool _collisionDetected = false;
+
   uint16_t _halfBodyLengMM = 80;
 
+  bool _collisionUSFlag = false;  
   byte _collisionNervSys = B00000000;
   bool _collisionBumperFlag = false;
+  bool _collisionLSRFlagL = false;
+  bool _collisionLSRFlagR = false;
+  bool _collisionLSRFlagU = false;
+  bool _collisionLSRFlagD = false;
+
   bool _collisionBeepBeepFlag = false;
   uint16_t _collisionCount = 0;
 
+  // Helper Objects
   CollisionEscaper _escaper;
+  LaserManager _laserManager = LaserManager();
 
   // Check flags for all collision sensors
   bool _checkAllFlag = false;
   uint8_t _checkNum = 7;
   uint8_t _checkVec[7] = {0,0,0,0,0,0,0}; //_checkVec[7] = {BL,BR,US,LL,LR,LU,LD}
-  uint16_t _checkAllInt = 100;
+  uint16_t _checkAllInt = 101;
   Timer _checkAllTimer = Timer();
 
   // Time to slow down if sensor tripped
@@ -202,58 +210,8 @@ private:
   int16_t _USColDistFar = 2*_halfBodyLengMM/10;  // cm  
   int16_t _USColDistSlowD = 4*_halfBodyLengMM/10; // cm
   int16_t _USColDistLim = 4;    // cm 
-  int16_t _USUpdateTime = 137;  // ms, set to prime number (100+timeout)
+  int16_t _USUpdateTime = 101;  // ms, set to prime number (100+timeout)
   Timer _USTimer = Timer();
-
-  // LASER ranger variables
-  uint16_t _resetDelay = 100;
-  int16_t _LSRColDistClose = _halfBodyLengMM;  // mm
-  int16_t _LSRColDistFar = 120;   //2*_halfBodyLengMM;   // mm
-  int16_t _LSRColDistSlowD = 240; //4*_halfBodyLengMM; // mm
-  int16_t _LSRColDistLim = 40;    // mm  
-  int16_t _LSRAltDist = 80;       // mm
-  bool _collisionLSRFlagL = false;
-  bool _collisionLSRFlagR = false;
-  bool _collisionLSRFlagB = false;
-
-  // LSR - UP - DONT CHANGE!!!
-  int16_t _LSRUpDistFar = 220;    // mm
-  int16_t _LSRUpDistClose = 180;   // mm
-  int16_t _LSRUpDistLim = 40;     // mm  
-  // LSR- DWN - DONT CHANGE!!!
-  int16_t _LSRDownCliffDistFar = 170, _LSRDownColDistFar = 90;     // mm
-  int16_t _LSRDownCliffDistClose = 160, _LSRDownColDistClose = 70;   // mm
-  int16_t _LSRDownCliffDistLim = 2000, _LSRDownColDistLim = 20;       // mm
-  int16_t _LSRDownDistCent = 120; // actually measured closer to 145mm
-  bool _collisionLSRFlagU = false, _collisionLSRFlagD = false;
-
-  // Actual range values in mm
-  bool _LSRLOn = false, _LSRROn = false, _LSRAOn = false;
-  int16_t _LSRRangeL=0, _LSRRangeR=0, _LSRRangeA=0; //mm
-  bool _LSRFlagL=false, _LSRFlagR=false, _LSRFlagA=false;
-  bool _LSRL_TO=false, _LSRR_TO=false, _LSRA_TO=false;
-
-  bool _LSRUOn = false, _LSRDOn = false;
-  int16_t _LSRRangeU=0, _LSRRangeD=0; //mm
-  bool _LSRFlagU=false, _LSRFlagD=false;
-  bool _LSRU_TO=false, _LSRD_TO=false;
-  
-  uint16_t _colLSRUpdateTime = 101;
-  Timer _colLSRTimer = Timer();
-  uint16_t _altLSRUpdateTime = 101;
-  Timer _altLSRTimer = Timer();
-  uint16_t _upDownLSRUpdateTime = 101;
-  Timer _upDownLSRTimer = Timer();
-  
-  // Objects for the laser ranger vl53l0x
-  Adafruit_VL53L0X _laserL = Adafruit_VL53L0X();
-  Adafruit_VL53L0X _laserR = Adafruit_VL53L0X();
-  Adafruit_VL53L0X _laserA = Adafruit_VL53L0X();
-  Adafruit_VL53L0X _laserU = Adafruit_VL53L0X();
-  Adafruit_VL53L0X _laserD = Adafruit_VL53L0X();
-
-  // I2C send byte 
-  byte _toSend = B00000000;
 
   // Data structure for info on last collision
   lastCollision_t _lastCol;

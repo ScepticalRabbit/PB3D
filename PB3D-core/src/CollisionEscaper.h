@@ -2,6 +2,7 @@
 #define COLLISIONESCAPER_H
 
 #include "Move.h"
+#include "CollisionFlags.h"
 
 #define ESCAPE_NOREV 1
 #define ESCAPE_REV 0

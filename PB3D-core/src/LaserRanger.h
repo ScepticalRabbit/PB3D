@@ -38,7 +38,7 @@ public:
     // UPDATE: called during LOOP
     //---------------------------------------------------------------------------
     void startRange();
-    void updateRange();
+    bool updateRange();
 
     //---------------------------------------------------------------------------
     // Get, set and reset

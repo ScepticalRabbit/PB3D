@@ -12,20 +12,20 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
     // NOTE: first thing in the tree is dealt with first
 
     // 1) BMPL: reverse a full body length and turn +90 deg away
-    if(checkVec[0] == COLL_CLOSE){
+    if(checkVec[0] == DANGER_CLOSE){
         _escapeCount = ESCAPE_REV;
         _escapeDist = 1.0*_defRevDist;
         _escapeAngle = -1.0*_defHardTurn;
     }
     // 2) BMPR: reverse a full body length and turn -90 deg away
-    else if(checkVec[1] == COLL_CLOSE){
+    else if(checkVec[1] == DANGER_CLOSE){
         _escapeCount = ESCAPE_REV;
         _escapeDist = 1.0*_defRevDist;
         _escapeAngle = 1.0*_defHardTurn;
     }
     // 7) LSRD: check cliff-close/far, check obstacle-close/far 
-    else if(checkVec[6] >= COLL_FAR){
-        if(checkVec[6] == COLL_CLOSE){
+    else if(checkVec[6] >= DANGER_FAR){
+        if(checkVec[6] == DANGER_CLOSE){
         _escapeCount = ESCAPE_REV;
         _escapeDist = 1.0*_defRevDist;
         _escapeAngle = _getRandTurnDir()*_defHardTurn;
@@ -37,8 +37,8 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
         }    
     }
     // 4) LSRL: check far (norev,+45deg), check close (rev,+90deg)
-    else if(checkVec[3] >= COLL_FAR){
-        if(checkVec[3] == COLL_CLOSE){
+    else if(checkVec[3] >= DANGER_FAR){
+        if(checkVec[3] == DANGER_CLOSE){
         _escapeCount = ESCAPE_REV;
         _escapeDist = 0.8*_defRevDist;
         _escapeAngle = -1.25*_defModTurn;
@@ -49,16 +49,16 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
         _escapeAngle = -1.0*_defModTurn;        
         }
 
-        if(checkVec[4] >= COLL_FAR){ // If the right laser is tripped as well then we are in a corner, do a 180
+        if(checkVec[4] >= DANGER_FAR){ // If the right laser is tripped as well then we are in a corner, do a 180
         _escapeAngle = -180.0 + _getRandTurnDir()*float(random(0,45));         
         }
-        else if(checkVec[2] >= COLL_FAR){ // If the ultrasonic sensor is tripped as well then turn harder
+        else if(checkVec[2] >= DANGER_FAR){ // If the ultrasonic sensor is tripped as well then turn harder
         _escapeAngle = -1.0*_defHardTurn;
         }
     }
     // 5) LSRR: check far (norev,-45deg), check close (rev,-90deg)
-    else if(checkVec[4] >= COLL_FAR){
-        if(checkVec[4] == COLL_CLOSE){
+    else if(checkVec[4] >= DANGER_FAR){
+        if(checkVec[4] == DANGER_CLOSE){
         _escapeCount = ESCAPE_REV;
         _escapeDist = 0.8*_defRevDist;
         _escapeAngle = 1.25*_defModTurn;
@@ -69,16 +69,16 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
         _escapeAngle = 1.0*_defModTurn;        
         }  
 
-        if(checkVec[3] >= COLL_FAR){ // If the right laser is tripped as well then we are in a corner, do a 180
+        if(checkVec[3] >= DANGER_FAR){ // If the right laser is tripped as well then we are in a corner, do a 180
         _escapeAngle = 180.0 + _getRandTurnDir()*float(random(0,45));         
         }
-        else if(checkVec[2] >= COLL_FAR){ // If the ultrasonic sensor is tripped as well then turn harder
+        else if(checkVec[2] >= DANGER_FAR){ // If the ultrasonic sensor is tripped as well then turn harder
         _escapeAngle = -1.0*_defHardTurn;
         }
     }
     // 3) US: check far (norev,+/-45deg), check close (rev,+/-90deg)
-    else if(checkVec[2] >= COLL_FAR){
-        if(checkVec[2] == COLL_CLOSE){
+    else if(checkVec[2] >= DANGER_FAR){
+        if(checkVec[2] == DANGER_CLOSE){
         _escapeCount = ESCAPE_REV;
         _escapeDist = _defRevDist;
         _escapeAngle = _getRandTurnDir()*_defHardTurn;
@@ -90,8 +90,8 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
         }
     }
     // 6) LSRU: check overhang-close/far 
-    else if(checkVec[5] >= COLL_FAR){
-        if(checkVec[5] == COLL_CLOSE){
+    else if(checkVec[5] >= DANGER_FAR){
+        if(checkVec[5] == DANGER_CLOSE){
         _escapeCount = ESCAPE_REV;
         _escapeDist = _defRevDist;
         _escapeAngle = _getRandTurnDir()*_defHardTurn;

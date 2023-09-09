@@ -6,8 +6,6 @@
 The task ? class is part of the PetBot (PB) program. It is used to...
 
 Author: Lloyd Fletcher
-Date Created: 12th December 2021
-Date Edited:  12th December 2021 
 */
 
 #ifndef TASKPICKEDUP_H

@@ -87,10 +87,13 @@ uint8_t LaserManager::getColCodeU(){
 }
 
 uint8_t LaserManager::getColCodeD(){
-    return _getColCode(&_laserD,_downColDistClose,_downColDistFar,
+    return _getColCliffCode(&_laserD,_downColDistClose,_downColDistFar,
         _downCliffDistClose,_downCliffDistFar);
 }
 
+uint8_t LaserManager::getColCodeA(){
+    return _getCliffCode(&_laserA,_altDistClose,_altDistFar);
+}
 
 //---------------------------------------------------------------------------
 // HELPER Functions
@@ -150,30 +153,39 @@ void LaserManager::_updateUpDownLSRs(){
 uint8_t LaserManager::_getColCode(LaserRanger* laser,
         int16_t colClose,int16_t colFar){
 
-    if(laser->getRange() <= colClose){return COLL_CLOSE;}
-    else if(laser->getRange() <= colFar){return COLL_FAR;}
-    else{return 0;}       
+    if(laser->getRange() <= colClose){return DANGER_CLOSE;}
+    else if(laser->getRange() <= colFar){return DANGER_FAR;}
+    else{return DANGER_NONE;}       
 }   
 
 //-----------------------------------------------------------------------------
 uint8_t LaserManager::_getColCode(LaserRanger* laser,
         int16_t colClose,int16_t colFar,int16_t colSlowDown){
 
-    if(laser->getRange() <= colClose){return COLL_CLOSE;}
-    else if(laser->getRange() <= colFar){return COLL_FAR;}
-    else if(laser->getRange() <= colSlowDown){return COLL_SLOWD;} 
-    else{return 0;}       
+    if(laser->getRange() <= colClose){return DANGER_CLOSE;}
+    else if(laser->getRange() <= colFar){return DANGER_FAR;}
+    else if(laser->getRange() <= colSlowDown){return DANGER_SLOWD;} 
+    else{return DANGER_NONE;}       
+} 
+
+//-----------------------------------------------------------------------------
+uint8_t LaserManager::_getCliffCode(LaserRanger* laser,
+        int16_t cliffClose,int16_t cliffFar){
+
+    if(laser->getRange() >= cliffClose){return DANGER_FAR;}
+    else if(laser->getRange() >= cliffFar){return DANGER_CLOSE;}
+    else{return DANGER_NONE;}       
 }   
 
 //----------------------------------------------------------------------------- 
-uint8_t LaserManager::_getColCode(LaserRanger* laser,
+uint8_t LaserManager::_getColCliffCode(LaserRanger* laser,
         int16_t colClose,int16_t colFar,
         int16_t cliffClose, int16_t cliffFar){
     
-    if(laser->getRange() >= cliffClose){return COLL_CLOSE;}
-    else if(laser->getRange() <= colClose){return COLL_CLOSE;}
-    else if(laser->getRange() <= colFar){return COLL_FAR;}
-    else if(laser->getRange() >= cliffFar){return COLL_FAR;}
-    else{return 0;}
+    if(laser->getRange() >= cliffClose){return DANGER_FAR;}
+    else if(laser->getRange() <= colClose){return DANGER_CLOSE;}
+    else if(laser->getRange() <= colFar){return DANGER_FAR;}
+    else if(laser->getRange() >= cliffFar){return DANGER_CLOSE;}
+    else{return DANGER_NONE;}
 }
     

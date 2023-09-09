@@ -27,7 +27,7 @@
 #include "src/Task.h"
 #include "src/Timer.h"
 #include "src/I2CDataSender.h"
-#include "src/SensorIMU.h"
+#include "src/IMUSensor.h"
 #include "src/Navigation.h"
 // Internal Classes - Tasks
 #include "src/TaskDance.h"
@@ -706,11 +706,11 @@ void DEBUG_PrintColFlags(){
   
   Serial.print(F("Lasers: "));
   Serial.print(F("L="));
-  Serial.print(collisionObj.getColLSRFlagL());
+  //Serial.print(collisionObj.getColLSRFlagL());
   Serial.print(F(",R="));
-  Serial.print(collisionObj.getColLSRFlagR());
+  //Serial.print(collisionObj.getColLSRFlagR());
   Serial.print(F(",B="));
-  Serial.print(collisionObj.getColLSRFlagB());
+  //Serial.print(collisionObj.getColLSRFlagB());
   Serial.println();     
 }
 
@@ -724,31 +724,31 @@ void DEBUG_PrintAllRanges(){
   Serial.println(F(" mm"));
   
   Serial.print(F("LSR,L: "));
-  Serial.print(collisionObj.getColLSRFlagL());
+  //Serial.print(collisionObj.getColLSRFlagL());
   Serial.print(F(" , "));
   Serial.print(collisionObj.getLSRRangeL());
   Serial.println(F(" mm"));
   
   Serial.print(F("LSR,R: "));
-  Serial.print(collisionObj.getColLSRFlagR());
+  //Serial.print(collisionObj.getColLSRFlagR());
   Serial.print(F(" , "));
   Serial.print(collisionObj.getLSRRangeR());
   Serial.println(F(" mm"));
   
   Serial.print(F("LSR,A: "));
-  Serial.print(collisionObj.getColLSRFlagB());
+  //Serial.print(collisionObj.getColLSRFlagB());
   Serial.print(F(" , "));
-  Serial.print(collisionObj.getLSRRangeAlt());
+  Serial.print(collisionObj.getLSRRangeA());
   Serial.println(F(" mm"));
   
   Serial.print(F("LSR,U: "));
-  Serial.print(collisionObj.getColLSRFlagU());
+  //Serial.print(collisionObj.getColLSRFlagU());
   Serial.print(F(" , "));
   Serial.print(collisionObj.getLSRRangeU());
   Serial.println(F(" mm"));
   
   Serial.print(F("LSR,D: "));
-  Serial.print(collisionObj.getColLSRFlagD());
+  //Serial.print(collisionObj.getColLSRFlagD());
   Serial.print(F(" , "));
   Serial.print(collisionObj.getLSRRangeD());
   Serial.println(F(" mm"));

@@ -45,8 +45,8 @@ void LaserRanger::startRange(){
     _rangeFlag = false;
 }
 
-void LaserRanger::updateRange(){
-    if(!_isEnabled){return;}
+bool LaserRanger::updateRange(){
+    if(!_isEnabled){return false;}
     
     if(_laserObj.isRangeComplete() && !_rangeFlag){
         _rangeTimeout = _laserObj.timeoutOccurred();
@@ -55,6 +55,10 @@ void LaserRanger::updateRange(){
         _range = _laserObj.readRangeResult();
         if(_range <= _rangeLim){_range = -1;}
         _rangeFlag = true;
+        return true;
+    }
+    else{
+        return false;
     }
 }
 
