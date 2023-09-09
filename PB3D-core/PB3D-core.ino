@@ -11,7 +11,6 @@
 // External Classes - Sensor and Module Libraries
 #include <Adafruit_MotorShield.h>
 #include <Adafruit_NeoPixel_ZeroDMA.h>
-#include <Ultrasonic.h> // Grove ultrasonic sensor
 
 // Internal Classes - Basic Functions
 #include "src/CollisionManager.h"
@@ -87,7 +86,7 @@ Adafruit_NeoPixel_ZeroDMA leds = Adafruit_NeoPixel_ZeroDMA(
   MOOD_NUMPIX, MOOD_PIN, NEO_GRB + NEO_KHZ800);
 
 // ULTRASONIC SENSOR
-Ultrasonic ultrasonicSens(COLL_USSENS);
+//Ultrasonic ultrasonicSens(COLL_USSENS);
 
 // MOTORS - Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
@@ -108,7 +107,7 @@ Encoder encoderR = Encoder(encPinAR,encPinBR);
 Move moveObj = Move(&AFMS,&encoderL,&encoderR);
 Mood moodObj = Mood(&leds);
 Task taskObj = Task(&leds);
-CollisionManager collisionObj = CollisionManager(&moodObj,&taskObj,&moveObj,&ultrasonicSens);
+CollisionManager collisionObj = CollisionManager(&moodObj,&taskObj,&moveObj);
 
 // Sensors, Actuators and Comms
 Speaker speakerObj = Speaker();
@@ -701,7 +700,7 @@ void DEBUG_PrintColFlags(){
   Serial.println();
       
   Serial.print(F("Ultrasonic: "));
-  Serial.print(collisionObj.getColUSFlag());
+  //Serial.print(collisionObj.getColUSFlag());
   Serial.println();
   
   Serial.print(F("Lasers: "));
@@ -718,7 +717,7 @@ void DEBUG_PrintAllRanges(){
   Serial.println();
   Serial.println(F("------------------------------"));
   Serial.print(F("US: "));
-  Serial.print(collisionObj.getColUSFlag());
+  //Serial.print(collisionObj.getColUSFlag());
   Serial.print(F(" , "));
   Serial.print(collisionObj.getUSRangeMM());
   Serial.println(F(" mm"));

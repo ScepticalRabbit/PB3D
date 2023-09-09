@@ -1,26 +1,18 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS: TEMPLATE
+// CLASS: LaserSensor
 //---------------------------------------------------------------------------
 /*
 The task X class is part of the PetBot (PB) program. It is used to...
 
 Author: Lloyd Fletcher
 */
-#include "LaserRanger.h"
-
-//---------------------------------------------------------------------------
-// CONSTRUCTOR: pass in pointers to main objects and other sensors
-//---------------------------------------------------------------------------
-// LaserRanger::LaserRanger(uint8_t inAddr, char inDescript){
-//     _address = inAddr;
-//     _descriptor = inDescript;
-// }
+#include "LaserSensor.h"
 
 //---------------------------------------------------------------------------
 // BEGIN: called during SETUP
 //---------------------------------------------------------------------------
-void LaserRanger::begin(){
+void LaserSensor::begin(){
     delay(_resetDelay);
     if(!_laserObj.begin(_address)){
         Serial.print(F("COLLISION: FAILED to init laser "));
@@ -38,14 +30,14 @@ void LaserRanger::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during LOOP
 //---------------------------------------------------------------------------
-void LaserRanger::startRange(){
+void LaserSensor::startRange(){
     if(!_isEnabled){return;}
 
     _laserObj.startRange();
     _rangeFlag = false;
 }
 
-bool LaserRanger::updateRange(){
+bool LaserSensor::updateRange(){
     if(!_isEnabled){return false;}
     
     if(_laserObj.isRangeComplete() && !_rangeFlag){
@@ -53,7 +45,7 @@ bool LaserRanger::updateRange(){
         if(_rangeTimeout){return false;}
 
         _range = _laserObj.readRangeResult();
-        if(_range <= _rangeLim){_range = -1;}
+        if(_range <= _rangeLim){_range = _rangeLim;}
         _rangeFlag = true;
         return true;
     }
@@ -61,10 +53,3 @@ bool LaserRanger::updateRange(){
         return false;
     }
 }
-
-//---------------------------------------------------------------------------
-// Get, set and reset
-//---------------------------------------------------------------------------
-
-
-

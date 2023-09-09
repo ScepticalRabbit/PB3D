@@ -1,55 +1,43 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS: TEMPLATE
+// CLASS: UltrasonicSensor
 //---------------------------------------------------------------------------
 /*
 The task X class is part of the PetBot (PB) program. It is used to...
 
 Author: Lloyd Fletcher
 */
-#include "ClassTemplate.h"
+#include "UltrasonicSensor.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
 //---------------------------------------------------------------------------
-BumperSensor::BumperSensor(Collision* inCollision, Mood* inMood, Task* inTask, Move* inMove, 
-            Speaker* inSpeaker){
-_collisionObj = inCollision;
-_moodObj = inMood;
-_taskObj = inTask;
-_moveObj = inMove;
-_speakerObj = inSpeaker;
+UltrasonicSensor::UltrasonicSensor(){
+
 }
 
 //---------------------------------------------------------------------------
 // BEGIN: called during SETUP
 //---------------------------------------------------------------------------
-void BumperSensor::begin(){
+void UltrasonicSensor::begin(){
 
 }
 
 //---------------------------------------------------------------------------
 // UPDATE: called during LOOP
 //---------------------------------------------------------------------------
-void BumperSensor::update(){
+void UltrasonicSensor::update(){
     if(!_isEnabled){return;}
 
-    if(_taskObj->getNewTaskFlag()){
-        _startFlag = true;
-    }
-
+    _range = _ultrasonicRanger.MeasureInCentimeters();
+    if(_range <= _colDistLim){_range = 400;}
 }
 
 //---------------------------------------------------------------------------
-// DOSOMETHING - called during the main during decision tree
-//---------------------------------------------------------------------------
-void BumperSensor::doSomething(){
-    if(!_isEnabled){return;}
-
-    if(_startFlag){
-        _startFlag = false;
-    }
-
+uint8_t UltrasonicSensor::getColCode(){
+    if(_range <= _colDistClose){return DANGER_CLOSE;}
+    else if(_range <= _colDistFar){return DANGER_FAR;}
+    else if(_range <= _colDistSlowD){return DANGER_SLOWD;}
+    else{return DANGER_NONE;}
 }
-
 

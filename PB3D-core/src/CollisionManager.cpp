@@ -8,11 +8,10 @@
 //-----------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
 //-----------------------------------------------------------------------------
-CollisionManager::CollisionManager(Mood* inMood, Task* inTask, Move* inMove, Ultrasonic* ultrasonicSens){
+CollisionManager::CollisionManager(Mood* inMood, Task* inTask, Move* inMove){
     _moodObj = inMood;
     _taskObj = inTask;
     _moveObj = inMove;
-    _ultrasonicSens = ultrasonicSens;
 
     _escaper.setMoveObj(inMove);
 }
@@ -22,11 +21,12 @@ CollisionManager::CollisionManager(Mood* inMood, Task* inTask, Move* inMove, Ult
 //-----------------------------------------------------------------------------
 void CollisionManager::begin(){
     // Start the ultrasonic timer  
-    _USTimer.start(0);
-    _BMPRTimer.start(0);
+    _ultrasonicTimer.start(0);
+    _bumperTimer.start(0);
     _slowDownTimer.start(0);
 
-    _laserManager.begin();    
+    _laserManager.begin();
+    _bumpers.begin();    
 }
 
 //-----------------------------------------------------------------------------
@@ -41,25 +41,31 @@ void CollisionManager::update(){
     }
             
     // COLLISION SENSOR: Run ultrasonic ranging, based on update time interval
-    if(_USTimer.finished()){  
-        _USTimer.start(_USUpdateTime);
-        _updateUSRanger();
+    if(_ultrasonicTimer.finished()){  
+        _ultrasonicTimer.start(_ultrasonicUpdateTime);
+        _ultrasonicRanger.update();
     }
 
     // COLLISION SENSOR: Run laser ranging
     _laserManager.update();   
 
     // COLLISION SENSOR: Bumper Switches slaved to Nervous System
-    if(_BMPRTimer.finished()){
-        _BMPRTimer.start(_BMPRUpdateTime);
-        _updateBumpers();
+    if(_bumperTimer.finished()){
+        _bumperTimer.start(_bumperUpdateTime);
+
+        _bumpers.update();
+
+        if(_bumpers.getBumpThresCheck()){
+            _moodObj->decMoodScore();
+            _bumpers.resetBumpCount();
+        }
     }
 
     // COLLISION DETECTION & DECISION
-    // NOTE: this sets the collision flags that control behaviour! 
+    // NOTE: this sets the collision flags that control escape behaviour! 
     if(_checkAllTimer.finished()){
         _checkAllTimer.start(_checkAllInt);
-        _updateCheckVec();
+        _updateCheckVec(); // Sets collision detection flag
 
         if(_collisionSlowDown && _slowDownTimer.finished()){
             _slowDownTimer.start(_slowDownInt);
@@ -96,10 +102,7 @@ bool CollisionManager::getAltFlag(){
 void CollisionManager::resetFlags(){
     _collisionDetected = false;
     _collisionSlowDown = false;
-
-    _collisionUSFlag = false;
-    _collisionBumperFlag = false;
-    _collisionNervSys = B00000000;
+    _bumpers.reset();
 }
 
 
@@ -125,70 +128,18 @@ int8_t CollisionManager::getEscapeTurn(){
     return _escaper.getEscapeTurn(_checkVec);
 }
 
-//-----------------------------------------------------------------------------
-void CollisionManager::_updateUSRanger(){  
-    _USSensRange = _ultrasonicSens->MeasureInCentimeters();
-    if(_USSensRange <= _USColDistLim){_USSensRange = 400;}
-
-    if(_USSensRange <= _USColDistClose){
-        _collisionDetected = true;
-        _collisionUSFlag = true;
-    }
-    else if(_USSensRange <= _USColDistFar){
-        _collisionDetected = true;
-        _collisionUSFlag = true;
-    }
-}
-
-//-----------------------------------------------------------------------------
-void CollisionManager::_updateBumpers(){
-    // Request a byte worth of digital pins from the follower Xiao
-    Wire.requestFrom(ADDR_NERVSYS,1);
-    // Read a byte from the follower
-    byte nervSysFlags = B00000000;
-    while(Wire.available()){
-        nervSysFlags = Wire.read();   
-    }
-    //Serial.println(nervSysFlags,BIN);
-    _collisionNervSys = nervSysFlags;
-
-    if((nervSysFlags & B00000001) == B00000001){
-        //Serial.println("Front Left Bumper");
-        _collisionDetected = true;
-        _collisionBumperFlag = true;
-    }
-    if ((nervSysFlags & B00000010) == B00000010){
-        //Serial.println("Front Right Bumper");
-        _collisionDetected = true;
-        _collisionBumperFlag = true;
-    }
-
-    // If the bumpers are hit too many times decrease mood
-    if(_collisionBumperFlag){
-        _BMPRCount++;
-        if(_BMPRCount >= _BMPRThres){
-        _moodObj->decMoodScore();
-        _BMPRCount = 0;
-        }
-    }
-}
-
 //---------------------------------------------------------------------------
 void CollisionManager::_updateCheckVec(){
     // uint8_t _checkVec[7] = {BL,BR,US,LL,LR,LU,LD}
     // NOTE: if's have to have most severe case first!
 
-    // Bumpers
-    if(((_collisionNervSys & B00000001) == B00000001)){_checkVec[0] = DANGER_CLOSE;}
-    else{_checkVec[0] = 0;}
-    if(((_collisionNervSys & B00000010) == B00000010)){_checkVec[1] = DANGER_CLOSE;}
-    else{_checkVec[1] = 0;}
+    // Bumper - Left
+    _checkVec[0] = _bumpers.getColCode(0);
+    // Bumper - Right
+    _checkVec[1] = _bumpers.getColCode(1);
 
     // Ultrasonic Ranger
-    if(_USSensRange <= _USColDistClose){_checkVec[2] = DANGER_CLOSE;}
-    else if(_USSensRange <= _USColDistFar){_checkVec[2] = DANGER_FAR;}
-    else if(_USSensRange <= _USColDistSlowD){_checkVec[2] = DANGER_SLOWD;}
-    else{_checkVec[2] = 0;}
+    _checkVec[2] = _ultrasonicRanger.getColCode();
 
     // Laser - Left
     _checkVec[3] = _laserManager.getColCodeL();
@@ -222,7 +173,7 @@ void CollisionManager::_updateEscapeDecision(){
     for(uint8_t ii=0;ii<_checkNum;ii++){
         _lastCol.checkVec[ii] = _checkVec[ii];
     }
-    _lastCol.USRange = _USSensRange*10;
+    _lastCol.USRange = _ultrasonicRanger.getRangeMM();
     _lastCol.LSRRangeL = _laserManager.getRangeL();
     _lastCol.LSRRangeR = _laserManager.getRangeR();
     _lastCol.LSRRangeU = _laserManager.getRangeU();

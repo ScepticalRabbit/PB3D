@@ -153,7 +153,7 @@ void LaserManager::_updateUpDownLSRs(){
 }
 
 //-----------------------------------------------------------------------------
-uint8_t LaserManager::_getColCode(LaserRanger* laser,
+uint8_t LaserManager::_getColCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar){
 
     if(laser->getRange() <= colClose){return DANGER_CLOSE;}
@@ -162,7 +162,7 @@ uint8_t LaserManager::_getColCode(LaserRanger* laser,
 }   
 
 //-----------------------------------------------------------------------------
-uint8_t LaserManager::_getColCode(LaserRanger* laser,
+uint8_t LaserManager::_getColCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar,int16_t colSlowDown){
 
     if(laser->getRange() <= colClose){return DANGER_CLOSE;}
@@ -172,7 +172,7 @@ uint8_t LaserManager::_getColCode(LaserRanger* laser,
 } 
 
 //-----------------------------------------------------------------------------
-uint8_t LaserManager::_getCliffCode(LaserRanger* laser,
+uint8_t LaserManager::_getCliffCode(LaserSensor* laser,
         int16_t cliffClose,int16_t cliffFar){
 
     if(laser->getRange() >= cliffClose){return DANGER_FAR;}
@@ -181,7 +181,7 @@ uint8_t LaserManager::_getCliffCode(LaserRanger* laser,
 }   
 
 //----------------------------------------------------------------------------- 
-uint8_t LaserManager::_getColCliffCode(LaserRanger* laser,
+uint8_t LaserManager::_getColCliffCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar,
         int16_t cliffClose, int16_t cliffFar){
     

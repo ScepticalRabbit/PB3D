@@ -23,21 +23,12 @@ Author: Lloyd Fletcher
 #include "CollisionDangerFlags.h"
 #include "CollisionEscaper.h"
 #include "LaserManager.h"
+#include "BumperSensor.h"
+#include "UltrasonicSensor.h"
 
 //-----------------------------------------------------------------------------
 // DEFINITIONS
 //-----------------------------------------------------------------------------
-// Collision flags and sub-board address
-#define ADDR_NERVSYS 9 
-#define COLL_USSENS 7
-
-// Define addresses for all laser sensors
-#define ADDR_LSR_L 0x31
-#define ADDR_LSR_R 0x32
-#define ADDR_LSR_A 0x33
-#define ADDR_LSR_U 0x34
-#define ADDR_LSR_D 0x35
-
 // Address for digital out 
 #ifndef ADDR_FOLLBOARD
   #define ADDR_FOLLBOARD 0x11
@@ -66,7 +57,7 @@ public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
   //---------------------------------------------------------------------------
-  CollisionManager(Mood* inMood, Task* inTask, Move* inMove, Ultrasonic* ultrasonicSens);
+  CollisionManager(Mood* inMood, Task* inTask, Move* inMove);
 
   //---------------------------------------------------------------------------
   // BEGIN: called during SETUP 
@@ -84,6 +75,8 @@ public:
   bool getEnabledFlag(){return _isEnabled;}
   void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
 
+  bool getDetectFlag(){return _collisionDetected;} 
+
   uint16_t getCount(){return _collisionCount;}
   void incCount(){_collisionCount++;}
   void resetCount(){_collisionCount = 0;}
@@ -91,19 +84,10 @@ public:
   bool getBeepBeepFlag(){return _collisionBeepBeepFlag;}
   void setBeepBeepFlag(bool inFlag){_collisionBeepBeepFlag = inFlag;}
 
-  bool getDetectFlag(){return _collisionDetected;} 
-  bool getBumperFlag(){return _collisionBumperFlag;}
-  // bool getColLSRFlagL(){return _collisionLSRFlagL;}
-  // bool getColLSRFlagR(){return _collisionLSRFlagR;}
-  // bool getColLSRFlagB(){return _collisionLSRFlagB;}
-  // bool getColLSRFlagU(){return _collisionLSRFlagU;}
-  // bool getColLSRFlagD(){return _collisionLSRFlagD;}
+  bool getBumperFlag(){return _bumpers.getBumpFlag();}
   
-  bool getColUSFlag(){return _collisionUSFlag;}
-  
-
-  int16_t getUSRange(){return _USSensRange;}
-  int16_t getUSRangeMM(){return (_USSensRange*10);}
+  int16_t getUSRange(){return _ultrasonicRanger.getRange();}
+  int16_t getUSRangeMM(){return _ultrasonicRanger.getRangeMM();}
   int16_t getLSRRangeL(){return _laserManager.getRangeL();}
   int16_t getLSRRangeR(){return _laserManager.getRangeR();}
   int16_t getLSRRangeA(){return _laserManager.getRangeA();}
@@ -126,29 +110,13 @@ private:
   //---------------------------------------------------------------------------
   // Check collision detection sensors
   //---------------------------------------------------------------------------
-  void _updateUSRanger();
-  void _updateBumpers();
-  // void _updateColLSRs();
-  // void _updateAltLSR();
-  // void _updateUpDownLSRs();
+  //void _updateUSRanger();
 
   //---------------------------------------------------------------------------
   // Check all ranges and escape decision tree
   //---------------------------------------------------------------------------
   void _updateCheckVec();
   void _updateEscapeDecision(); // Escape decision tree
-
-  //---------------------------------------------------------------------------
-  // LASER INIT: set all I2C addresses
-  //---------------------------------------------------------------------------
-  // void _initLSR(byte sendByte, Adafruit_VL53L0X* LSRObj, bool* LSROn,
-  //               uint8_t LSRAddr,char LSRStr);
-  // void _setLSRAddrs();
-
-  //---------------------------------------------------------------------------
-  // Helper functions
-  //---------------------------------------------------------------------------
-  // void _sendByteWithI2C(byte inByte);
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
@@ -166,16 +134,16 @@ private:
 
   uint16_t _halfBodyLengMM = 80;
 
-  bool _collisionUSFlag = false;  
-  byte _collisionNervSys = B00000000;
-  bool _collisionBumperFlag = false;
-
+  //bool _collisionUSFlag = false;  
+  
   bool _collisionBeepBeepFlag = false;
   uint16_t _collisionCount = 0;
 
   // Helper Objects
   CollisionEscaper _escaper;
   LaserManager _laserManager = LaserManager();
+  UltrasonicSensor _ultrasonicRanger = UltrasonicSensor();
+  BumperSensor _bumpers = BumperSensor();
 
   // Check flags for all collision sensors
   uint8_t _checkNum = 7;
@@ -187,20 +155,12 @@ private:
   uint16_t _slowDownInt = 500;
   Timer _slowDownTimer = Timer();
 
-  // Bumper variables
-  int8_t _BMPRCount = 0, _BMPRThres = 13;
-  int16_t _BMPRUpdateTime = 101;
-  Timer _BMPRTimer = Timer();
+  // Collision Sensor Timers
+  int16_t _bumperUpdateTime = 101;
+  Timer _bumperTimer = Timer();
+  int16_t _ultrasonicUpdateTime = 101;  // ms, set to prime number (100+timeout)
+  Timer _ultrasonicTimer = Timer();
   
-  // Ultrasonic ranger variables
-  int16_t _USSensRange = 1000;
-  int16_t _USColDistClose = _halfBodyLengMM/10; // cm
-  int16_t _USColDistFar = 2*_halfBodyLengMM/10;  // cm  
-  int16_t _USColDistSlowD = 4*_halfBodyLengMM/10; // cm
-  int16_t _USColDistLim = 4;    // cm 
-  int16_t _USUpdateTime = 101;  // ms, set to prime number (100+timeout)
-  Timer _USTimer = Timer();
-
   // Data structure for info on last collision
   lastCollision_t _lastCol;
 };

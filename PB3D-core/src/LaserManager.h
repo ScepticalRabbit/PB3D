@@ -16,7 +16,7 @@ Author: Lloyd Fletcher
 
 // Internal libraries
 #include "Timer.h"
-#include "LaserRanger.h"
+#include "LaserSensor.h"
 #include "CollisionDangerFlags.h"
 
 // Definitions
@@ -72,13 +72,13 @@ private:
     void _updateAltLSR();
     void _updateUpDownLSRs();
 
-    uint8_t _getColCode(LaserRanger* laser,
+    uint8_t _getColCode(LaserSensor* laser,
                     int16_t colClose,int16_t colFar);    
-    uint8_t _getColCode(LaserRanger* laser,
+    uint8_t _getColCode(LaserSensor* laser,
                     int16_t colClose,int16_t colFar,int16_t colSlowDown);    
-    uint8_t _getCliffCode(LaserRanger* laser,
+    uint8_t _getCliffCode(LaserSensor* laser,
                     int16_t cliffClose,int16_t cliffFar);     
-    uint8_t _getColCliffCode(LaserRanger* laser,
+    uint8_t _getColCliffCode(LaserSensor* laser,
                     int16_t colClose,int16_t colFar,
                     int16_t cliffClose, int16_t cliffFar);
     
@@ -87,11 +87,11 @@ private:
     // CLASS VARIABLES
     //---------------------------------------------------------------------------
     // Objects for the laser rangers
-    LaserRanger _laserL = LaserRanger(ADDR_LSR_L,'L');
-    LaserRanger _laserR = LaserRanger(ADDR_LSR_R,'R');
-    LaserRanger _laserA = LaserRanger(ADDR_LSR_A,'A');
-    LaserRanger _laserU = LaserRanger(ADDR_LSR_U,'U');
-    LaserRanger _laserD = LaserRanger(ADDR_LSR_D,'D');
+    LaserSensor _laserL = LaserSensor(ADDR_LSR_L,'L');
+    LaserSensor _laserR = LaserSensor(ADDR_LSR_R,'R');
+    LaserSensor _laserA = LaserSensor(ADDR_LSR_A,'A');
+    LaserSensor _laserU = LaserSensor(ADDR_LSR_U,'U');
+    LaserSensor _laserD = LaserSensor(ADDR_LSR_D,'D');
 
     // LASER ranger variables
     uint16_t _halfBodyLengMM = 80;
@@ -104,9 +104,6 @@ private:
     int16_t _colDistLim = 40;    // mm  
     int16_t _altDistClose = 80;  // mm
     int16_t _altDistFar = 180;   // mm
-    // bool _collisionLSRFlagL = false;
-    // bool _collisionLSRFlagR = false;
-    // bool _collisionLSRFlagB = false;
 
     // LSR - UP - DONT CHANGE!!!
     int16_t _upColDistFar = 220;    // mm

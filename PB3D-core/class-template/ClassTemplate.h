@@ -22,12 +22,12 @@ Author: Lloyd Fletcher
 //---------------------------------------------------------------------------
 // CLASS TEMPLATE: 
 //---------------------------------------------------------------------------
-class ClassTemplate{
+class BumperSensor{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
   //---------------------------------------------------------------------------
-  ClassTemplate(Collision* inCollision, Mood* inMood, Task* inTask, Move* inMove, 
+  BumperSensor(Collision* inCollision, Mood* inMood, Task* inTask, Move* inMove, 
                 Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
@@ -47,6 +47,7 @@ public:
 
   //---------------------------------------------------------------------------
   // Get, set and reset
+  //---------------------------------------------------------------------------
   bool getEnabledFlag(){return _isEnabled;}
   void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
 
