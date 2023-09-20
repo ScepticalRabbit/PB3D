@@ -55,7 +55,7 @@ public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
   //---------------------------------------------------------------------------
-  CollisionManager(MoodManager* inMood, Task* inTask, Move* inMove);
+  CollisionManager(MoodManager* inMood, Task* inTask, MoveManager* inMove);
 
   //---------------------------------------------------------------------------
   // BEGIN: called during SETUP 
@@ -119,7 +119,7 @@ private:
   // Main object and sensor pointers
   MoodManager* _moodObj = NULL;
   Task* _taskObj = NULL;
-  Move* _moveObj = NULL;
+  MoveManager* _moveObj = NULL;
   
   // Collision management variables
   bool _isEnabled = true;

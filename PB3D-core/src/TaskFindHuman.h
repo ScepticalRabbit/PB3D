@@ -25,7 +25,7 @@ class TaskFindHuman{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskFindHuman(MoodManager* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker, 
+  TaskFindHuman(MoodManager* inMood, Task* inTask, MoveManager* inMove, Speaker* inSpeaker, 
                 TaskInteract* inTInt){
     _moodObj = inMood;
     _taskObj = inTask;
@@ -175,7 +175,7 @@ private:
   // MAIN OBJECT POINTERS
   MoodManager* _moodObj;
   Task* _taskObj;
-  Move* _moveObj;
+  MoveManager* _moveObj;
   Speaker* _speakerObj;
   TaskInteract* _taskInteractObj;
   // Timers

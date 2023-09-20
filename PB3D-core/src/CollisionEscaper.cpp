@@ -2,7 +2,7 @@
 #include "CollisionDangerFlags.h"
 
 //-----------------------------------------------------------------------------
-void CollisionEscaper::setMoveObj(Move* inMove){
+void CollisionEscaper::setMoveObj(MoveManager* inMove){
     _moveObj = inMove;
 }
 

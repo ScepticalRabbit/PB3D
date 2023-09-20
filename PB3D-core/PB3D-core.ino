@@ -104,7 +104,7 @@ Encoder encoderL = Encoder(encPinAL,encPinBL);
 Encoder encoderR = Encoder(encPinAR,encPinBR);
 
 // BASIC CLASSES
-Move moveObj = Move(&AFMS,&encoderL,&encoderR);
+MoveManager moveObj = MoveManager(&AFMS,&encoderL,&encoderR);
 MoodManager moodObj = MoodManager(&leds);
 Task taskObj = Task(&leds);
 CollisionManager collisionObj = CollisionManager(&moodObj,&taskObj,&moveObj);

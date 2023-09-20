@@ -25,7 +25,7 @@ class TaskInteract{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskInteract(MoodManager* inMood, Task* inTask, Move* inMove, 
+  TaskInteract(MoodManager* inMood, Task* inTask, MoveManager* inMove, 
                Speaker* inSpeaker, TaskDance* inDance, PatSensor* inPatSens){
     _moodObj = inMood;
     _taskObj = inTask;
@@ -185,7 +185,7 @@ private:
   // MAIN OBJECT POINTERS
   MoodManager* _moodObj;
   Task* _taskObj;
-  Move* _moveObj;
+  MoveManager* _moveObj;
   TaskDance* _taskDanceObj;
   Speaker* _speakerObj;
   PatSensor* _patSensObj; 

@@ -20,7 +20,7 @@ class TaskRest{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskRest(MoodManager* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker){
+  TaskRest(MoodManager* inMood, Task* inTask, MoveManager* inMove, Speaker* inSpeaker){
     _moodObj = inMood;
     _taskObj = inTask;
     _moveObj = inMove;
@@ -91,7 +91,7 @@ private:
   // MAIN OBJECT POINTERS
   MoodManager* _moodObj;
   Task* _taskObj;
-  Move* _moveObj;
+  MoveManager* _moveObj;
   Speaker* _speakerObj;
 
   // Timers

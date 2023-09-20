@@ -1,13 +1,11 @@
 //----------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS: MOVE
+// CLASS: MoveManager Manager
 //----------------------------------------------------------------------------
 /*
-The task class is part of the PetBot (PB) program. It used to...
+The move manager class is part of the PetBot (PB) program. It used to...
 
 Author: Lloyd Fletcher
-Date Created: 28th Aug. 2021
-Date Edited:  28th Aug. 2021
 */
 
 #ifndef MOVE_H
@@ -53,128 +51,37 @@ Date Edited:  28th Aug. 2021
 // Increment with last code above +1
 #define MOVE_C_COUNT 5 
 
-class Move{
+class MoveManager{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  Move(Adafruit_MotorShield* AFMS, Encoder* encL, Encoder* encR){
-      _AFMS = AFMS;
-      _encoder_L = encL;
-      _encoder_R = encR;
-  }
+  //---------------------------------------------------------------------------
+  MoveManager(Adafruit_MotorShield* AFMS, Encoder* encL, Encoder* encR);
   
   //---------------------------------------------------------------------------
   // BEGIN: called during SETUP  
-  void begin(){
-    // Start the motor shield object 
-    _AFMS->begin();  // create with the default frequency 1.6KHz
-    // M1 is the right motor, M2 is the left motor
-    _motorR = _AFMS->getMotor(1);
-    _motorL = _AFMS->getMotor(2);
-    // Set the speed to start, from 0 (off) to 255 (max  speed)
-    _motorR->setSpeed(_defForwardPWR);
-    _motorR->run(FORWARD);
-    _motorR->run(RELEASE);
-    _motorL->setSpeed(_defForwardPWR);
-    _motorL->run(FORWARD);
-    _motorL->run(RELEASE);
-  
-    // Randomly generate a move type and start the timer
-    _moveCompound = random(0,_moveCompoundCount);
-    _moveUpdateTime = random(_moveUpdateMinTime,_moveUpdateMaxTime);
-    _moveTimer.start(_moveUpdateTime);
-    _subMoveTimer.start(0);
-    _lookTimer.start(0);
-    _timeoutTimer.start(0);
-
-    // Start/setup the encoders
-    _encoder_L->begin();
-    _encoder_R->begin();
-    // Start the speed PIDs
-    _speedPID_L.begin();
-    _speedPID_R.begin();
-    _speedPID_L.setOutputLimits(_minPWR, 255.0);
-    _speedPID_R.setOutputLimits(_minPWR, 255.0);
-    _speedPID_L.setSampleTime(_encoder_L->getSpeedUpdateTime());
-    _speedPID_R.setSampleTime(_encoder_R->getSpeedUpdateTime()); 
-    // Start the position PIDs
-    _posPID_L.begin();
-    _posPID_R.begin();
-    _posPID_L.setOutputLimits(-1.0*_posPIDMaxSpeed,_posPIDMaxSpeed);
-    _posPID_R.setOutputLimits(-1.0*_posPIDMaxSpeed,_posPIDMaxSpeed);
-    _posPID_L.setSampleTime(_encoder_L->getSpeedUpdateTime()*2);
-    _posPID_R.setSampleTime(_encoder_R->getSpeedUpdateTime()*2); 
-  }
+  //---------------------------------------------------------------------------
+  void begin();
 
   //---------------------------------------------------------------------------
-  // UPDATE
-  void updateMove(){
-    if(_moveTimer.finished()){
-      _moveCompound = random(0,_moveCompoundCount);
-      _updateCompoundMove();
-    }
-  }
-
-  void updateMove(int8_t inMoveType){
-    if(_moveTimer.finished()){
-      _moveCompound = inMoveType;
-      _updateCompoundMove();
-    }
-  }
+  // UPDATE: Called during LOOP
+  //---------------------------------------------------------------------------
+  void updateMove();
+  void updateMove(int8_t inMoveType);
 
   //---------------------------------------------------------------------------
-  // GO
-  void go(){
-    if(_moveCompound == MOVE_C_ZIGZAG){
-      zigZag();
-    }
-    else if(_moveCompound == MOVE_C_SPIRAL){
-      spiral();  
-    }
-    else if(_moveCompound == MOVE_C_CIRCLE){
-      circle();
-    }
-    else if(_moveCompound == MOVE_C_LOOK){
-      lookAround();
-    }
-    else{
-      forward();
-    }
-  }
+  // GO: Called during explore or other task to randomise movements
+  //---------------------------------------------------------------------------
+   void go();
 
-  //============================================================================
-  // MOVE OBJ - Type/Speed GET,SET and RESET functions
-  //============================================================================
+  //---------------------------------------------------------------------------
+  // GET,SET and RESET functions: Inline
+  //---------------------------------------------------------------------------
   // MOVE TYPE - Get/Set
   int8_t getBasicMove(){return _moveBasic;}
   int8_t getCompoundMove(){return _moveCompound;}
   void setCompoundMove(int8_t inMoveCode){_moveCompound = inMoveCode;}
 
-  void setMoveControl(int8_t inMoveControl){
-    if(inMoveControl == MOVE_CONTROL_SPEED){
-      // Use PIDs to control speed in mm/s
-      _moveControl = MOVE_CONTROL_SPEED;
-    }
-    else{
-      // Bypass PIDs and directly set motor PWM output between 0-255
-      _moveControl = MOVE_CONTROL_POWER;
-    }
-  }
-
-  void changeCircDir(){
-    if(_spiralDirection == MOVE_B_LEFT){
-      _spiralDirection = MOVE_B_RIGHT;
-    }
-    else{
-      _spiralDirection = MOVE_B_LEFT;
-    }
-    if(_circleDirection == MOVE_B_LEFT){
-      _circleDirection = MOVE_B_RIGHT;
-    }
-    else{
-      _circleDirection = MOVE_B_LEFT;
-    }
-  }
 
   // MOTOR POWER CONTROL - Get/Set
   uint8_t getMinPower(){return _minPWR;}
@@ -188,12 +95,6 @@ public:
   void setBackPWR(uint8_t inPower){_curBackPWR = inPower;}
   void setTurnPWR(uint8_t inPower){_curTurnPWR = inPower;}
   
-  void setPWRByDiff(int8_t inDiff){
-    _curForwardPWR= _defForwardPWR+inDiff;
-    _curBackPWR = _defBackPWR+inDiff;
-    _curTurnPWR = _defTurnPWR+inDiff;  
-  }
-
   // MOTOR SPEED CONTROL - Get/Set
   float getMinSpeed(){return _minSpeed;}
   float getMaxSpeed(){return _maxSpeed;}
@@ -206,17 +107,6 @@ public:
   void setBackSpeed(float inSpeed){_curBackSpeed = -1.0*fabs(inSpeed);}
   void setTurnSpeed(float inSpeed){_curTurnSpeed = fabs(inSpeed);}
 
-  void setSpeedByColFlag(bool obstacleClose){
-    if(obstacleClose){_speedColFact = _speedColTrue;}
-    else{_speedColFact = _speedColFalse;}
-    _updateCurrSpeed();    
-  }
-
-  void setSpeedByMoodFact(float inFact){
-    _speedMoodFact = inFact;
-    _updateCurrSpeed();
-  }
-
   // ENCODERS - Get/Set
   int32_t getEncCountL(){return _encoder_L->getCount();}
   int32_t getEncCountR(){return _encoder_R->getCount();}
@@ -228,7 +118,18 @@ public:
   void resetMoveTimer(){_moveTimer.start(0);}
   void resetSubMoveTimer(){_subMoveTimer.start(0);}
 
+  //---------------------------------------------------------------------------
+  // GET,SET and RESET functions: full implementation
+  //---------------------------------------------------------------------------
+  void setPWRByDiff(int8_t inDiff);
+  void setSpeedByColFlag(bool obstacleClose);
+  void setMoveControl(int8_t inMoveControl);
+  void changeCircDir();
+  void setSpeedByMoodFact(float inFact);
+
+  //---------------------------------------------------------------------------
   // CALCULATORS
+  //--------------------------------------------------------------------------- 
   uint16_t calcTimeout(float inSpeed, float inDist){
     float absSpeed = abs(inSpeed);
     float absDist = abs(inDist);
@@ -239,21 +140,18 @@ public:
       timeout = timeToDist;
     }
     else{ // Finish moving after we finish accelerating
-      //float distWhileAccel = 0.5*_speedTimeoutAccel*timeToVel*timeToVel; // s=1/2*a*t^2
-      //float distRemaining = inDist-distWhileAccel;
-      //float timeAtConstVel = distRemaining/inSpeed;
       float timeAtConstVel = (absDist-0.5*_speedTimeoutAccel*timeToVel*timeToVel)/absSpeed;
       timeout = timeAtConstVel+timeToVel;
     }
     return uint16_t(_speedTimeoutSF*timeout*1000.0); // milliseconds
   }
   
-  //============================================================================
+  //---------------------------------------------------------------------------
   // BASIC MOVEMENT FUNCTIONS - GENERIC (switched by _moveControl var)
-  //============================================================================
+  //---------------------------------------------------------------------------
   
   //----------------------------------------------------------------------------
-  // Move Stop - same regardless of control mode
+  // MoveManager Stop - same regardless of control mode
   void stop(){
     _updateBasicMove(MOVE_B_STOP);
     _motorL->run(RELEASE);
@@ -270,7 +168,7 @@ public:
   }
 
   //----------------------------------------------------------------------------
-  // Move Forward 
+  // MoveManager Forward 
   void forward(){
     if(_moveControl == MOVE_CONTROL_SPEED){
       forwardSPD(_curForwardSpeed);
@@ -1191,16 +1089,18 @@ private:
   // MOVE OBJ - Pointers to external objects
   
   // Adafruit Motor Shield Objects 
-  Adafruit_MotorShield* _AFMS;
-  Adafruit_DCMotor* _motorL;
-  Adafruit_DCMotor* _motorR;
+  Adafruit_MotorShield* _AFMS = NULL;
+  Adafruit_DCMotor* _motorL = NULL;
+  Adafruit_DCMotor* _motorR = NULL;
   
   // Encoder Objects
-  Encoder* _encoder_L;
-  Encoder* _encoder_R;
+  Encoder* _encoder_L = NULL;
+  Encoder* _encoder_R = NULL;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Type and General Variables
+  bool _isEnabled = true;
+
   int8_t _moveControl = MOVE_CONTROL_SPEED;  
   int8_t _moveBasic = MOVE_B_FORWARD;
   int8_t _moveCompound = MOVE_C_STRAIGHT;

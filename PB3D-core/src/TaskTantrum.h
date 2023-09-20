@@ -24,7 +24,7 @@ class TaskTantrum{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskTantrum(MoodManager* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker){
+  TaskTantrum(MoodManager* inMood, Task* inTask, MoveManager* inMove, Speaker* inSpeaker){
     _moodObj = inMood;
     _moveObj = inMove;
     _taskObj = inTask;
@@ -97,7 +97,7 @@ private:
   // MAIN OBJECT POINTERS
   MoodManager* _moodObj;
   Task* _taskObj;
-  Move* _moveObj;
+  MoveManager* _moveObj;
   Speaker* _speakerObj;
   // Timers
   Timer _timerObj1 = Timer();

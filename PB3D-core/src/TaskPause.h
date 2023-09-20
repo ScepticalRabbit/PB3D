@@ -23,7 +23,7 @@ class TaskPause{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPause(CollisionManager* inCollision, Task* inTask, Move* inMove, Speaker* inSpeaker){
+  TaskPause(CollisionManager* inCollision, Task* inTask, MoveManager* inMove, Speaker* inSpeaker){
     _collisionObj = inCollision;
     _taskObj = inTask;
     _moveObj = inMove;
@@ -67,7 +67,7 @@ private:
   CollisionManager* _collisionObj;
   MoodManager* _moodObj;
   Task* _taskObj;
-  Move* _moveObj;
+  MoveManager* _moveObj;
   Speaker* _speakerObj;
 
   // TASK - PAUSE

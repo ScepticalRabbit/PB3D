@@ -30,7 +30,7 @@ class TaskPounce{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPounce(CollisionManager* inCollision, MoodManager* inMood, Task* inTask, Move* inMove, 
+  TaskPounce(CollisionManager* inCollision, MoodManager* inMood, Task* inTask, MoveManager* inMove, 
              Speaker* inSpeaker){
     _collisionObj = inCollision;
     _moodObj = inMood;
@@ -432,7 +432,7 @@ private:
   CollisionManager* _collisionObj;
   MoodManager* _moodObj;
   Task* _taskObj;
-  Move* _moveObj;
+  MoveManager* _moveObj;
   Speaker* _speakerObj;
 
   //---------------------------------------------------------------------------

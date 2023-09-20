@@ -12,7 +12,7 @@ Author: Lloyd Fletcher
 //---------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
 //---------------------------------------------------------------------------
-BumperSensor::BumperSensor(Collision* inCollision, MoodManager* inMood, Task* inTask, Move* inMove, 
+BumperSensor::BumperSensor(Collision* inCollision, MoodManager* inMood, Task* inTask, MoveManager* inMove, 
             Speaker* inSpeaker){
 _collisionObj = inCollision;
 _moodObj = inMood;

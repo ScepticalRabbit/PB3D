@@ -33,7 +33,7 @@ class TaskDance{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskDance(MoodManager* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker){
+  TaskDance(MoodManager* inMood, Task* inTask, MoveManager* inMove, Speaker* inSpeaker){
     _moodObj = inMood;
     _taskObj = inTask;
     _moveObj = inMove;
@@ -244,7 +244,7 @@ private:
   // MAIN OBJECT POINTERS
   MoodManager* _moodObj;
   Task* _taskObj;
-  Move* _moveObj;
+  MoveManager* _moveObj;
   Speaker* _speakerObj;
 
   //---------------------------------------------------------------------------

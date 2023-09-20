@@ -11,7 +11,7 @@ class CollisionEscaper{
     public:
         CollisionEscaper(){};
 
-        void setMoveObj(Move* inMove);
+        void setMoveObj(MoveManager* inMove);
         void updateEscapeDecision(uint8_t checkVec[]);
         void setEscapeStart(uint8_t checkVec[]);
         void escape();
@@ -25,7 +25,7 @@ class CollisionEscaper{
     private:
         float _getRandTurnDir();
 
-        Move* _moveObj = NULL;
+        MoveManager* _moveObj = NULL;
         uint8_t _escapeCount = 3;
         float _escapeAngle = 45.0;
         float _escapeDist = 180.0;

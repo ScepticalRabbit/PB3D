@@ -30,7 +30,7 @@ class TaskPickedUp{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, Task* inTask, Move* inMove, 
+  TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, Task* inTask, MoveManager* inMove, 
                Speaker* inSpeaker, PatSensor* inPatSens){
     _collisionObj = inCollision;
     _moodObj = inMood;
@@ -284,7 +284,7 @@ private:
   CollisionManager* _collisionObj;
   MoodManager* _moodObj;
   Task* _taskObj;
-  Move* _moveObj;
+  MoveManager* _moveObj;
   Speaker* _speakerObj;
   PatSensor* _patSensObj;
 

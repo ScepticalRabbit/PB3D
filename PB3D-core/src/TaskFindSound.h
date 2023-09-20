@@ -35,7 +35,7 @@ class TaskFindSound{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskFindSound(MoodManager* inMood, Task* inTask, Move* inMove, Speaker* inSpeaker){
+  TaskFindSound(MoodManager* inMood, Task* inTask, MoveManager* inMove, Speaker* inSpeaker){
     _moodObj = inMood;
     _taskObj = inTask;
     _moveObj = inMove;
@@ -219,7 +219,7 @@ private:
   // Main Object Pointers
   MoodManager* _moodObj;
   Task* _taskObj;
-  Move* _moveObj;
+  MoveManager* _moveObj;
   Speaker* _speakerObj;
 
   // Base Varibles
