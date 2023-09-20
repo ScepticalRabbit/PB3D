@@ -130,21 +130,7 @@ public:
   //---------------------------------------------------------------------------
   // CALCULATORS
   //--------------------------------------------------------------------------- 
-  uint16_t calcTimeout(float inSpeed, float inDist){
-    float absSpeed = abs(inSpeed);
-    float absDist = abs(inDist);
-    float timeToVel = absSpeed/_speedTimeoutAccel; // seconds
-    float timeToDist = sqrt((2*absDist)/_speedTimeoutAccel); //seconds
-    float timeout = 0.0;
-    if(timeToDist < timeToVel){ // Finish moving before we finish acceleratin
-      timeout = timeToDist;
-    }
-    else{ // Finish moving after we finish accelerating
-      float timeAtConstVel = (absDist-0.5*_speedTimeoutAccel*timeToVel*timeToVel)/absSpeed;
-      timeout = timeAtConstVel+timeToVel;
-    }
-    return uint16_t(_speedTimeoutSF*timeout*1000.0); // milliseconds
-  }
+  uint16_t calcTimeout(float inSpeed, float inDist);
   
   //---------------------------------------------------------------------------
   // BASIC MOVEMENT FUNCTIONS - GENERIC (switched by _moveControl var)
@@ -152,408 +138,86 @@ public:
   
   //----------------------------------------------------------------------------
   // MoveManager Stop - same regardless of control mode
-  void stop(){
-    _updateBasicMove(MOVE_B_STOP);
-    _motorL->run(RELEASE);
-    _motorR->run(RELEASE);
-    _motorL->setSpeed(0);
-    _motorR->setSpeed(0);
-  }
-
-  void stopNoUpdate(){
-    _motorL->run(RELEASE);
-    _motorR->run(RELEASE);
-    _motorL->setSpeed(0);
-    _motorR->setSpeed(0);
-  }
+  void stop();
+  void stopNoUpdate();
 
   //----------------------------------------------------------------------------
   // MoveManager Forward 
-  void forward(){
-    if(_moveControl == MOVE_CONTROL_SPEED){
-      forwardSPD(_curForwardSpeed);
-    }
-    else{
-      forwardPWR(_curForwardPWR);
-    }
-  }
-  void forward(float inSpeed){
-    forwardSPD(inSpeed);
-  }
-  void forward(uint8_t inPower){
-    forwardPWR(inPower);
-  }
+  void forward();
+  void forward(float inSpeed);
+  void forward(uint8_t inPower);
 
   //----------------------------------------------------------------------------
   // Move Back
-  void back(){
-    if(_moveControl == MOVE_CONTROL_SPEED){
-      backSPD(_curBackSpeed);
-    }
-    else{
-      backPWR(_curBackPWR);
-    }
-  }
-  void back(float inSpeed){
-    backSPD(inSpeed);
-  }
-  void back(uint8_t inPower){
-    backPWR(inPower);
-  }
+  void back();
+  void back(float inSpeed);
+  void back(uint8_t inPower);
 
   //----------------------------------------------------------------------------
   // Move Left
-  void left(){
-    if(_moveControl == MOVE_CONTROL_SPEED){
-      leftSPD(_curTurnSpeed);
-    }
-    else{
-      leftPWR(_curTurnPWR);
-    }
-  }
-  void left(float inSpeed){
-    leftSPD(inSpeed);
-  }
-  void left(uint8_t inPower){
-    leftPWR(inPower);
-  }
+  void left();
+  void left(float inSpeed);
+  void left(uint8_t inPower);
 
   //----------------------------------------------------------------------------
   // Move Right
-  void right(){
-    if(_moveControl == MOVE_CONTROL_SPEED){
-      rightSPD(_curTurnSpeed);
-    }
-    else{
-      rightPWR(_curTurnPWR);
-    }
-  }
-  void right(float inSpeed){
-    rightSPD(inSpeed);
-  }
-  void right(uint8_t inPower){
-    rightPWR(inPower);
-  }
+  void right();
+  void right(float inSpeed);
+  void right(uint8_t inPower);
   
   //----------------------------------------------------------------------------
   // Move Forward Left
-  void forwardLeft(){
-    if(_moveControl == MOVE_CONTROL_SPEED){
-      forwardLeft(_curForwardSpeed, _curTurnSpeedDiff);
-    }
-    else{
-      forwardLeft(_curForwardPWR, _curTurnPWRDiff);
-    }
-  }
-
-  void forwardLeftDiffFrac(float diffFrac){
-    if(_moveControl == MOVE_CONTROL_SPEED){
-      float speedDiff = _curForwardSpeed*diffFrac;
-      forwardLeft(_curForwardSpeed, speedDiff);
-    }
-    else{
-      uint8_t pwrDiff = round(diffFrac*float(_curForwardPWR));
-      forwardLeft(_curForwardPWR, pwrDiff);
-    }
-  }
-  
-  void forwardLeft(float inSpeedDiff){
-    forwardLeftSPD(_curTurnSpeed,inSpeedDiff);
-  }
-  void forwardLeft(float inSpeed, float inSpeedDiff){
-    forwardLeftSPD(inSpeed,inSpeedDiff);
-  }
-  
-  void forwardLeft(uint8_t inPowerDiff){
-    forwardLeftPWR(_curTurnPWR,inPowerDiff);
-  }
-  void forwardLeft(uint8_t inPower, uint8_t inPowerDiff){
-    forwardLeftPWR(inPower,inPowerDiff);
-  }
+  void forwardLeft();
+  void forwardLeftDiffFrac(float diffFrac);
+  void forwardLeft(float inSpeedDiff);
+  void forwardLeft(float inSpeed, float inSpeedDiff);
+  void forwardLeft(uint8_t inPowerDiff);
+  void forwardLeft(uint8_t inPower, uint8_t inPowerDiff);
 
   //----------------------------------------------------------------------------
   // Move Forward Right
-  void forwardRight(){
-    if(_moveControl == MOVE_CONTROL_SPEED){
-      forwardRight(_curForwardSpeed, _curTurnSpeedDiff);
-    }
-    else{
-      forwardRight(_curForwardPWR, _curTurnPWRDiff);
-    }
-  }
-
-  void forwardRightDiffFrac(float diffFrac){
-    if(_moveControl == MOVE_CONTROL_SPEED){
-      float speedDiff = _curForwardSpeed*diffFrac;
-      forwardRight(_curForwardSpeed, speedDiff);
-    }
-    else{
-      uint8_t pwrDiff = round(diffFrac*float(_curForwardPWR));
-      forwardRight(_curForwardPWR, pwrDiff);
-    }
-  }
-  
-  void forwardRight(float inSpeedDiff){
-    forwardRightSPD(_curTurnSpeed,inSpeedDiff);
-  }
-  void forwardRight(float inSpeed, float inSpeedDiff){
-    forwardRightSPD(inSpeed,inSpeedDiff);
-  }
-  
-  void forwardRight(uint8_t inPowerDiff){
-    forwardRightPWR(_curTurnPWR,inPowerDiff);
-  }
-  void forwardRight(uint8_t inPower, uint8_t inPowerDiff){
-    forwardRightPWR(inPower,inPowerDiff);
-  }
+  void forwardRight();
+  void forwardRightDiffFrac(float diffFrac);
+  void forwardRight(float inSpeedDiff);
+  void forwardRight(float inSpeed, float inSpeedDiff);
+  void forwardRight(uint8_t inPowerDiff);
+  void forwardRight(uint8_t inPower, uint8_t inPowerDiff);
 
   //----------------------------------------------------------------------------
   // Move Circle
-  void circle(){
-    if(_moveControl == MOVE_CONTROL_SPEED){
-      circleSPD(_curTurnSpeed,_circleDiffSpeed,_circleDirection);
-    }
-    else{
-      circlePWR(_curTurnPWR,_circleDiffPWR,_circleDirection);
-    }
-  }
-  void circle(int8_t turnDir){
-    if(_moveControl == MOVE_CONTROL_SPEED){
-      circleSPD(_curTurnSpeed,_circleDiffSpeed,turnDir);
-    }
-    else{
-      circlePWR(_curTurnPWR,_circleDiffPWR,turnDir);
-    }
-  }
+  void circle();
+  void circle(int8_t turnDir);
 
   //============================================================================
   // BASIC MOVEMENT FUNCTIONS - CONTROL BY POWER
   //============================================================================
    // MOVE - POWER CONTROL - SPECIFY POWER
-  void forwardPWR(uint8_t inPower){
-    _updateBasicMove(MOVE_B_FORWARD);
-    _motorL->run(FORWARD);
-    _motorR->run(FORWARD);
-    _motorL->setSpeed(inPower);
-    _motorR->setSpeed(inPower);
-  }
-  void backPWR(uint8_t inPower){
-    _updateBasicMove(MOVE_B_BACK);
-    _motorL->run(BACKWARD);
-    _motorR->run(BACKWARD);
-    _motorL->setSpeed(inPower);
-    _motorR->setSpeed(inPower);
-  }
-  void leftPWR(uint8_t inPower){
-    _updateBasicMove(MOVE_B_LEFT);
-    _motorL->run(BACKWARD);
-    _motorR->run(FORWARD);
-    _motorL->setSpeed(inPower);
-    _motorR->setSpeed(inPower);  
-  }
-  void rightPWR(uint8_t inPower){
-    _updateBasicMove(MOVE_B_RIGHT);
-    _motorL->run(FORWARD);
-    _motorR->run(BACKWARD);
-    _motorL->setSpeed(inPower);
-    _motorR->setSpeed(inPower);
-  }
-  void forwardLeftPWR(uint8_t inPower, uint8_t inPowerDiff){
-    _updateBasicMove(MOVE_B_FORLEFT);
-    _motorL->run(FORWARD);
-    _motorR->run(FORWARD);
-    _motorL->setSpeed(inPower-inPowerDiff/2);
-    _motorR->setSpeed(inPower+inPowerDiff/2);
-  }
-  void forwardRightPWR(uint8_t inPower, uint8_t inPowerDiff){
-    _updateBasicMove(MOVE_B_FORRIGHT);
-    _motorL->run(FORWARD);
-    _motorR->run(FORWARD);
-    _motorL->setSpeed(inPower+inPowerDiff/2);
-    _motorR->setSpeed(inPower-inPowerDiff/2);
-  }
-  void circlePWR(uint8_t inPower, int8_t inPowerDiff, int8_t turnDir){
-    if(turnDir == MOVE_B_LEFT){
-      forwardLeftPWR(inPower,inPowerDiff);
-    }
-    else{
-      forwardRightPWR(inPower,inPowerDiff);
-    }
-  }
-  
+  void forwardPWR(uint8_t inPower);
+  void backPWR(uint8_t inPower);
+  void leftPWR(uint8_t inPower);
+  void rightPWR(uint8_t inPower);
+  void forwardLeftPWR(uint8_t inPower, uint8_t inPowerDiff);
+  void forwardRightPWR(uint8_t inPower, uint8_t inPowerDiff);
+  void circlePWR(uint8_t inPower, int8_t inPowerDiff, int8_t turnDir);
+
   //============================================================================
   // BASIC MOVEMENT - SPEED CONTROL with PID
   //============================================================================
   // MOVE - SPEED CONTROL - SPECIFY SPEED
-  void forwardSPD(float inSpeed){
-    _updateBasicMove(MOVE_B_FORWARD);
-    _atSpeed(inSpeed,inSpeed);  
-  }
-  void backSPD(float inSpeed){
-    _updateBasicMove(MOVE_B_BACK);
-    _atSpeed(inSpeed,inSpeed);
-  }
-  
-  void leftSPD(float inSpeed){
-    _updateBasicMove(MOVE_B_LEFT);
-    _atSpeed(-1.0*inSpeed,inSpeed);  
-  }
-  void forwardLeftSPD(float inSpeed, float inSpeedDiff){
-    _updateBasicMove(MOVE_B_FORLEFT);
-    _atSpeed(inSpeed-(0.5*inSpeedDiff),inSpeed+(0.5*inSpeedDiff));  
-  }
-  
-  void rightSPD(float inSpeed){
-    _updateBasicMove(MOVE_B_RIGHT);
-    _atSpeed(inSpeed,-1.0*inSpeed);  
-  }
-  void forwardRightSPD(float inSpeed, float inSpeedDiff){
-    _updateBasicMove(MOVE_B_FORRIGHT);
-    _atSpeed(inSpeed+(0.5*inSpeedDiff),inSpeed-(0.5*inSpeedDiff));  
-  }
-  
-  void circleSPD(float inSpeed, float inSpeedDiff, int8_t turnDir){
-    if(turnDir == MOVE_B_LEFT){
-      forwardLeft(inSpeed,inSpeedDiff);
-    }
-    else{
-      forwardRight(inSpeed,inSpeedDiff);
-    }
-  }
-
+  void forwardSPD(float inSpeed);
+  void backSPD(float inSpeed);
+  void leftSPD(float inSpeed);
+  void forwardLeftSPD(float inSpeed, float inSpeedDiff);
+  void rightSPD(float inSpeed);
+  void forwardRightSPD(float inSpeed, float inSpeedDiff);
+  void circleSPD(float inSpeed, float inSpeedDiff, int8_t turnDir);
   // NOTE: position can be negative to move backwards
-  void toDistCtrlPos(float setDist){
-    _updateBasicMove(MOVE_B_TODIST_CPOS);
-    _toPos(setDist,setDist);  
-  }
-  void toDistCtrlPos(float setDistL, float setDistR){
-    _updateBasicMove(MOVE_B_TODIST_CPOS);
-    _toPos(setDistL,setDistR);  
-  }
-
-  void turnToAngleCtrlPos(float setAngle){
-    _updateBasicMove(MOVE_B_TOANG_CPOS);
-    float arcLeng = setAngle*_wheelCircAng;
-    _toPos(-1.0*arcLeng,arcLeng);
-  }
-  
-  int8_t toDistCtrlSpd(float speedL, float speedR, float setDistL, float setDistR){
-    int8_t isComplete = 0;
-    _updateBasicMove(MOVE_B_TODIST_CSPD);
-
-    // If the set distance changes outside tolerance force update
-    if(!((setDistL >= (_toDistSetPtL-_toDistTol)) && (setDistL <= (_toDistSetPtL+_toDistTol)))){
-      _toDistSetPtL = setDistL;      
-      _updateBasicMove(MOVE_B_FORCEUPD);  
-    }
-    if(!((setDistR >= (_toDistSetPtR-_toDistTol)) && (setDistR <= (_toDistSetPtR+_toDistTol)))){
-      _toDistSetPtR = setDistR;      
-      _updateBasicMove(MOVE_B_FORCEUPD);  
-    }
-
-    // At the start we store our target counts for each encode
-    if(_encCountStart){
-      uint16_t timeoutL = calcTimeout(speedL,setDistL);
-      uint16_t timeoutR = calcTimeout(speedR,setDistR);
-      if(timeoutL > timeoutR){
-        _timeoutTimer.start(timeoutL);
-      }
-      else{
-        _timeoutTimer.start(timeoutR);  
-      }
-      
-      _encCountStart = false;
-      _encCountDiffL = int32_t(setDistL/_encoder_L->getMMPerCount());
-      _encCountDiffR = int32_t(setDistR/_encoder_R->getMMPerCount());
-      _endEncCountL = _startEncCountL + _encCountDiffL;
-      _endEncCountR = _startEncCountR + _encCountDiffR;
-
-      /*
-      Serial.print("MMPCount= "); Serial.print(_encoder_L->getMMPerCount());
-      Serial.print(",SetDistL= "); Serial.print(setDistL); Serial.print(",SetDistR= "); Serial.print(setDistR);
-      Serial.print(",ECDiffL= "); Serial.print(_encCountDiffL); Serial.print(",ECDiffR= "); Serial.print(_encCountDiffR);
-      Serial.println();
-      Serial.print("StartECount: L="); Serial.print(_startEncCountL); Serial.print(", R="); Serial.print(_startEncCountR);
-      Serial.println();
-      Serial.print("EndECount: L="); Serial.print(_endEncCountL); Serial.print(", R="); Serial.print(_endEncCountR);
-      Serial.println();
-      Serial.println();
-      */
-    }
-
-    if(_timeoutTimer.finished()){
-      isComplete = 2;  
-    }
-    else{
-      if((setDistL > 0.0) && (setDistR > 0.0)){ // Go forward
-        if((_encoder_L->getCount() <= _endEncCountL)||(_encoder_R->getCount() <= _endEncCountR)){
-          _atSpeed(abs(speedL),abs(speedR));        
-        }
-        else{
-          isComplete = 1;
-          stopNoUpdate();
-        }    
-      }
-      else if((setDistL < 0.0) && (setDistR > 0.0)){ // Turn left 
-        if((_encoder_L->getCount() >= _endEncCountL)||(_encoder_R->getCount() <= _endEncCountR)){
-          _atSpeed(-1.0*abs(speedL),abs(speedR));        
-        }
-        else{
-          isComplete = 1;
-          stopNoUpdate();        
-        }      
-      }
-      else if((setDistL > 0.0) && (setDistR < 0.0)){
-        if((_encoder_L->getCount() <= _endEncCountL)||(_encoder_R->getCount() >= _endEncCountR)){
-          _atSpeed(abs(speedL),-1.0*abs(speedR));        
-        }
-        else{
-          isComplete = 1;
-          stopNoUpdate();        
-        } 
-      }
-      else if((setDistL < 0.0) && (setDistR < 0.0)){ // Turn right
-        if((_encoder_L->getCount() >= _endEncCountL)||(_encoder_R->getCount() >= _endEncCountR)){
-          _atSpeed(-1.0*abs(speedL),-1.0*abs(speedR));        
-        }
-        else{
-          isComplete = 1;
-          stopNoUpdate();        
-        } 
-      }
-      else{
-        isComplete = 1;
-        stopNoUpdate();
-      }
-    }
-    return isComplete;
-  }
-
-  int8_t toDistCtrlSpd(float setDist){
-    int8_t isComplete = 0;
-    if(setDist < 0.0){
-      isComplete = toDistCtrlSpd(_curBackSpeed,_curBackSpeed,setDist,setDist);
-    }
-    else{
-      isComplete = toDistCtrlSpd(_curForwardSpeed,_curForwardSpeed,setDist,setDist);
-    }
-    return isComplete;
-  }
-
-  int8_t turnToAngleCtrlSpd(float setAngle){
-    float setDist = setAngle*_wheelCircAng;
-    int8_t isComplete = 0;
-    if(setAngle > 0.0){ // Turn left
-      isComplete = toDistCtrlSpd(-1.0*_curTurnSpeed,_curTurnSpeed,-1.0*setDist,setDist);  
-    }
-    else if(setAngle < 0.0){
-      isComplete = toDistCtrlSpd(_curTurnSpeed,-1.0*_curTurnSpeed,-1.0*setDist,setDist);
-    }
-    else{
-      isComplete = 1;
-    }
-    return isComplete;
-  }
+  void toDistCtrlPos(float setDist);
+  void toDistCtrlPos(float setDistL, float setDistR);
+  void turnToAngleCtrlPos(float setAngle);
+  int8_t toDistCtrlSpd(float speedL, float speedR, float setDistL, float setDistR);
+  int8_t toDistCtrlSpd(float setDist);
+  int8_t turnToAngleCtrlSpd(float setAngle);
 
   //============================================================================
   // COMPOUND MOVEMENT FUNCTIONS 
@@ -563,248 +227,31 @@ public:
 
   //----------------------------------------------------------------------------
   // MOVE WIGGLE LEFT/RIGHT
-  void wiggle(){
-    wiggle(_wiggleDefLeftDur,_wiggleDefRightDur);
-  }
-  void wiggle(uint16_t leftDur, uint16_t rightDur){
-    // Update the wiggle direction if needed
-    if(_subMoveTimer.finished()){
-      stop(); // Stop the motors because we are going to switch direction
-      if(_wiggleLeftFlag){
-        // If we are turning left, switch to right
-        _wiggleLeftFlag = false;
-        _wiggleCurrDur = rightDur; 
-      }
-      else{
-        // If we are turning right, switch to left
-        _wiggleLeftFlag = true;
-        _wiggleCurrDur = leftDur;
-      }
-      _subMoveTimer.start(_wiggleCurrDur);
-    }
-  
-    if(_wiggleLeftFlag){
-      left();
-    }
-    else{
-      right();  
-    }
-  }
+  void wiggle();
+  void wiggle(uint16_t leftDur, uint16_t rightDur);
 
   //----------------------------------------------------------------------------
   // MOVE FORWARD/BACK
-  void forwardBack(){
-    forwardBack(_FBDefForwardDur,_FBDefBackDur);
-  }
-  void forwardBack(uint16_t forwardDur, uint16_t backDur){
-    // Update the forward/back direction if needed
-    if(_subMoveTimer.finished()){
-      stop(); // Stop the motors because we are going to switch direction
-      if(_FBForwardFlag){
-        // If we are going forward, switch to back
-        _FBForwardFlag = false;
-        _FBCurrDur = backDur; 
-      }
-      else{
-        // If we are going back, switch to forward
-        _FBForwardFlag = true;
-        _FBCurrDur = forwardDur;
-      }
-      _subMoveTimer.start(_FBCurrDur);
-    }
-  
-    if(_FBForwardFlag){
-      forward();
-    }
-    else{
-      back(); 
-    }
-  }
+  void forwardBack();
+  void forwardBack(uint16_t forwardDur, uint16_t backDur);
 
   //----------------------------------------------------------------------------
   // MOVE SPIRAL
-  void spiral(){
-    spiral(_spiralDirection);
-  } 
-  void spiral(int8_t turnDir){
-    if(_moveControl == MOVE_CONTROL_SPEED){
-      spiralSPD(turnDir);
-    }
-    else{
-      spiralPWR(turnDir);
-    }
-  } 
-  void spiralSPD(int8_t turnDir){
-    if(_spiralStart || (_moveCompound != MOVE_C_SPIRAL)){
-      // Reset the flag so we don't re-init, 
-      _spiralStart = false;
-      _moveCompound = MOVE_C_SPIRAL;
-      // Calculate the speed/time slope for the linear increase of speed 
-      // for the slow wheel
-      _initSpiralSpeedDiff = _curForwardSpeed-_spiralMinSpeed; 
-      _curSpiralSpeedDiff = _initSpiralSpeedDiff; 
-      _spiralSlope = _initSpiralSpeedDiff/float(_spiralDuration);
-      // Start the spiral timer
-      _subMoveTimer.start(_spiralDuration);
-    }
-    
-    // Calculate the current speed for the slope wheel based on the timer
-    _spiralCurrTime = _subMoveTimer.getTime();
-    _curSpiralSpeedDiff = _initSpiralSpeedDiff - _spiralSlope*float(_spiralCurrTime);
-
-    // Check if we are increasing the speed of the slow wheel above the fast one
-    if(_curSpiralSpeedDiff>_curForwardSpeed){
-      _curSpiralSpeedDiff = _curForwardSpeed-_minSpeed;
-    }
-
-    // If the spiral time is finished then set the flag to restart the spiral
-    if(_subMoveTimer.finished()){
-      _spiralStart = true;
-    }
-    else{
-      circleSPD(_curForwardSpeed,_curSpiralSpeedDiff,turnDir);  
-    }
-  }
-  void spiralPWR(int8_t turnDir){
-    if(_spiralStart || (_moveCompound != MOVE_C_SPIRAL)){
-      // Reset the flag so we don't re-init, 
-      _spiralStart = false;
-      _moveCompound = MOVE_C_SPIRAL;
-      // Calculate the speed/time slope for the linear increase of speed 
-      // for the slow wheel
-      _initSpiralSpeedDiffPWR = _curForwardPWR-_spiralMinPWR; 
-      _curSpiralSpeedDiffPWR = _initSpiralSpeedDiffPWR;
-      _spiralSlopePWR = float(_initSpiralSpeedDiffPWR)/float(_spiralDuration); 
-      // Start the spiral timer 
-      _subMoveTimer.start(_spiralDuration);
-    }
-    
-    _spiralCurrTime = _subMoveTimer.getTime();
-    _curSpiralSpeedDiffPWR = round(float(_initSpiralSpeedDiff) - _spiralSlopePWR*float(_spiralCurrTime));
-    
-    if(_curSpiralSpeedDiffPWR>_curForwardPWR){
-      _curSpiralSpeedDiffPWR = _curForwardPWR-_spiralMinPWR;
-    }
-  
-    if(_subMoveTimer.finished()){
-      _spiralStart = true;
-    }
-    else{
-      circlePWR(_curForwardPWR,_curSpiralSpeedDiffPWR,turnDir);  
-    }
-  }
+  void spiral();
+  void spiral(int8_t turnDir);
+  void spiralSPD(int8_t turnDir);
+  void spiralPWR(int8_t turnDir);
 
   //----------------------------------------------------------------------------
   // MOVE ZIG/ZAG
-  void zigZag(){
-    if(_zzTurnFlag){
-      if(!_subMoveTimer.finished()){
-        if(_zzTurnDir == MOVE_B_LEFT){
-          if(_moveControl == MOVE_CONTROL_SPEED){
-            forwardLeft(_curTurnSpeed,_zzTurnDiffSpeed);
-          }
-          else{
-            forwardLeft(_curTurnPWR,_zzTurnDiffPWR);
-          }
-        }
-        else{
-          if(_moveControl == MOVE_CONTROL_SPEED){
-            forwardRight(_curTurnSpeed,_zzTurnDiffSpeed);
-          }
-          else{
-            forwardRight(_curTurnPWR,_zzTurnDiffPWR);
-          }  
-        }
-      }
-      else{
-        if(_zzTurnDir == MOVE_B_LEFT){
-          _zzTurnDir = MOVE_B_RIGHT;
-          _zzTurnDuration = _zzRightTurnDur;  
-        }
-        else{
-          _zzTurnDir = MOVE_B_LEFT;
-          _zzTurnDuration = _zzLeftTurnDur;  
-        }
-        _zzTurnFlag = false;
-        _zzStraightFlag = true;
-        _subMoveTimer.start(_zzStraightDuration);
-      }  
-    }
-  
-    if(_zzStraightFlag){
-      if(!_subMoveTimer.finished()){
-        forward();    
-      }
-      else{
-        _zzTurnFlag = true;
-        _zzStraightFlag = false;
-        _subMoveTimer.start(_zzTurnDuration); 
-      }  
-    }
-  }
+  void zigZag();
   
   //----------------------------------------------------------------------------
   // MOVE LOOK AROUND
-  void lookAround(){
-    if(_lookStartFlag){
-      //Serial.println("LOOK START.");
-      _moveCompound = MOVE_C_LOOK;
-      _lookStartFlag = false;
-      _lookTimer.start(_lookMoveTime);
-      _lookCurAng = 0;
-      _lookMoveSwitch = true;
-      resetPIDs();
-    }
-    else{
-      if(_lookTimer.finished()){
-        _lookMoveSwitch = !_lookMoveSwitch;
-        //Serial.print("LOOK TIMER FINISHED: ");
-        if(_lookMoveSwitch){
-          //Serial.println("START. Ang++");
-          _lookTimer.start(_lookMoveTime);
-          _lookCurAng++;
-          
-          /*if(_lookCurAng >= _lookNumAngs){
-            _lookCurAng = 0;
-          }*/
-        }
-        else{
-          //Serial.println("PAUSE.");
-          _lookTimer.start(_lookPauseTime);  
-        }
-      }
-    }
-
-    if(_lookMoveSwitch && (_lookCurAng <= _lookNumAngs)){
-      float moveAng = 0.0;
-      if(_lookCurAng == 0){
-        moveAng = _lookAngles[_lookCurAng];
-      }
-      else{
-        moveAng = _lookAngles[_lookCurAng] - _lookAngles[_lookCurAng-1]; 
-      }
-      turnToAngleCtrlPos(moveAng);
-    }
-    else{
-      stop();
-    }  
-  }
+  void lookAround();
+  void forceLookMove();
+  void resetLook();
   
-  void forceLookMove(){
-    //Serial.println("FUNC: force look move. Ang++");
-    _lookMoveSwitch = true;
-    _lookCurAng++;
-    _lookTimer.start(_lookMoveTime);
-    resetPIDs();
-  }
-
-  void resetLook(){
-    //Serial.println("FUNC: reset look.");
-    _lookStartFlag = true;
-    _lookCurAng = 0;
-    resetPIDs();  
-  }
-
   // LOOK - Diagnostics
   bool lookIsMoving(){return _lookMoveSwitch;}
   bool lookIsPaused(){return !_lookMoveSwitch;}
