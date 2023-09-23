@@ -12,7 +12,7 @@ Author: Lloyd Fletcher
 //---------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
 //---------------------------------------------------------------------------
-ClassTemp::ClassTemp(Collision* inCollision, MoodManager* inMood, Task* inTask, MoveManager* inMove, 
+ClassTemp::ClassTemp(Collision* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
             Speaker* inSpeaker){
 _collisionObj = inCollision;
 _moodObj = inMood;

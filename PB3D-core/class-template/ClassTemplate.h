@@ -27,7 +27,7 @@ public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
   //---------------------------------------------------------------------------
-  ClassTemp(CollisionManager* inCollision, MoodManager* inMood, Task* inTask, MoveManager* inMove, 
+  ClassTemp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
                 Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
@@ -57,7 +57,7 @@ private:
   //---------------------------------------------------------------------------
   Collision* _collisionObj = NULL;
   MoodManager* _moodObj = NULL;
-  Task* _taskObj = NULL;
+  TaskManager* _taskObj = NULL;
   MoveManager* _moveObj = NULL;
   Speaker* _speakerObj = NULL;
 

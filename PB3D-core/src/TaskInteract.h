@@ -16,8 +16,9 @@ Date Edited:  8th October 2021
 #include <Wire.h> // I2C 
 #include <Seeed_CY8C401XX.h> // Capcitive Touch Sensor
 #include "MoodManager.h"
-#include "Task.h"
+#include "TaskManager.h"
 #include "MoveManager.h"
+#include "TaskDance.h"
 #include "Timer.h"
 #include "PatSensor.h"
 
@@ -25,7 +26,7 @@ class TaskInteract{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskInteract(MoodManager* inMood, Task* inTask, MoveManager* inMove, 
+  TaskInteract(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
                Speaker* inSpeaker, TaskDance* inDance, PatSensor* inPatSens){
     _moodObj = inMood;
     _taskObj = inTask;
@@ -184,7 +185,7 @@ public:
 private:
   // MAIN OBJECT POINTERS
   MoodManager* _moodObj;
-  Task* _taskObj;
+  TaskManager* _taskObj;
   MoveManager* _moveObj;
   TaskDance* _taskDanceObj;
   Speaker* _speakerObj;

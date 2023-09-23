@@ -16,7 +16,7 @@ Date Edited:  29th April 2022
 #include <Wire.h> // I2C
 #include "MoodManager.h"
 #include "CollisionManager.h" 
-#include "Task.h"
+#include "TaskManager.h"
 #include "MoveManager.h"
 #include "Timer.h"
 #include "Speaker.h"
@@ -30,7 +30,7 @@ class TaskPounce{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPounce(CollisionManager* inCollision, MoodManager* inMood, Task* inTask, MoveManager* inMove, 
+  TaskPounce(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
              Speaker* inSpeaker){
     _collisionObj = inCollision;
     _moodObj = inMood;
@@ -431,7 +431,7 @@ private:
   // MAIN OBJECT POINTERS
   CollisionManager* _collisionObj;
   MoodManager* _moodObj;
-  Task* _taskObj;
+  TaskManager* _taskObj;
   MoveManager* _moveObj;
   Speaker* _speakerObj;
 

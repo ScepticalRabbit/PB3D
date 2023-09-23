@@ -23,7 +23,7 @@
 #include "src/PID.h"
 #include "src/Speaker.h"
 #include "src/Tail.h"
-#include "src/Task.h"
+#include "src/TaskManager.h"
 #include "src/Timer.h"
 #include "src/I2CDataSender.h"
 #include "src/IMUSensor.h"
@@ -106,7 +106,7 @@ Encoder encoderR = Encoder(encPinAR,encPinBR);
 // BASIC CLASSES
 MoveManager moveObj = MoveManager(&AFMS,&encoderL,&encoderR);
 MoodManager moodObj = MoodManager(&leds);
-Task taskObj = Task(&leds);
+TaskManager taskObj = TaskManager(&leds);
 CollisionManager collisionObj = CollisionManager(&moodObj,&taskObj,&moveObj);
 
 // Sensors, Actuators and Comms
@@ -134,10 +134,11 @@ TaskPause taskPauseObj = TaskPause(&collisionObj,&taskObj,&moveObj,&speakerObj);
 //-----------------------------------------------------------------------------
 void setup() {
   // Start the serial 
-  Serial.begin(115200); 
-  while(!Serial){}
+  Serial.begin(115200);
+  // Only use below to stop start up until UDB cable connected 
+  //while(!Serial){}
    
-  // Initialize I2C communications
+  // Initialize I2C communications for sensors and sub boards
   Wire.begin();  // Join I2C bus as leader
   delay(2000);   // Needed to ensure sensors work, delay allows sub-processors to start up
 

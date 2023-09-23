@@ -8,8 +8,8 @@ The task class is part of the PetBot (PB) program.
 Author: Lloyd Fletcher
 */
 
-#ifndef TASK_H
-#define TASK_H
+#ifndef TASKMANAGER_H
+#define TASKMANAGER_H
 
 #include <Arduino.h>
 #include <Adafruit_NeoPixel_ZeroDMA.h>
@@ -31,372 +31,68 @@ Author: Lloyd Fletcher
 #define TASK_FINDDARK 6 
 #define TASK_POUNCE 7
 
-class Task{
+class TaskManager{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
   //---------------------------------------------------------------------------
-  Task(Adafruit_NeoPixel_ZeroDMA* RGBLEDs){
-    _taskLEDs = RGBLEDs;
-  }
+  TaskManager(Adafruit_NeoPixel_ZeroDMA* RGBLEDs);
   
   //---------------------------------------------------------------------------
   // BEGIN: called during SETUP
   //---------------------------------------------------------------------------
-  void begin(){
-    // Generate a probability, start the task timer and set the task
-    _taskPc = random(0,100); // NOTE: random num between (min,max-1)
-    _taskTimer.start(_taskDuration);
-    _LEDTimer.start(0);
-  }
+  void begin();
 
   //---------------------------------------------------------------------------
   // UPDATE: called during LOOP
   //---------------------------------------------------------------------------
-  void update(){
-    if(_taskTimer.finished()){
-      _update();
-    }
-  }
-
-  void forceUpdate(){
-    _update();
-  }
+  void update();
+  void forceUpdate();
 
   //---------------------------------------------------------------------------
   // Get, set and reset
   //---------------------------------------------------------------------------
   // Default setTask function uses default task durations
-  void setTask(int8_t taskIn){
-    if(taskIn != _taskCode){
-      _taskCode = taskIn;
-      _taskNewFlag = true;
-      uint32_t tempDuration = random(_taskDurationMin,_taskDurationMax);
-      
-      // Set default duraiton for each task and set the LEDs
-      if(_taskCode == TASK_TEST){
-        _taskDuration = 30000;
-        taskLEDTest();  
-      }
-      else if(_taskCode == TASK_EXPLORE){
-        _taskDuration = tempDuration;
-        taskLEDExplore();    
-      }
-      else if(_taskCode == TASK_REST){
-        _taskDuration = tempDuration;  
-      }
-      else if(_taskCode == TASK_DANCE){
-        _taskDuration = _danceDuration;  
-        taskLEDDance();
-      }
-      else if(_taskCode == TASK_TANTRUM){
-        _taskDuration = _tantrumDuration;
-        taskLEDCollision();  
-      }
-      else if(_taskCode == TASK_FINDHUMAN){
-        _taskDuration = 20000;
-        taskLEDFindHuman();  
-      }
-      else if(_taskCode == TASK_FINDLIGHT){
-        _taskDuration = 20000;
-        taskLEDFindLight();  
-      }
-      else if(_taskCode == TASK_FINDDARK){
-        _taskDuration = 20000;
-        taskLEDFindDark();  
-      }
-      else if(_taskCode == TASK_FINDSOUND){
-        _taskDuration = 20000;
-        taskLEDFindSound();  
-      }
-      else if(_taskCode == TASK_INTERACT){
-        _taskDuration = 20000;
-        taskLEDInteract();  
-      }      
-      else if(_taskCode == TASK_PICKEDUP){
-        _taskDuration = 60000;
-        // LEDs set based on state in the TaskPickedUp class
-      }
-      else if(_taskCode == TASK_PAUSE){
-        _taskDuration = 60000;
-        // LEDs set based on state in the TaskPause class
-      }
-      else if(_taskCode == TASK_POUNCE){
-        _taskDuration = 20000;
-      }
-      else{
-        _taskCode = TASK_EXPLORE;
-        _taskDuration = tempDuration;
-        taskLEDExplore();
-      }
-      // Start the task timer
-      _taskTimer.start(_taskDuration);
-    }
-  }
+  void setTask(int8_t taskIn);
+  void setTaskDuration(uint32_t taskDur);
+  void assignProb(int8_t moodIn);
 
-  void setTaskDuration(uint32_t taskDur){
-    _taskDuration = taskDur;
-    _taskTimer.start(_taskDuration);
-  }
-
-  int8_t getTask(){
-    return _taskCode;
-  }
-
-  bool getNewTaskFlag(){
-    return _taskNewFlag;
-  }
-
-  void setNewTaskFlag(bool inFlag){
-    _taskNewFlag = inFlag;
-  }
-
-  void setDanceDuration(uint32_t inDuration){
-    _danceDuration = inDuration;
-  }
-
-  void setTantrumDuration(uint16_t inDuration){
-    _tantrumDuration = inDuration;
-  }
-
-  void setDanceUpdateFlag(bool inFlag){
-    _danceUpdateFlag = inFlag;
-  }
-
-  bool getDanceUpdateFlag(){
-    return _danceUpdateFlag;
-  }
-
-  void assignProb(int8_t moodIn){
-     // Moods: [neutral,happy,sad,angry,scared]
-     // test is used for forcing task probability
-    if(moodIn == MOOD_NEUTRAL){
-      _setTaskProb(_taskProbNeutral);  
-    }
-    else if(moodIn == MOOD_HAPPY){
-      _setTaskProb(_taskProbHappy); 
-    }
-    else if(moodIn == MOOD_SAD){
-      _setTaskProb(_taskProbSad); 
-    }
-    else if(moodIn == MOOD_ANGRY){
-      _setTaskProb(_taskProbAngry);
-    }
-    else if(moodIn == MOOD_SCARED){
-      _setTaskProb(_taskProbScared);
-    }
-    else if(moodIn == MOOD_TEST){
-      _setTaskProb(_taskProbTest);
-    }
-    else{
-      _setTaskProb(_taskProbNeutral);
-    }
-
-    // DEBUG
-    /*
-    Serial.println();
-    Serial.print("TASK PROB BOUNDS: ");
-    for(int8_t ii = 0; ii < _taskCount; ii++){
-      Serial.print(_taskProbBounds[ii]), Serial.print(",");
-    }
-    Serial.println();
-    */
-  }
+  int8_t getTask(){return _taskCode;}
+  bool getNewTaskFlag(){return _taskNewFlag;}
+  void setNewTaskFlag(bool inFlag){_taskNewFlag = inFlag;}
+  void setDanceDuration(uint32_t inDuration){_danceDuration = inDuration;}
+  void setTantrumDuration(uint16_t inDuration){_tantrumDuration = inDuration;}
+  void setDanceUpdateFlag(bool inFlag){_danceUpdateFlag = inFlag;}
+  bool getDanceUpdateFlag(){return _danceUpdateFlag;}
 
   //------------------------------------------------------------------------
   // TASK LED FUNCTIONS
   //---------------------------------------------------------------------------
-  void taskLEDCollision(){
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));
-    _taskLEDs->show();    
-  }
-  
-  void taskLEDExplore(){
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 255, 0));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 255, 0));
-    _taskLEDs->show();    
-  }
-  
-  void taskLEDRest(uint8_t intensity){
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 0, intensity));
-    _taskLEDs->setPixelColor(1, _taskLEDs->Color(0, 0, intensity));
-    _taskLEDs->setPixelColor(2, _taskLEDs->Color(0, 0, intensity));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 0, intensity));
-    _taskLEDs->show();
-  }
-  
-  void taskLEDDance(){
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 255, 0));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 255, 0));
-    _taskLEDs->show();    
-  }
-
-  void taskLEDTantrum(){
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));
-    _taskLEDs->show();     
-  }
-  
-  void taskLEDFindHuman(){
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 255));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 255));
-    _taskLEDs->show();    
-  }
-  
-  void taskLEDInteract(){
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 255, 255));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 255, 255));
-    _taskLEDs->show();    
-  }
-
-  void taskLEDPickedUpOk(){
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 255, 0));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 255, 0));
-    _taskLEDs->show();    
-  }
-
-  void taskLEDPickedUpPanic(){
-    if(_LEDTimer.finished()){
-      _LEDTimer.start(_LEDOnOffTime);
-      _LEDSwitch = !_LEDSwitch;
-    }
-    
-    if(_LEDSwitch){    
-      _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
-      _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));
-      _taskLEDs->show();
-    }
-    else{
-      taskLEDOff();      
-    }
-  }
-
-  void taskLEDPause(uint16_t pauseTime){
-    if(_LEDTimer.finished()){
-      _LEDTimer.start(pauseTime);
-    }
-
-    uint8_t LEDVal = _calcRisingLEDVal(pauseTime);
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(LEDVal, LEDVal, 0));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(LEDVal, LEDVal, 0));
-    _taskLEDs->show(); 
-  }
-
-  void taskLEDFindLight(){
-    uint8_t intens = 255;
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(intens, intens, intens));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(intens, intens, intens));
-    _taskLEDs->show();    
-  }
-
-  void taskLEDFindDark(){
-    uint8_t intens = 85;
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(intens, intens, intens));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(intens, intens, intens));
-    _taskLEDs->show();    
-  }
-
-  void taskLEDFindSound(){
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 0, 255));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 0, 255));
-    _taskLEDs->show();    
-  }
-
-  void taskLEDTest(){
-    if(_LEDTimer.finished()){
-      _LEDTimer.start(_LEDOnOffTime);
-      _LEDSwitch = !_LEDSwitch;
-    }
-    
-    if(_LEDSwitch){  
-      _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
-      _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 0, 255));
-      _taskLEDs->show();
-    }
-    else{
-      _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 0, 255));
-      _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));
-      _taskLEDs->show();  
-    }
-  }
-
-  void taskLEDOff(){
-    _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 0, 0));
-    _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 0, 0));
-    _taskLEDs->show();  
-  }
+  void taskLEDCollision();
+  void taskLEDExplore();
+  void taskLEDRest(uint8_t intensity);
+  void taskLEDDance();
+  void taskLEDTantrum();
+  void taskLEDFindHuman();
+  void taskLEDInteract();
+  void taskLEDPickedUpOk();
+  void taskLEDPickedUpPanic();
+  void taskLEDPause(uint16_t pauseTime);
+  void taskLEDFindLight();
+  void taskLEDFindDark();
+  void taskLEDFindSound();
+  void taskLEDTest();
+  void taskLEDOff();
 
   //------------------------------------------------------------------------
   // HSV LEDS
-  void taskLEDHue(uint16_t hue){
-    _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue)));
-    _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue)));
-    _taskLEDs->show();   
-  }
-
-  void taskLEDHSV(uint16_t hue, uint8_t sat, uint8_t value){
-    _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue,sat,value)));
-    _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue,sat,value)));
-    _taskLEDs->show();     
-  }
-
-  void taskLEDCol(uint16_t col){
-    uint16_t hue = 65536*col/12;
-    _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue)));
-    _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue)));
-    _taskLEDs->show();    
-  }
-
-  void taskLEDCol(uint16_t colL, uint16_t colR){
-    uint16_t hueL = 65536*colL/12;
-    uint16_t hueR = 65536*colR/12;
-    _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hueR)));
-    _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hueL)));
-    _taskLEDs->show();     
-  }
-
-  void taskLEDCSV(uint16_t col, uint8_t sat, uint8_t val){
-    uint16_t hue = 65536*col/12;
-    _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue,sat,val)));
-    _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue,sat,val)));
-    _taskLEDs->show();     
-  }
-
-  void taskLEDCSV(uint16_t colL,uint16_t colR,uint8_t satL,uint8_t satR, uint8_t valL, uint8_t valR){
-    uint16_t hueL = 65536*colL/12;
-    uint16_t hueR = 65536*colR/12;
-    _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hueR,satR,valR)));
-    _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hueL,satL,valL)));
-    _taskLEDs->show();     
-  }
-
-
-  
-  /*
-  void taskLEDPounce(){
-    taskLEDHue(_huePounce);
-  }
-
-  void taskLEDPounce(uint8_t intens){
-    taskLEDHSV(_huePounce,255,intens);       
-  }
-
-  void taskLEDPounce(uint8_t intensL, uint8_t intensR){
-    _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(_huePounce,255,intensR)));
-    _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(_huePounce,255,intensL)));
-    _taskLEDs->show();          
-  }
-
-  void taskLEDPounce(uint8_t satL, uint8_t satR, uint8_t intensL, uint8_t intensR){
-    _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(_huePounce,satR,intensR)));
-    _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(_huePounce,satL,intensL)));
-    _taskLEDs->show();          
-  }
-  */
-
-  //------------------------------------------------------------------------
-  
+  void taskLEDHue(uint16_t hue);
+  void taskLEDHSV(uint16_t hue, uint8_t sat, uint8_t value);
+  void taskLEDCol(uint16_t col);
+  void taskLEDCol(uint16_t colL, uint16_t colR);
+  void taskLEDCSV(uint16_t col, uint8_t sat, uint8_t val);
+  void taskLEDCSV(uint16_t colL,uint16_t colR,uint8_t satL,uint8_t satR, uint8_t valL, uint8_t valR);
+ 
 private:
   //------------------------------------------------------------------------
   // TASK Private Functions

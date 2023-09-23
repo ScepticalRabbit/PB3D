@@ -251,7 +251,7 @@
         Serial.print(F("Time: ")); Serial.print(inState->state.onTime); Serial.print(F("; ")); 
         Serial.print(F("Mood: ")); Serial.print(inState->state.mood); Serial.print(F("; "));
         Serial.print(F("MoodSc: ")); Serial.print(inState->state.moodScore); Serial.print(F("; "));
-        Serial.print(F("Task: ")); Serial.print(inState->state.task); Serial.print(F("; "));
+        Serial.print(F("TaskManager: ")); Serial.print(inState->state.task); Serial.print(F("; "));
         Serial.println();
 
         Serial.print(F("MoveB: ")); Serial.print(inState->state.moveBasic); Serial.print(F("; "));

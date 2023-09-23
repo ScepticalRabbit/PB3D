@@ -8,7 +8,7 @@
 //-----------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
 //-----------------------------------------------------------------------------
-CollisionManager::CollisionManager(MoodManager* inMood, Task* inTask, MoveManager* inMove){
+CollisionManager::CollisionManager(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove){
     _moodObj = inMood;
     _taskObj = inTask;
     _moveObj = inMove;

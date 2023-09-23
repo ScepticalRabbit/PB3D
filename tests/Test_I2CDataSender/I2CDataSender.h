@@ -113,7 +113,7 @@ public:
     Serial.print(_currState.state.mood);
     Serial.print(F("; "));
     
-    Serial.print(F("Task: "));
+    Serial.print(F("TaskManager: "));
     Serial.print(_currState.state.task);
     Serial.print(F("; "));
   

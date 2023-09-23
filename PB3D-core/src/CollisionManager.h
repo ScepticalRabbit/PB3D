@@ -14,7 +14,7 @@ Author: Lloyd Fletcher
 #include <Arduino.h>
 #include "MoodManager.h"
 #include "MoveManager.h"
-#include "Task.h"
+#include "TaskManager.h"
 #include "Timer.h"
 
 // Helper classes
@@ -55,7 +55,7 @@ public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
   //---------------------------------------------------------------------------
-  CollisionManager(MoodManager* inMood, Task* inTask, MoveManager* inMove);
+  CollisionManager(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove);
 
   //---------------------------------------------------------------------------
   // BEGIN: called during SETUP 
@@ -118,7 +118,7 @@ private:
   //---------------------------------------------------------------------------
   // Main object and sensor pointers
   MoodManager* _moodObj = NULL;
-  Task* _taskObj = NULL;
+  TaskManager* _taskObj = NULL;
   MoveManager* _moveObj = NULL;
   
   // Collision management variables

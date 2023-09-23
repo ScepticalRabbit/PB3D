@@ -30,7 +30,7 @@ Date Edited:  11th Dec. 2022
 // CLASS
 class I2CDataSender{
 public:
-  I2CDataSender(CollisionManager* inCollision, MoodManager* inMood, Task* inTask, MoveManager* inMove,
+  I2CDataSender(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
                 IMUSensor* inIMU, Navigation* inNav){
     _collisionObj = inCollision;
     _moodObj = inMood;
@@ -167,7 +167,7 @@ private:
   // MAIN OBJECT POINTERS
   CollisionManager* _collisionObj = NULL;
   MoodManager* _moodObj = NULL;
-  Task* _taskObj = NULL;
+  TaskManager* _taskObj = NULL;
   MoveManager* _moveObj = NULL;
   IMUSensor* _IMUObj = NULL;
   Navigation* _navObj = NULL;

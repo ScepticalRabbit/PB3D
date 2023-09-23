@@ -15,7 +15,7 @@ Date Edited:  29th Aug 2021
 
 #include <Arduino.h>
 #include "MoodManager.h"
-#include "Task.h"
+#include "TaskManager.h"
 #include "MoveManager.h"
 #include "Speaker.h"
 #include "Timer.h"
@@ -24,7 +24,7 @@ class TaskTantrum{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskTantrum(MoodManager* inMood, Task* inTask, MoveManager* inMove, Speaker* inSpeaker){
+  TaskTantrum(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker){
     _moodObj = inMood;
     _moveObj = inMove;
     _taskObj = inTask;
@@ -96,7 +96,7 @@ public:
 private:
   // MAIN OBJECT POINTERS
   MoodManager* _moodObj;
-  Task* _taskObj;
+  TaskManager* _taskObj;
   MoveManager* _moveObj;
   Speaker* _speakerObj;
   // Timers

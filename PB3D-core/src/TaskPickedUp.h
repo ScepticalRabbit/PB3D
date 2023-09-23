@@ -15,7 +15,7 @@ Author: Lloyd Fletcher
 #include <Seeed_CY8C401XX.h> // Capcitive Touch Sensor
 #include "MoodManager.h"
 #include "CollisionManager.h" 
-#include "Task.h"
+#include "TaskManager.h"
 #include "MoveManager.h"
 #include "Timer.h"
 #include "Speaker.h"
@@ -30,7 +30,7 @@ class TaskPickedUp{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, Task* inTask, MoveManager* inMove, 
+  TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
                Speaker* inSpeaker, PatSensor* inPatSens){
     _collisionObj = inCollision;
     _moodObj = inMood;
@@ -119,7 +119,7 @@ public:
       if(prob <= 50){_moodObj->setMood(MOOD_SCARED);}
       else{_moodObj->setMood(MOOD_ANGRY);}
       
-      // Task LEDS - Panic
+      // TaskManager LEDS - Panic
       _taskObj->taskLEDPickedUpPanic();
 
       // Wiggle to get free
@@ -137,7 +137,7 @@ public:
     else{
       // MoodManager - Neutral
       _moodObj->setMood(MOOD_NEUTRAL);
-      // Task LEDS - Ok
+      // TaskManager LEDS - Ok
       _taskObj->taskLEDPickedUpOk();
 
       // Stop motor
@@ -283,7 +283,7 @@ private:
   // MAIN OBJECT POINTERS
   CollisionManager* _collisionObj;
   MoodManager* _moodObj;
-  Task* _taskObj;
+  TaskManager* _taskObj;
   MoveManager* _moveObj;
   Speaker* _speakerObj;
   PatSensor* _patSensObj;

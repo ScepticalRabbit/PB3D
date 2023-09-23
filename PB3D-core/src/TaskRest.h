@@ -12,7 +12,7 @@ Author: Lloyd Fletcher
 #define TASKREST_H
 
 #include <Arduino.h>
-#include "Task.h"
+#include "TaskManager.h"
 #include "MoveManager.h"
 #include "Timer.h"
 
@@ -20,7 +20,7 @@ class TaskRest{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskRest(MoodManager* inMood, Task* inTask, MoveManager* inMove, Speaker* inSpeaker){
+  TaskRest(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker){
     _moodObj = inMood;
     _taskObj = inTask;
     _moveObj = inMove;
@@ -90,7 +90,7 @@ public:
 private:
   // MAIN OBJECT POINTERS
   MoodManager* _moodObj;
-  Task* _taskObj;
+  TaskManager* _taskObj;
   MoveManager* _moveObj;
   Speaker* _speakerObj;
 

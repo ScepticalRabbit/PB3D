@@ -15,7 +15,7 @@ Date Edited:  12th December 2021
 
 #include <Wire.h> // I2C
 #include "CollisionManager.h" 
-#include "Task.h"
+#include "TaskManager.h"
 #include "MoveManager.h"
 #include "Timer.h"
 
@@ -23,7 +23,7 @@ class TaskPause{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPause(CollisionManager* inCollision, Task* inTask, MoveManager* inMove, Speaker* inSpeaker){
+  TaskPause(CollisionManager* inCollision, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker){
     _collisionObj = inCollision;
     _taskObj = inTask;
     _moveObj = inMove;
@@ -66,7 +66,7 @@ private:
   // MAIN OBJECT POINTERS
   CollisionManager* _collisionObj;
   MoodManager* _moodObj;
-  Task* _taskObj;
+  TaskManager* _taskObj;
   MoveManager* _moveObj;
   Speaker* _speakerObj;
 
