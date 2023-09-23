@@ -13,21 +13,21 @@ Author: Lloyd Fletcher
 
 #include <Arduino.h>
 #include <Wire.h> // I2C
-#include "Collision.h" 
+#include "CollisionManager.h" 
 #include "Task.h"
-#include "Move.h"
+#include "MoveManager.h"
 #include "Timer.h"
 #include "Speaker.h"
 
 //---------------------------------------------------------------------------
 // CLASS TEMPLATE: 
 //---------------------------------------------------------------------------
-class BumperSensor{
+class ClassTemp{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
   //---------------------------------------------------------------------------
-  BumperSensor(Collision* inCollision, MoodManager* inMood, Task* inTask, MoveManager* inMove, 
+  ClassTemp(CollisionManager* inCollision, MoodManager* inMood, Task* inTask, MoveManager* inMove, 
                 Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------

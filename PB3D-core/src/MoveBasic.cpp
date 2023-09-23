@@ -7,43 +7,35 @@ The task X class is part of the PetBot (PB) program. It is used to...
 
 Author: Lloyd Fletcher
 */
-#include "ClassTemplate.h"
+#include "MoveBasic.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
 //---------------------------------------------------------------------------
-ClassTemp::ClassTemp(Collision* inCollision, MoodManager* inMood, Task* inTask, MoveManager* inMove, 
-            Speaker* inSpeaker){
-_collisionObj = inCollision;
-_moodObj = inMood;
-_taskObj = inTask;
-_moveObj = inMove;
-_speakerObj = inSpeaker;
-}
+MoveBasic::MoveBasic(){
+
+} 
 
 //---------------------------------------------------------------------------
 // BEGIN: called during SETUP
 //---------------------------------------------------------------------------
-void ClassTemp::begin(){
+void MoveBasic::begin(){
 
 }
 
 //---------------------------------------------------------------------------
 // UPDATE: called during LOOP
 //---------------------------------------------------------------------------
-void ClassTemp::update(){
+void MoveBasic::update(){
     if(!_isEnabled){return;}
 
-    if(_taskObj->getNewTaskFlag()){
-        _startFlag = true;
-    }
 
 }
 
 //---------------------------------------------------------------------------
 // DOSOMETHING - called during the main during decision tree
 //---------------------------------------------------------------------------
-void ClassTemp::doSomething(){
+void MoveBasic::doSomething(){
     if(!_isEnabled){return;}
 
     if(_startFlag){
