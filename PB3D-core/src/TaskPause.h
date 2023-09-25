@@ -17,58 +17,40 @@ Date Edited:  12th December 2021
 #include "CollisionManager.h" 
 #include "TaskManager.h"
 #include "MoveManager.h"
+#include "Speaker.h"
 #include "Timer.h"
 
 class TaskPause{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPause(CollisionManager* inCollision, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker){
-    _collisionObj = inCollision;
-    _taskObj = inTask;
-    _moveObj = inMove;
-    _speakerObj = inSpeaker;
-  }
+  TaskPause(CollisionManager* inCollision, TaskManager* inTask, 
+            MoveManager* inMove, Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
   // BEGIN: called during SETUP
-  void begin(){
-    _pauseTimer.start(0);
-  }
+  void begin();
 
-  void update(){
-    if(!_isEnabled){return;}
-    
-    if(_taskObj->getNewTaskFlag()){
-      _pauseDur = random(_pauseDurMin,_pauseDurMax);
-      _pauseTimer.start(_pauseDur);
-    }
-  }
+  //---------------------------------------------------------------------------
+  // UPDATE: called during LOOP
+  void update();
 
-  void pause(){
-    if(!_isEnabled){return;}
-    
-    if(_pauseTimer.finished()){
-      _taskObj->forceUpdate();
-    }
-    else{
-      _taskObj->taskLEDPause(_pauseDur);
-      _collisionObj->setEnabledFlag(false);
-      _moveObj->stop();
-    }
-  }
+  //---------------------------------------------------------------------------
+  // PAUSE
+  void pause();
 
-  // GET/SET FUNCTIONS
+  //---------------------------------------------------------------------------
+  // Get, set and reset
   bool getEnabledFlag(){return _isEnabled;}
   void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
 
 private:
   // MAIN OBJECT POINTERS
-  CollisionManager* _collisionObj;
-  MoodManager* _moodObj;
-  TaskManager* _taskObj;
-  MoveManager* _moveObj;
-  Speaker* _speakerObj;
+  CollisionManager* _collisionObj = NULL;
+  MoodManager* _moodObj = NULL;
+  TaskManager* _taskObj = NULL;
+  MoveManager* _moveObj = NULL;
+  Speaker* _speakerObj = NULL;
 
   // TASK - PAUSE
   bool _isEnabled = true;

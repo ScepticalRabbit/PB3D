@@ -60,11 +60,11 @@ private:
 
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
-  MoodManager* _moodObj;
-  TaskManager* _taskObj;
-  MoveManager* _moveObj;
-  Speaker* _speakerObj;
-  PatSensor* _patSensObj;
+  MoodManager* _moodObj = NULL;
+  TaskManager* _taskObj = NULL;
+  MoveManager* _moveObj = NULL;
+  Speaker* _speakerObj = NULL;
+  PatSensor* _patSensObj = NULL;
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES

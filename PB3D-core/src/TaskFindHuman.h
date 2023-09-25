@@ -52,11 +52,11 @@ private:
 
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
-  MoodManager* _moodObj;
-  TaskManager* _taskObj;
-  MoveManager* _moveObj;
-  Speaker* _speakerObj;
-  TaskInteract* _taskInteractObj;
+  MoodManager* _moodObj = NULL;
+  TaskManager* _taskObj = NULL;
+  MoveManager* _moveObj = NULL;
+  Speaker* _speakerObj = NULL;
+  TaskInteract* _taskInteractObj = NULL;
 
   // Timers
   Timer _callTimer = Timer();

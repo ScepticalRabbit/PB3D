@@ -16,8 +16,9 @@ Author: Lloyd Fletcher
 #include "CollisionManager.h" 
 #include "Task.h"
 #include "MoveManager.h"
-#include "Timer.h"
 #include "Speaker.h"
+#include "Timer.h"
+
 
 //---------------------------------------------------------------------------
 // CLASS TEMPLATE: 

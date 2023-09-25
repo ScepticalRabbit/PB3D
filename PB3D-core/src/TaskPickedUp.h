@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3D! 
-// CLASS: PICKED UP
+// CLASS: TaskPickedUp
 //---------------------------------------------------------------------------
 /*
 The task ? class is part of the PetBot (PB) program. It is used to...
@@ -275,18 +275,19 @@ public:
     }
   }
 
-  // GET/SET FUNCTIONS
+  //---------------------------------------------------------------------------
+  // Get, set and reset
   bool getEnabledFlag(){return _isEnabled;}
   void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
 
 private:
   // MAIN OBJECT POINTERS
-  CollisionManager* _collisionObj;
-  MoodManager* _moodObj;
-  TaskManager* _taskObj;
-  MoveManager* _moveObj;
-  Speaker* _speakerObj;
-  PatSensor* _patSensObj;
+  CollisionManager* _collisionObj = NULL;
+  MoodManager* _moodObj = NULL;
+  TaskManager* _taskObj = NULL;
+  MoveManager* _moveObj = NULL;
+  Speaker* _speakerObj = NULL;
+  PatSensor* _patSensObj = NULL;
 
   // TASK - PICKED UP
   bool _isEnabled = true;
