@@ -37,7 +37,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP
+  // BEGIN: called once during SETUP
   void begin(){
     // Servo - for wagging tail
     _tailServo.attach(TAIL_SERVO_POUT);
@@ -46,7 +46,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE: called during LOOP
+  // UPDATE: called during every LOOP
   void update(){
     if(!_isEnabled){return;}
 

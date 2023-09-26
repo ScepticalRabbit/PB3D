@@ -41,7 +41,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP
+  // BEGIN: called once during SETUP
   void begin(){
     _initStateData(&_currState);
     _updateStateData(&_currState);
@@ -56,7 +56,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE: called during LOOP
+  // UPDATE: called during every LOOP
   void update(){
     if(!_isEnabled){return;}
 

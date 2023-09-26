@@ -10,7 +10,7 @@ Author: Lloyd Fletcher
 #include "LaserSensor.h"
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 //---------------------------------------------------------------------------
 void LaserSensor::begin(){
     delay(_resetDelay);
@@ -28,7 +28,7 @@ void LaserSensor::begin(){
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void LaserSensor::startRange(){
     if(!_isEnabled){return;}

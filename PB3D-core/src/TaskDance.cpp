@@ -20,7 +20,7 @@ TaskDance::TaskDance(MoodManager* inMood, TaskManager* inTask,
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 void TaskDance::begin(){
     _danceStartFlag = true;
     _timerObj.start(0);    

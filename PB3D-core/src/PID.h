@@ -46,13 +46,13 @@ public:
   }
   
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP
+  // BEGIN: called once during SETUP
   void begin(){
     _pidTimer.start(0);  
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE: called during LOOP
+  // UPDATE: called during every LOOP
   
   // This version directly returns the output, useful for position control
   void update(double input){

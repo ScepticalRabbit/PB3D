@@ -21,7 +21,7 @@ TaskFindHuman::TaskFindHuman(MoodManager* inMood, TaskManager* inTask, MoveManag
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 void TaskFindHuman::begin(){
     delay(500);
     _presDetector = PresenceDetector(_movementSensor, _sensitivityPresence, _sensitivityMovement, _detectInterval);
@@ -35,7 +35,7 @@ void TaskFindHuman::begin(){
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 void TaskFindHuman::update(){
     // If the human presence sensor wasn't found then do nothing
     if(!_isEnabled){

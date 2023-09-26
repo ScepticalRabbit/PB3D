@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT - PB3! 
-// CLASS: TASKREST
+// CLASS: TaskRest
 //---------------------------------------------------------------------------
 /*
 The task ? class is part of the PetBot (PB) program. It is used to...
@@ -14,85 +14,38 @@ Author: Lloyd Fletcher
 #include <Arduino.h>
 #include "TaskManager.h"
 #include "MoveManager.h"
+#include "Speaker.h"
 #include "Timer.h"
 
 class TaskRest{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskRest(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker){
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
-    _speakerObj = inSpeaker;
-  }
+  TaskRest(MoodManager* inMood, TaskManager* inTask, 
+            MoveManager* inMove, Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP
-  void begin(){
-    _timerObj.start(0);
-  }
+  // BEGIN: called once during SETUP
+  void begin();
 
   //---------------------------------------------------------------------------
-  // UPDATE: called during LOOP
-  void update(){
-    // If the task has changed then modify other classes as needed
-    if(_taskObj->getNewTaskFlag()){
-      reset();
-      _speakerObj->reset();
-    }
-  }
+  // UPDATE: called during every LOOP
+  void update();
 
-  void rest(){
-    // Reset the speaker flags
-    uint8_t inCodes[] = {SPEAKER_SNORE,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
-    _speakerObj->setSoundCodes(inCodes,4);
+  //---------------------------------------------------------------------------
+  // REST
+  void rest();
 
-    // Stop moving while sleeping
-    _moveObj->stop();
-    
-    if(_timerObj.finished()){
-      if(_restLEDIncrease){
-        // If we are increasing increment the LED intensity
-        _restLEDVal = _restLEDVal+1;
-        
-        // If we are above the max value reset and decrease
-        if(_restLEDVal>=_restLEDMax){
-          _restLEDVal = _restLEDMax;
-          _restLEDIncrease = false;
-          _speakerObj->reset();
-        }
-      }
-      else{
-        // If we are decreasing decrement the LED intensity
-        _restLEDVal = _restLEDVal-1;
-        
-        // If we are below the min intensity reset and increase
-        if(_restLEDVal<=_restLEDMin){
-          _restLEDVal = _restLEDMin;
-          _restLEDIncrease = true;
-        }  
-      }
-      // Restart the timerr
-      _timerObj.start(_restUpdateTime);
-      // Set the current LED value
-      _taskObj->taskLEDRest(_restLEDVal);
-    }
-  }
-
-  void reset(){
-    _timerObj.start(0);
-    _restLEDVal = _restLEDMax;
-    _restLEDIncrease = false;
-    _speakerObj->reset();
-  }
+  //---------------------------------------------------------------------------
+  // Get, set and reset
+  void reset();
   
 private:
   // MAIN OBJECT POINTERS
-  MoodManager* _moodObj;
-  TaskManager* _taskObj;
-  MoveManager* _moveObj;
-  Speaker* _speakerObj;
+  MoodManager* _moodObj = NULL;
+  TaskManager* _taskObj = NULL;
+  MoveManager* _moveObj = NULL;
+  Speaker* _speakerObj = NULL;
 
   // Timers
   Timer _timerObj = Timer();

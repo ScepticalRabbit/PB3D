@@ -22,7 +22,7 @@ TaskPickedUp::TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, T
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 void TaskPickedUp::begin(){
     // Ping the touch sensor to see if it is connected
     Wire.beginTransmission(ADDR_TOUCHSENS);
@@ -45,7 +45,7 @@ void TaskPickedUp::begin(){
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 void TaskPickedUp::update(){
     // If the sensor wasn't found then do nothing
     if(!_isEnabled){return;}

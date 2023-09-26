@@ -17,7 +17,7 @@ TaskManager::TaskManager(Adafruit_NeoPixel_ZeroDMA* RGBLEDs){
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 //---------------------------------------------------------------------------
 void TaskManager::begin(){
     // Generate a probability, start the task timer and set the task
@@ -27,7 +27,7 @@ void TaskManager::begin(){
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void TaskManager::update(){
     if(_taskTimer.finished()){

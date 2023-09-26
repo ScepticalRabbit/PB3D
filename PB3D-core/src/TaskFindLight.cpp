@@ -21,7 +21,7 @@ TaskFindLight::TaskFindLight(MoodManager* inMood, TaskManager* inTask, MoveManag
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 void TaskFindLight::begin(){
     // LEFT light sensor
     _tcaSelect(LIGHTSENS_L);
@@ -51,7 +51,7 @@ void TaskFindLight::begin(){
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 void TaskFindLight::update(){
     if(!_isEnabled){return;}
 

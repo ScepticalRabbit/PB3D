@@ -19,7 +19,7 @@ MoveManager::MoveManager(Adafruit_MotorShield* AFMS, Encoder* encL, Encoder* enc
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 //---------------------------------------------------------------------------
 void MoveManager::begin(){
     // Start the motor shield object 
@@ -63,7 +63,7 @@ void MoveManager::begin(){
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void MoveManager::updateMove(){
     if(!_isEnabled){return;}

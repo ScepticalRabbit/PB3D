@@ -32,7 +32,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP
+  // BEGIN: called once during SETUP
   void begin(){
     _filtTimer.start(0);
   }

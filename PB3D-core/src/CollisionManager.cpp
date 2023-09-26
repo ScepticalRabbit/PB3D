@@ -17,7 +17,7 @@ CollisionManager::CollisionManager(MoodManager* inMood, TaskManager* inTask, Mov
 }
 
 //-----------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 //-----------------------------------------------------------------------------
 void CollisionManager::begin(){
     // Start the ultrasonic timer  
@@ -30,7 +30,7 @@ void CollisionManager::begin(){
 }
 
 //-----------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 //-----------------------------------------------------------------------------
 void CollisionManager::update(){
     //uint32_t startTime = micros(); 

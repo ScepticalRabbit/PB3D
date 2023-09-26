@@ -36,7 +36,7 @@ public:
             Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP
+  // BEGIN: called once during SETUP
   void begin();
 
   //---------------------------------------------------------------------------

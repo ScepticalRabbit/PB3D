@@ -26,7 +26,7 @@ public:
   PatSensor(){}
 
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP
+  // BEGIN: called once during SETUP
   void begin(){
     // Ping the touch sensor to see if it is connected
     Wire.beginTransmission(ADDR_TOUCHSENS);
@@ -46,7 +46,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE: called during LOOP
+  // UPDATE: called during every LOOP
   void update(){
     if(!_isEnabled){return;}
 

@@ -13,7 +13,7 @@ LaserManager::LaserManager(){
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 //---------------------------------------------------------------------------
 void LaserManager::begin(){
     // Start all timers:
@@ -64,7 +64,7 @@ void LaserManager::begin(){
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void LaserManager::update(){
     _updateColLSRs();

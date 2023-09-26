@@ -28,7 +28,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP
+  // BEGIN: called once during SETUP
   void begin(){
     if (!_cal.begin()) {
       Serial.println(F("IMU: Failed to init calib helper."));
@@ -54,7 +54,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE: called during LOOP
+  // UPDATE: called during every LOOP
   void update(){
     if(!_isEnabled){return;}
 

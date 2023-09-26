@@ -21,12 +21,12 @@ TaskPounce::TaskPounce(CollisionManager* inCollision, MoodManager* inMood, TaskM
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 void TaskPounce::begin(){
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 void TaskPounce::update(){
     if(!_isEnabled){return;}
 

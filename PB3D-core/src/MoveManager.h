@@ -59,7 +59,7 @@ public:
   MoveManager(Adafruit_MotorShield* AFMS, Encoder* encL, Encoder* encR);
   
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP  
+  // BEGIN: called once during SETUP  
   //---------------------------------------------------------------------------
   void begin();
 

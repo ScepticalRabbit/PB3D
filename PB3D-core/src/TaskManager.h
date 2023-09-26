@@ -39,12 +39,12 @@ public:
   TaskManager(Adafruit_NeoPixel_ZeroDMA* RGBLEDs);
   
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP
+  // BEGIN: called once during SETUP
   //---------------------------------------------------------------------------
   void begin();
 
   //---------------------------------------------------------------------------
-  // UPDATE: called during LOOP
+  // UPDATE: called during every LOOP
   //---------------------------------------------------------------------------
   void update();
   void forceUpdate();

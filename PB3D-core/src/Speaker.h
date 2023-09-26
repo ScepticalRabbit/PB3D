@@ -36,7 +36,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP
+  // BEGIN: called once during SETUP
   void begin(){
     // NOTE: see adafruit guidance about metro M4 dac here:
     // https://learn.adafruit.com/adafruit-metro-m4-express-featuring-atsamd51/adapting-sketches-to-m0
@@ -54,7 +54,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE: called during LOOP
+  // UPDATE: called during every LOOP
   void update(){
     // If the current sound has ended increment to play the next one
     if(_soundCount == SOUND_END){

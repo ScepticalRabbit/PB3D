@@ -22,14 +22,14 @@ TaskInteract::TaskInteract(MoodManager* inMood, TaskManager* inTask, MoveManager
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 void TaskInteract::begin(){
     _askSqueakTimer.start(0);
     _askWiggleTimer.start(0);
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 void TaskInteract::update(){
     if(!_isEnabled){return;}
 

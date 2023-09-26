@@ -15,7 +15,7 @@ Author: Lloyd Fletcher
 // MoodManager(Adafruit_NeoPixel_ZeroDMA* RGBLEDs){_moodLEDs = RGBLEDs;}
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 //---------------------------------------------------------------------------
 void MoodManager::begin(){
     // Generate a probability, start the mood timer and set the mood
@@ -25,7 +25,7 @@ void MoodManager::begin(){
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void MoodManager::update(){
     if(!_isEnabled){return;}

@@ -19,13 +19,13 @@ TaskPause::TaskPause(CollisionManager* inCollision, TaskManager* inTask, MoveMan
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 void TaskPause::begin(){
     _pauseTimer.start(0);
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 void TaskPause::update(){
     if(!_isEnabled){return;}
 

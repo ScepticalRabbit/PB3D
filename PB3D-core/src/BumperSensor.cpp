@@ -17,7 +17,7 @@ BumperSensor::BumperSensor(){
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 //---------------------------------------------------------------------------
 void BumperSensor::begin(){
     // TODO: check that there is something at this address 
@@ -25,7 +25,7 @@ void BumperSensor::begin(){
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void BumperSensor::update(){
     if(!_isEnabled){return;}

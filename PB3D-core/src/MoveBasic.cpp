@@ -17,14 +17,14 @@ MoveBasic::MoveBasic(){
 } 
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 //---------------------------------------------------------------------------
 void MoveBasic::begin(){
 
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void MoveBasic::update(){
     if(!_isEnabled){return;}

@@ -20,7 +20,7 @@ TaskFindSound::TaskFindSound(MoodManager* inMood, TaskManager* inTask,
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 void TaskFindSound::begin(){
     // Send the byte flag back
     Wire.beginTransmission(ADDR_FOLLBOARD);

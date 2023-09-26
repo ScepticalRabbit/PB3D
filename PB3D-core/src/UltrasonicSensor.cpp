@@ -17,14 +17,14 @@ UltrasonicSensor::UltrasonicSensor(){
 }
 
 //---------------------------------------------------------------------------
-// BEGIN: called during SETUP
+// BEGIN: called once during SETUP
 //---------------------------------------------------------------------------
 void UltrasonicSensor::begin(){
 
 }
 
 //---------------------------------------------------------------------------
-// UPDATE: called during LOOP
+// UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void UltrasonicSensor::update(){
     if(!_isEnabled){return;}

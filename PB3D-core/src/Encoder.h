@@ -26,7 +26,7 @@ public:
   }
   
   //---------------------------------------------------------------------------
-  // BEGIN: called during SETUP
+  // BEGIN: called once during SETUP
   //---------------------------------------------------------------------------
   void begin(){
     pinMode(_pinA, INPUT);
@@ -37,7 +37,7 @@ public:
   }
 
   //---------------------------------------------------------------------------
-  // UPDATE: called during LOOP
+  // UPDATE: called during every LOOP
   //---------------------------------------------------------------------------
   // Update for the right encoder '!='
   void updateNEQ(){
