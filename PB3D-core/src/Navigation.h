@@ -11,6 +11,8 @@ Author: Lloyd Fletcher
 #ifndef NAVIGATION_H
 #define NAVIGATION_H
 
+#include <Arduino.h>
+
 #include "Timer.h"
 #include "Encoder.h"
 #include "IMUSensor.h"

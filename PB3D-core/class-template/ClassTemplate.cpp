@@ -11,7 +11,6 @@ Author: Lloyd Fletcher
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
-//---------------------------------------------------------------------------
 ClassTemp::ClassTemp(Collision* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
             Speaker* inSpeaker){
 _collisionObj = inCollision;
@@ -23,14 +22,12 @@ _speakerObj = inSpeaker;
 
 //---------------------------------------------------------------------------
 // BEGIN: called during SETUP
-//---------------------------------------------------------------------------
 void ClassTemp::begin(){
 
 }
 
 //---------------------------------------------------------------------------
 // UPDATE: called during LOOP
-//---------------------------------------------------------------------------
 void ClassTemp::update(){
     if(!_isEnabled){return;}
 
@@ -42,7 +39,6 @@ void ClassTemp::update(){
 
 //---------------------------------------------------------------------------
 // DOSOMETHING - called during the main during decision tree
-//---------------------------------------------------------------------------
 void ClassTemp::doSomething(){
     if(!_isEnabled){return;}
 

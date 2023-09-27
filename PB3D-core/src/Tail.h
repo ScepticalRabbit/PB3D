@@ -13,6 +13,7 @@ Date Edited:  12th February 2021
 #ifndef TAIL_H
 #define TAIL_H
 
+#include <Arduino.h>
 #include <Wire.h> // I2C
 //#include "CollisionManager.h" 
 #include "TaskManager.h"

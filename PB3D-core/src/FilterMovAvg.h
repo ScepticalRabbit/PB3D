@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS: Filter Low Pass
+// CLASS: FilterMovAvg
 //---------------------------------------------------------------------------
 /*
 This class is part of the PetBot (PB) program. It is a moving average filter
@@ -9,92 +9,37 @@ integer less than 255 and much smaller values are recommended to avoid memory
 issues.
 
 Author: Lloyd Fletcher
-Date Created: 5th Sep. 2021
-Date Edited:  5th Sep. 2021 
 */
 #ifndef FILTERMOVAVG_H
 #define FILTERMOVAVG_H
 
+#include <Arduino.h>
 #include "Timer.h"
 
 class FilterMovAvg{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR/DESTRUCTOR
-  FilterMovAvg(){
-    _dataArray = new double[_window];
-    for(uint8_t ii=0 ; ii<_window ; ii++){
-      _dataArray[ii] = 0.0;
-    }
-  }
-
-  FilterMovAvg(uint8_t inWin){
-    _window = inWin;
-    _dataArray = new double[inWin];
-    for(uint8_t ii=0 ; ii<inWin ; ii++){
-      _dataArray[ii] = 0.0;
-    }
-  }
-
-  FilterMovAvg(uint8_t inWin, uint16_t inUpdateTime){
-    _window = inWin;
-    _updateTime = inUpdateTime;
-    _dataArray = new double[inWin];
-    for(uint8_t ii=0 ; ii<inWin ; ii++){
-      _dataArray[ii] = 0.0;
-    }
-  }
-
-  ~FilterMovAvg(){
-    delete []_dataArray;
-  }
+  FilterMovAvg();
+  FilterMovAvg(uint8_t inWin);
+  FilterMovAvg(uint8_t inWin, uint16_t inUpdateTime);
+  ~FilterMovAvg();
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
-  void begin(){
-    _filtTimer.start(0);
-  }
+  void begin();
 
-  double filter(double inData){
-    if(_filtTimer.finished()){
-      // Remove the data point at the current position from the running total
-      _dataSum = _dataSum - _dataArray[_currIndex];
-      // Overwrite the data point at the current position
-      _dataArray[_currIndex] = inData;
-      // Add the current data point to the running total
-      _dataSum = _dataSum + inData;
-      // Increment the index and wrap around if needed
-      _currIndex++;
-      if(_currIndex >= _window){
-        _currIndex = 0;
-      }
-      // The filtered value is the average over our window, return it
-      _currFiltered = _dataSum / _window;
+  //---------------------------------------------------------------------------
+  // FILTER
+  double filter(double inData);
 
-      _filtTimer.start(_updateTime);
-    }
-    return _currFiltered;
-  }
+  //---------------------------------------------------------------------------
+  // Get, set and reset
+  void reset();
+  void reset(float inVal);
 
-  void reset(){
-    for(uint8_t ii=0 ; ii<_window ; ii++){
-      _dataArray[ii] = 0.0;
-    }
-  }
-
-  void reset(float inVal){
-    for(uint8_t ii=0 ; ii<_window ; ii++){
-      _dataArray[ii] = inVal;
-    }
-  }
-
-  uint8_t getWindow(){
-    return _window;
-  }
-
-  double getCurrVal(){
-    return _currFiltered;
-  }
+  uint8_t getWindow(){return _window;}
+  double getCurrVal(){return _currFiltered;}
 
 private:
   Timer _filtTimer; 

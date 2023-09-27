@@ -13,6 +13,7 @@ Date Edited:  20th April 2022
 #ifndef PATSENSOR_H
 #define PATSENSOR_H
 
+#include <Arduino.h>
 #include <Wire.h> // I2C
 #include <Seeed_CY8C401XX.h> // Capacitive Touch Sensor
 #include "Timer.h"

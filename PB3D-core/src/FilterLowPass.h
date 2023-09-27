@@ -1,70 +1,42 @@
 //---------------------------------------------------------------------------
 // PET BOT 3D - PB3D! 
-// CLASS: Filter Low Pass
+// CLASS: FilterLowPass
 //---------------------------------------------------------------------------
 /*
 This class is part of the PetBot (PB) program. It is a 1st order low pass 
-filter. The filter
+filter. 
 
 Author: Lloyd Fletcher
-Date Created: 5th Sep. 2021
-Date Edited:  5th Sep. 2021 
 */
 #ifndef FILTERLOWPASS_H
 #define FILTERLOWPASS_H
 
+#include <Arduino.h>
 #include "Timer.h"
 
 class FilterLowPass{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTORS
-  FilterLowPass(){
-  }
-
-  FilterLowPass(double inAlpha){
-    _alpha = inAlpha;
-  }
-
-  FilterLowPass(double inAlpha, uint16_t inUpdateTime){
-    _alpha = inAlpha;
-    _updateTime = inUpdateTime;
-  }
+  FilterLowPass();
+  FilterLowPass(double inAlpha);
+  FilterLowPass(double inAlpha, uint16_t inUpdateTime);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
-  void begin(){
-    _filtTimer.start(0);
-  }
+  void begin();
 
-  double filter(double inData){
-    if(_filtTimer.finished()){
-      _currFiltered = _alpha*inData + (1-_alpha)*_prevFiltered;
-      _prevFiltered = _currFiltered;
-      _filtTimer.start(_updateTime);
-    }
-    return _currFiltered;
-  }
+  //---------------------------------------------------------------------------
+  // FILTER
+  double filter(double inData);
 
-  void setAlpha(double inAlpha){
-    _alpha = inAlpha;
-  }
-
-  double getAlpha(){
-    return _alpha;
-  }
-
-  double getCurrVal(){
-    return _currFiltered;
-  }
-
-  void reset(){
-    _prevFiltered = 0.0;
-  }
-
-  void reset(float inVal){
-    _prevFiltered = inVal;
-  }
+  //---------------------------------------------------------------------------
+  // Get, set and reset
+  void setAlpha(double inAlpha){_alpha = inAlpha;}
+  double getAlpha(){return _alpha;}
+  double getCurrVal(){return _currFiltered;}
+  void reset(){_prevFiltered = 0.0;}
+  void reset(double inVal){_prevFiltered = inVal;}
 
 private:
   Timer _filtTimer;

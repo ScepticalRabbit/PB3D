@@ -16,6 +16,8 @@ Date Edited:  29th Aug. 2021
 #ifndef PID_H
 #define PID_H
 
+#include <Arduino.h>
+
 #define PID_OFF 0
 #define PID_ON 1
 

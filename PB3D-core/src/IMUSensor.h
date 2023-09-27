@@ -9,6 +9,8 @@ Author: Lloyd Fletcher
 #ifndef IMUSENSOR_H
 #define IMUSENSOR_H
 
+#include <Arduino.h>
+
 #include <Adafruit_Sensor_Calibration.h>
 #include <Adafruit_AHRS.h>
 #include <Adafruit_FXAS21002C.h>

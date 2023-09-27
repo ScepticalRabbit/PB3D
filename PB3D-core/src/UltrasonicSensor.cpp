@@ -10,20 +10,6 @@ Author: Lloyd Fletcher
 #include "UltrasonicSensor.h"
 
 //---------------------------------------------------------------------------
-// CONSTRUCTOR: pass in pointers to main objects and other sensors
-//---------------------------------------------------------------------------
-UltrasonicSensor::UltrasonicSensor(){
-
-}
-
-//---------------------------------------------------------------------------
-// BEGIN: called once during SETUP
-//---------------------------------------------------------------------------
-void UltrasonicSensor::begin(){
-
-}
-
-//---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void UltrasonicSensor::update(){

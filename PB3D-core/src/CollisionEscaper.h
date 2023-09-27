@@ -1,6 +1,7 @@
 #ifndef COLLISIONESCAPER_H
 #define COLLISIONESCAPER_H
 
+#include <Arduino.h>
 #include "MoveManager.h"
 #include "CollisionDangerFlags.h"
 

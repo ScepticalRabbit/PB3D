@@ -27,35 +27,29 @@ class ClassTemp{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
-  //---------------------------------------------------------------------------
-  ClassTemp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+ ClassTemp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
                 Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
   // BEGIN: called during SETUP
-  //---------------------------------------------------------------------------
   void begin();
 
   //---------------------------------------------------------------------------
   // UPDATE: called during LOOP
-  //---------------------------------------------------------------------------
   void update();
 
   //---------------------------------------------------------------------------
   // DOSOMETHING - called during the main during decision tree 
-  //---------------------------------------------------------------------------
-  void doSomething();
+   void doSomething();
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-  //---------------------------------------------------------------------------
-  bool getEnabledFlag(){return _isEnabled;}
+    bool getEnabledFlag(){return _isEnabled;}
   void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
-  //---------------------------------------------------------------------------
   Collision* _collisionObj = NULL;
   MoodManager* _moodObj = NULL;
   TaskManager* _taskObj = NULL;
@@ -64,8 +58,7 @@ private:
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  //---------------------------------------------------------------------------
-  bool _isEnabled = true;
+   bool _isEnabled = true;
   bool _startFlag = true;
 
 };

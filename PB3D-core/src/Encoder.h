@@ -11,6 +11,7 @@ Author: Lloyd Fletcher
 #ifndef ENCODER_H
 #define ENCODER_H
 
+#include <Arduino.h>
 #include "Timer.h"
 #include "FilterMovAvg.h" 
 #include "FilterLowPass.h"
@@ -19,92 +20,32 @@ class Encoder{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR
-  Encoder(int8_t pinA, int8_t pinB){    
-    _pinA = pinA;
-    _pinB = pinB;
-    _encCountCurr = 0;
-  }
+  Encoder(int8_t pinA, int8_t pinB);
   
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
-  //---------------------------------------------------------------------------
-  void begin(){
-    pinMode(_pinA, INPUT);
-    pinMode(_pinB, INPUT);
-    _speedTimer.start(0);
-    _speedFiltMMPS.begin();
-    _speedFiltCPS.begin();
-  }
+  void begin();
 
   //---------------------------------------------------------------------------
   // UPDATE: called during every LOOP
-  //---------------------------------------------------------------------------
   // Update for the right encoder '!='
-  void updateNEQ(){
-    if(digitalRead(_pinA) != digitalRead(_pinB)){
-      _encCountCurr++;
-      _encDirCode = 'F';
-    }
-    else{
-      _encCountCurr--;
-      _encDirCode = 'B';
-    } 
-  }
+  void updateNEQ();
   
   // Update for the left encoder '=='
-  void updateEQ(){
-    if(digitalRead(_pinA) == digitalRead(_pinB)){
-      _encCountCurr++;
-      _encDirCode = 'F';
-    }
-    else{
-      _encCountCurr--;
-      _encDirCode = 'B';
-    } 
-  }
-
-  //---------------------------------------------------------------------------
-  // Get, set and reset
-  int32_t getCount(){return _encCountCurr;}
-  void setCount(int32_t inCount){_encCountCurr = inCount;}
-  char getDir(){return _encDirCode;}
+  void updateEQ();
 
   //-------------------------------------------------------------------------
   // SPEED CALCULATION FUNCTIONS
-  void updateSpeed(){
-    if(_speedTimer.finished()){
-      // Get the current time and restart the timer
-      double timeIntS = double(_speedTimer.getTime())/1000.0;
-      _speedTimer.start(_speedUpdateTime);
-      
-      // Calculate distance travelled using the encoder count difference
-      double distMM = double(_encCountCurr-_encCountPrevForSpeed)*_mmPerCount;
+  void updateSpeed();
 
-      // Calculate speed in 'counts/second'
-      _rawSpeedCPS = double(_encCountCurr-_encCountPrevForSpeed)/timeIntS;
-      // Smooth the raw speed using the filter
-      _smoothSpeedCPS = _speedFiltCPS.filter(_rawSpeedCPS); 
-      
-      // Calculate raw and smoothed speed
-      _rawSpeedMMPS = distMM/timeIntS;
-      // Smooth the raw speed using the filter
-      _smoothSpeedMMPS = _speedFiltMMPS.filter(_rawSpeedMMPS); 
+  //---------------------------------------------------------------------------
+  // Get, set and reset
+  void resetFilter();
+  void resetFilter(float inVal);
 
-      // Store the encoder count for the next round of calculations
-      _encCountPrevForSpeed = _encCountCurr;
-    }
-  }
-
-  void resetFilter(){
-    _speedFiltMMPS.reset();
-    _speedFiltCPS.reset();
-  }
-
-  void resetFilter(float inVal){
-    _speedFiltMMPS.reset(inVal);
-    _speedFiltCPS.reset(inVal);
-  }
-
+  int32_t getCount(){return _encCountCurr;}
+  void setCount(int32_t inCount){_encCountCurr = inCount;}
+  char getDir(){return _encDirCode;}
   double getMMPerCount(){return _mmPerCount;}
   double getRawSpeedMMPS(){return _rawSpeedMMPS;}
   double getSmoothSpeedMMPS(){return _smoothSpeedMMPS;}
@@ -116,8 +57,8 @@ private:
   // CORE VARIABLES - Used by all types of encoder
   volatile int32_t _encCountCurr;
   char _encDirCode = 'F';
-  int8_t _pinA;
-  int8_t _pinB;
+  int8_t _pinA = -1;
+  int8_t _pinB = -1;
 
   // SPEED VARIABLES - Used by robot wheel encoders
   Timer _speedTimer = Timer(); 

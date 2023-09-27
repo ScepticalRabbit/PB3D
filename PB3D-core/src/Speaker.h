@@ -11,6 +11,7 @@ Author: Lloyd Fletcher
 #ifndef SPEAKER_H
 #define SPEAKER_H
 
+#include <Arduino.h>
 #include "Timer.h"
 #include "MusicNotes.h"
 
