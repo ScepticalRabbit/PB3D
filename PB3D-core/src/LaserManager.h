@@ -31,31 +31,37 @@ Author: Lloyd Fletcher
 #define ADDR_LSR_U 0x34
 #define ADDR_LSR_D 0x35
 
+// DEBUG Flag: used to print debugging info to serial on laser status and range
+//#define DEBUG_LSRMANAGER_L
+//#define DEBUG_LSRMANAGER_R
+
 class LaserManager{
 public:
     //---------------------------------------------------------------------------
     // CONSTRUCTOR: pass in pointers to main objects and other sensors
-    //---------------------------------------------------------------------------
     LaserManager();
 
     //---------------------------------------------------------------------------
     // BEGIN: called once during SETUP
-    //---------------------------------------------------------------------------
     void begin();
 
     //---------------------------------------------------------------------------
     // UPDATE: called during every LOOP
-    //---------------------------------------------------------------------------
     void update();
 
     //---------------------------------------------------------------------------
     // Get, set and reset
-    //---------------------------------------------------------------------------
-    int16_t getRangeL(){return _laserL.getRange();}
+     int16_t getRangeL(){return _laserL.getRange();}
     int16_t getRangeR(){return _laserR.getRange();}
     int16_t getRangeA(){return _laserA.getRange();}
     int16_t getRangeU(){return _laserU.getRange();}
     int16_t getRangeD(){return _laserD.getRange();}
+
+    int8_t getStatusL(){return _laserL.getRangeStatus();}
+    int8_t getStatusR(){return _laserR.getRangeStatus();}
+    int8_t getStatusA(){return _laserA.getRangeStatus();}
+    int8_t getStatusU(){return _laserU.getRangeStatus();} 
+    int8_t getStatusD(){return _laserD.getRangeStatus();}
 
     uint8_t getColCodeL();
     uint8_t getColCodeR();
@@ -106,6 +112,17 @@ private:
     int16_t _altDistClose = 80;  // mm
     int16_t _altDistFar = 180;   // mm
 
+    // LSR - Multi-ranging averaging and error catching
+    int16_t _laserRngsL[3] = {0,0,0};
+    int16_t _laserRngsR[3] = {0,0,0};
+    int16_t _laserRngsU[3] = {0,0,0};
+    int16_t _laserRngsD[3] = {0,0,0};
+
+    int8_t _laserStatL[3] = {0,0,0};
+    int8_t _laserStatR[3] = {0,0,0};
+    int8_t _laserStatU[3] = {0,0,0};
+    int8_t _laserStatD[3] = {0,0,0}; 
+
     // LSR - UP - DONT CHANGE!!!
     int16_t _upColDistFar = 220;    // mm
     int16_t _upColDistClose = 180;   // mm
@@ -115,11 +132,10 @@ private:
     int16_t _downCliffDistClose = 160, _downColDistClose = 70;   // mm
     int16_t _downCliffDistLim = 2000, _downColDistLim = 20;       // mm
     int16_t _downDistCent = 120; // actually measured closer to 125mm
-    
-    //bool _collisionLSRFlagU = false, _collisionLSRFlagD = false;
-
+  
     // Timers
-    uint16_t _colLSRUpdateTime = 101;
+    // NOTE: fastest update time on lasers at current setting is 40ms
+    uint16_t _colLSRUpdateTime = 40;
     Timer _colLSRTimer = Timer();
     uint16_t _altLSRUpdateTime = 101;
     Timer _altLSRTimer = Timer();

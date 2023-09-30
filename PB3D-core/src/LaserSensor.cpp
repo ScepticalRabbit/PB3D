@@ -34,6 +34,7 @@ void LaserSensor::startRange(){
     if(!_isEnabled){return;}
 
     _laserObj.startRange();
+    _rangeStartTime = millis();
     _rangeFlag = false;
 }
 
@@ -42,11 +43,22 @@ bool LaserSensor::updateRange(){
     
     if(_laserObj.isRangeComplete() && !_rangeFlag){
         _rangeTimeout = _laserObj.timeoutOccurred();
-        if(_rangeTimeout){return false;}
-
+        _rangeStatus = _laserObj.readRangeStatus();
         _range = _laserObj.readRangeResult();
-        if(_range <= _rangeLim){_range = -1;}
         _rangeFlag = true;
+
+        // Check failure conditions for valid ranging, failure range = -1
+        if(_rangeTimeout){
+            _range = -1;
+        }
+        if(_rangeStatus != 0){
+            _range = -1;
+        }
+        if(_range <= _rangeLim){
+            _range = -1;
+        }
+
+        _rangeTime = millis()-_rangeStartTime;
         return true;
     }
     else{

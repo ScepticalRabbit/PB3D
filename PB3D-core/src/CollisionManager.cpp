@@ -20,13 +20,15 @@ CollisionManager::CollisionManager(MoodManager* inMood, TaskManager* inTask, Mov
 // BEGIN: called once during SETUP
 //-----------------------------------------------------------------------------
 void CollisionManager::begin(){
-    // Start the ultrasonic timer  
     _ultrasonicTimer.start(0);
     _bumperTimer.start(0);
     _slowDownTimer.start(0);
 
     _laserManager.begin();
-    _bumpers.begin();    
+    _bumpers.begin();
+
+    // Flag to turn off ultrasonic ranger to help with timing interruptions
+    //_ultrasonicRanger.setEnabledFlag(false);    
 }
 
 //-----------------------------------------------------------------------------
@@ -105,7 +107,6 @@ void CollisionManager::resetFlags(){
     _bumpers.reset();
 }
 
-
 //-----------------------------------------------------------------------------
 void CollisionManager::setEscapeStart(){   
     _updateCheckVec();    // Check all collision sensors - used for decision tree
@@ -174,14 +175,19 @@ void CollisionManager::_updateEscapeDecision(){
         _lastCol.checkVec[ii] = _checkVec[ii];
     }
     _lastCol.USRange = _ultrasonicRanger.getRangeMM();
+
     _lastCol.LSRRangeL = _laserManager.getRangeL();
     _lastCol.LSRRangeR = _laserManager.getRangeR();
     _lastCol.LSRRangeU = _laserManager.getRangeU();
     _lastCol.LSRRangeD = _laserManager.getRangeD();
-    _lastCol.escCount = _escaper.getEscapeCount();
-    _lastCol.escDist = _escaper.getEscapeDist();
-    _lastCol.escAng = _escaper.getEscapeAngle();
 
+    _lastCol.LSRStatusL = _laserManager.getStatusL();
+    _lastCol.LSRStatusR = _laserManager.getStatusR();
+    _lastCol.LSRStatusU = _laserManager.getStatusU();
+    _lastCol.LSRStatusD = _laserManager.getStatusD();
+
+    _lastCol.escCount = _escaper.getEscapeCount();
+    
     // Plot debug information
     #if defined(COLL_DEBUG_DECISIONTREE)
         Serial.println();
@@ -196,10 +202,15 @@ void CollisionManager::_updateEscapeDecision(){
         Serial.println();
 
         Serial.print("US= "); Serial.print(_lastCol.USRange); Serial.println(" mm");
-        Serial.print("LL= "); Serial.print(_lastCol.LSRRangeL); Serial.println(" mm");
-        Serial.print("LR= " ); Serial.print(_lastCol.LSRRangeR); Serial.println(" mm");
-        Serial.print("LU= "); Serial.print(_lastCol.LSRRangeU); Serial.println(" mm");
-        Serial.print("LD= "); Serial.print(_lastCol.LSRRangeD); Serial.println(" mm");
+        
+        Serial.print("LL= "); Serial.print(_lastCol.LSRStatusL); Serial.print(", ");
+        Serial.print(_lastCol.LSRRangeL); Serial.println(" mm");
+        Serial.print("LR= " ); Serial.print(_lastCol.LSRStatusR); Serial.print(", ");
+        Serial.print(_lastCol.LSRRangeR); Serial.println(" mm");
+        Serial.print("LU= "); Serial.print(_lastCol.LSRStatusU); Serial.print(", ");
+        Serial.print(_lastCol.LSRRangeU); Serial.println(" mm");
+        Serial.print("LD= "); Serial.print(_lastCol.LSRStatusD); Serial.print(", "); 
+        Serial.print(_lastCol.LSRRangeD); Serial.println(" mm");
         
         Serial.println();
         Serial.print("Esc,Count="); Serial.print(_lastCol.escCount);

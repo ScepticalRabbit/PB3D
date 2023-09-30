@@ -136,7 +136,7 @@ void setup() {
   // Start the serial 
   Serial.begin(115200);
   // Only use below to stop start up until UDB cable connected 
-  //while(!Serial){}
+  // while(!Serial){}
    
   // Initialize I2C communications for sensors and sub boards
   Wire.begin();  // Join I2C bus as leader
@@ -249,8 +249,6 @@ void loop(){
     moveObj.setPWRByDiff(moodObj.getPowerDiff());
     moveObj.setSpeedByMoodFact(moodObj.getSpeedFact());
   }
-
-  // DEBUG MODE: force mood to a particular value
   if(_debug_forceMood){moodObj.setMood(_debug_moodCode);}
     
   //-------------------------------------------------------------------------

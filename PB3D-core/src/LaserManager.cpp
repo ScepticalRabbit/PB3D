@@ -118,10 +118,18 @@ void LaserManager::_updateColLSRs(){
     }
 
     if(_laserL.updateRange()){
-
+        #ifdef DEBUG_LSRMANAGER_L
+            Serial.print("LL= "); Serial.print(_laserL.getRangeStatus()); Serial.print(", ");
+            Serial.print(_laserL.getRange()); Serial.print(" mm");
+            Serial.print(", "); Serial.print(_laserL.getRangeTime()); Serial.println(" ms");
+        #endif 
     }
     if(_laserR.updateRange()){
-        
+        #ifdef DEBUG_LSRMANAGER_R
+            Serial.print("LR= "); Serial.print(_laserR.getRangeStatus()); Serial.print(", ");
+            Serial.print(_laserR.getRange()); Serial.print(" mm");
+            Serial.print(", "); Serial.print(_laserR.getRangeTime()); Serial.println(" ms");
+        #endif 
     }
 }
 

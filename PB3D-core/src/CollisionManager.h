@@ -43,6 +43,8 @@ struct lastCollision_t{
   int16_t USRange = 0;
   int16_t LSRRangeL = 0,LSRRangeR = 0;
   int16_t LSRRangeU = 0,LSRRangeD = 0;
+  int8_t LSRStatusL = 0,LSRStatusR = 0;
+  int8_t LSRStatusU = 0,LSRStatusD = 0;
   uint8_t escCount = 0; 
   float escDist = 0.0, escAng = 0.0;
 };
@@ -86,11 +88,13 @@ public:
   
   int16_t getUSRange(){return _ultrasonicRanger.getRange();}
   int16_t getUSRangeMM(){return _ultrasonicRanger.getRangeMM();}
+
   int16_t getLSRRangeL(){return _laserManager.getRangeL();}
   int16_t getLSRRangeR(){return _laserManager.getRangeR();}
   int16_t getLSRRangeA(){return _laserManager.getRangeA();}
   int16_t getLSRRangeU(){return _laserManager.getRangeU();}
   int16_t getLSRRangeD(){return _laserManager.getRangeD();}
+
   lastCollision_t* getLastCollision(){return &_lastCol;}
 
   uint8_t getColCheck(uint8_t pos){return _checkVec[pos];}
@@ -139,7 +143,7 @@ private:
   // Check flags for all collision sensors
   uint8_t _checkNum = 7;
   uint8_t _checkVec[7] = {0,0,0,0,0,0,0}; //_checkVec[7] = {BL,BR,US,LL,LR,LU,LD}
-  uint16_t _checkAllInt = 51;
+  uint16_t _checkAllInt = 50;
   Timer _checkAllTimer = Timer();
 
   // Time to slow down if sensor tripped
