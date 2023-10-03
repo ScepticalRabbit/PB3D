@@ -85,14 +85,11 @@ uint32_t _test_timeStamp = 0;
 Adafruit_NeoPixel_ZeroDMA leds = Adafruit_NeoPixel_ZeroDMA(
   MOOD_NUMPIX, MOOD_PIN, NEO_GRB + NEO_KHZ800);
 
-// ULTRASONIC SENSOR
-//Ultrasonic ultrasonicSens(COLL_USSENS);
-
 // MOTORS - Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 //-----------------------------------------------------------------------------
-// INTERNAL CLASSES - See *.h files in tabs
+// INTERNAL CLASSES
 
 // SENSORS AND CONTROLLERS
 // Digital pins for left and right encoders
