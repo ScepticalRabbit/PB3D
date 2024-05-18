@@ -37,5 +37,14 @@ PB3D is a 3D printed pet robot based on arduino.
 - GB/Y: Front laser mount and eyes
 - GB: print Xiao 3 mount
 
+## NOTES:
+-----------------------------------------------------------
+
+### Adafruit GPIO exapnder PCF8574
+https://learn.adafruit.com/adafruit-pcf8574
+https://github.com/adafruit/Adafruit_PCF8574
+https://www.adafruit.com/product/5545
+
+If you want to send a GPIO output logic level to some other device or peripheral, the light pull-up acts as high logic out, the strong ground output acts as low logic out.
 
 
