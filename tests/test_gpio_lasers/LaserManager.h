@@ -24,14 +24,15 @@ Author: Lloyd Fletcher
 // Address for digital out GPIO
 #define ADDR_GPIO 0x21
 // Addresses for lasers on I2C
+// The default address for the VL53L0X is 0x29
 #define ADDR_LSR_UC 0x31
 #define ADDR_LSR_DL 0x32
 #define ADDR_LSR_DR 0x33
 
 
 // DEBUG Flag: used to print debugging info to serial on laser status and range
-//#define DEBUG_LSRMANAGER_L
-//#define DEBUG_LSRMANAGER_R
+#define DEBUG_LSRMANAGER_DL
+#define DEBUG_LSRMANAGER_DR
 
 class LaserManager{
 public:

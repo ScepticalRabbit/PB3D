@@ -58,12 +58,14 @@ void LaserManager::begin(){
     _laserUC.begin();
 
     // Activate second laser sensor
-    //delay(_resetDelay);
-    //_laserDL.begin();
+    _pcf.digitalWrite(1, HIGH);
+    delay(_resetDelay);
+    _laserDL.begin();
 
     // Activate third laser sensor
-    //delay(_resetDelay);
-    //_laserDR.begin();
+    _pcf.digitalWrite(2, HIGH);
+    delay(_resetDelay);
+    _laserDR.begin();
 
 }
 
@@ -72,8 +74,8 @@ void LaserManager::begin(){
 //---------------------------------------------------------------------------
 void LaserManager::update(){
     _updateColLSRs();
-    _updateAltLSR();
-    _updateUpDownLSRs();
+    //_updateAltLSR();
+    //_updateUpDownLSRs();
 }
 
 //---------------------------------------------------------------------------
@@ -108,17 +110,17 @@ void LaserManager::_updateColLSRs(){
     }
 
     if(_laserDL.updateRange()){
-        #ifdef DEBUG_LSRMANAGER_L
-            Serial.print("LL= "); Serial.print(_laserL.getRangeStatus()); Serial.print(", ");
-            Serial.print(_laserL.getRange()); Serial.print(" mm");
-            Serial.print(", "); Serial.print(_laserL.getRangeTime()); Serial.println(" ms");
+        #ifdef DEBUG_LSRMANAGER_DL
+            Serial.print("DL= "); Serial.print(_laserDL.getRangeStatus()); Serial.print(", ");
+            Serial.print(_laserDL.getRange()); Serial.print(" mm");
+            Serial.print(", "); Serial.print(_laserDL.getRangeTime()); Serial.println(" ms");
         #endif
     }
     if(_laserDR.updateRange()){
-        #ifdef DEBUG_LSRMANAGER_R
-            Serial.print("LR= "); Serial.print(_laserR.getRangeStatus()); Serial.print(", ");
-            Serial.print(_laserR.getRange()); Serial.print(" mm");
-            Serial.print(", "); Serial.print(_laserR.getRangeTime()); Serial.println(" ms");
+        #ifdef DEBUG_LSRMANAGER_DR
+            Serial.print("DR= "); Serial.print(_laserDR.getRangeStatus()); Serial.print(", ");
+            Serial.print(_laserDR.getRange()); Serial.print(" mm");
+            Serial.print(", "); Serial.print(_laserDR.getRangeTime()); Serial.println(" ms");
         #endif
     }
 }

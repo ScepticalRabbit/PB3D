@@ -10,14 +10,9 @@ Author: Lloyd Fletcher
 
 #include <Arduino.h>
 #include "LaserManager.h"
-#include "LaserSensor.h"
 
 LaserManager _laserManager = LaserManager();
-/*
-LaserSensor _laserUC = LaserSensor(ADDR_LSR_UC,'U');
-LaserSensor _laserDL = LaserSensor(ADDR_LSR_DL,'H');
-LaserSensor _laserDR = LaserSensor(ADDR_LSR_DR,'K');
-*/
+
 //---------------------------------------------------------------------------
 // SETUP
 void setup(){
@@ -28,12 +23,12 @@ void setup(){
 
   // Initialize I2C communications for sensors and sub boards
   Wire.begin();  // Join I2C bus as leader
-  delay(1000);   // Needed to ensure sensors work, delay allows sub-processors to start up
+  delay(500);   // Needed to ensure sensors work, delay allows sub-processors to start up
 
   // SERIAL: POST SETUP
   Serial.println();
-  Serial.println(F("PB3D: LASER GPIO TEST"));
-  Serial.println(F("------------------------------"));
+  Serial.println(F("PB3D: LASER GPIO ACTIVATION TEST"));
+  Serial.println(F("--------------------------------"));
 
   //----------------------------------------------------------------------------
   // LASER MANAGER
@@ -45,7 +40,7 @@ void setup(){
 //---------------------------------------------------------------------------
 // LOOP
 void loop(){
-
+  _laserManager.update();
 }
 
 //---------------------------------------------------------------------------
