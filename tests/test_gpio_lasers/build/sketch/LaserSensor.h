@@ -1,3 +1,4 @@
+#line 1 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/LaserSensor.h"
 //---------------------------------------------------------------------------
 // PET BOT - PB3D!
 // CLASS: LaserRanger

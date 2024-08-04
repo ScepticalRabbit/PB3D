@@ -1,3 +1,4 @@
+#line 1 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/LaserManager.cpp"
 //-----------------------------------------------------------------------------
 // PET BOT 3D - PB3D!
 // CLASS: CSensorLasers

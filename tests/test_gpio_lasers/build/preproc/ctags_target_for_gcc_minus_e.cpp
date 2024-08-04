@@ -1,3 +1,4 @@
+# 1 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/test_gpio_lasers.ino"
 //---------------------------------------------------------------------------
 // PET BOT 3D - PB3D!
 // TEST: PCF8574 gpio activate lasers VL53LOx
@@ -8,8 +9,8 @@ TODO
 Author: Lloyd Fletcher
 */
 
-#include <Arduino.h>
-#include "LaserManager.h"
+# 12 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/test_gpio_lasers.ino" 2
+# 13 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/test_gpio_lasers.ino" 2
 
 LaserManager _laserManager = LaserManager();
 
@@ -22,13 +23,13 @@ void setup(){
   while(!Serial){}
 
   // Initialize I2C communications for sensors and sub boards
-  Wire.begin();  // Join I2C bus as leader
-  delay(500);   // Needed to ensure sensors work, delay allows sub-processors to start up
+  Wire.begin(); // Join I2C bus as leader
+  delay(500); // Needed to ensure sensors work, delay allows sub-processors to start up
 
   // SERIAL: POST SETUP
   Serial.println();
-  Serial.println(F("PB3D: LASER GPIO ACTIVATION TEST"));
-  Serial.println(F("--------------------------------"));
+  Serial.println((reinterpret_cast<const __FlashStringHelper *>(("PB3D: LASER GPIO ACTIVATION TEST"))));
+  Serial.println((reinterpret_cast<const __FlashStringHelper *>(("--------------------------------"))));
 
   //----------------------------------------------------------------------------
   // LASER MANAGER
@@ -48,4 +49,3 @@ void loop(){
 
 //---------------------------------------------------------------------------
 // FUNCTIONS
-

@@ -1,3 +1,4 @@
+#line 1 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/test_gpio_lasers.ino"
 //---------------------------------------------------------------------------
 // PET BOT 3D - PB3D!
 // TEST: PCF8574 gpio activate lasers VL53LOx
@@ -15,6 +16,11 @@ LaserManager _laserManager = LaserManager();
 
 //---------------------------------------------------------------------------
 // SETUP
+#line 18 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/test_gpio_lasers.ino"
+void setup();
+#line 45 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/test_gpio_lasers.ino"
+void loop();
+#line 18 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/test_gpio_lasers.ino"
 void setup(){
   // Start the serial
   Serial.begin(115200);
@@ -48,4 +54,5 @@ void loop(){
 
 //---------------------------------------------------------------------------
 // FUNCTIONS
+
 

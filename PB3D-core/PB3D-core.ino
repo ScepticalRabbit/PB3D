@@ -237,9 +237,7 @@ void loop(){
   // If mood has updated then modify the other classes
   if(moodObj.getNewMoodFlag()){
     moodObj.setNewMoodFlag(false); // Reset the flag
-    // Update task probabilities based on the current mood
     taskObj.assignProb(moodObj.getMood());
-    // Update the movement speed based on the current mood
     moveObj.setPWRByDiff(moodObj.getPowerDiff());
     moveObj.setSpeedByMoodFact(moodObj.getSpeedFact());
   }
