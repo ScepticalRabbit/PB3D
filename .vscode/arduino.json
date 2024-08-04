@@ -1,7 +1,8 @@
 {
     "configuration": "cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off",
     "board": "adafruit:samd:adafruit_metro_m4",
-    "programmer": "adafruit_jlink",
+    "programmer": "adafruit_atmel_ice",
     "sketch": "PB3D-core/PB3D-core.ino",
-    "port": "/dev/ttyACM0"
+    "port": "/dev/ttyACM0",
+    "output": "./PB3D-core/build"
 }
