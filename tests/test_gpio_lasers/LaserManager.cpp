@@ -38,33 +38,33 @@ void LaserManager::begin(){
     for (uint8_t pp=0; pp<8; pp++) {
         _pcf.digitalWrite(pp, LOW);
     }
-    delay(_resetDelay);
+    delay(_reset_delay);
 
     // Turn on all sensors - set all high
     for (uint8_t pp=0; pp<8; pp++) {
         _pcf.digitalWrite(pp, HIGH);
     }
-    delay(_resetDelay);
+    delay(_reset_delay);
 
     // Reset all laser sensors - set all low
     for (uint8_t pp=0; pp<8; pp++) {
         _pcf.digitalWrite(pp, LOW);
     }
-    delay(_resetDelay);
+    delay(_reset_delay);
 
     // Activate first laser sensor
     _pcf.digitalWrite(0, HIGH);
-    delay(_resetDelay);
+    delay(_reset_delay);
     _laserUC.begin();
 
     // Activate second laser sensor
     _pcf.digitalWrite(1, HIGH);
-    delay(_resetDelay);
+    delay(_reset_delay);
     _laserDL.begin();
 
     // Activate third laser sensor
     _pcf.digitalWrite(2, HIGH);
-    delay(_resetDelay);
+    delay(_reset_delay);
     _laserDR.begin();
 
 }
@@ -101,26 +101,26 @@ uint8_t LaserManager::getColCodeDR(){
 
 //-----------------------------------------------------------------------------
 void LaserManager::_updateColLSRs(){
-    if(!_laserDL.getEnabled() || !_laserDR.getEnabled()){return;}
+    if(!_laserDL.get_enabled() || !_laserDR.get_enabled()){return;}
 
     if(_colLSRTimer.finished()){
         _colLSRTimer.start(_colLSRUpdateTime);
-        _laserDL.startRange();
-        _laserDR.startRange();
+        _laserDL.start_range();
+        _laserDR.start_range();
     }
 
-    if(_laserDL.updateRange()){
+    if(_laserDL.update_range()){
         #ifdef DEBUG_LSRMANAGER_DL
-            Serial.print("DL= "); Serial.print(_laserDL.getRangeStatus()); Serial.print(", ");
-            Serial.print(_laserDL.getRange()); Serial.print(" mm");
-            Serial.print(", "); Serial.print(_laserDL.getRangeTime()); Serial.println(" ms");
+            Serial.print("DL= "); Serial.print(_laserDL.get_range_status()); Serial.print(", ");
+            Serial.print(_laserDL.get_range()); Serial.print(" mm");
+            Serial.print(", "); Serial.print(_laserDL.get_range_time()); Serial.println(" ms");
         #endif
     }
-    if(_laserDR.updateRange()){
+    if(_laserDR.update_range()){
         #ifdef DEBUG_LSRMANAGER_DR
-            Serial.print("DR= "); Serial.print(_laserDR.getRangeStatus()); Serial.print(", ");
-            Serial.print(_laserDR.getRange()); Serial.print(" mm");
-            Serial.print(", "); Serial.print(_laserDR.getRangeTime()); Serial.println(" ms");
+            Serial.print("DR= "); Serial.print(_laserDR.get_range_status()); Serial.print(", ");
+            Serial.print(_laserDR.get_range()); Serial.print(" mm");
+            Serial.print(", "); Serial.print(_laserDR.get_range_time()); Serial.println(" ms");
         #endif
     }
 }
@@ -128,14 +128,14 @@ void LaserManager::_updateColLSRs(){
 //-----------------------------------------------------------------------------
 /*
 void LaserManager::_updateAltLSR() {
-    if(!_laserA.getEnabled()){return;}
+    if(!_laserA.get_enabled()){return;}
 
     if(_altLSRTimer.finished()){
         _altLSRTimer.start(_altLSRUpdateTime);
-        _laserA.startRange();
+        _laserA.start_range();
     }
 
-    if(_laserA.updateRange()){
+    if(_laserA.update_range()){
 
     }
 }
@@ -143,26 +143,26 @@ void LaserManager::_updateAltLSR() {
 //-----------------------------------------------------------------------------
 /*
 void LaserManager::_updateUpDownLSRs(){
-    if(!_laserU.getEnabled() || !_laserD.getEnabled()){return;}
+    if(!_laserU.get_enabled() || !_laserD.get_enabled()){return;}
 
     if(_upDownLSRTimer.finished()){
         _upDownLSRTimer.start(_upDownLSRUpdateTime);
-        _laserU.startRange();
-        _laserD.startRange();
+        _laserU.start_range();
+        _laserD.start_range();
     }
 
-    _laserU.updateRange();
-    _laserD.updateRange();
+    _laserU.update_range();
+    _laserD.update_range();
 }
 */
 //-----------------------------------------------------------------------------
 uint8_t LaserManager::_getColCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar){
 
-    if(laser->getRange() < 0 ){return DANGER_NONE;}
+    if(laser->get_range() < 0 ){return DANGER_NONE;}
 
-    if(laser->getRange() <= colClose){return DANGER_CLOSE;}
-    else if(laser->getRange() <= colFar){return DANGER_FAR;}
+    if(laser->get_range() <= colClose){return DANGER_CLOSE;}
+    else if(laser->get_range() <= colFar){return DANGER_FAR;}
     else{return DANGER_NONE;}
 }
 
@@ -170,11 +170,11 @@ uint8_t LaserManager::_getColCode(LaserSensor* laser,
 uint8_t LaserManager::_getColCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar,int16_t colSlowDown){
 
-    if(laser->getRange() < 0 ){return DANGER_NONE;}
+    if(laser->get_range() < 0 ){return DANGER_NONE;}
 
-    if(laser->getRange() <= colClose){return DANGER_CLOSE;}
-    else if(laser->getRange() <= colFar){return DANGER_FAR;}
-    else if(laser->getRange() <= colSlowDown){return DANGER_SLOWD;}
+    if(laser->get_range() <= colClose){return DANGER_CLOSE;}
+    else if(laser->get_range() <= colFar){return DANGER_FAR;}
+    else if(laser->get_range() <= colSlowDown){return DANGER_SLOWD;}
     else{return DANGER_NONE;}
 }
 
@@ -182,10 +182,10 @@ uint8_t LaserManager::_getColCode(LaserSensor* laser,
 uint8_t LaserManager::_getCliffCode(LaserSensor* laser,
         int16_t cliffClose,int16_t cliffFar){
 
-    if(laser->getRange() < 0 ){return DANGER_NONE;}
+    if(laser->get_range() < 0 ){return DANGER_NONE;}
 
-    if(laser->getRange() >= cliffClose){return DANGER_FAR;}
-    else if(laser->getRange() >= cliffFar){return DANGER_CLOSE;}
+    if(laser->get_range() >= cliffClose){return DANGER_FAR;}
+    else if(laser->get_range() >= cliffFar){return DANGER_CLOSE;}
     else{return DANGER_NONE;}
 }
 
@@ -194,12 +194,12 @@ uint8_t LaserManager::_getColCliffCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar,
         int16_t cliffClose, int16_t cliffFar){
 
-    if(laser->getRange() < 0 ){return DANGER_NONE;}
+    if(laser->get_range() < 0 ){return DANGER_NONE;}
 
-    if(laser->getRange() >= cliffClose){return DANGER_FAR;}
-    else if(laser->getRange() <= colClose){return DANGER_CLOSE;}
-    else if(laser->getRange() <= colFar){return DANGER_FAR;}
-    else if(laser->getRange() >= cliffFar){return DANGER_CLOSE;}
+    if(laser->get_range() >= cliffClose){return DANGER_FAR;}
+    else if(laser->get_range() <= colClose){return DANGER_CLOSE;}
+    else if(laser->get_range() <= colFar){return DANGER_FAR;}
+    else if(laser->get_range() >= cliffFar){return DANGER_CLOSE;}
     else{return DANGER_NONE;}
 }
 

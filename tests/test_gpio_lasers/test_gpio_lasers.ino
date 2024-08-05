@@ -11,7 +11,7 @@ Author: Lloyd Fletcher
 #include <Arduino.h>
 #include "LaserManager.h"
 
-LaserManager _laserManager = LaserManager();
+LaserManager _laser_manager = LaserManager();
 
 //---------------------------------------------------------------------------
 // SETUP
@@ -32,7 +32,7 @@ void setup(){
 
   //----------------------------------------------------------------------------
   // LASER MANAGER
-  _laserManager.begin();
+  _laser_manager.begin();
   //----------------------------------------------------------------------------
 
   // Final setup - increase I2C clock speed
@@ -43,9 +43,6 @@ void setup(){
 //---------------------------------------------------------------------------
 // LOOP
 void loop(){
-  _laserManager.update();
+  _laser_manager.update();
 }
-
-//---------------------------------------------------------------------------
-// FUNCTIONS
 

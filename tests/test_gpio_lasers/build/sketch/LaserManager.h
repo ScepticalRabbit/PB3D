@@ -18,6 +18,7 @@ Author: Lloyd Fletcher
 #include "Timer.h"
 #include "LaserSensor.h"
 #include "CollisionDangerFlags.h"
+#include "LaserIndex.h"
 
 #define ADDR_GPIO 0x21
 // NOTE: The default address for the VL53L0X is 0x29
@@ -30,17 +31,6 @@ Author: Lloyd Fletcher
 #define DEBUG_LSRMANAGER_DL
 #define DEBUG_LSRMANAGER_DR
 
-enum LaserLoc{
-    CENTRE,
-    UP_CENTRE,
-    DOWN_LEFT,
-    DOWN_RIGHT,
-    HALF_LEFT,
-    HALF_RIGHT,
-    LEFT,
-    RIGHT,
-    REAR,
-};
 
 class LaserManager{
 public:
@@ -58,13 +48,12 @@ public:
 
     //--------------------------------------------------------------------------
     // Get, set and reset
-    int16_t getRangeUC(){return _laserUC.getRange();}
-    int16_t getRangeDL(){return _laserDL.getRange();}
-    int16_t getRangeDR(){return _laserDR.getRange();}
+    int16_t get_range(LaserIndex laser_loc){
+        return _laser_array[laser_loc].get_range();}
 
-    int8_t getStatusUC(){return _laserUC.getRangeStatus();}
-    int8_t getStatusDL(){return _laserDL.getRangeStatus();}
-    int8_t getStatusDR(){return _laserDR.getRangeStatus();}
+    int8_t get_statusUC(){return _laserUC.get_range_status();}
+    int8_t get_statusDL(){return _laserDL.get_range_status();}
+    int8_t get_statusDR(){return _laserDR.get_range_status();}
 
     uint8_t getColCodeUC();
     uint8_t getColCodeDL();
@@ -99,11 +88,10 @@ private:
     Adafruit_PCF8574 _pcf;
 
     // Objects for the laser rangers
-
-    LaserSensor _laserC = LaserSensor(ADDR_LSR_UC,'C');
-    LaserSensor _laserUC = LaserSensor(ADDR_LSR_C,'U');
-    LaserSensor _laserDL = LaserSensor(ADDR_LSR_DL,'H');
-    LaserSensor _laserDR = LaserSensor(ADDR_LSR_DR,'K');
+    LaserSensor _laserC = LaserSensor(ADDR_LSR_UC,LSR_UP_CENTRE);
+    LaserSensor _laserUC = LaserSensor(ADDR_LSR_C,LSR_CENTRE);
+    LaserSensor _laserDL = LaserSensor(ADDR_LSR_DL,LSR_DOWN_LEFT);
+    LaserSensor _laserDR = LaserSensor(ADDR_LSR_DR,LSR_DOWN_RIGHT);
 
     const static uint8_t _num_lasers = 4;
     LaserSensor _laser_array[_num_lasers] =
@@ -111,7 +99,7 @@ private:
 
     // LASER ranger variables
     uint16_t _halfBodyLengMM = 80;
-    uint16_t _resetDelay = 100;
+    uint16_t _reset_delay = 100;
 
     int16_t _colDistClose = _halfBodyLengMM;  // mm
     int16_t _colDistFar = 120;   // mm

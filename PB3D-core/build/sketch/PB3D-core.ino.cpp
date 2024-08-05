@@ -130,45 +130,6 @@ TaskPause taskPauseObj = TaskPause(&collisionObj,&taskObj,&moveObj,&speakerObj);
 //-----------------------------------------------------------------------------
 // SETUP
 //-----------------------------------------------------------------------------
-#line 132 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void setup();
-#line 228 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void loop();
-#line 410 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void updateEncLA();
-#line 413 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void updateEncLB();
-#line 416 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void updateEncRA();
-#line 419 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void updateEncRB();
-#line 426 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void escapeCollision();
-#line 438 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void detectedCollision();
-#line 492 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void DEBUG_SpeedTest(uint8_t inPWR, uint8_t moveCode);
-#line 534 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void DEBUG_SpeedTest(float inSpeed, uint8_t moveCode);
-#line 576 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void DEBUG_PrintSpeedMMPS();
-#line 586 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void DEBUG_PrintSpeedCPS();
-#line 596 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void DEBUG_PlotSpeedBoth();
-#line 608 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void DEBUG_PlotSpeedPID_L();
-#line 624 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void DEBUG_PlotSpeedPID_R();
-#line 640 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void DEBUG_PlotSpeedMMPS();
-#line 652 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void DEBUG_PrintColCheck();
-#line 702 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void DEBUG_PrintAllRanges();
-#line 733 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void DEBUG_PrintLightSens();
-#line 132 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void setup() {
   // Start the serial
   Serial.begin(115200);
@@ -277,9 +238,7 @@ void loop(){
   // If mood has updated then modify the other classes
   if(moodObj.getNewMoodFlag()){
     moodObj.setNewMoodFlag(false); // Reset the flag
-    // Update task probabilities based on the current mood
     taskObj.assignProb(moodObj.getMood());
-    // Update the movement speed based on the current mood
     moveObj.setPWRByDiff(moodObj.getPowerDiff());
     moveObj.setSpeedByMoodFact(moodObj.getSpeedFact());
   }

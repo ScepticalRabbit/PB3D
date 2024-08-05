@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------
-// PET BOT - PB3D! 
+// PET BOT - PB3D!
 // CLASS: LaserSensor
 //---------------------------------------------------------------------------
 /*
@@ -13,52 +13,52 @@ Author: Lloyd Fletcher
 // BEGIN: called once during SETUP
 //---------------------------------------------------------------------------
 void LaserSensor::begin(){
-    delay(_resetDelay);
-    if(!_laserObj.begin(_address)){
+    delay(_reset_delay);
+    if(!_laser_obj.begin(_address)){
         Serial.print(F("COLLISION: FAILED to init laser "));
         Serial.println(_descriptor);
-        _isEnabled = false;
+        _is_enabled = false;
     }
     else{
         Serial.print(F("COLLISION: initialised laser "));
         Serial.println(_descriptor);
-        _isEnabled = true;
+        _is_enabled = true;
     }
-    delay(_resetDelay);
+    delay(_reset_delay);
 }
 
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
-void LaserSensor::startRange(){
-    if(!_isEnabled){return;}
+void LaserSensor::start_range(){
+    if(!_is_enabled){return;}
 
-    _laserObj.startRange();
-    _rangeStartTime = millis();
-    _rangeFlag = false;
+    _laser_obj.start_range();
+    _range_start_time = millis();
+    _range_flag = false;
 }
 
-bool LaserSensor::updateRange(){
-    if(!_isEnabled){return false;}
-    
-    if(_laserObj.isRangeComplete() && !_rangeFlag){
-        _rangeTimeout = _laserObj.timeoutOccurred();
-        _rangeStatus = _laserObj.readRangeStatus();
-        _range = _laserObj.readRangeResult();
-        _rangeFlag = true;
+bool LaserSensor::update_range(){
+    if(!_is_enabled){return false;}
+
+    if(_laser_obj.isRangeComplete() && !_range_flag){
+        _range_timeout = _laser_obj.timeoutOccurred();
+        _range_status = _laser_obj.readrange_status();
+        _range = _laser_obj.readRangeResult();
+        _range_flag = true;
 
         // Check failure conditions for valid ranging, failure range = -1
-        if(_rangeTimeout){
+        if(_range_timeout){
             _range = -1;
         }
-        if(_rangeStatus != 0){
+        if(_range_status != 0){
             _range = -1;
         }
-        if(_range <= _rangeLim){
+        if(_range <= _range_limit){
             _range = -1;
         }
 
-        _rangeTime = millis()-_rangeStartTime;
+        _range_time = millis()-_range_start_time;
         return true;
     }
     else{
