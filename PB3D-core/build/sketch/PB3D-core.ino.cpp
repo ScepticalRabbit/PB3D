@@ -130,6 +130,45 @@ TaskPause taskPauseObj = TaskPause(&collisionObj,&taskObj,&moveObj,&speakerObj);
 //-----------------------------------------------------------------------------
 // SETUP
 //-----------------------------------------------------------------------------
+#line 132 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void setup();
+#line 228 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void loop();
+#line 408 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void updateEncLA();
+#line 411 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void updateEncLB();
+#line 414 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void updateEncRA();
+#line 417 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void updateEncRB();
+#line 424 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void escapeCollision();
+#line 436 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void detectedCollision();
+#line 490 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void DEBUG_SpeedTest(uint8_t inPWR, uint8_t moveCode);
+#line 532 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void DEBUG_SpeedTest(float inSpeed, uint8_t moveCode);
+#line 574 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void DEBUG_PrintSpeedMMPS();
+#line 584 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void DEBUG_PrintSpeedCPS();
+#line 594 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void DEBUG_PlotSpeedBoth();
+#line 606 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void DEBUG_PlotSpeedPID_L();
+#line 622 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void DEBUG_PlotSpeedPID_R();
+#line 638 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void DEBUG_PlotSpeedMMPS();
+#line 650 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void DEBUG_PrintColCheck();
+#line 700 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void DEBUG_PrintAllRanges();
+#line 731 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+void DEBUG_PrintLightSens();
+#line 132 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void setup() {
   // Start the serial
   Serial.begin(115200);

@@ -49,7 +49,7 @@ public:
     //--------------------------------------------------------------------------
     // Get, set and reset
     int16_t get_range(LaserIndex laser_loc){
-        return _laser_array[laser_loc].get_range();}
+        return _laser_array[laser_loc]->get_range();}
 
     int8_t get_statusUC(){return _laserUC.get_range_status();}
     int8_t get_statusDL(){return _laserDL.get_range_status();}
@@ -66,9 +66,9 @@ private:
     //--------------------------------------------------------------------------
     //void _sendByteWithI2C(uint8_t sendAddr, byte sendByte);
 
-    void _updateColLSRs();
-    void _updateAltLSR();
-    void _updateUpDownLSRs();
+    void _update_col_lasers();
+    void _update_alt_lasers();
+    void _update_updown_lasers();
 
     uint8_t _getColCode(LaserSensor* laser,
                     int16_t colClose,int16_t colFar);
@@ -85,7 +85,7 @@ private:
     // CLASS VARIABLE
     //--------------------------------------------------------------------------
     // GPIO Expander
-    Adafruit_PCF8574 _pcf;
+    Adafruit_PCF8574 _gpio_expander;
 
     // Objects for the laser rangers
     LaserSensor _laserC = LaserSensor(ADDR_LSR_UC,LSR_UP_CENTRE);
@@ -94,20 +94,20 @@ private:
     LaserSensor _laserDR = LaserSensor(ADDR_LSR_DR,LSR_DOWN_RIGHT);
 
     const static uint8_t _num_lasers = 4;
-    LaserSensor _laser_array[_num_lasers] =
-        {_laserC,_laserUC,_laserDL,_laserDR};
+    LaserSensor* _laser_array[_num_lasers] =
+        {&_laserC,&_laserUC,&_laserDL,&_laserDR};
 
     // LASER ranger variables
-    uint16_t _halfBodyLengMM = 80;
+    uint16_t _half_body_leng_mm = 80;
     uint16_t _reset_delay = 100;
 
-    int16_t _colDistClose = _halfBodyLengMM;  // mm
-    int16_t _colDistFar = 120;   // mm
-    int16_t _colDistSlowD = 240; // mm
-    int16_t _colDistLim = 40;    // mm
-    int16_t _altDistLim = 0;     // mm
-    int16_t _altDistClose = 80;  // mm
-    int16_t _altDistFar = 180;   // mm
+    int16_t _col_dist_close = _half_body_leng_mm;  // mm
+    int16_t _col_dist_far = 120;   // mm
+    int16_t _col_dist_slow = 240; // mm
+    int16_t _col_dist_lim = 40;    // mm
+    int16_t _alt_dist_lim = 0;     // mm
+    int16_t _alt_dist_close = 80;  // mm
+    int16_t _alt_dist_far = 180;   // mm
 
     // LSR - Multi-ranging averaging and error catching
     int16_t _laserRngsL[3] = {0,0,0};
@@ -121,9 +121,9 @@ private:
     int8_t _laserStatD[3] = {0,0,0};
 
     // LSR - UP - DONT CHANGE!!!
-    int16_t _upColDistFar = 220;    // mm
-    int16_t _upColDistClose = 180;   // mm
-    int16_t _upColDistLim = 40;     // mm
+    int16_t _up_col_dist_far = 220;    // mm
+    int16_t _up_col_dist_close = 180;   // mm
+    int16_t _up_col_dist_lim = 40;     // mm
     // LSR- DWN - DONT CHANGE!!!
     int16_t _downCliffDistFar = 170, _downColDistFar = 90;     // mm
     int16_t _downCliffDistClose = 160, _downColDistClose = 70;   // mm
@@ -132,11 +132,11 @@ private:
 
     // Timers
     // NOTE: fastest update time on lasers at current setting is 40ms
-    uint16_t _colLSRUpdateTime = 40;
-    Timer _colLSRTimer = Timer();
-    uint16_t _altLSRUpdateTime = 101;
-    Timer _altLSRTimer = Timer();
-    uint16_t _upDownLSRUpdateTime = 101;
-    Timer _upDownLSRTimer = Timer();
+    uint16_t _col_laser_update_time = 40;
+    Timer _col_laser_timer = Timer();
+    uint16_t _alt_laser_update_time = 101;
+    Timer _alt_laser_timer = Timer();
+    uint16_t _updown_laser_update_time = 101;
+    Timer _updown_laser_timer = Timer();
 };
 #endif

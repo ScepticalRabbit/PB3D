@@ -26,7 +26,7 @@ class LaserSensor{
 public:
      LaserSensor(uint8_t in_addr, LaserIndex laser_loc){
         _address = in_addr;
-        _laser_loc = laser_loc;
+        _laser_ind = laser_loc;
     }
 
     //---------------------------------------------------------------------------
@@ -45,7 +45,7 @@ public:
     int16_t get_range(){return _range;}
     int8_t get_range_status(){return _range_status;}
     uint32_t get_range_time(){return _range_time;}
-    char get_location(){return _laser_loc;}
+    char get_location(){return _laser_ind;}
     void set_range_limit(int16_t in_limit){_range_limit = in_limit;}
 
 private:
@@ -60,7 +60,7 @@ private:
     uint8_t _address = 0;
     int16_t _range = -1;
     uint8_t _init_num = 0;
-    LaserIndex _laser_loc = LSR_CENTRE;
+    LaserIndex _laser_ind = LSR_CENTRE;
 
     bool _range_timeout = false;
     bool _range_flag = false;

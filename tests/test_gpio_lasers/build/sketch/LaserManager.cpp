@@ -19,12 +19,12 @@ LaserManager::LaserManager(){
 //---------------------------------------------------------------------------
 void LaserManager::begin(){
     // Start all timers:
-    _colLSRTimer.start(0);
-    _altLSRTimer.start(0);
-    _upDownLSRTimer.start(0);
+    _col_laser_timer.start(0);
+    _alt_laser_timer.start(0);
+    _updown_laser_timer.start(0);
 
     // Start the GPIO Board
-    if (!_pcf.begin(ADDR_GPIO, &Wire)) {
+    if (!_gpio_expander.begin(ADDR_GPIO, &Wire)) {
         Serial.println("LSRMANAGER: Could not init PCF8574");
         while (1);
     }
@@ -32,39 +32,39 @@ void LaserManager::begin(){
         Serial.println("LSRMANAGER: init PCF8574 successful!");
     }
     for (uint8_t pp=0; pp<8; pp++) {
-        _pcf.pinMode(pp, OUTPUT);
+        _gpio_expander.pinMode(pp, OUTPUT);
     }
 
     // Reset all laser sensors - set all low
     for (uint8_t pp=0; pp<8; pp++) {
-        _pcf.digitalWrite(pp, LOW);
+        _gpio_expander.digitalWrite(pp, LOW);
     }
     delay(_reset_delay);
 
     // Turn on all sensors - set all high
     for (uint8_t pp=0; pp<8; pp++) {
-        _pcf.digitalWrite(pp, HIGH);
+        _gpio_expander.digitalWrite(pp, HIGH);
     }
     delay(_reset_delay);
 
     // Reset all laser sensors - set all low
     for (uint8_t pp=0; pp<8; pp++) {
-        _pcf.digitalWrite(pp, LOW);
+        _gpio_expander.digitalWrite(pp, LOW);
     }
     delay(_reset_delay);
 
     // Activate first laser sensor
-    _pcf.digitalWrite(0, HIGH);
+    _gpio_expander.digitalWrite(0, HIGH);
     delay(_reset_delay);
     _laserUC.begin();
 
     // Activate second laser sensor
-    _pcf.digitalWrite(1, HIGH);
+    _gpio_expander.digitalWrite(1, HIGH);
     delay(_reset_delay);
     _laserDL.begin();
 
     // Activate third laser sensor
-    _pcf.digitalWrite(2, HIGH);
+    _gpio_expander.digitalWrite(2, HIGH);
     delay(_reset_delay);
     _laserDR.begin();
 
@@ -74,24 +74,24 @@ void LaserManager::begin(){
 // UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void LaserManager::update(){
-    _updateColLSRs();
-    //_updateAltLSR();
-    //_updateUpDownLSRs();
+    _update_col_lasers();
+    //_update_alt_lasers();
+    //_update_updown_lasers();
 }
 
 //---------------------------------------------------------------------------
 // Get, set and reset
 //---------------------------------------------------------------------------
 uint8_t LaserManager::getColCodeUC(){
-    return _getColCode(&_laserUC,_colDistClose,_colDistFar,_colDistSlowD);
+    return _getColCode(&_laserUC,_col_dist_close,_col_dist_far,_col_dist_slow);
 }
 
 uint8_t LaserManager::getColCodeDL(){
-    return _getColCode(&_laserDL,_colDistClose,_colDistFar,_colDistSlowD);
+    return _getColCode(&_laserDL,_col_dist_close,_col_dist_far,_col_dist_slow);
 }
 
 uint8_t LaserManager::getColCodeDR(){
-    return _getColCode(&_laserDR,_upColDistClose,_upColDistFar);
+    return _getColCode(&_laserDR,_up_col_dist_close,_up_col_dist_far);
 }
 
 
@@ -101,11 +101,11 @@ uint8_t LaserManager::getColCodeDR(){
 //---------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-void LaserManager::_updateColLSRs(){
+void LaserManager::_update_col_lasers(){
     if(!_laserDL.get_enabled() || !_laserDR.get_enabled()){return;}
 
-    if(_colLSRTimer.finished()){
-        _colLSRTimer.start(_colLSRUpdateTime);
+    if(_col_laser_timer.finished()){
+        _col_laser_timer.start(_col_laser_update_time);
         _laserDL.start_range();
         _laserDR.start_range();
     }
@@ -128,7 +128,7 @@ void LaserManager::_updateColLSRs(){
 
 //-----------------------------------------------------------------------------
 /*
-void LaserManager::_updateAltLSR() {
+void LaserManager::_update_alt_lasers() {
     if(!_laserA.get_enabled()){return;}
 
     if(_altLSRTimer.finished()){
@@ -143,7 +143,7 @@ void LaserManager::_updateAltLSR() {
 */
 //-----------------------------------------------------------------------------
 /*
-void LaserManager::_updateUpDownLSRs(){
+void LaserManager::_update_updown_lasers(){
     if(!_laserU.get_enabled() || !_laserD.get_enabled()){return;}
 
     if(_upDownLSRTimer.finished()){

@@ -6,8 +6,8 @@
 Author: Lloyd Fletcher
 */
 
-#ifndef LASERTYPES_H
-#define LASERTYPES_H
+#ifndef LASERINDEX_H
+#define LASERINDEX_H
 
 enum LaserIndex{
     LSR_CENTRE = 0,
@@ -18,7 +18,7 @@ enum LaserIndex{
     LSR_HALF_RIGHT,
     LSR_LEFT,
     LSR_RIGHT,
-    LSR_REAR,
+    LSR_BACK,
     LSR_COUNT
 };
 
