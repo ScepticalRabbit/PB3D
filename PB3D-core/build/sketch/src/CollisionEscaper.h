@@ -13,7 +13,7 @@
 
 #include <Arduino.h>
 #include "MoveManager.h"
-#include "CollisionDangerFlags.h"
+#include "CollisionDangerCodes.h"
 
 #define ESCAPE_NOREV 1
 #define ESCAPE_REV 0

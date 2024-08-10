@@ -33,7 +33,7 @@ public:
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
   void begin(){
-    if(!_IMUObj->getEnabledFlag()){
+    if(!_IMUObj->get_enabled_flag()){
       Serial.println(F("NAV: IMU disabled, navigation disabled."));
     }
     else{
@@ -46,7 +46,7 @@ public:
   //---------------------------------------------------------------------------
   // UPDATE: called during every LOOP
   void update(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     if(_navTimer.finished()){
       _navTimer.start(_navUpdateTime);
@@ -91,7 +91,7 @@ public:
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool getEnabledFlag(){return _isEnabled;}
+  bool get_enabled_flag(){return _is_enabled;}
 
   float getPosX(){return _posXNext;}
   float getPosY(){return _posYNext;}
@@ -102,12 +102,12 @@ public:
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _isEnabled = true;
+  bool _is_enabled = true;
 
   // Debug variables
   uint8_t _debugCount = 0;

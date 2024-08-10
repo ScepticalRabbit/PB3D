@@ -46,8 +46,8 @@ public:
   //---------------------------------------------------------------------------
   // Get, set and reset
   //---------------------------------------------------------------------------
-  bool getEnabledFlag(){return _isEnabled;}
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  bool get_enabled_flag(){return _is_enabled;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
   void resetMood(){_setMood(_moodCode);}
   int8_t getMood(){return _moodCode;}
   int8_t getPowerDiff(){return _moodPowerDiffVec[_moodCode];}
@@ -93,7 +93,7 @@ private:
   //---------------------------------------------------------------------------=
   // Moods: [neutral,happy,sad,angry,scared]
   // Mood changes task probabilities
-  bool _isEnabled = true;
+  bool _is_enabled = true;
   int8_t _moodCode = MOOD_NEUTRAL;
   int16_t _moodPc = 0, _moodNegPc = 0;
   uint8_t _moodCount = 5;

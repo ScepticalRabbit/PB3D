@@ -38,7 +38,7 @@ void TaskFindSound::begin(){
 // UPDATE: called during each loop to update variables
 void TaskFindSound::update(){
     // If the sensor wasn't found then do nothing
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     // SENSOR: Ask follower Xiao for sound data
     if(_sensUpdateTimer.finished()){
@@ -90,7 +90,7 @@ void TaskFindSound::update(){
 
     // NEW TASK: if task is new set the start flag
     if(_taskObj->getNewTaskFlag()){
-        _startFlag = true;
+        _start_flag = true;
     }
 }
 
@@ -101,13 +101,13 @@ void TaskFindSound::findSound(){
     _taskObj->taskLEDFindSound();
 
     // If the sensor wasn't found then sxit the function
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     //--------------------------------------------------------------------
     // START
     // First time this is called as a new task reset some variables
-    if(_startFlag){
-        _startFlag = false;
+    if(_start_flag){
+        _start_flag = false;
 
         // Send the flag to sample environment
         _I2CSendSampEnvFlag();

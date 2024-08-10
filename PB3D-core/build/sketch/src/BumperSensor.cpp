@@ -9,26 +9,17 @@
 //------------------------------------------------------------------------------
 #include "BumperSensor.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR: pass in pointers to main objects and other sensors
-//---------------------------------------------------------------------------
-BumperSensor::BumperSensor(){
-
-}
-
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // BEGIN: called once during SETUP
-//---------------------------------------------------------------------------
 void BumperSensor::begin(){
     // TODO: check that there is something at this address
     //Wire.requestFrom(ADDR_BUMPERS,1);
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // UPDATE: called during every LOOP
-//---------------------------------------------------------------------------
 void BumperSensor::update(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     // Request a byte worth of digital pins from the follower Xiao
     Wire.requestFrom(ADDR_BUMPERS,1);
@@ -60,7 +51,7 @@ void BumperSensor::update(){
 }
 
 //---------------------------------------------------------------------------
-uint8_t BumperSensor::getColCode(uint8_t bumpCode){
+uint8_t BumperSensor::get_collision_code(uint8_t bumpCode){
     if(bumpCode >= _numBumpers){
         return DANGER_NONE;
     }

@@ -45,6 +45,11 @@
     "Includepath": null
   },
   {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/CollisionStrategy.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
     "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/LaserManager.cpp",
     "Include": "",
     "Includepath": null

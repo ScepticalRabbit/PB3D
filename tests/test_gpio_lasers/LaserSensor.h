@@ -22,7 +22,7 @@
 //---------------------------------------------------------------------------
 class LaserSensor{
 public:
-     LaserSensor(uint8_t in_addr, LaserIndex laser_loc){
+     LaserSensor(uint8_t in_addr, ELaserIndex laser_loc){
         _address = in_addr;
         _laser_ind = laser_loc;
     }
@@ -58,7 +58,7 @@ private:
     uint8_t _address = 0;
     int16_t _range = -1;
     uint8_t _init_num = 0;
-    LaserIndex _laser_ind = LSR_CENTRE;
+    ELaserIndex _laser_ind = LSR_CENTRE;
 
     bool _range_timeout = false;
     bool _range_flag = false;

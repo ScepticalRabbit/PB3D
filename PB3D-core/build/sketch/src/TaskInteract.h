@@ -44,9 +44,9 @@ public:
   // Get, set and reset
   void setStartInteractFlag(bool inFlag);
 
-  bool getEnabledFlag(){return _isEnabled;}
+  bool get_enabled_flag(){return _is_enabled;}
   uint16_t getTimeOut(){return _patTimeOut;}
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
 
 private:
@@ -59,7 +59,7 @@ private:
   PatSensor* _patSensObj = NULL;
 
   // TASK - INTERACT - Enabled Flag
-  bool _isEnabled = true;
+  bool _is_enabled = true;
 
   // TASK - INTERACT Variables
   bool _interactStartFlag = true;

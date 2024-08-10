@@ -28,7 +28,7 @@ void TaskFindLight::begin(){
     _tcaSelect(LIGHTSENS_L);
     if(!_lightSensL.begin(&Wire)) {
         Serial.println(F("TASKFINDLIGHT: Left light sensor NOT found."));
-        _isEnabled = false;
+        _is_enabled = false;
         //while(true){};
     }
     Serial.println(F("TASKFINDLIGHT: Left light sensor found."));
@@ -39,7 +39,7 @@ void TaskFindLight::begin(){
     _tcaSelect(LIGHTSENS_R);
     if(!_lightSensR.begin(&Wire)) {
         Serial.println(F("TASKFINDLIGHT: Right light sensor NOT found."));
-        _isEnabled = false;
+        _is_enabled = false;
         //while(true){};
     }
     Serial.println(F("TASKFINDLIGHT: Right light sensor found."));
@@ -54,7 +54,7 @@ void TaskFindLight::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskFindLight::update(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     if(_senseTimer.finished()){
         _senseTimer.start(_senseUpdateTime);
@@ -92,14 +92,14 @@ void TaskFindLight::update(){
 // FINDLIGHT - called during the main during decision tree
 void TaskFindLight::findLight(){
     _taskObj->taskLEDFindLight();
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     _findLux(true);
 }
 
 void TaskFindLight::findDark(){
     _taskObj->taskLEDFindDark();
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     _findLux(false);
 }

@@ -28,7 +28,7 @@ void TaskFindHuman::begin(){
     _presDetector = PresenceDetector(_movementSensor, _sensitivityPresence, _sensitivityMovement, _detectInterval);
     if (_movementSensor.initialize() == false){
         Serial.println(F("TASKFINDHUMAN: Failed to initialise presence sensor."));
-        _isEnabled = false;
+        _is_enabled = false;
     }
     Serial.println(F("TASKFINDHUMAN: IR presence sensor initialised."));
     _IRPFlags1 = false; _IRPFlags2 = false; _IRPFlags3 = false; _IRPFlags4 = false;
@@ -39,12 +39,12 @@ void TaskFindHuman::begin(){
 // UPDATE: called during every LOOP
 void TaskFindHuman::update(){
     // If the human presence sensor wasn't found then do nothing
-    if(!_isEnabled){
+    if(!_is_enabled){
         return;
     }
 
     if(_taskObj->getNewTaskFlag()){
-        _startFlag = true;
+        _start_flag = true;
     }
 
     // SENSOR: IR Human Presence Sensor
@@ -62,14 +62,14 @@ void TaskFindHuman::findHuman(){
     _taskObj->taskLEDFindHuman();
 
     // If the human presence sensor wasn't found then bypass the rest of the function
-    if(!_isEnabled){
+    if(!_is_enabled){
         _taskObj->forceUpdate();
         return;
     }
 
     // First time this is called as a new task reset some variables
-    if(_startFlag){
-        _startFlag = false;
+    if(_start_flag){
+        _start_flag = false;
 
         _speakerObj->reset();
         _callTimer.start(_callInterval);

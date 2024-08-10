@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 #include "CollisionEscaper.h"
-#include "CollisionDangerFlags.h"
+#include "CollisionDangerCodes.h"
 
 //-----------------------------------------------------------------------------
 void CollisionEscaper::setMoveObj(MoveManager* inMove){

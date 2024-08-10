@@ -31,7 +31,7 @@ void CollisionManager::begin(){
     _bumpers.begin();
 
     // Flag to turn off ultrasonic ranger to help with timing interruptions
-    //_ultrasonicRanger.setEnabledFlag(false);
+    //_ultrasonicRanger.set_enabled_flag(false);
 }
 
 //-----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ void CollisionManager::update(){
 
     // If a new task is generated turn back on collision detecttion
     if(_taskObj->getNewTaskFlag()){
-        setEnabledFlag(true);
+        set_enabled_flag(true);
     }
 
     // COLLISION SENSOR: Run ultrasonic ranging, based on update time interval
@@ -60,9 +60,9 @@ void CollisionManager::update(){
 
         _bumpers.update();
 
-        if(_bumpers.getBumpThresCheck()){
+        if(_bumpers.get_bump_thres_check()){
             _moodObj->decMoodScore();
-            _bumpers.resetBumpCount();
+            _bumpers.reset_bump_count();
         }
     }
 
@@ -86,7 +86,7 @@ void CollisionManager::update(){
 
     // DISABLED: If collision detection is turned off set flags to false and return
     // Doing this last allows ranges to update but resets flags
-    if(!_isEnabled){resetFlags();}
+    if(!_is_enabled){resetFlags();}
 
     //uint32_t endTime = micros();
     //Serial.println(endTime-startTime);
@@ -96,7 +96,7 @@ void CollisionManager::update(){
 // Get, set and reset
 //---------------------------------------------------------------------------
 bool CollisionManager::getAltFlag(){
-    if(_laserManager.getColCodeA() > DANGER_NONE){
+    if(_laserManager.get_collision_code(LSR_ALT) > DANGER_NONE){
         return true;
     }
     else{
@@ -138,12 +138,12 @@ void CollisionManager::_updateCheckVec(){
     // NOTE: if's have to have most severe case first!
 
     // Bumper - Left
-    _checkVec[0] = _bumpers.getColCode(0);
+    _checkVec[0] = _bumpers.get_collision_code(0);
     // Bumper - Right
-    _checkVec[1] = _bumpers.getColCode(1);
+    _checkVec[1] = _bumpers.get_collision_code(1);
 
     // Ultrasonic Ranger
-    _checkVec[2] = _ultrasonicRanger.getColCode();
+    _checkVec[2] = _ultrasonicRanger.get_collision_code();
 
     // Laser - Left
     _checkVec[3] = _laserManager.getColCodeL();

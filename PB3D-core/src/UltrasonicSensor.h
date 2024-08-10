@@ -14,7 +14,7 @@
 #include <Wire.h>       // I2C
 #include <Ultrasonic.h> // Grove ultrasonic sensor
 
-#include "CollisionDangerFlags.h"
+#include "CollisionDangerCodes.h"
 
 #define COLL_USSENS 7
 
@@ -41,20 +41,20 @@ public:
     //---------------------------------------------------------------------------
     // Get, set and reset
     //---------------------------------------------------------------------------
-    bool getEnabledFlag(){return _isEnabled;}
-    void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+    bool get_enabled_flag(){return _is_enabled;}
+    void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
     int16_t getRange(){return _range;}
     int16_t getRangeMM(){return _range*10;}
 
-    uint8_t getColCode();
+    uint8_t get_collision_code();
 
 private:
     //---------------------------------------------------------------------------
     // CLASS VARIABLES
     //---------------------------------------------------------------------------
-    bool _isEnabled = true;
-    bool _startFlag = true;
+    bool _is_enabled = true;
+    bool _start_flag = true;
 
     Ultrasonic _ultrasonicRanger = Ultrasonic(COLL_USSENS);
 

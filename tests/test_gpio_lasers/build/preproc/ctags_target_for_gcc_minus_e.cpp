@@ -1,48 +1,43 @@
 # 1 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/test_gpio_lasers.ino"
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D!
-// TEST: PCF8574 gpio activate lasers VL53LOx
-//---------------------------------------------------------------------------
-/*
-TODO
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
-
+# 11 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/test_gpio_lasers.ino" 2
 # 12 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/test_gpio_lasers.ino" 2
-# 13 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/test_gpio_lasers.ino" 2
 
 LaserManager _laser_manager = LaserManager();
 
 //---------------------------------------------------------------------------
 // SETUP
 void setup(){
-  // Start the serial
-  Serial.begin(115200);
-  // Only use below to stop start up until USB cable connected
-  while(!Serial){}
+    Serial.begin(115200);
+    // Only use below to stop start up until USB cable connected
+    while(!Serial){}
 
-  // Initialize I2C communications for sensors and sub boards
-  Wire.begin(); // Join I2C bus as leader
-  delay(500); // Needed to ensure sensors work, delay allows sub-processors to start up
+    Wire.begin(); // Join I2C bus as leader
+    delay(500); // Needed to ensure sensors work, delay allows sub-processors to start up
 
-  // SERIAL: POST SETUP
-  Serial.println();
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>(("PB3D: LASER GPIO ACTIVATION TEST"))));
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>(("--------------------------------"))));
+    // SERIAL: POST SETUP
+    Serial.println();
+    Serial.println((reinterpret_cast<const __FlashStringHelper *>(("PB3D: LASER GPIO ACTIVATION TEST"))));
+    Serial.println((reinterpret_cast<const __FlashStringHelper *>(("--------------------------------"))));
 
-  //----------------------------------------------------------------------------
-  // LASER MANAGER
-  _laser_manager.begin();
-  //----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
+    // LASER MANAGER
+    _laser_manager.begin();
 
-  // Final setup - increase I2C clock speed
-  Wire.setClock(400000); // 400KHz
-
+    // Final setup - increase I2C clock speed
+    Wire.setClock(400000); // 400KHz
 }
 
 //---------------------------------------------------------------------------
 // LOOP
 void loop(){
-  _laser_manager.update();
+    _laser_manager.update();
 }

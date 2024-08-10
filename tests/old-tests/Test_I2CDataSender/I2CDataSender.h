@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
+// PET BOT 3D - PB3D!
 // CLASS - I2CDataSender
 //-----------------------------------------------------------------------------
 /*
@@ -26,7 +26,7 @@ typedef struct stateData_t{
   uint8_t mood;
   uint8_t task;
   bool collisionFlags[4];
-  float wheelSpeed;  
+  float wheelSpeed;
 };
 
 typedef union dataPacket_t{
@@ -57,27 +57,27 @@ public:
 
       Serial.println(F("INITIAL DATA STRUCT"));
     printDataStruct();
-  
+
     _I2CTimer.start(_I2CTime);
   }
 
   //---------------------------------------------------------------------------
   // UPDATE - called during every iteration of the main loop
   void update(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     if(_I2CTimer.finished()){
       _I2CTimer.start(_I2CTime);
       _sendTimer.start(0);
-  
+
       Wire.beginTransmission(NERVSYS_ADDR);
       Wire.write(_currState.dataPacket,PACKET_SIZE);
       Wire.endTransmission();
-  
-      Serial.print(F("I2C Send Time: "));    
+
+      Serial.print(F("I2C Send Time: "));
       Serial.print(_sendTimer.getTime());
       Serial.println(F("ms"));
-      
+
       Serial.println(F("SENT DATA STRUCTURE:"));
       printDataStruct();
       // Change the data to be sent to check everything is sending ok
@@ -88,20 +88,20 @@ public:
   //---------------------------------------------------------------------------
   // DOSOMETHING - called during the main during decision tree
   void doSomething(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
-    if(_startFlag){
-      _startFlag = false;
+    if(_start_flag){
+      _start_flag = false;
     }
   }
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool getEnabledFlag(){return _isEnabled;}
+  bool get_enabled_flag(){return _is_enabled;}
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
   void setStateMood(uint8_t inMood){_currState.state.mood = inMood;}
   void setStateTask(uint8_t inTask){_currState.state.mood = inTask;}
@@ -112,11 +112,11 @@ public:
     Serial.print(F("Mood: "));
     Serial.print(_currState.state.mood);
     Serial.print(F("; "));
-    
+
     Serial.print(F("TaskManager: "));
     Serial.print(_currState.state.task);
     Serial.print(F("; "));
-  
+
     Serial.print(F("Col Flags: "));
     for(uint8_t ii = 0; ii < 4; ii++){
       if(_currState.state.collisionFlags[ii]){
@@ -127,7 +127,7 @@ public:
       }
     }
     Serial.print(F("; "));
-  
+
     Serial.print(F("Speed: "));
     Serial.print(_currState.state.wheelSpeed);
     Serial.print(F("; "));
@@ -158,9 +158,9 @@ public:
 
 private:
   //---------------------------------------------------------------------------
-  // CLASS VARIABLES 
-  bool _isEnabled = true;
-  bool _startFlag = true;
+  // CLASS VARIABLES
+  bool _is_enabled = true;
+  bool _start_flag = true;
 
   // DATA PACKET
   dataPacket_t _currState;
@@ -171,4 +171,4 @@ private:
   uint16_t _I2CTime = 100; // ms
   Timer _sendTimer = Timer();
 };
-#endif 
+#endif

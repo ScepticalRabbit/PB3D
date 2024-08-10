@@ -44,8 +44,8 @@ public:
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-    bool getEnabledFlag(){return _isEnabled;}
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+    bool get_enabled_flag(){return _is_enabled;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
@@ -58,8 +58,8 @@ private:
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-   bool _isEnabled = true;
-  bool _startFlag = true;
+   bool _is_enabled = true;
+  bool _start_flag = true;
 
 };
 #endif

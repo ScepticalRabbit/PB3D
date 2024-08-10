@@ -48,7 +48,7 @@ void TaskPickedUp::begin(){
 // UPDATE: called during every LOOP
 void TaskPickedUp::update(){
     // If the sensor wasn't found then do nothing
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     // Check the altirude to see if PB has been picked up
     if(_collisionObj->getAltFlag() && !_isPickedUp){
@@ -56,7 +56,7 @@ void TaskPickedUp::update(){
         _startPickedUpFlag = true;
 
         // If picked up turn off collision detection
-        _collisionObj->setEnabledFlag(false);
+        _collisionObj->set_enabled_flag(false);
 
         // Based on the current task set the panic flag
         if((_taskObj->getTask() == TASK_INTERACT)||(_taskObj->getTask() == TASK_DANCE)){
@@ -75,7 +75,7 @@ void TaskPickedUp::update(){
 // PICKED UP - called during the main during decision tree
 void TaskPickedUp::pickedUp(){
     // If the sensor wasn't found then do nothing
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     //--------------------------------------------
     // START ONLY
@@ -157,7 +157,7 @@ void TaskPickedUp::pickedUp(){
     }
 
     // If picked up turn off collision detection
-    _collisionObj->setEnabledFlag(false);
+    _collisionObj->set_enabled_flag(false);
 
     //--------------------------------------------
     // VIBRATION MOTOR: PURRING
@@ -236,7 +236,7 @@ void TaskPickedUp::pickedUp(){
         // Re-enable pat sensor buttons
         _patSensObj->setButtonsEnabled(true);
         // Re-enable collision detection
-        _collisionObj->setEnabledFlag(true);
+        _collisionObj->set_enabled_flag(true);
         // Set task to pause
         _taskObj->setTask(TASK_PAUSE);
 

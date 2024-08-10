@@ -14,54 +14,42 @@
 #include <Wire.h> // I2C
 
 #include "Timer.h"
-#include "CollisionDangerFlags.h"
+#include "I2CAddress.h"
+#include "CollisionDangerCodes.h"
 
-#define ADDR_BUMPERS 9
 
-#define BUMP_NUM = 2
-#define BUMP_LEFT = 0
-#define BUMP_RIGHT = 1
-
-//---------------------------------------------------------------------------
-// CLASS TEMPLATE:
-//---------------------------------------------------------------------------
 class BumperSensor{
 public:
-    //---------------------------------------------------------------------------
-    // CONSTRUCTOR: pass in pointers to main objects and other sensors
-    //---------------------------------------------------------------------------
-    BumperSensor();
+    BumperSensor(){}
 
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // BEGIN: called once during SETUP
-    //---------------------------------------------------------------------------
     void begin();
 
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // UPDATE: called during every LOOP
-    //---------------------------------------------------------------------------
     void update();
 
     //---------------------------------------------------------------------------
     // Get, set and reset
     //---------------------------------------------------------------------------
-    bool getEnabledFlag(){return _isEnabled;}
-    void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+    bool get_enabled_flag(){return _is_enabled;}
+    void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
-    bool getBumpFlag(){return _bumperAnyFlag;}
-    bool getBumpThresCheck(){return (_bumpCount >= _bumpThres);}
-    int8_t getBumpCount(){return _bumpCount;}
-    void resetBumpCount(){_bumpCount= 0;}
+    bool get_bump_flag(){return _bumperAnyFlag;}
+    bool get_bump_thres_check(){return (_bumpCount >= _bumpThres);}
+    int8_t get_bump_count(){return _bumpCount;}
+    void reset_bump_count(){_bumpCount= 0;}
 
-    uint8_t getColCode(uint8_t bumpCode);
+    uint8_t get_collision_code(uint8_t bumpCode);
     void reset();
 
 private:
     //---------------------------------------------------------------------------
     // CLASS VARIABLES
     //---------------------------------------------------------------------------
-    bool _isEnabled = true;
-    bool _startFlag = true;
+    bool _is_enabled = true;
+    bool _start_flag = true;
 
     const static uint8_t _numBumpers = 2;
     const uint8_t _bumpLeft = 0;

@@ -1,21 +1,21 @@
 # 1 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-//-----------------------------------------------------------------------------
-// PB3D CORE PROGRAM
-// Author: Lloyd Fletcher
-// Version: v1.0
-//-----------------------------------------------------------------------------
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-// Arduino Libraries
-# 9 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
-# 10 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 11 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 12 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 
 // External Classes - Sensor and Module Libraries
-# 13 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
-# 14 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 15 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 16 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 
 // Internal Classes - Basic Functions
-# 17 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
-# 18 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 19 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 20 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 21 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
@@ -29,9 +29,9 @@
 # 29 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 30 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 31 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
-// Internal Classes - Tasks
+# 32 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 33 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
-# 34 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+// Internal Classes - Tasks
 # 35 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 36 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 37 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
@@ -40,6 +40,8 @@
 # 40 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 41 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 42 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 43 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 44 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 
 //-----------------------------------------------------------------------------
 // VARIABLES
@@ -80,7 +82,7 @@ uint32_t _test_timeStamp = 0;
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //-----------------------------------------------------------------------------
-// EXTERNAL CLASSES - Adafruit and Grove
+// EXTERNAL CLASSES
 
 // MOOD LEDs
 Adafruit_NeoPixel_ZeroDMA leds = Adafruit_NeoPixel_ZeroDMA(
@@ -127,7 +129,6 @@ TaskPause taskPauseObj = TaskPause(&collisionObj,&taskObj,&moveObj,&speakerObj);
 
 //-----------------------------------------------------------------------------
 // SETUP
-//-----------------------------------------------------------------------------
 void setup() {
   // Start the serial
   Serial.begin(115200);
@@ -212,7 +213,6 @@ void setup() {
   taskObj.assignProb(moodObj.getMood());
 
   tailObj.setState(0);
-  //tailObj.setWagParams(uint16_t inMoveTime, int16_t inOffset, uint16_t inPauseTime, uint8_t inCountLim)
   Serial.println();
 
   // Final setup - increase I2C clock speed
@@ -221,15 +221,14 @@ void setup() {
   //while(1){}
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // MAIN LOOP
-//---------------------------------------------------------------------------
 void loop(){
   //if(!_test_firstLoop){while(true){};}
   //uint32_t startLoop = millis();
   uint32_t startLoop = micros();
 
-  //-------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // UPDATE MOOD - Based on internal timer, see Mood class
   moodObj.update();
 
@@ -242,7 +241,7 @@ void loop(){
   }
   if(_debug_forceMood){moodObj.setMood(_debug_moodCode);}
 
-  //-------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // GENERATE TASK - Based on internal timer, see Task class
   taskObj.update();
 
@@ -255,9 +254,9 @@ void loop(){
       taskObj.setTask(_debug_taskCode);
     }
   }
-  if(_debug_collisionOff){collisionObj.setEnabledFlag(false);}
+  if(_debug_collisionOff){collisionObj.set_enabled_flag(false);}
 
-  //-------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // UPDATE OBJECTS - Each object has own internal timer
   uint32_t startUpdate = micros();
   collisionObj.update();
@@ -284,7 +283,7 @@ void loop(){
   // After updating all objects reset the new task flag
   taskObj.setNewTaskFlag(false);
 
-  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   // TEST CODE - SENSOR REPORTS
   if(_test_reportTimer.finished()){
     _test_reportTimer.start(_test_reportTime);
@@ -292,20 +291,19 @@ void loop(){
     //DEBUG_PrintAllRanges();
     //DEBUG_PrintLightSens();
   }
-  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  //-------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // RESET FLAGS
-  //-------------------------------------------------------------------------
   // Reset the sound code and let the decision tree update it for the next loop
   uint8_t inCodes[] = {0,0,0,0};
   speakerObj.setSoundCodes(inCodes,4);
   // Reset the tail to the central position - allow tasks and mood control
   tailObj.setState(0);
 
-  //-------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // MAIN DECISION TREE
-  //-------------------------------------------------------------------------
+  //
   // NOTE: Rest and Interact are placed before collision avoidance to disable
   // handling of collisions while these modes are active - should be able to
   // make this smarter so certain things can re-enable collision avoidance
@@ -378,7 +376,6 @@ void loop(){
 
   //-------------------------------------------------------------------------
   // POST DECISION TREE OVERRIDES
-  //-------------------------------------------------------------------------
   // Wag tail if happy - regardless of task use of tail
   if(moodObj.getMood() == 1){
     tailObj.setState(3);
@@ -392,18 +389,19 @@ void loop(){
   }
 
   //-------------------------------------------------------------------------
+  // END of LOOP
+
   //uint32_t endLoop = millis();
-  uint32_t endLoop = micros();
   //Serial.print(F("MAIN LOOP TOOK: "));
   //Serial.print(endLoop-startLoop); Serial.print(",");
   //Serial.print(endUpdate-startUpdate); Serial.print(",");
   //Serial.println();
   //_test_firstLoop = false;
+
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // INTERRUPT FUNCTIONS
-//---------------------------------------------------------------------------
 void updateEncLA(){
   encoderL.updateNEQ();
 }
@@ -417,9 +415,8 @@ void updateEncRB(){
   encoderR.updateNEQ();
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // COLLISION HANDLING TASK TREE FUNCTIONS
-//---------------------------------------------------------------------------
 void escapeCollision(){
   taskObj.taskLEDCollision();
   collisionObj.resetFlags();
@@ -483,9 +480,8 @@ void detectedCollision(){
   }
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // DEBUG FUNCTIONS
-//---------------------------------------------------------------------------
 void DEBUG_SpeedTest(uint8_t inPWR, uint8_t moveCode){
   if(_test_pauseTimer.finished()){
     if(_test_pauseSwitch){
@@ -694,7 +690,7 @@ void DEBUG_PrintColCheck(){
 
   Serial.println((reinterpret_cast<const __FlashStringHelper *>(("------------------------------"))));
   Serial.println();
-}
+}//---------------------------------------------------------------------------
 
 void DEBUG_PrintAllRanges(){
   Serial.println();

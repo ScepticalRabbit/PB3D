@@ -156,9 +156,13 @@
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterLowPass.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PID.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionDangerFlags.h \
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionDangerCodes.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionEscaper.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserManager.h \
+ /home/lloydf/Arduino/libraries/Adafruit_PCF8574/Adafruit_PCF8574.h \
+ /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.h \
+ /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_SPIDevice.h \
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/I2CAddress.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserSensor.h \
  /home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/Adafruit_VL53L0X.h \
  /home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/vl53l0x_api.h \
@@ -169,6 +173,8 @@
  /home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/vl53l0x_platform.h \
  /home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/vl53l0x_i2c_platform.h \
  /home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/vl53l0x_platform_log.h \
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserIndex.h \
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionStrategy.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/BumperSensor.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/UltrasonicSensor.h \
  /home/lloydf/Arduino/libraries/Grove_Ultrasonic_Ranger/Ultrasonic.h \
@@ -267,8 +273,6 @@
  /home/lloydf/Arduino/libraries/Adafruit_AHRS/src/Adafruit_AHRS_Mahony.h \
  /home/lloydf/Arduino/libraries/Adafruit_AHRS/src/Adafruit_AHRS_NXPFusion.h \
  /home/lloydf/Arduino/libraries/Adafruit_FXAS21002C/Adafruit_FXAS21002C.h \
- /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.h \
- /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_SPIDevice.h \
  /home/lloydf/Arduino/libraries/Adafruit_FXOS8700/Adafruit_FXOS8700.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Navigation.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/StateData.h \

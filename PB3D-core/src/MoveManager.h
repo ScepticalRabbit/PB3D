@@ -321,7 +321,7 @@ private:
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Type and General Variables
-  bool _isEnabled = true;
+  bool _is_enabled = true;
 
   int8_t _moveControl = MOVE_CONTROL_SPEED;
   int8_t _moveBasic = MOVE_B_FORWARD;

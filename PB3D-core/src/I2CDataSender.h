@@ -59,7 +59,7 @@ public:
   //---------------------------------------------------------------------------
   // UPDATE: called during every LOOP
   void update(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     if(_I2CTimer.finished()){
         _I2CTimer.start(_I2CTime);
@@ -84,11 +84,11 @@ public:
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool getEnabledFlag(){return _isEnabled;}
+  bool get_enabled_flag(){return _is_enabled;}
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
@@ -176,8 +176,8 @@ private:
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _isEnabled = true;
-  bool _startFlag = true;
+  bool _is_enabled = true;
+  bool _start_flag = true;
 
   // DATA PACKET
   dataPacket_t _currState;

@@ -1,11 +1,11 @@
 //---------------------------------------------------------------------------
-// PET BOT - PB3D! 
+// PET BOT - PB3D!
 // CLASS - IMU
 //---------------------------------------------------------------------------
 /*
 Author: Lloyd Fletcher
 Date Created: 22nd December 2022
-Date Edited:  22nd December 2022 
+Date Edited:  22nd December 2022
 */
 
 #ifndef IMU_H
@@ -40,10 +40,10 @@ public:
 
     if (!_initIMU()) {
       Serial.println(F("IMU: Failed to find NXP sensors"));
-      _isEnabled = false;
+      _is_enabled = false;
       //while(true){delay(10);}
     }
- 
+
     _filter.begin(_IMUFilterFreq);
     _IMUTimer.start(0);
   }
@@ -51,7 +51,7 @@ public:
   //---------------------------------------------------------------------------
   // UPDATE - called during every iteration of the main loop
   void update(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     if(_IMUTimer.finished()){
       _IMUTimer.start(_IMUUpdateTime);
@@ -68,17 +68,17 @@ public:
       _cal.calibrate(_mEvent);
       _cal.calibrate(_aEvent);
       _cal.calibrate(_gEvent);
-      
+
       // Gyroscope needs to be converted from Rad/s to Degree/s
       // the rest are not unit-important
       float gx = _gEvent.gyro.x * SENSORS_RADS_TO_DPS;
       float gy = _gEvent.gyro.y * SENSORS_RADS_TO_DPS;
       float gz = _gEvent.gyro.z * SENSORS_RADS_TO_DPS;
-    
+
       // Update the SensorFusion filter
       // Supposedly computationally intensive - test on M4 = 1ms or less
-      _filter.update(gx, gy, gz, 
-                    _aEvent.acceleration.x, _aEvent.acceleration.y, _aEvent.acceleration.z, 
+      _filter.update(gx, gy, gz,
+                    _aEvent.acceleration.x, _aEvent.acceleration.y, _aEvent.acceleration.z,
                     _mEvent.magnetic.x, _mEvent.magnetic.y, _mEvent.magnetic.z);
 
       // Get the Euler angles from the filter
@@ -89,13 +89,13 @@ public:
       // Debug prints update every X interations based on debugFreq
       if(_debugCount++ >= _debugFreq){
         _debugCount = 0; // Reset the debug count
-        
+
         #if defined(IMU_DEBUG_TIMER)
-          Serial.print("IMU: update took "); 
+          Serial.print("IMU: update took ");
           Serial.print(_IMUTimer.getTime());
           Serial.println("ms");
         #endif
-  
+
         #if defined(IMU_DEBUG_RAW_OUTPUT)
           Serial.print("IMU: Raw Accel: ");
           Serial.print(accel.acceleration.x, 4); Serial.print(", ");
@@ -113,7 +113,7 @@ public:
           Serial.print(mag.magnetic.z, 4); Serial.print(",");
           Serial.println();
         #endif
-  
+
         #if defined(IMU_DEBUG_ANGLES)
           Serial.print("IMU: Angles, Head: ");
           Serial.print(_heading);
@@ -128,7 +128,7 @@ public:
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool getEnabledFlag(){return _isEnabled;}
+  bool get_enabled_flag(){return _is_enabled;}
 
   float getRollAng(){return _roll;}
   float getPitchAng(){return _pitch;}
@@ -136,7 +136,7 @@ public:
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
@@ -148,13 +148,13 @@ private:
     _accel = _fxos.getAccelerometerSensor();
     _gyro = &_fxas;
     _mag = _fxos.getMagnetometerSensor();
-  
+
     return true;
   }
-  
+
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _isEnabled = true;
+  bool _is_enabled = true;
 
   // Debug variables
   uint8_t _debugCount = 0;

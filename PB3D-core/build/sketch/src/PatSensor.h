@@ -41,14 +41,14 @@ public:
   void reset();
   void genPatCountThres();
 
-  bool getEnabledFlag(){return _isEnabled;}
+  bool get_enabled_flag(){return _is_enabled;}
   bool getPatFlag(){return _patFlag;}
   bool getButtonOneFlag(){return _buttonOneFlag;}
   bool getButtonTwoFlag(){return _buttonTwoFlag;}
   uint8_t getPatCount(){return _sensPatCount;}
   bool getPatFinished(){return (_sensPatCount >= _sensPatCountThres);}
 
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
   void setPatFlag(bool inFlag){_patFlag = inFlag;}
   void setPatCountThres(uint8_t inCount){_sensPatCountThres = inCount;}
   void setButtonsEnabled(bool inFlag){_buttonsEnabled = inFlag;}
@@ -60,7 +60,7 @@ private:
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _isEnabled = true;
+  bool _is_enabled = true;
 
   bool _patFlag = false;
   bool _patComplete = false;

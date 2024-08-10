@@ -47,8 +47,8 @@ public:
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-  bool getEnabledFlag(){return _isEnabled;}
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  bool get_enabled_flag(){return _is_enabled;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
 private:
   // MAIN OBJECT POINTERS
@@ -60,7 +60,7 @@ private:
   PatSensor* _patSensObj = NULL;
 
   // TASK - PICKED UP
-  bool _isEnabled = true;
+  bool _is_enabled = true;
   bool _isPickedUp = false;
   bool _startPickedUpFlag = false;
   bool _patFlag = false, _patComplete = false;

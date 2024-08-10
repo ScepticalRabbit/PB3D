@@ -12,62 +12,61 @@
 #define LASERSENSOR_H
 
 #include <Arduino.h>
-#include <Wire.h> // I2C
+#include <Wire.h>
 
 #include "Adafruit_VL53L0X.h"
+
+#include "LaserIndex.h"
 
 //---------------------------------------------------------------------------
 // LASER RANGER:
 //---------------------------------------------------------------------------
 class LaserSensor{
 public:
-    //---------------------------------------------------------------------------
-    // CONSTRUCTOR: pass in pointers to main objects and other sensors
-     LaserSensor(uint8_t inAddr, char inDescript){
-        _address = inAddr;
-        _descriptor = inDescript;
+     LaserSensor(uint8_t in_addr, ELaserIndex laser_loc){
+        _address = in_addr;
+        _laser_ind = laser_loc;
     }
 
     //---------------------------------------------------------------------------
     // BEGIN: called once during SETUP
-     void begin();
+    void begin();
 
     //---------------------------------------------------------------------------
     // UPDATE: called during every LOOP
-    void startRange();
-    bool updateRange();
+    void start_range();
+    bool update_range();
 
     //---------------------------------------------------------------------------
     // Get, set and reset
-    bool getEnabled(){return _isEnabled;}
-    void setEnabled(bool inFlag){_isEnabled = inFlag;}
-    int16_t getRange(){return _range;}
-    int8_t getRangeStatus(){return _rangeStatus;}
-    uint32_t getRangeTime(){return _rangeTime;}
-    char getDescriptor(){return _descriptor;}
-    void setRangeLim(int16_t inLim){_rangeLim = inLim;}
+    bool get_enabled(){return _is_enabled;}
+    void set_enabled(bool in_flag){_is_enabled = in_flag;}
+    int16_t get_range(){return _range;}
+    int8_t get_range_status(){return _range_status;}
+    uint32_t get_range_time(){return _range_time;}
+    char get_location(){return _laser_ind;}
+    void set_range_limit(int16_t in_limit){_range_limit = in_limit;}
 
 private:
     //---------------------------------------------------------------------------
     // CLASS VARIABLES
-    bool _isEnabled = true;
-    bool _startFlag = true;
+    bool _is_enabled = true;
+    bool _start_flag = true;
 
-    Adafruit_VL53L0X _laserObj = Adafruit_VL53L0X();
+    Adafruit_VL53L0X _laser_obj = Adafruit_VL53L0X();
 
-    const uint16_t _resetDelay = 100;
+    const uint16_t _reset_delay = 100;
     uint8_t _address = 0;
     int16_t _range = -1;
-    uint8_t _initNum = 0;
-    char _descriptor = 'X';
+    uint8_t _init_num = 0;
+    ELaserIndex _laser_ind = LSR_CENTRE;
 
-
-    bool _rangeTimeout = false;
-    bool _rangeFlag = false;
-    int8_t _rangeStatus = 0;
-    uint32_t _rangeStartTime = 0;
-    uint32_t _rangeTime = 0;
-    int16_t _rangeLim = 40;
-    int16_t _rangeMax = 2000;
+    bool _range_timeout = false;
+    bool _range_flag = false;
+    int8_t _range_status = 0;
+    uint32_t _range_start_time = 0;
+    uint32_t _range_time = 0;
+    int16_t _range_limit = 40;
+    int16_t _range_max = 2000;
 };
 #endif

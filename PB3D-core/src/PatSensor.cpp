@@ -16,11 +16,11 @@ void PatSensor::begin(){
     Wire.beginTransmission(ADDR_TOUCHSENS);
     if(Wire.endTransmission() != 0){
         Serial.println(F("PATSENSOR: Failed to initialise touch sensor."));
-        _isEnabled = false;
+        _is_enabled = false;
     }
     else{
         Serial.println(F("PATSENSOR: Initialised touch sensor."));
-        _isEnabled = true;
+        _is_enabled = true;
     }
 
     // Generate Random Numbers
@@ -32,7 +32,7 @@ void PatSensor::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void PatSensor::update(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     // SENSOR: Check for button press unless disabled
     if(_buttonsEnabled){
@@ -63,7 +63,7 @@ void PatSensor::update(){
 //---------------------------------------------------------------------------
 // ACCEPT PATS - called during the main during decision tree
 void PatSensor::acceptPats(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     // Slider value, left=100, right=0
     uint8_t valueSlider = 0;

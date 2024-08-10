@@ -124,17 +124,17 @@ public:
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool getEnabledFlag(){return _isEnabled;}
+  bool get_enabled_flag(){return _is_enabled;}
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _isEnabled = true;
-  bool _startFlag = true;
+  bool _is_enabled = true;
+  bool _start_flag = true;
 
   // Declare instance of the packet to send
   dataPacket_t _currState;

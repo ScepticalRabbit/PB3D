@@ -1,13 +1,12 @@
 #line 1 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/LaserSensor.h"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D!
-// CLASS: LaserRanger
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef LASERSENSOR_H
 #define LASERSENSOR_H
@@ -24,7 +23,7 @@ Author: Lloyd Fletcher
 //---------------------------------------------------------------------------
 class LaserSensor{
 public:
-     LaserSensor(uint8_t in_addr, LaserIndex laser_loc){
+     LaserSensor(uint8_t in_addr, ELaserIndex laser_loc){
         _address = in_addr;
         _laser_ind = laser_loc;
     }
@@ -60,7 +59,7 @@ private:
     uint8_t _address = 0;
     int16_t _range = -1;
     uint8_t _init_num = 0;
-    LaserIndex _laser_ind = LSR_CENTRE;
+    ELaserIndex _laser_ind = LSR_CENTRE;
 
     bool _range_timeout = false;
     bool _range_flag = false;

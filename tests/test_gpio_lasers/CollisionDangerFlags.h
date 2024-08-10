@@ -10,7 +10,7 @@
 #ifndef DANGER_FLAGS
 #define DANGER_FLAGS
 
-enum DangerFlag{
+enum EDangerFlag{
     DANGER_NONE = 0,
     DANGER_SLOW,
     DANGER_FAR,

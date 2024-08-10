@@ -67,7 +67,7 @@ void MoveManager::begin(){
 // UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void MoveManager::updateMove(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     if(_moveTimer.finished()){
         _moveCompound = random(0,_moveCompoundCount);
@@ -76,7 +76,7 @@ void MoveManager::updateMove(){
 }
 
 void MoveManager::updateMove(int8_t inMoveType){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     if(_moveTimer.finished()){
         _moveCompound = inMoveType;
@@ -88,7 +88,7 @@ void MoveManager::updateMove(int8_t inMoveType){
 // GO
 //---------------------------------------------------------------------------
 void MoveManager::go(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     if(_moveCompound == MOVE_C_ZIGZAG){
         zigZag();

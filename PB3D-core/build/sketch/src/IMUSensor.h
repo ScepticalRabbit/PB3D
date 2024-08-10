@@ -46,7 +46,7 @@ public:
 
     if (!_initIMU()) {
       Serial.println(F("IMU: Failed to find NXP sensors"));
-      _isEnabled = false;
+      _is_enabled = false;
       //while(true){delay(10);}
     }
     else{
@@ -60,7 +60,7 @@ public:
   //---------------------------------------------------------------------------
   // UPDATE: called during every LOOP
   void update(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     if(_IMUTimer.finished()){
       _IMUTimer.start(_IMUUpdateTime);
@@ -137,7 +137,7 @@ public:
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool getEnabledFlag(){return _isEnabled;}
+  bool get_enabled_flag(){return _is_enabled;}
 
   float getRollAng(){return _roll;}
   float getPitchAng(){return _pitch;}
@@ -145,7 +145,7 @@ public:
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
@@ -163,7 +163,7 @@ private:
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _isEnabled = true;
+  bool _is_enabled = true;
 
   // Debug variables
   uint8_t _debugCount = 0;

@@ -1,16 +1,17 @@
 #line 1 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/LaserIndex.h"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D!
-// CLASS: LaserRanger
-//---------------------------------------------------------------------------
-/*
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-#ifndef LASERTYPES_H
-#define LASERTYPES_H
+#ifndef LASERINDEX_H
+#define LASERINDEX_H
 
-enum LaserIndex{
+enum ELaserIndex{
     LSR_CENTRE = 0,
     LSR_UP_CENTRE,
     LSR_DOWN_LEFT,
@@ -19,7 +20,8 @@ enum LaserIndex{
     LSR_HALF_RIGHT,
     LSR_LEFT,
     LSR_RIGHT,
-    LSR_REAR,
+    LSR_BACK,
+    LSR_ALT,
     LSR_COUNT
 };
 

@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
+// PET BOT 3D - PB3D!
 // CLASS - RFDATASENDERTX
 //-----------------------------------------------------------------------------
 /*
@@ -43,7 +43,7 @@ typedef struct stateData_t{
   uint8_t mood;
   uint8_t task;
   bool collisionFlags[4];
-  float wheelSpeed;  
+  float wheelSpeed;
 };
 
 typedef union dataPacket_t{
@@ -63,45 +63,45 @@ public:
   //---------------------------------------------------------------------------
   // BEGIN - called during setup function before main loop
   void begin(){
-    // RF: reset pin 
+    // RF: reset pin
     pinMode(RFM69_RST, OUTPUT);
     digitalWrite(RFM69_RST, LOW);
-  
+
     Serial.println(F("RF: TX Radio Send Struct"));
     Serial.println();
-  
+
     // RF: Reset the RF chip
     digitalWrite(RFM69_RST, HIGH);
     delay(10);
     digitalWrite(RFM69_RST, LOW);
     delay(10);
-  
+
     // RF: initialise chip
     if (!_rf69_manager.init()) {
       Serial.println(F("RF TX: Failed to init RF TX"));
-      _isEnabled = false;
+      _is_enabled = false;
       //while(1);
     }
     else{
       Serial.println(F("RF TX: initialised."));
-    
+
       // RF: set parameters
       if (!_rf69.setFrequency(RF69_FREQ)) {
         Serial.println("RF TX: setFrequency failed");
       }
       _rf69.setTxPower(14, true); // range from 14-20 for power, 2nd arg must be true for 69HCW
-      
+
       // RF: Encryption
       uint8_t key[] = { 0x04, 0x05, 0x09, 0x08, 0x02, 0x01, 0x03, 0x08,
                         0x04, 0x05, 0x09, 0x08, 0x02, 0x01, 0x03, 0x08};
       _rf69.setEncryptionKey(key);
-    
+
       Serial.print("RF: RFM69 TX radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
     }
-    
+
     // RF: Start timer
     _radioTimer.start(_radioSendInt);
-  
+
     // INIT CLASS:
     _currState.state.mood = 1;
     _currState.state.task = 2;
@@ -110,21 +110,21 @@ public:
     _currState.state.collisionFlags[2] = true;
     _currState.state.collisionFlags[3] = false;
     _currState.state.wheelSpeed = 202.2;
-    
+
     Serial.println(F("INITIAL DATA STRUCT"));
     printDataStruct();
 
     // Send the struct and see if there is a listener
     if(!_sendStateStruct()){
       Serial.println(F("RF TX: initial data send failed! - Disabling"));
-      _isEnabled = false;
+      _is_enabled = false;
     }
   }
 
   //---------------------------------------------------------------------------
   // UPDATE - called during every iteration of the main loop
   void update(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     // RADIO
     if(_radioTimer.finished()){
@@ -134,19 +134,19 @@ public:
       // Print the data structure to be sent
       Serial.println(F("SENDING DATA STRUCTURE:"));
       printDataStruct();
-      
+
       // Send data structure to the destination as a byte array
       if (_rf69_manager.sendtoWait(_currState.dataPacket,PACKET_SIZE,DEST_RF_ADDR)) {
         uint8_t len = sizeof(_buf);
-        uint8_t from; 
-          
+        uint8_t from;
+
         if (_rf69_manager.recvfromAckTimeout(_buf, &len, _radioTimeOut, &from)) {
           _buf[len] = 0; // zero out remaining string
-          
+
           Serial.print("Reply from #"); Serial.print(from);
           Serial.print(" [RSSI :"); Serial.print(_rf69.lastRssi()); Serial.print("] : ");
-          Serial.println((char*)_buf);     
-  
+          Serial.println((char*)_buf);
+
         } else {
           Serial.println(F("No reply..."));
         }
@@ -168,21 +168,21 @@ public:
   //---------------------------------------------------------------------------
   // DOSOMETHING - called during the main during decision tree
   void doSomething(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
-    if(_startFlag){
-      _startFlag = false;
+    if(_start_flag){
+      _start_flag = false;
     }
 
   }
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool getEnabledFlag(){return _isEnabled;}
+  bool get_enabled_flag(){return _is_enabled;}
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
   void setStateByte(byte inByte,int16_t index){
     _currState.dataPacket[index] = inByte;
@@ -194,11 +194,11 @@ public:
     Serial.print(F("Mood: "));
     Serial.print(_currState.state.mood);
     Serial.print(F("; "));
-    
+
     Serial.print(F("TaskManager: "));
     Serial.print(_currState.state.task);
     Serial.print(F("; "));
-  
+
     Serial.print(F("Col Flags: "));
     for(uint8_t ii = 0; ii < 4; ii++){
       if(_currState.state.collisionFlags[ii]){
@@ -209,7 +209,7 @@ public:
       }
     }
     Serial.print(F("; "));
-  
+
     Serial.print(F("Speed: "));
     Serial.print(_currState.state.wheelSpeed);
     Serial.print(F("; "));
@@ -221,23 +221,23 @@ private:
   // PRIVATE FUNCTIONS
   bool _sendStateStruct(){
     bool sendStatus = false;
-    
+
     // Print the data structure to be sent
     Serial.println(F("SENDING DATA STRUCTURE:"));
     printDataStruct();
-    
+
     // Send data structure to the destination as a byte array
     if (_rf69_manager.sendtoWait(_currState.dataPacket,PACKET_SIZE,DEST_RF_ADDR)) {
       uint8_t len = sizeof(_buf);
-      uint8_t from; 
-        
+      uint8_t from;
+
       if (_rf69_manager.recvfromAckTimeout(_buf, &len, _radioTimeOut, &from)) {
         _buf[len] = 0; // zero out remaining string
-        
+
         Serial.print("Reply from #"); Serial.print(from);
         Serial.print(" [RSSI :"); Serial.print(_rf69.lastRssi()); Serial.print("] : ");
         Serial.println((char*)_buf);
-             
+
         sendStatus = true;
       } else {
         Serial.println(F("No reply..."));
@@ -247,7 +247,7 @@ private:
       Serial.println(F("Send failed (no ack)."));
       sendStatus = false;
     }
-  
+
     /*
     _radioEnd = millis();
     Serial.println();
@@ -260,20 +260,20 @@ private:
   }
 
   //---------------------------------------------------------------------------
-  // CLASS VARIABLES 
-  bool _isEnabled = true;
-  bool _startFlag = true;
+  // CLASS VARIABLES
+  bool _is_enabled = true;
+  bool _start_flag = true;
 
   // DATA PACKET - I2C and Radio
   dataPacket_t _currState;
 
   // RADIO VARIABLES
   // Radio class and radio data manager class
-  // RH_RF69_MAX_MESSAGE_LEN = 60 
+  // RH_RF69_MAX_MESSAGE_LEN = 60
   RH_RF69 _rf69 = RH_RF69(RFM69_CS, RFM69_INT);
   RHReliableDatagram _rf69_manager = RHReliableDatagram(_rf69, SERV_RF_ADDR);
   int16_t _packetnum = 0;  // packet counter
-  
+
   // Radio timer
   uint16_t _radioSendInt = 100; // ms
   uint16_t _radioTimeOut = 100; // ms
@@ -284,6 +284,6 @@ private:
   uint8_t _buf[RH_RF69_MAX_MESSAGE_LEN];
 
   // I2C VARIABLES
-  
+
 };
 #endif // RFDATASENDERTX_H

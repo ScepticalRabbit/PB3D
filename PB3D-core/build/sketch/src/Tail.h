@@ -47,7 +47,7 @@ public:
   //---------------------------------------------------------------------------
   // UPDATE: called during every LOOP
   void update(){
-    if(!_isEnabled){return;}
+    if(!_is_enabled){return;}
 
     // Update the tail servo based on the main timer
     if(_updateTimer.finished()){
@@ -110,11 +110,11 @@ public:
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool getEnabledFlag(){return _isEnabled;}
+  bool get_enabled_flag(){return _is_enabled;}
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
   void setState(uint8_t inState){_currState = inState;}
   void setPos(int16_t inPos){_tailPosCurr = inPos;}
@@ -151,7 +151,7 @@ public:
 private:
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _isEnabled = true;
+  bool _is_enabled = true;
 
   Servo _tailServo;
 
