@@ -1,13 +1,12 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/UltrasonicSensor.h"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: UltrasonicSensor
-//---------------------------------------------------------------------------
-/*
-The X class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef ULTRASONICSENSOR_H
 #define ULTRASONICSENSOR_H
@@ -63,8 +62,8 @@ private:
     uint16_t _halfBodyLengMM = 80;
     int16_t _range = 2000;
     int16_t _colDistClose = _halfBodyLengMM/10; // cm
-    int16_t _colDistFar = 2*(_halfBodyLengMM/10);  // cm  
+    int16_t _colDistFar = 2*(_halfBodyLengMM/10);  // cm
     int16_t _colDistSlowD = 3*(_halfBodyLengMM/10); // cm
-    int16_t _colDistLim = 4;    // cm 
+    int16_t _colDistLim = 4;    // cm
 };
-#endif 
+#endif

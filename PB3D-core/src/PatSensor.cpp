@@ -1,12 +1,12 @@
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D!
-// CLASS: PatSensor
-//---------------------------------------------------------------------------
-/*
-The X class is part of the PetBot (PB) program. 
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "PatSensor.h"
 
 //---------------------------------------------------------------------------
@@ -66,10 +66,10 @@ void PatSensor::acceptPats(){
     if(!_isEnabled){return;}
 
     // Slider value, left=100, right=0
-    uint8_t valueSlider = 0; 
+    uint8_t valueSlider = 0;
     _touchSens.get_touch_slider_value(&valueSlider);
 
-    // See if we need to update the slider tolerance if it is in range   
+    // See if we need to update the slider tolerance if it is in range
     if((valueSlider<=(_sensPatThres+_sensPatTol))&&(valueSlider>=(_sensPatThres-_sensPatTol))){
         _sensPatThres = _sensPatThres-_sensPatInc;
         if((_sensPatThres-_sensPatTol)<=0){
@@ -84,12 +84,12 @@ void PatSensor::acceptPats(){
 // Get, set and reset
 void PatSensor::reset(){
     _patFlag = false;   // Reset the pat flag
-    _sensPatCount = 0;  // Reset the pat counter 
+    _sensPatCount = 0;  // Reset the pat counter
     genPatCountThres(); // Generate a new threshold
     // Disable buttons once pat is over
-    _disableButtonsTimer.start(_disableButtonsTime); 
+    _disableButtonsTimer.start(_disableButtonsTime);
 }
 
 void PatSensor::genPatCountThres(){
-    _sensPatCountThres = random(_sensPatCountThresMin,_sensPatCountThresMax+1);  
+    _sensPatCountThres = random(_sensPatCountThresMin,_sensPatCountThresMax+1);
 }

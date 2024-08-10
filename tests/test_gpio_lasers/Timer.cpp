@@ -1,13 +1,12 @@
-//-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: TIMER
-//-----------------------------------------------------------------------------
-/*
-The timer class is part of the PetBot (PB) program. It used to control the
-timing of different functions of the robot.
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "Timer.h"
 
 Timer::Timer(){

@@ -1,17 +1,17 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskPounce
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskPounce.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskPounce::TaskPounce(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+TaskPounce::TaskPounce(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker){
     _collisionObj = inCollision;
     _moodObj = inMood;
@@ -37,7 +37,7 @@ void TaskPounce::update(){
 
 //---------------------------------------------------------------------------
 // Pounce! - called during the main during decision tree
-void TaskPounce::seekAndPounce(){   
+void TaskPounce::seekAndPounce(){
     if(!_isEnabled){return;}
 
     if(_startAllFlag){
@@ -128,7 +128,7 @@ if(_seekStart){
     _moveObj->resetPIDs();
     _collisionObj->setEnabledFlag(false);
 }
-_collisionObj->setEnabledFlag(false); // Disable collision detection 
+_collisionObj->setEnabledFlag(false); // Disable collision detection
 
 // TASK LEDS
 uint8_t seekCol = 1;
@@ -149,7 +149,7 @@ else if(_moveObj->getLookCurrAngInd() == 3){
 else{
     _taskObj->taskLEDOff();
 }
-    
+
 // Move to different angles and take measurements.
 if(!_moveObj->getLookFinished()){
     _moveObj->lookAround();
@@ -168,7 +168,7 @@ if(!_moveObj->getLookFinished()){
         _measTimer.start(_measPrePauseTime);
         }
     }
-        
+
     // If measurement timer is finished take a measurement
     if(_measFlag && _measTimer.finished()){
         _measTimer.start(_measInterval);
@@ -178,16 +178,16 @@ if(!_moveObj->getLookFinished()){
         Serial.print("Sample "), Serial.print(_measCountForAvg);
         Serial.print(" = "), Serial.print(sample), Serial.print(" mm");
         Serial.println();
-        
+
         _measCountForAvg++;
-        
+
         if(_measCountForAvg >= _measNumForAvg){
         _measVec[_measCurInd] = _measSumForAvg/_measNumForAvg;
 
         Serial.print("Measurement Avg. "),Serial.print(_measCurInd);
         Serial.print(" = "), Serial.print(_measVec[_measCurInd]), Serial.print(" mm");
         Serial.println();
-        
+
         _measFlag = false;
         _measCurInd++;
 
@@ -231,23 +231,23 @@ void TaskPounce::_lockOn(){
         }
         // LOCK ON ANGLE/RANGE
         _lockOnAng = _measAngs[_lockValidRangeMinInd];
-        _lockOnRange = float(_measVec[_lockValidRangeMinInd]);        
+        _lockOnRange = float(_measVec[_lockValidRangeMinInd]);
         _lockOnTimer.start(_lockSpoolUpTime);  // Start timer
-        
+
         _moveObj->resetPIDs(); // Reset PIDs
         _collisionObj->setEnabledFlag(false); // Disable collisition detection
 
         // DEBUG: Lock on start
         Serial.println("LOCK ON: Start");
     }
-    _collisionObj->setEnabledFlag(false); // Disable collision detection 
+    _collisionObj->setEnabledFlag(false); // Disable collision detection
 
     // Decide on a target
     // 1) If all ranges less than min range - REALIGN
     // 2) If all ranges greater than max range - GO TO CLOSEST
     // 3) Go through valid ranges and go to the nearest one - GO TO CLOSEST
     if(_lockValidRangeCount == 0){
-        _state = POUNCE_REALIGN; 
+        _state = POUNCE_REALIGN;
     }
     else{
         // Spool up - flash lights and wag tail - TODO
@@ -260,7 +260,7 @@ void TaskPounce::_lockOn(){
         if(_moveObj->getPosPIDAttainSP_Both()){
         _state = POUNCE_RUN;
         }
-        
+
         // EXIT CONDITION: TIMEOUT
         if(_lockOnTimer.finished()){
         _state = POUNCE_RUN;
@@ -273,17 +273,17 @@ void TaskPounce::_lockOn(){
 void TaskPounce::_runToTarget(){
     if(_runStartFlag){
         _runStartFlag = false;
-        
+
         // Re-calc timeout based on the measured range
-        _runTimeout = int16_t(((_lockOnRange-float(_runRangeLim))/_runSpeed)*1000.0)+500;       
+        _runTimeout = int16_t(((_lockOnRange-float(_runRangeLim))/_runSpeed)*1000.0)+500;
         _runTimer.start(_runTimeout); // Start timer
 
         // Calculate encoder counts to get to target
         int32_t runEncCounts = int32_t((_lockOnRange-float(_runRangeLim))/(_moveObj->getEncMMPerCount()));
         int32_t encAvgCounts = (_moveObj->getEncCountL()+_moveObj->getEncCountR())/2;
         _runEndEncCount = encAvgCounts+runEncCounts;
-        
-        _collisionObj->setEnabledFlag(true); // Re-enable collision detection    
+
+        _collisionObj->setEnabledFlag(true); // Re-enable collision detection
         // DEBUG: Run to start
         Serial.println("RUN: Start");
         Serial.print("RUN: Timeout = ");
@@ -317,24 +317,24 @@ void TaskPounce::_runToTarget(){
 
 //---------------------------------------------------------------------------
 // REALIGN
-void TaskPounce::_realign(){  
+void TaskPounce::_realign(){
     if(_realignStartFlag){
         _realignStartFlag = false;
 
         // Set to the initial state
         _realignState = 0;
-        
+
         // Generate angle and start timers
         _realignAng = float(random(_realignAngMin,_realignAngMax));
         _realignTimer.start(_realignPrePauseTime);
-        
-        _collisionObj->setEnabledFlag(false); // Disable collision detection 
+
+        _collisionObj->setEnabledFlag(false); // Disable collision detection
         _moveObj->resetPIDs();  // Reset move PIDs
 
         // DEBUG: Run to start
         Serial.println("REALIGN: Start, Pre-pause");
     }
-    _collisionObj->setEnabledFlag(false); // Disable collision detection 
+    _collisionObj->setEnabledFlag(false); // Disable collision detection
 
     // TASK LEDS
     _taskObj->taskLEDCSV(_realignCol,_realignCol,_lowSat,_lowSat,255,255);
@@ -342,7 +342,7 @@ void TaskPounce::_realign(){
     // Move to the randomly generate angle to reorient
     if(_realignState == 0){ // Pre-pause
         _moveObj->stop();
-        
+
         if(_realignTimer.finished()){
         _realignTimer.start(_realignTimeout);
         _realignState++;
@@ -363,7 +363,7 @@ void TaskPounce::_realign(){
     }
     else if(_realignState == 2){// Post-pause
         _moveObj->stop();
-        
+
         if(_realignTimer.finished()){
         _realignTimer.start(_realignTimeout);
         _realignState++;

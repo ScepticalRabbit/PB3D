@@ -93,10 +93,8 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 // INTERNAL CLASSES
 
 // SENSORS AND CONTROLLERS
-// Digital pins for left and right encoders
 static int encPinAL = 2, encPinBL = 3;
 static int encPinAR = 4, encPinBR = 5;
-// Declare encoder objects in main, pass pointers to move object
 // NOTE: encoders must be in main to attach interrupts
 Encoder encoderL = Encoder(encPinAL,encPinBL);
 Encoder encoderR = Encoder(encPinAR,encPinBR);
@@ -317,13 +315,13 @@ void loop(){
   else if(taskObj.getTask() == 1){
     taskRestObj.rest();
   }
-  else if(taskObj.getTask() == -4 /* Only called by other tasks */){
+  else if(taskObj.getTask() == -4 /* Only called by other tasks*/){
     taskPauseObj.pause();
   }
-  else if(taskObj.getTask() == -3 /* Only called by other tasks */){
+  else if(taskObj.getTask() == -3 /* Only called by other tasks*/){
     taskPickedUpObj.pickedUp();
   }
-  else if(taskObj.getTask() == -2 /* Only called by other tasks */){
+  else if(taskObj.getTask() == -2 /* Only called by other tasks*/){
     taskInteractObj.interact();
   }
   else if(collisionObj.getEscapeFlag() && !_debug_collisionOff){

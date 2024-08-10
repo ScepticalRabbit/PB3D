@@ -1,20 +1,19 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/Encoder.h"
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: Encoder
-//---------------------------------------------------------------------------
-/*
-The encoder class is part of the PetBot (PB) program.
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef ENCODER_H
 #define ENCODER_H
 
 #include <Arduino.h>
 #include "Timer.h"
-#include "FilterMovAvg.h" 
+#include "FilterMovAvg.h"
 #include "FilterLowPass.h"
 
 class Encoder{
@@ -22,7 +21,7 @@ public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR
   Encoder(int8_t pinA, int8_t pinB);
-  
+
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
   void begin();
@@ -31,7 +30,7 @@ public:
   // UPDATE: called during every LOOP
   // Update for the right encoder '!='
   void updateNEQ();
-  
+
   // Update for the left encoder '=='
   void updateEQ();
 
@@ -62,8 +61,8 @@ private:
   int8_t _pinB = -1;
 
   // SPEED VARIABLES - Used by robot wheel encoders
-  Timer _speedTimer = Timer(); 
-  
+  Timer _speedTimer = Timer();
+
   // Characteristics of the motor/gears/wheel/encoder
   double _wheelDiam = 60.0;
   double _wheelCirc = _wheelDiam*PI;
@@ -77,7 +76,7 @@ private:
 
   uint8_t _speedFiltWin = 10;
   float _speedFiltAlpha = 0.1; // NOTE: lower alpha for more smoothing!
-  // NOTE: filter is called within speed update loop so set update time to 
+  // NOTE: filter is called within speed update loop so set update time to
   // be less than the speed one so we update the filter at the same rate
   // as the speed
   //FilterMovAvg _speedFilt = FilterMovAvg(_speedFiltWin,_speedUpdateTime/2);

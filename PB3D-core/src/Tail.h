@@ -1,21 +1,18 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TAIL
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-Date Created: 12th February 2021
-Date Edited:  12th February 2021 
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TAIL_H
 #define TAIL_H
 
 #include <Arduino.h>
 #include <Wire.h> // I2C
-//#include "CollisionManager.h" 
+//#include "CollisionManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
 #include "Timer.h"
@@ -60,10 +57,10 @@ public:
         _tailServo.write(_tailPosCurr);
       }
       else if(_currState == TAIL_WAG_CON){
-        wagContinuous();  
+        wagContinuous();
       }
       else if(_currState == TAIL_WAG_INT){
-        wagInterval();  
+        wagInterval();
       }
       else{
         _tailServo.write(_tailPosCent);
@@ -91,7 +88,7 @@ public:
     if(_wagTimer.finished()){
       if(_wagCount<_wagCountLim){
         _wagTimer.start(_wagMoveTime);
-  
+
         if(_wagSwitch){
           _wagSwitch = !_wagSwitch;
           _tailServo.write(_tailPosCent-_wagPosOffset);
@@ -117,7 +114,7 @@ public:
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
   void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
-  
+
   void setState(uint8_t inState){_currState = inState;}
   void setPos(int16_t inPos){_tailPosCurr = inPos;}
 
@@ -130,19 +127,19 @@ public:
     _wagMoveTime = inMoveTime;
     _wagPosOffset = inOffset;
     _wagPauseTime = inPauseTime;
-    _wagCountLim = inCountLim;      
+    _wagCountLim = inCountLim;
   }
-  
+
   void setWagConParams(uint16_t inMoveTime, int16_t inOffset){
     _wagMoveTime = inMoveTime;
-    _wagPosOffset = inOffset;  
+    _wagPosOffset = inOffset;
   }
-    
+
   void setWagIntParams(uint16_t inMoveTime, int16_t inOffset, uint16_t inPauseTime, uint8_t inCountLim){
     _wagMoveTime = inMoveTime;
     _wagPosOffset = inOffset;
     _wagPauseTime = inPauseTime;
-    _wagCountLim = inCountLim;      
+    _wagCountLim = inCountLim;
   }
 
   void reset(){
@@ -164,7 +161,7 @@ private:
   // MODE: SET POS
   int16_t _tailPosCurr = 90;
   int16_t _tailPosCent = 90;
-  
+
   // MODE: WAG CONTINUOUS
   bool _wagSwitch = true;
   int16_t _wagPosOffset = 30;

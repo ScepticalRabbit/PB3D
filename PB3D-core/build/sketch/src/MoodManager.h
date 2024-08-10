@@ -1,20 +1,17 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/MoodManager.h"
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: Mood Manager
-//---------------------------------------------------------------------------
-/*
-The mood class is part of the PetBot (PB) program. It controls what mood PB3D 
-is in. The mood is indicated using the inner LEDs and the task is indicated 
-with the outer LEDs.
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #ifndef MOODMANAGER_H
 #define MOODMANAGER_H
 
 #include <Arduino.h>
-//#include <Adafruit_NeoPixel.h> // RGB LEDs
 #include <Adafruit_NeoPixel_ZeroDMA.h>
 #include "Timer.h"
 
@@ -64,7 +61,7 @@ public:
   //---------------------------------------------------------------------------
   // Mood Score Functions
   //---------------------------------------------------------------------------
-  
+
   int8_t getMoodScore(){return _moodScore;}
   void setMoodScore(int8_t inScore){_moodScore = constrain(inScore,_moodScoreMin,_moodScoreMax);}
   void resetMoodScore(){_moodScore = 0;}
@@ -90,7 +87,7 @@ private:
   // Helper Functions
   //---------------------------------------------------------------------------
   void _setMood(int8_t moodIn);
-  
+
   //---------------------------------------------------------------------------=
   // MOOD VARIABLES
   //---------------------------------------------------------------------------=

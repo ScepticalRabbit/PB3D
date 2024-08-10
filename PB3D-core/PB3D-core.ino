@@ -92,10 +92,8 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 // INTERNAL CLASSES
 
 // SENSORS AND CONTROLLERS
-// Digital pins for left and right encoders
 static int encPinAL = 2, encPinBL = 3;
 static int encPinAR = 4, encPinBR = 5;
-// Declare encoder objects in main, pass pointers to move object
 // NOTE: encoders must be in main to attach interrupts
 Encoder encoderL = Encoder(encPinAL,encPinBL);
 Encoder encoderR = Encoder(encPinAR,encPinBR);

@@ -1,21 +1,24 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/LaserManager.cpp"
-//-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D!
-// CLASS: CSensorLasers
-//-----------------------------------------------------------------------------
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
+
 #include <Arduino.h>
 #include "LaserManager.h"
 #include "CollisionDangerFlags.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
-//---------------------------------------------------------------------------
 LaserManager::LaserManager(){
 }
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
-//---------------------------------------------------------------------------
 void LaserManager::begin(){
     // Start all timers:
     _colLSRTimer.start(0);
@@ -43,7 +46,7 @@ void LaserManager::begin(){
     _sendByteWithI2C(ADDR_FOLLBOARD,_toSend);
     delay(_resetDelay);
     _laserR.begin();
- 
+
     // Activate third laser sensor
     _toSend = B00001110;
     _sendByteWithI2C(ADDR_FOLLBOARD,_toSend);
@@ -66,7 +69,6 @@ void LaserManager::begin(){
 
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
-//---------------------------------------------------------------------------
 void LaserManager::update(){
     _updateColLSRs();
     _updateAltLSR();
@@ -75,7 +77,6 @@ void LaserManager::update(){
 
 //---------------------------------------------------------------------------
 // Get, set and reset
-//---------------------------------------------------------------------------
 uint8_t LaserManager::getColCodeL(){
     return _getColCode(&_laserL,_colDistClose,_colDistFar,_colDistSlowD);
 }
@@ -99,16 +100,13 @@ uint8_t LaserManager::getColCodeA(){
 
 //---------------------------------------------------------------------------
 // HELPER Functions
-//---------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
 void LaserManager::_sendByteWithI2C(uint8_t sendAddr, byte sendByte){
     Wire.beginTransmission(sendAddr);
     Wire.write(sendByte);
     Wire.endTransmission();
 }
 
-//-----------------------------------------------------------------------------
 void LaserManager::_updateColLSRs(){
     if(!_laserL.getEnabled() || !_laserR.getEnabled()){return;}
 
@@ -123,18 +121,17 @@ void LaserManager::_updateColLSRs(){
             Serial.print("LL= "); Serial.print(_laserL.getRangeStatus()); Serial.print(", ");
             Serial.print(_laserL.getRange()); Serial.print(" mm");
             Serial.print(", "); Serial.print(_laserL.getRangeTime()); Serial.println(" ms");
-        #endif 
+        #endif
     }
     if(_laserR.updateRange()){
         #ifdef DEBUG_LSRMANAGER_R
             Serial.print("LR= "); Serial.print(_laserR.getRangeStatus()); Serial.print(", ");
             Serial.print(_laserR.getRange()); Serial.print(" mm");
             Serial.print(", "); Serial.print(_laserR.getRangeTime()); Serial.println(" ms");
-        #endif 
+        #endif
     }
 }
 
-//-----------------------------------------------------------------------------
 void LaserManager::_updateAltLSR() {
     if(!_laserA.getEnabled()){return;}
 
@@ -142,13 +139,12 @@ void LaserManager::_updateAltLSR() {
         _altLSRTimer.start(_altLSRUpdateTime);
         _laserA.startRange();
     }
-    
+
     if(_laserA.updateRange()){
 
     }
 }
 
-//-----------------------------------------------------------------------------
 void LaserManager::_updateUpDownLSRs(){
     if(!_laserU.getEnabled() || !_laserD.getEnabled()){return;}
 
@@ -162,7 +158,7 @@ void LaserManager::_updateUpDownLSRs(){
     _laserD.updateRange();
 }
 
-//-----------------------------------------------------------------------------
+
 uint8_t LaserManager::_getColCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar){
 
@@ -170,10 +166,9 @@ uint8_t LaserManager::_getColCode(LaserSensor* laser,
 
     if(laser->getRange() <= colClose){return DANGER_CLOSE;}
     else if(laser->getRange() <= colFar){return DANGER_FAR;}
-    else{return DANGER_NONE;}       
-}   
+    else{return DANGER_NONE;}
+}
 
-//-----------------------------------------------------------------------------
 uint8_t LaserManager::_getColCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar,int16_t colSlowDown){
 
@@ -181,26 +176,24 @@ uint8_t LaserManager::_getColCode(LaserSensor* laser,
 
     if(laser->getRange() <= colClose){return DANGER_CLOSE;}
     else if(laser->getRange() <= colFar){return DANGER_FAR;}
-    else if(laser->getRange() <= colSlowDown){return DANGER_SLOWD;} 
-    else{return DANGER_NONE;}       
-} 
+    else if(laser->getRange() <= colSlowDown){return DANGER_SLOWD;}
+    else{return DANGER_NONE;}
+}
 
-//-----------------------------------------------------------------------------
 uint8_t LaserManager::_getCliffCode(LaserSensor* laser,
         int16_t cliffClose,int16_t cliffFar){
-    
+
     if(laser->getRange() < 0 ){return DANGER_NONE;}
 
     if(laser->getRange() >= cliffClose){return DANGER_FAR;}
     else if(laser->getRange() >= cliffFar){return DANGER_CLOSE;}
-    else{return DANGER_NONE;}       
-}   
+    else{return DANGER_NONE;}
+}
 
-//----------------------------------------------------------------------------- 
 uint8_t LaserManager::_getColCliffCode(LaserSensor* laser,
         int16_t colClose,int16_t colFar,
         int16_t cliffClose, int16_t cliffFar){
-    
+
     if(laser->getRange() < 0 ){return DANGER_NONE;}
 
     if(laser->getRange() >= cliffClose){return DANGER_FAR;}
@@ -209,4 +202,4 @@ uint8_t LaserManager::_getColCliffCode(LaserSensor* laser,
     else if(laser->getRange() >= cliffFar){return DANGER_CLOSE;}
     else{return DANGER_NONE;}
 }
-    
+

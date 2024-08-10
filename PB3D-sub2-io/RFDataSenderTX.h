@@ -1,14 +1,11 @@
-//-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS - RFDATASENDERTX
-//-----------------------------------------------------------------------------
-/*
-TODO
-
-Author: Lloyd Fletcher
-Date Created: 11th Dec. 2022
-Date Edited:  11th Dec. 2022
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef RFDATASENDERTX_H
 #define RFDATASENDERTX_H
@@ -48,19 +45,19 @@ public:
   //---------------------------------------------------------------------------
   // BEGIN - called during setup function before main loop
   void begin(){
-    // RF: reset pin 
+    // RF: reset pin
     pinMode(RFM69_RST, OUTPUT);
     digitalWrite(RFM69_RST, LOW);
-  
+
     Serial.println(F("RF: TX Radio Send Struct"));
     Serial.println();
-  
+
     // RF: Reset the RF chip
     digitalWrite(RFM69_RST, HIGH);
     delay(10);
     digitalWrite(RFM69_RST, LOW);
     delay(10);
-  
+
     // RF: initialise chip
     if (!_rf69_manager.init()) {
       Serial.println(F("RF TX: Failed to init RF TX"));
@@ -71,13 +68,13 @@ public:
       Serial.println(F("RF TX: initialised."));
       _rf69_manager.setTimeout(_sendTimeout);
       _rf69_manager.setRetries(_sendRetries);
-    
+
       // RF: set parameters
       if (!_rf69.setFrequency(RF69_FREQ)) {
         Serial.println("RF TX: setFrequency failed");
       }
       _rf69.setTxPower(20, true); // range from 14-20 for power, 2nd arg must be true for 69HCW
-      
+
       // RF: Encryption
       /*
       uint8_t key[] = { 0x04, 0x05, 0x09, 0x08, 0x02, 0x01, 0x03, 0x08,
@@ -86,14 +83,14 @@ public:
       */
 
       Serial.print("RF: RFM69 TX radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
-    
+
       // RF: Start timer
       _radioTimer.start(_radioSendInt);
-      
+
       Serial.println(F("INITIAL DATA STRUCT"));
       _initStateData(&_currState);
-      _printStateData(&_currState);    
-  
+      _printStateData(&_currState);
+
       // Send the struct and see if there is a listener
       if(!_sendStateStruct()){
         Serial.println(F("RF TX: initial data send failed!"));
@@ -116,7 +113,7 @@ public:
     */
     if(_newPacket){
       _newPacket = false;
-      _sendStateStruct();      
+      _sendStateStruct();
     }
   }
 
@@ -133,7 +130,7 @@ public:
     _currState.dataPacket[index] = inByte;
   }
 
-  //---------------------------------------------------------------------------  
+  //---------------------------------------------------------------------------
   // DIAGNOSTICS
   void printStateData(){
     _printStateData(&_currState);
@@ -144,38 +141,38 @@ private:
   // PRIVATE FUNCTIONS
   bool _sendStateStruct(){
     bool sendStatus = false;
-    
+
     // Print the data structure to be sent
     //Serial.println(F("SENDING DATA STRUCTURE:"));
     //_printStateData(&_currState);
-    
+
     _radioStart = millis();
-    
+
     // Send data structure to the destination as a byte array
     if (_rf69_manager.sendtoWait(_currState.dataPacket,PACKET_SIZE,DEST_RF_ADDR)) {
       /*
       uint8_t len = sizeof(_buf);
-      uint8_t from; 
-        
+      uint8_t from;
+
       if (_rf69_manager.recvfromAckTimeout(_buf, &len, _radioTimeOut, &from)) {
         _buf[len] = 0; // zero out remaining string
-        
+
         //Serial.print("Reply from #"); Serial.print(from);
         //Serial.print(" [RSSI :"); Serial.print(_rf69.lastRssi()); Serial.print("] : ");
         //Serial.println((char*)_buf);
-             
+
         sendStatus = true;
       } else {
         Serial.println(F("No reply..."));
         sendStatus = false;
       }
       */
-    } 
+    }
     else{
       Serial.println(F("RF TX: send failed, no ack."));
       sendStatus = false;
     }
-  
+
     _radioEnd = millis();
     //Serial.println();
     //Serial.print("Radio time = ");
@@ -187,7 +184,7 @@ private:
   }
 
   //---------------------------------------------------------------------------
-  // CLASS VARIABLES 
+  // CLASS VARIABLES
   bool _isEnabled = true;
   bool _startFlag = true;
 
@@ -197,14 +194,14 @@ private:
 
   // RADIO VARIABLES
   // Radio class and radio data manager class
-  // RH_RF69_MAX_MESSAGE_LEN = 60 
+  // RH_RF69_MAX_MESSAGE_LEN = 60
   RH_RF69 _rf69 = RH_RF69(RFM69_CS, RFM69_INT);
   RHReliableDatagram _rf69_manager = RHReliableDatagram(_rf69, SERV_RF_ADDR);
   int16_t _packetnum = 0;  // packet counter
 
   uint8_t _sendRetries = 2;
-  uint16_t _sendTimeout = 13; //ms  
-  
+  uint16_t _sendTimeout = 13; //ms
+
   // Radio timer
   //uint16_t _radioSendInt = 200; // ms
   uint16_t _radioSendInt = STATEDATA_UPD_TIME; // ms

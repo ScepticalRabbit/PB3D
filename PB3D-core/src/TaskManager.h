@@ -1,12 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: TASK
-//---------------------------------------------------------------------------
-/*
-The task class is part of the PetBot (PB) program. 
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKMANAGER_H
 #define TASKMANAGER_H
@@ -18,17 +17,17 @@ Author: Lloyd Fletcher
 
 // Define task codes
 #define TASK_TEST -7
-#define TASK_PAUSE -4     // Only called by other tasks 
-#define TASK_PICKEDUP -3  // Only called by other tasks 
-#define TASK_INTERACT -2  // Only called by other tasks 
+#define TASK_PAUSE -4     // Only called by other tasks
+#define TASK_PICKEDUP -3  // Only called by other tasks
+#define TASK_INTERACT -2  // Only called by other tasks
 #define TASK_TANTRUM -1   // Only called by other tasks
-#define TASK_EXPLORE 0    
-#define TASK_REST 1       
-#define TASK_DANCE 2      
+#define TASK_EXPLORE 0
+#define TASK_REST 1
+#define TASK_DANCE 2
 #define TASK_FINDHUMAN 3
 #define TASK_FINDSOUND 4
 #define TASK_FINDLIGHT 5
-#define TASK_FINDDARK 6 
+#define TASK_FINDDARK 6
 #define TASK_POUNCE 7
 
 class TaskManager{
@@ -37,7 +36,7 @@ public:
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
   //---------------------------------------------------------------------------
   TaskManager(Adafruit_NeoPixel_ZeroDMA* RGBLEDs);
-  
+
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
   //---------------------------------------------------------------------------
@@ -92,14 +91,14 @@ public:
   void taskLEDCol(uint16_t colL, uint16_t colR);
   void taskLEDCSV(uint16_t col, uint8_t sat, uint8_t val);
   void taskLEDCSV(uint16_t colL,uint16_t colR,uint8_t satL,uint8_t satR, uint8_t valL, uint8_t valR);
- 
+
 private:
   //------------------------------------------------------------------------
   // TASK Private Functions
   void _update(){
     _taskPc = random(0,100); // NOTE: random num between (min,max-1)
     _danceUpdateFlag = false;
-  
+
     if((_taskPc >= 0) && (_taskPc < _taskProbBounds[0])){ // EXPLORE
       setTask(TASK_EXPLORE);
     }
@@ -126,14 +125,14 @@ private:
       setTask(TASK_EXPLORE);
     }
     // Start the timer.
-    _taskTimer.start(_taskDuration);  
+    _taskTimer.start(_taskDuration);
   }
 
   void _setTaskProb(int8_t inProbs[]){
     int16_t probSum = 0;
     for(int8_t ii = 0; ii < _taskCount; ii++){
       probSum = probSum+inProbs[ii];
-      _taskProbBounds[ii] = probSum;  
+      _taskProbBounds[ii] = probSum;
     }
   }
 
@@ -148,31 +147,31 @@ private:
     float slope = (float(startVal)-float(endVal))/(float(0.0)-float(timeInt));
     return round(float(startVal) + slope*float(_LEDTimer.getTime()));
   }
-  
+
   //------------------------------------------------------------------------
   // TASK Variables
   // [1.explore,2.rest,3.dance,4.findhuman,5.findsound,6.findlight,7.finddark]
   int8_t _taskCode = 0;
   int8_t _taskPc = 0;
-  
+
   const static int8_t _taskCount = 7;
   int8_t _taskProbBounds[_taskCount] = {30,40,55,70,85,95,100};
-  
-  int8_t _taskProbTest[_taskCount] =    {100,0,0,0,0,0,0}; 
+
+  int8_t _taskProbTest[_taskCount] =    {100,0,0,0,0,0,0};
   int8_t _taskProbNeutral[_taskCount] = {30,10,15,15,15,10,5};
   int8_t _taskProbHappy[_taskCount] =   {25,5,20,20,15,15,0};
   int8_t _taskProbSad[_taskCount] =     {40,20,5,5,10,0,20};
   int8_t _taskProbAngry[_taskCount] =   {40,0,15,15,15,10,5};
   int8_t _taskProbScared[_taskCount] =  {30,5,10,10,10,0,35};
-  
+
   uint32_t _taskDuration = 7000;
   uint32_t _taskDurationMin = 5000;
   uint32_t _taskDurationMax = 15000;
   bool _taskNewFlag = true;
-  
+
   // Sub task variables
   bool _danceUpdateFlag = false;
-  uint32_t _danceDuration = 0; 
+  uint32_t _danceDuration = 0;
   uint16_t _tantrumDuration = 0;
 
   // Colours for Tasks

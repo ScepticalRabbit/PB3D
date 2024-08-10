@@ -1,17 +1,17 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskDance
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskDance.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskDance::TaskDance(MoodManager* inMood, TaskManager* inTask, 
+TaskDance::TaskDance(MoodManager* inMood, TaskManager* inTask,
                      MoveManager* inMove, Speaker* inSpeaker){
     _moodObj = inMood;
     _taskObj = inTask;
@@ -23,7 +23,7 @@ TaskDance::TaskDance(MoodManager* inMood, TaskManager* inTask,
 // BEGIN: called once during SETUP
 void TaskDance::begin(){
     _danceStartFlag = true;
-    _timerObj.start(0);    
+    _timerObj.start(0);
 }
 
 //---------------------------------------------------------------------------
@@ -33,12 +33,12 @@ void TaskDance::update(){
     if(_taskObj->getNewTaskFlag()){
         // Reset the dance start flag in case this is the current task.
         _danceStartFlag = true;
-        
+
         if(_taskObj->getTask() == TASK_DANCE){
         _generateTempo();
         _generateDance();
         _taskObj->setDanceDuration(_danceDuration);
-        _taskObj->setTaskDuration(_danceDuration);  
+        _taskObj->setTaskDuration(_danceDuration);
         }
     }
 }
@@ -71,7 +71,7 @@ void TaskDance::dance(){
     }
     else if(_danceCurrMove == DANCE_FORBACK){
         //Serial.println("DANCE_FORBACK");
-        _moveObj->forwardBack(int(_dance4NoteMs),int(_dance4NoteMs));  
+        _moveObj->forwardBack(int(_dance4NoteMs),int(_dance4NoteMs));
     }
     else if(_danceCurrMove == DANCE_CIRCLE){
         //Serial.println("DANCE_CIRCLE");
@@ -133,7 +133,7 @@ void TaskDance::_generateTempo(){
     _danceBPM = float(random(_danceBPMMin,_danceBPMMax)); // NOTE: random num between (min,max-1)
     _dance4NoteMs = (60.0/_danceBPM)*1000.0;
     _danceBarMs = _dance4NoteMs*4.0;
-    _danceDuration = uint32_t(_danceBarMs*float(_danceNumBars)); 
+    _danceDuration = uint32_t(_danceBarMs*float(_danceNumBars));
 }
 
 void TaskDance::_generateDance(){
@@ -159,7 +159,7 @@ void TaskDance::_generateDance(){
         }
         else{
             _danceMoveVec[ii] = random(1,DANCE_NUM_MOVES);
-        } 
+        }
         }
     }
     }
@@ -171,7 +171,7 @@ void TaskDance::_updateDance(){
     _danceMoveInd = _danceMoveInd+1;
     if(_danceMoveInd >= _danceNumMoves){
         _danceMoveInd = 0;
-    }  
+    }
     _danceCurrMove = _danceMoveVec[_danceMoveInd];
 
     // Update the dance bar
@@ -185,14 +185,14 @@ void TaskDance::_updateDance(){
     // Update turn/spin direction
     if(_danceMoveInd == 0){
         _danceTurnDir = MOVE_B_LEFT;
-        _danceSpinDir = MOVE_B_LEFT;  
+        _danceSpinDir = MOVE_B_LEFT;
     }
     else if(_danceMoveVec[_danceMoveInd-1] == DANCE_TURN){
         if(_danceTurnDir == MOVE_B_RIGHT){
         _danceTurnDir = MOVE_B_LEFT;
         }
         else{
-        _danceTurnDir = MOVE_B_RIGHT;  
+        _danceTurnDir = MOVE_B_RIGHT;
         }
     }
     else if(_danceMoveVec[_danceMoveInd-1] == DANCE_SPIN){
@@ -200,11 +200,11 @@ void TaskDance::_updateDance(){
         _danceSpinDir = MOVE_B_LEFT;
         }
         else{
-        _danceSpinDir = MOVE_B_RIGHT;  
+        _danceSpinDir = MOVE_B_RIGHT;
         }
     }
 
     // Reset the speaker to sync with dance bars
-    _speakerObj->reset(); 
+    _speakerObj->reset();
 }
 

@@ -1,13 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: BumperSensor
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
-
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 #ifndef BUMPERSENSOR_H
 #define BUMPERSENSOR_H
 
@@ -24,7 +22,7 @@ Author: Lloyd Fletcher
 #define BUMP_RIGHT = 1
 
 //---------------------------------------------------------------------------
-// CLASS TEMPLATE: 
+// CLASS TEMPLATE:
 //---------------------------------------------------------------------------
 class BumperSensor{
 public:
@@ -76,4 +74,4 @@ private:
     int8_t _bumpCount = 0;
     int8_t _bumpThres = 13;
 };
-#endif 
+#endif

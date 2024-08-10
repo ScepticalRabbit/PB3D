@@ -1,17 +1,16 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskFindSound
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKFINDSOUND_H
 #define TASKFINDSOUND_H
 
-#include <Wire.h> // I2C 
+#include <Wire.h> // I2C
 #include "MoodManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
@@ -37,7 +36,7 @@ class TaskFindSound{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskFindSound(MoodManager* inMood, TaskManager* inTask, 
+  TaskFindSound(MoodManager* inMood, TaskManager* inTask,
                 MoveManager* inMove, Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------

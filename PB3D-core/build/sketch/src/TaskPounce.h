@@ -1,20 +1,19 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskPounce.h"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskPounce
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKPOUNCE_H
 #define TASKPOUNCE_H
 
 #include <Wire.h> // I2C
 #include "MoodManager.h"
-#include "CollisionManager.h" 
+#include "CollisionManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
 #include "Timer.h"
@@ -23,13 +22,13 @@ Author: Lloyd Fletcher
 #define POUNCE_SEEK 0
 #define POUNCE_LOCKON 1
 #define POUNCE_RUN 2
-#define POUNCE_REALIGN 3 
+#define POUNCE_REALIGN 3
 
 class TaskPounce{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPounce(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+  TaskPounce(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
              Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
@@ -54,7 +53,7 @@ public:
   int8_t getState(){return _state;}
   int16_t getAngCentForCollision(){return _realignAngCentCollision;}
   void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
-  
+
 private:
   //---------------------------------------------------------------------------
   // PRIVATE FUNCTIONS
@@ -78,7 +77,7 @@ private:
   //---------------------------------------------------------------------------
   // REALIGN
   void _realign();
-  
+
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
   CollisionManager* _collisionObj = NULL;
@@ -109,12 +108,12 @@ private:
   uint16_t _measPrePauseTime = 150;
   uint16_t _measInterval = 110;
   bool _measFlag = false;
-  
+
   uint8_t _measCurInd = 0;
   uint8_t _measNumVals = 3;
   int16_t _measVec[3] = {-1,-1,-1};
   float _measAngs[3] = {30.0,0.0,-30.0};
-  
+
   int16_t _measSumForAvg = 0;
   int16_t _measNumForAvg = 3;
   int16_t _measCountForAvg = 0;
@@ -128,7 +127,7 @@ private:
   uint8_t _lockValidRangeMinInd = 0, _lockValidRangeMaxInd = 0;
   uint8_t _lockValidRangeCount =  0;
   float _lockOnAng = 0.0, _lockOnRange = 0.0;
-  
+
   // Run
   bool _runStartFlag = true;
   Timer _runTimer = Timer();

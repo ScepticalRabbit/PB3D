@@ -1,21 +1,18 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskPause.h"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: PAUSE
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-Date Created: 12th December 2021
-Date Edited:  12th December 2021 
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKPAUSE_H
 #define TASKPAUSE_H
 
 #include <Wire.h> // I2C
-#include "CollisionManager.h" 
+#include "CollisionManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
 #include "Speaker.h"
@@ -25,7 +22,7 @@ class TaskPause{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPause(CollisionManager* inCollision, TaskManager* inTask, 
+  TaskPause(CollisionManager* inCollision, TaskManager* inTask,
             MoveManager* inMove, Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
@@ -57,6 +54,6 @@ private:
   bool _isEnabled = true;
   Timer _pauseTimer = Timer();
   uint16_t _pauseDur = 2000;
-  uint16_t _pauseDurMin = 2000, _pauseDurMax = 4000; 
+  uint16_t _pauseDurMin = 2000, _pauseDurMax = 4000;
 };
 #endif // PAUSE

@@ -1,9 +1,12 @@
-//-----------------------------------------------------------------------------
-// PB3D - Sub-Board - Bumpers and RF Transmitter
-// Author: Lloyd Fletcher
-// Version: v0.5b
-// Date Created: 23rd May 2021
-//-----------------------------------------------------------------------------
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
+
 #include <Wire.h>
 #include "RFDataSenderTX.h"
 #include "Timer.h"
@@ -43,7 +46,7 @@ void setup(){
   //delay(1000);
   sender.begin();
   //delay(1000);
-  
+
   pinMode(COL_BUMPER_FR, INPUT_PULLUP);
   pinMode(COL_BUMPER_FL, INPUT_PULLUP);
 
@@ -52,7 +55,7 @@ void setup(){
 
   Wire.begin(NERVSYS_ADDR);
   Wire.onRequest(requestEvent);
-  Wire.onReceive(receiveEvent); 
+  Wire.onReceive(receiveEvent);
 }
 
 //----------------------------------------------------------------------------
@@ -84,10 +87,10 @@ void loop(){
   if(_bumperTimer.finished()){
     _bumperTimer.start(_bumperInt);
     byte temp = B00000000;
-  
+
     int8_t switchFL = digitalRead(COL_BUMPER_FL);
     int8_t switchFR = digitalRead(COL_BUMPER_FR);
-  
+
     // Note switches close, allow current to flow, voltage 0
     if(switchFL == 0){
       temp = temp | B00000001;
@@ -96,7 +99,7 @@ void loop(){
       temp = temp | B00000010;
     }
     collisionFlags = temp;
-  
+
     // Print flags to serial for debugging
     //Serial.print(F("COL FLAGS:"));
     //Serial.println(collisionFlags,BIN);
@@ -109,9 +112,9 @@ void loop(){
   if(_printDataOn){
     if(_printTimer.finished()){
       _printTimer.start(_printTime);
-      
+
       Serial.println(F("I2C DATA STRUCT REC:"));
-      sender.printStateData(); 
+      sender.printStateData();
     }
   }
 }

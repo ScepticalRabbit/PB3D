@@ -1,12 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TEMPLATE
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 #include "BumperSensor.h"
 
 //---------------------------------------------------------------------------
@@ -20,7 +19,7 @@ BumperSensor::BumperSensor(){
 // BEGIN: called once during SETUP
 //---------------------------------------------------------------------------
 void BumperSensor::begin(){
-    // TODO: check that there is something at this address 
+    // TODO: check that there is something at this address
     //Wire.requestFrom(ADDR_BUMPERS,1);
 }
 
@@ -35,7 +34,7 @@ void BumperSensor::update(){
     // Read a byte from the follower
     byte bumperByte = B00000000;
     while(Wire.available()){
-        bumperByte  = Wire.read();   
+        bumperByte  = Wire.read();
     }
     _bumperReadByte = bumperByte;
 
@@ -76,6 +75,6 @@ uint8_t BumperSensor::getColCode(uint8_t bumpCode){
 void BumperSensor::reset(){
     _bumperAnyFlag = false;
     for(uint8_t ii=0; ii<_numBumpers; ii++){
-        _bumperFlags[ii] = false;    
+        _bumperFlags[ii] = false;
     }
 }

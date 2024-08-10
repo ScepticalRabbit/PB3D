@@ -1,12 +1,12 @@
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D!
-// CLASS: LaserManager
-//---------------------------------------------------------------------------
-/*
-The X class is part of the PetBot (PB) program. 
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #ifndef LASERMANAGER_H
 #define LASERMANAGER_H
 
@@ -20,7 +20,7 @@ Author: Lloyd Fletcher
 #include "CollisionDangerFlags.h"
 
 // Definitions
-// Address for digital out 
+// Address for digital out
 #ifndef ADDR_FOLLBOARD
   #define ADDR_FOLLBOARD 0x11
 #endif
@@ -60,7 +60,7 @@ public:
     int8_t getStatusL(){return _laserL.getRangeStatus();}
     int8_t getStatusR(){return _laserR.getRangeStatus();}
     int8_t getStatusA(){return _laserA.getRangeStatus();}
-    int8_t getStatusU(){return _laserU.getRangeStatus();} 
+    int8_t getStatusU(){return _laserU.getRangeStatus();}
     int8_t getStatusD(){return _laserD.getRangeStatus();}
 
     uint8_t getColCodeL();
@@ -79,16 +79,16 @@ private:
     void _updateUpDownLSRs();
 
     uint8_t _getColCode(LaserSensor* laser,
-                    int16_t colClose,int16_t colFar);    
+                    int16_t colClose,int16_t colFar);
     uint8_t _getColCode(LaserSensor* laser,
-                    int16_t colClose,int16_t colFar,int16_t colSlowDown);    
+                    int16_t colClose,int16_t colFar,int16_t colSlowDown);
     uint8_t _getCliffCode(LaserSensor* laser,
-                    int16_t cliffClose,int16_t cliffFar);     
+                    int16_t cliffClose,int16_t cliffFar);
     uint8_t _getColCliffCode(LaserSensor* laser,
                     int16_t colClose,int16_t colFar,
                     int16_t cliffClose, int16_t cliffFar);
-    
-    
+
+
     //---------------------------------------------------------------------------
     // CLASS VARIABLES
     //---------------------------------------------------------------------------
@@ -107,8 +107,8 @@ private:
     int16_t _colDistClose = _halfBodyLengMM;  // mm
     int16_t _colDistFar = 120;   // mm
     int16_t _colDistSlowD = 240; // mm
-    int16_t _colDistLim = 40;    // mm 
-    int16_t _altDistLim = 0;     // mm 
+    int16_t _colDistLim = 40;    // mm
+    int16_t _altDistLim = 0;     // mm
     int16_t _altDistClose = 80;  // mm
     int16_t _altDistFar = 180;   // mm
 
@@ -121,18 +121,18 @@ private:
     int8_t _laserStatL[3] = {0,0,0};
     int8_t _laserStatR[3] = {0,0,0};
     int8_t _laserStatU[3] = {0,0,0};
-    int8_t _laserStatD[3] = {0,0,0}; 
+    int8_t _laserStatD[3] = {0,0,0};
 
     // LSR - UP - DONT CHANGE!!!
     int16_t _upColDistFar = 220;    // mm
     int16_t _upColDistClose = 180;   // mm
-    int16_t _upColDistLim = 40;     // mm  
+    int16_t _upColDistLim = 40;     // mm
     // LSR- DWN - DONT CHANGE!!!
     int16_t _downCliffDistFar = 170, _downColDistFar = 90;     // mm
     int16_t _downCliffDistClose = 160, _downColDistClose = 70;   // mm
     int16_t _downCliffDistLim = 2000, _downColDistLim = 20;       // mm
     int16_t _downDistCent = 120; // actually measured closer to 125mm
-  
+
     // Timers
     // NOTE: fastest update time on lasers at current setting is 40ms
     uint16_t _colLSRUpdateTime = 40;

@@ -1,18 +1,18 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskPickedUp.cpp"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskPickedUp
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskPickedUp.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskPickedUp::TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+TaskPickedUp::TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker, PatSensor* inPatSens){
     _collisionObj = inCollision;
     _moodObj = inMood;
@@ -31,7 +31,7 @@ void TaskPickedUp::begin(){
         Serial.println(F("TASKPICKEDUP: Failed to initialise touch sensor."));
     }
     else{
-        Serial.println(F("TASKPICKEDUP: Touch sensor initialised."));  
+        Serial.println(F("TASKPICKEDUP: Touch sensor initialised."));
     }
 
     // Generate all random parameters
@@ -58,15 +58,15 @@ void TaskPickedUp::update(){
 
         // If picked up turn off collision detection
         _collisionObj->setEnabledFlag(false);
-        
+
         // Based on the current task set the panic flag
         if((_taskObj->getTask() == TASK_INTERACT)||(_taskObj->getTask() == TASK_DANCE)){
-        _panicFlag = false;  
+        _panicFlag = false;
         }
         else{
         _panicFlag = true;
         }
-        
+
         // Set the task to "picked up"
         _taskObj->setTask(TASK_PICKEDUP);
     }
@@ -100,13 +100,13 @@ void TaskPickedUp::pickedUp(){
         int8_t prob = random(0,100);
         if(prob <= 50){_moodObj->setMood(MOOD_SCARED);}
         else{_moodObj->setMood(MOOD_ANGRY);}
-        
+
         // TaskManager LEDS - Panic
         _taskObj->taskLEDPickedUpPanic();
 
         // Wiggle to get free
         _moveObj->wiggle(_panicWiggleLeftDur,_panicWiggleRightDur);
-        
+
         // Speaker updates
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_BEEP,SPEAKER_SLIDE,SPEAKER_BEEP};
         _speakerObj->setSoundCodes(inCodes,4);
@@ -114,7 +114,7 @@ void TaskPickedUp::pickedUp(){
         _panicDurs[_pauseInd] = _randPausePanic;
         _speakerObj->setSoundDurs(_panicDurs,8);
 
-        _callUpdateTime = _speakerObj->getTotalSoundDur();   
+        _callUpdateTime = _speakerObj->getTotalSoundDur();
     }
     else{
         // MoodManager - Neutral
@@ -123,21 +123,21 @@ void TaskPickedUp::pickedUp(){
         _taskObj->taskLEDPickedUpOk();
 
         // Stop motor
-        _moveObj->stop(); 
+        _moveObj->stop();
 
         // Speaker updates
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_SLIDE};
-        _speakerObj->setSoundCodes(inCodes,4);  
+        _speakerObj->setSoundCodes(inCodes,4);
         _speakerObj->setSoundFreqs(_callFreqs,8);
         _callDurs[_pauseInd] = _randPauseCall;
         _speakerObj->setSoundDurs(_callDurs,8);
-        
+
         _callUpdateTime = _speakerObj->getTotalSoundDur();
     }
 
     //--------------------------------------------
     // PAT SENSOR
-    // Update the pat sensor 
+    // Update the pat sensor
     _patSensObj->acceptPats();
 
     // If patted once set the class flag
@@ -147,10 +147,10 @@ void TaskPickedUp::pickedUp(){
 
     if(_patSensObj->getPatFinished()){
         // Set internal switch for exit condition
-        _patComplete = true;    
+        _patComplete = true;
         // Reset the pat sensor
         _patSensObj->reset();
-        
+
         // MOOD UPDATE: 75% chance go to happy
         int8_t prob = random(0,100);
         if(prob<75){_moodObj->setMood(MOOD_HAPPY);}
@@ -165,7 +165,7 @@ void TaskPickedUp::pickedUp(){
     if(_patFlag){
         // If patted stop panicking
         _panicFlag = false;
-        
+
         if(_purrTimer.finished()){
         // Regenerate random purr times
         _purrOnTime = random(_purrOnTimeMin,_purrOnTimeMax);
@@ -181,13 +181,13 @@ void TaskPickedUp::pickedUp(){
         else{
             _purrTimer.start(_purrOffTime);
             // Set byte to turn on purr sensor
-            _sendByte = B00001110;  
+            _sendByte = B00001110;
         }
         }
         // Send byte to turn on/off pat sensor
         Wire.beginTransmission(ADDR_FOLLBOARD);
         Wire.write(_sendByte);
-        Wire.endTransmission();  
+        Wire.endTransmission();
     }
 
     //--------------------------------------------
@@ -205,13 +205,13 @@ void TaskPickedUp::pickedUp(){
         _callDurs[_pauseInd] = _randPauseCall;
         _speakerObj->setSoundDurs(_callDurs,8);
         }
-        
+
         // Restart call timer with new times
         _callUpdateTime = _speakerObj->getTotalSoundDur();
         _callTimer.start(_callUpdateTime);
-        
+
         // Reset the speaker
-        _speakerObj->reset();  
+        _speakerObj->reset();
     }
 
     //--------------------------------------------
@@ -222,12 +222,12 @@ void TaskPickedUp::pickedUp(){
         _exitTimer.start(_exitTime);
         }
         else if(_exitTimerOn && _exitTimer.finished()){
-        _exitFlag = true;  
+        _exitFlag = true;
         }
     }
     else{
         _exitTimerOn = false;
-        _exitTimer.start(_exitTime);  
+        _exitTimer.start(_exitTime);
     }
 
     //--------------------------------------------
@@ -239,7 +239,7 @@ void TaskPickedUp::pickedUp(){
         // Re-enable collision detection
         _collisionObj->setEnabledFlag(true);
         // Set task to pause
-        _taskObj->setTask(TASK_PAUSE); 
+        _taskObj->setTask(TASK_PAUSE);
 
         // Based on the state on exit set different conditions
         int8_t prob = random(0,100);

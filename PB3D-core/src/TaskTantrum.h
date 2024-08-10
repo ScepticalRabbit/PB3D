@@ -1,12 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3! 
-// CLASS: TaskTantrum
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 #ifndef TASKTANTRUM_H
 #define TASKTANTRUM_H
 
@@ -21,7 +20,7 @@ class TaskTantrum{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskTantrum(MoodManager* inMood, TaskManager* inTask, 
+  TaskTantrum(MoodManager* inMood, TaskManager* inTask,
               MoveManager* inMove, Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
@@ -49,7 +48,7 @@ private:
   // Timers
   Timer _timerObj1 = Timer();
   Timer _timerObj2 = Timer();
-  
+
   // SUBTASK - TANTRUM Variables
   bool _startTantrumFlag = false;
   bool _tantrumComplete = false;

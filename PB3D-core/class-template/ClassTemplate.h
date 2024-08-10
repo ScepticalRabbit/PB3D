@@ -1,19 +1,18 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TEMPLATE
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef CLASSTEMP_H
 #define CLASSTEMP_H
 
 #include <Arduino.h>
 #include <Wire.h> // I2C
-#include "CollisionManager.h" 
+#include "CollisionManager.h"
 #include "Task.h"
 #include "MoveManager.h"
 #include "Speaker.h"
@@ -21,13 +20,13 @@ Author: Lloyd Fletcher
 
 
 //---------------------------------------------------------------------------
-// CLASS TEMPLATE: 
+// CLASS TEMPLATE:
 //---------------------------------------------------------------------------
 class ClassTemp{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
- ClassTemp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+ ClassTemp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
                 Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
@@ -39,7 +38,7 @@ public:
   void update();
 
   //---------------------------------------------------------------------------
-  // DOSOMETHING - called during the main during decision tree 
+  // DOSOMETHING - called during the main during decision tree
    void doSomething();
 
   //---------------------------------------------------------------------------
@@ -62,4 +61,4 @@ private:
   bool _startFlag = true;
 
 };
-#endif 
+#endif

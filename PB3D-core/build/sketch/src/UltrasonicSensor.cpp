@@ -1,13 +1,13 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/UltrasonicSensor.cpp"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: UltrasonicSensor
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "UltrasonicSensor.h"
 
 //---------------------------------------------------------------------------

@@ -1,11 +1,10 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/Speaker.cpp"
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D!
-// CLASS: Speaker
-//---------------------------------------------------------------------------
-/*
-The X class is part of the PetBot (PB) program. 
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 #include "Speaker.h"

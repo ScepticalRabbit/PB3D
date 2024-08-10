@@ -1,19 +1,16 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskFindHuman
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-Date Created: 7th February 2021
-Date Edited:  8th October 2021 
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKFINDHUMAN_H
 #define TASKFINDHUMAN_H
 
-#include <Wire.h> // I2C 
+#include <Wire.h> // I2C
 #include "Grove_Human_Presence_Sensor.h" // IR presence sensor
 #include "MoodManager.h"
 #include "TaskManager.h"
@@ -26,7 +23,7 @@ class TaskFindHuman{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskFindHuman(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker, 
+  TaskFindHuman(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker,
                 TaskInteract* inTInt);
 
   //---------------------------------------------------------------------------
@@ -76,15 +73,15 @@ private:
   Timer _sensUpdateTimer = Timer();
   uint8_t _humIRSensUpdateTime = 50;
   //NOTE: Sensors are organised clock wise with 1 closest to the grove connector
-  bool _IRPFlags1 = false; 
-  bool _IRPFlags2 = false; 
-  bool _IRPFlags3 = false; 
+  bool _IRPFlags1 = false;
+  bool _IRPFlags2 = false;
+  bool _IRPFlags3 = false;
   bool _IRPFlags4 = false;
-  float _IRtDer1 =0.0; 
-  float _IRtDer2 =0.0; 
-  float _IRtDer3 =0.0; 
+  float _IRtDer1 =0.0;
+  float _IRtDer2 =0.0;
+  float _IRtDer3 =0.0;
   float _IRtDer4 =0.0;
-  float _diffIR13=0.0; 
+  float _diffIR13=0.0;
   float _diffIR24=0.0;
 
   // Variables for controlling calling: where you?

@@ -1,13 +1,13 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskTantrum.cpp"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskTantrum
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskTantrum.h"
 
 //---------------------------------------------------------------------------
@@ -38,7 +38,7 @@ if(_startTantrumFlag){
     // Growl timer and flag
     _growlFlag = true;
     _timerObj2.start(_tantrumGrowlDuration);
-    
+
     // MOOD UPDATE: 30% chance of angry
     int8_t prob = random(0,100);
     if(prob<30){_moodObj->setMood(MOOD_ANGRY);}
@@ -62,10 +62,10 @@ if(_timerObj2.finished()){
     _growlFlag = !_growlFlag;
     if(_growlFlag){
     _timerObj2.start(_tantrumGrowlDuration);
-    _speakerObj->reset();  
+    _speakerObj->reset();
     }
     else{
-    _timerObj2.start(_tantrumGrowlPause); 
+    _timerObj2.start(_tantrumGrowlPause);
     }
 }
 if(_timerObj1.finished()){

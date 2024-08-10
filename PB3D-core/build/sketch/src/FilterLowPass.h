@@ -1,14 +1,13 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/FilterLowPass.h"
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: FilterLowPass
-//---------------------------------------------------------------------------
-/*
-This class is part of the PetBot (PB) program. It is a 1st order low pass 
-filter. 
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #ifndef FILTERLOWPASS_H
 #define FILTERLOWPASS_H
 

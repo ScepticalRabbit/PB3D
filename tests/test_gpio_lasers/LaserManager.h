@@ -1,12 +1,12 @@
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
 //------------------------------------------------------------------------------
-// PET BOT 3D - PB3D!
-// CLASS: LaserManager
-//------------------------------------------------------------------------------
-/*
-The X class is part of the PetBot (PB) program.
 
-Author: Lloyd Fletcher
-*/
 #ifndef LASERMANAGER_H
 #define LASERMANAGER_H
 

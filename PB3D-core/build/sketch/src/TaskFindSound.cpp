@@ -1,18 +1,18 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskFindSound.cpp"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskFindSound
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskFindSound.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskFindSound::TaskFindSound(MoodManager* inMood, TaskManager* inTask, 
+TaskFindSound::TaskFindSound(MoodManager* inMood, TaskManager* inTask,
                             MoveManager* inMove, Speaker* inSpeaker){
     _moodObj = inMood;
     _taskObj = inTask;
@@ -44,10 +44,10 @@ void TaskFindSound::update(){
     // SENSOR: Ask follower Xiao for sound data
     if(_sensUpdateTimer.finished()){
         _sensUpdateTimer.start(_sensUpdateTime);
-        
+
         // Request ear state data from follower board
         _I2CReadEarState();
-        
+
         // Send the byte flag back
         _I2CSendByte();
 
@@ -69,10 +69,10 @@ void TaskFindSound::update(){
     }
 
     if(_taskObj->getTask() != TASK_FINDSOUND){
-        // ENABLE: If X claps in this interval then start finding sound 
+        // ENABLE: If X claps in this interval then start finding sound
         if(_clapEnableTimer.finished()){
         _clapEnableTimer.start(_clapEnableUpdateTime);
-        
+
         if(_clapCount >= _clapThres){
             _taskObj->setTask(TASK_FINDSOUND);
         }
@@ -113,7 +113,7 @@ void TaskFindSound::findSound(){
         // Send the flag to sample environment
         _I2CSendSampEnvFlag();
 
-        _speakerObj->reset();           
+        _speakerObj->reset();
         _callTimer.start(_callInterval);
     }
 
@@ -126,7 +126,7 @@ void TaskFindSound::findSound(){
     uint16_t inFreqs[]  = {NOTE_A4,NOTE_G4,NOTE_G4,NOTE_A6,0,0,0,0};
     uint16_t inDurs[]   = {300,0,200,0,0,0,0,0};
     _speakerObj->setSoundFreqs(inFreqs,8);
-    _speakerObj->setSoundDurs(inDurs,8);    
+    _speakerObj->setSoundDurs(inDurs,8);
 
 
     if(_callTimer.finished()){
@@ -136,27 +136,27 @@ void TaskFindSound::findSound(){
 
     //--------------------------------------------------------------------
     // FIND SOUND: Track based on ear state from Xiao
-    // EAR STATE = 0: uncertain, 1: forward, 2: left, 3: right 
+    // EAR STATE = 0: uncertain, 1: forward, 2: left, 3: right
     if(_earState == EAR_COM_LEFT){
         //_moveObj->left();
-        //_moveObj->forwardLeft(_speedDiffLR); 
+        //_moveObj->forwardLeft(_speedDiffLR);
         _moveObj->forwardLeftDiffFrac(_speedDiffFracLR);
     }
-    else if(_earState == EAR_COM_RIGHT){ 
+    else if(_earState == EAR_COM_RIGHT){
         //_moveObj->right();
-        //_moveObj->forwardRight(_speedDiffLR);  
+        //_moveObj->forwardRight(_speedDiffLR);
         _moveObj->forwardRightDiffFrac(_speedDiffFracLR);
     }
-    else if(_earState == EAR_COM_FORWARD){ 
-        _moveObj->forward();  
+    else if(_earState == EAR_COM_FORWARD){
+        _moveObj->forward();
     }
-    else if(_earState == EAR_COM_SENV){     
-        _moveObj->forward(); 
+    else if(_earState == EAR_COM_SENV){
+        _moveObj->forward();
     }
     else{
         //_moveObj->updateMove();
         //_moveObj->go();
-        _moveObj->forward();  
+        _moveObj->forward();
     }
 }
 
@@ -169,7 +169,7 @@ void TaskFindSound::_I2CSendByte(){
 }
 
 void TaskFindSound::_I2CSendSampEnvFlag(){
-    byte sampEnvByte = _sendByte | B01000000;    
+    byte sampEnvByte = _sendByte | B01000000;
     Wire.beginTransmission(ADDR_FOLLBOARD);
     Wire.write(sampEnvByte);
     Wire.endTransmission();

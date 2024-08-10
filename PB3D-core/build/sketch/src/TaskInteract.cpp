@@ -1,18 +1,18 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskInteract.cpp"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskInteract
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskInteract.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskInteract::TaskInteract(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+TaskInteract::TaskInteract(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker, TaskDance* inDance, PatSensor* inPatSens){
     _moodObj = inMood;
     _taskObj = inTask;
@@ -50,10 +50,10 @@ void TaskInteract::interact(){
     // If this is the first time we enter the function set key variables
     if(_interactStartFlag){
         _interactStartFlag = false;
-        
+
         _moveObj-> stop();
         _moveObj->resetSubMoveTimer();
-        
+
         _patSensObj->reset();
         _patSensObj->setButtonsEnabled(false);
         _patTimeOutTimer.start(_patTimeOut);
@@ -79,8 +79,8 @@ void TaskInteract::interact(){
         _askFlag = true;
         _askSqueakTimer.start(_askSqueakInterval);
         _askWiggleTimer.start(_askWiggleDuration);
-        
-        // Reset the speaker 
+
+        // Reset the speaker
         _speakerObj->reset();
     }
 
@@ -91,7 +91,7 @@ void TaskInteract::interact(){
         }
         else{
         // Otherwise 'wiggle' to ask for a pat
-        _moveObj->wiggle(_askWiggleLeftDur,_askWiggleRightDur);     
+        _moveObj->wiggle(_askWiggleLeftDur,_askWiggleRightDur);
         }
     }
     else{
@@ -106,11 +106,11 @@ void TaskInteract::interact(){
     if(_patSensObj->getPatFinished()){
         // INTERACT EXIT CONDITION - reset start flag
         _interactStartFlag = true;
-        
+
         // Reset the pat sensor
         _patSensObj->reset();
         _patSensObj->setButtonsEnabled(true);
-        
+
         // Update mood to happy
         int8_t prob = random(0,100);
         if(prob <= 80){
@@ -119,8 +119,8 @@ void TaskInteract::interact(){
         else{
         _moodObj->setMood(MOOD_NEUTRAL);
         }
-        _moodObj->incMoodScore();      
-        
+        _moodObj->incMoodScore();
+
         // Update task to dance
         _taskObj->setTask(TASK_DANCE);
         // Overide default task duration to be a specific number of bars
@@ -138,17 +138,17 @@ void TaskInteract::interact(){
         // Reset the pat sensor
         _patSensObj->reset();
         _patSensObj->setButtonsEnabled(true);
-        
+
         // Update mood to sad
         int8_t prob = random(0,100);
-        if(prob <= 75){ 
+        if(prob <= 75){
         _moodObj->setMood(MOOD_SAD);
         }
         else{
         _moodObj->setMood(MOOD_NEUTRAL);
         }
         _moodObj->decMoodScore();
-        
+
         // Update task to explore
         _taskObj->setTask(TASK_EXPLORE);
     }

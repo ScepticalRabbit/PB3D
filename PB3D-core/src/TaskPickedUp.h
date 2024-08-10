@@ -1,12 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskPickedUp
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKPICKEDUP_H
 #define TASKPICKEDUP_H
@@ -14,7 +13,7 @@ Author: Lloyd Fletcher
 #include <Wire.h> // I2C
 #include <Seeed_CY8C401XX.h> // Capcitive Touch Sensor
 #include "MoodManager.h"
-#include "CollisionManager.h" 
+#include "CollisionManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
 #include "Timer.h"
@@ -30,7 +29,7 @@ class TaskPickedUp{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+  TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
                Speaker* inSpeaker, PatSensor* inPatSens);
 
   //---------------------------------------------------------------------------
@@ -64,7 +63,7 @@ private:
   bool _isPickedUp = false;
   bool _startPickedUpFlag = false;
   bool _patFlag = false, _patComplete = false;
-  
+
   bool _exitFlag = false, _exitTimerOn = false;
   uint16_t _exitTime = 2000;
   Timer _exitTimer = Timer();
@@ -79,7 +78,7 @@ private:
   uint16_t _purrOnTime = 4000,_purrOnTimeMin = 3000,_purrOnTimeMax = 4000;
   uint16_t _purrOffTime = 2000,_purrOffTimeMin = 1000,_purrOffTimeMax = 2500;
   Timer _purrTimer = Timer();
-  
+
   // PANIC!
   bool _panicFlag = false;
   uint16_t _panicWiggleLeftDur = 250, _panicWiggleRightDur = 250;

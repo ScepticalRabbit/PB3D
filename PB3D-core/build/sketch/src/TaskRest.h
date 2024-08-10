@@ -1,13 +1,12 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskRest.h"
-//---------------------------------------------------------------------------
-// PET BOT - PB3! 
-// CLASS: TaskRest
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKREST_H
 #define TASKREST_H
@@ -22,7 +21,7 @@ class TaskRest{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskRest(MoodManager* inMood, TaskManager* inTask, 
+  TaskRest(MoodManager* inMood, TaskManager* inTask,
             MoveManager* inMove, Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
@@ -40,7 +39,7 @@ public:
   //---------------------------------------------------------------------------
   // Get, set and reset
   void reset();
-  
+
 private:
   // MAIN OBJECT POINTERS
   MoodManager* _moodObj = NULL;

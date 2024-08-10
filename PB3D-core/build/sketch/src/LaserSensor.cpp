@@ -1,18 +1,17 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/LaserSensor.cpp"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: LaserSensor
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "LaserSensor.h"
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // BEGIN: called once during SETUP
-//---------------------------------------------------------------------------
 void LaserSensor::begin(){
     delay(_resetDelay);
     if(!_laserObj.begin(_address)){
@@ -28,9 +27,8 @@ void LaserSensor::begin(){
     delay(_resetDelay);
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // UPDATE: called during every LOOP
-//---------------------------------------------------------------------------
 void LaserSensor::startRange(){
     if(!_isEnabled){return;}
 
@@ -41,7 +39,7 @@ void LaserSensor::startRange(){
 
 bool LaserSensor::updateRange(){
     if(!_isEnabled){return false;}
-    
+
     if(_laserObj.isRangeComplete() && !_rangeFlag){
         _rangeTimeout = _laserObj.timeoutOccurred();
         _rangeStatus = _laserObj.readRangeStatus();

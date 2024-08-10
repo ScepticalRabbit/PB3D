@@ -1,3 +1,12 @@
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
+
 #ifndef STATEDATA_H
 #define STATEDATA_H
 
@@ -13,7 +22,7 @@
         // TIME
         uint32_t onTime;
         // LAST COLLISION
-        uint8_t checkVec[7]; 
+        uint8_t checkVec[7];
         uint16_t USRange;
         uint16_t LSRRangeL, LSRRangeR;
         uint16_t LSRRangeU, LSRRangeD;
@@ -26,7 +35,7 @@
     };
 
     #define PACKET_SIZE sizeof(stateData_t)
-    
+
     void _initStateData(dataPacket_t* inState){
         // TIME
         inState->state.onTime = 0;
@@ -39,22 +48,22 @@
         inState->state.LSRRangeR = 0;
         inState->state.LSRRangeU = 0;
         inState->state.LSRRangeD = 0;
-        inState->state.escCount = 0; 
-        inState->state.escDist = 0.0; 
+        inState->state.escCount = 0;
+        inState->state.escDist = 0.0;
         inState->state.escAng = 0.0;
     }
-    
+
     void _printStateData(dataPacket_t* inState){
         Serial.println();
         Serial.println(F("----------------------------------------"));
 
-        Serial.print(F("Time: ")); Serial.print(inState->state.onTime); Serial.print(F("; ")); 
+        Serial.print(F("Time: ")); Serial.print(inState->state.onTime); Serial.print(F("; "));
         Serial.println();
 
         Serial.println(F("CheckVec=[BL,BR,US,LL,LR,LU,LD,]"));
         Serial.print("CheckVec=[");
         for(uint8_t ii=0;ii<7;ii++){
-            Serial.print(" ");Serial.print(inState->state.checkVec[ii]);Serial.print(","); 
+            Serial.print(" ");Serial.print(inState->state.checkVec[ii]);Serial.print(",");
         }
         Serial.println("]");
 
@@ -71,13 +80,13 @@
         Serial.println();
 
         Serial.println(F("----------------------------------------"));
-        Serial.println();  
+        Serial.println();
     }
 
     void _serialLogData(dataPacket_t* inState){
         Serial.print(inState->state.onTime); Serial.print(",");
         for(uint8_t ii=0;ii<7;ii++){
-            Serial.print(inState->state.checkVec[ii]);Serial.print(","); 
+            Serial.print(inState->state.checkVec[ii]);Serial.print(",");
         }
         Serial.print(inState->state.USRange); Serial.print(",");
         Serial.print(inState->state.LSRRangeL); Serial.print(",");
@@ -94,7 +103,7 @@
 #elif defined(STATEDATA_NAV)
     struct stateData_t{
         // TIME
-        uint32_t onTime;  
+        uint32_t onTime;
         // MOVE
         float wheelSpeedL;
         float wheelSpeedR;
@@ -110,14 +119,14 @@
         float navVelC;
         float navHead;
     };
-    
+
     union dataPacket_t{
       stateData_t state;
       byte dataPacket[sizeof(stateData_t)];
     };
 
     #define PACKET_SIZE sizeof(stateData_t)
-    
+
     void _initStateData(dataPacket_t* inState){
         // TIME
         inState->state.onTime = 0;
@@ -134,14 +143,14 @@
         inState->state.navVelX = 0.0;
         inState->state.navVelY = 0.0;
         inState->state.navVelC = 0.0;
-        inState->state.navHead = 0.0;    
+        inState->state.navHead = 0.0;
     }
-    
+
     void _printStateData(dataPacket_t* inState){
         Serial.println();
         Serial.println(F("----------------------------------------"));
 
-        Serial.print(F("Time: ")); Serial.print(inState->state.onTime); Serial.print(F("; ")); 
+        Serial.print(F("Time: ")); Serial.print(inState->state.onTime); Serial.print(F("; "));
         Serial.println();
 
         Serial.print(F("W_SpdL: ")); Serial.print(inState->state.wheelSpeedL); Serial.print(F("; "));
@@ -164,7 +173,7 @@
         Serial.println();
 
         Serial.println(F("----------------------------------------"));
-        Serial.println();  
+        Serial.println();
     }
 
 #else // Default state data packet
@@ -174,7 +183,7 @@
         // MOOD
         int8_t mood;
         int8_t moodScore;
-        // TASK  
+        // TASK
         int8_t task;
         // MOVE
         int8_t moveBasic;
@@ -201,21 +210,21 @@
         int16_t colLSRURng;
         int16_t colLSRDRng;
     };
-    
+
     union dataPacket_t{
       stateData_t state;
       byte dataPacket[sizeof(stateData_t)];
     };
 
     #define PACKET_SIZE sizeof(stateData_t)
-    
+
     void _initStateData(dataPacket_t* inState){
         // TIME
         inState->state.onTime = 0;
         // MOOD
         inState->state.mood = 0;
         inState->state.moodScore = 0;
-        // TASK  
+        // TASK
         inState->state.task = 0;
         // MOVE
         inState->state.moveBasic = 0;
@@ -243,12 +252,12 @@
         inState->state.colLSRURng = 0;
         inState->state.colLSRDRng = 0;
     }
-    
+
     void _printStateData(dataPacket_t* inState){
         Serial.println();
         Serial.println(F("----------------------------------------"));
 
-        Serial.print(F("Time: ")); Serial.print(inState->state.onTime); Serial.print(F("; ")); 
+        Serial.print(F("Time: ")); Serial.print(inState->state.onTime); Serial.print(F("; "));
         Serial.print(F("Mood: ")); Serial.print(inState->state.mood); Serial.print(F("; "));
         Serial.print(F("MoodSc: ")); Serial.print(inState->state.moodScore); Serial.print(F("; "));
         Serial.print(F("TaskManager: ")); Serial.print(inState->state.task); Serial.print(F("; "));
@@ -302,19 +311,19 @@
     typedef struct stateData_t{
 
     };
-    
+
     typedef union dataPacket_t{
       stateData_t state;
       byte dataPacket[sizeof(stateData_t)];
     };
 
     #define PACKET_SIZE sizeof(stateData_t)
-    
+
     void _initStateData(dataPacket_t* inState){
-        
-    }       
-    
+
+    }
+
     void _printStateData(dataPacket_t* inState){
-        
+
     }
 */

@@ -1,12 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D!
-// CLASS: LaserRanger
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef LASERSENSOR_H
 #define LASERSENSOR_H

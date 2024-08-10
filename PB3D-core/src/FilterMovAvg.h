@@ -1,15 +1,12 @@
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: FilterMovAvg
-//---------------------------------------------------------------------------
-/*
-This class is part of the PetBot (PB) program. It is a moving average filter
-with a window size defined using the constructor. The window size must be an
-integer less than 255 and much smaller values are recommended to avoid memory
-issues.
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #ifndef FILTERMOVAVG_H
 #define FILTERMOVAVG_H
 
@@ -42,7 +39,7 @@ public:
   double getCurrVal(){return _currFiltered;}
 
 private:
-  Timer _filtTimer; 
+  Timer _filtTimer;
   uint16_t _updateTime = 1; // Default update time is 1ms (1kHz)
   uint8_t _window = 5;      // Default window is 5 data points
   uint8_t _currIndex = 0;

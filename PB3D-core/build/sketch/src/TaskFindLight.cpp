@@ -1,18 +1,18 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskFindLight.cpp"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskFindLight
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskFindLight.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskFindLight::TaskFindLight(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+TaskFindLight::TaskFindLight(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker, PatSensor* inPatSens){
     _moodObj = inMood;
     _taskObj = inTask;
@@ -58,9 +58,9 @@ void TaskFindLight::update(){
 
     if(_senseTimer.finished()){
         _senseTimer.start(_senseUpdateTime);
-        
+
         _tcaSelect(LIGHTSENS_L);
-        _luxLeft = _lightSensL.readLux(VEML_LUX_NORMAL_NOWAIT);  
+        _luxLeft = _lightSensL.readLux(VEML_LUX_NORMAL_NOWAIT);
         _tcaSelect(LIGHTSENS_R);
         _luxRight = _lightSensR.readLux(VEML_LUX_NORMAL_NOWAIT);
 
@@ -73,7 +73,7 @@ void TaskFindLight::update(){
     if(_gradTimer.finished()){
         _gradTimer.start(_gradUpdateTime);
 
-        _luxLRAvgT0 = _luxLRAvgT1; 
+        _luxLRAvgT0 = _luxLRAvgT1;
         _luxLRAvgT1 = _luxAvg;
 
         _luxGrad = _luxLRAvgT1 - _luxLRAvgT0;
@@ -149,12 +149,12 @@ void TaskFindLight::_findLux(bool seekLightFlag){
     // If either threshold was tripped then turn
     if(_gradMoveFlag){
         _moveObj->turnToAngleCtrlPos(180.0);
-        
+
         if(_moveObj->getPosPIDAttainSP_Both() || _gradMoveTimeout.finished()){
             _gradMoveFlag = false;
         }
     }
-    else if(thresTrip){  
+    else if(thresTrip){
         if(_luxDiff > 0){
             if(seekLightFlag){ // Turn towards light
                 _moveObj->forwardLeftDiffFrac(speedDiffFrac);
@@ -173,7 +173,7 @@ void TaskFindLight::_findLux(bool seekLightFlag){
         }
     }
     else{
-        _moveObj->forward();  
+        _moveObj->forward();
     }
 }
 
@@ -182,5 +182,5 @@ void TaskFindLight::_tcaSelect(uint8_t index) {
 
     Wire.beginTransmission(TCAADDR);
     Wire.write(1 << index);
-    Wire.endTransmission();  
+    Wire.endTransmission();
 }

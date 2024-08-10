@@ -1,12 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: SPEAKER
-//---------------------------------------------------------------------------
-/*
-The speaker class is part of the PetBot (PB) program.
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef SPEAKER_H
 #define SPEAKER_H
@@ -31,17 +30,17 @@ Author: Lloyd Fletcher
 
 class Speaker{
 public:
-  //---------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // CONSTRUCTOR
   Speaker(){}
 
-  //---------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // BEGIN: called once during SETUP
   void begin(){
     // NOTE: see adafruit guidance about metro M4 dac here:
     // https://learn.adafruit.com/adafruit-metro-m4-express-featuring-atsamd51/adapting-sketches-to-m0
     // pinMode(SPEAKER_POUT,OUTPUT);
-    
+
     digitalWrite(SPEAKER_POUT,LOW);
     _soundTimer.start(0);
     _noteTimer.start(0);
@@ -60,7 +59,7 @@ public:
     if(_soundCount == SOUND_END){
       _soundStart = true;
       _soundCount = SOUND_PLAY;
-      _soundCodeInd++; 
+      _soundCodeInd++;
 
       // If we have run out of codes in the array wait until reset is called
       // Reset must be called externally to this class
@@ -69,7 +68,7 @@ public:
         _soundCodeInd = _numCodes-1;
       }
     }
-    
+
     if(_soundTimer.finished()){
       _soundTimer.start(_soundUpdateTime);
 
@@ -83,43 +82,41 @@ public:
       else if (_currSoundCode == SPEAKER_GROWL){
         _soundDurs[ff] = _growlDur;
       }
-      
+
       makeSound(_currSoundCode,
                 _soundFreqs[ff],_soundFreqs[ff+1],
-                _soundDurs[ff] ,_soundDurs[ff+1]); 
+                _soundDurs[ff] ,_soundDurs[ff+1]);
     }
   }
 
-  //--------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // SETTERS
-  //--------------------------------------------------------------------------------------------
   void setSoundCodes(uint8_t inCodes[], uint8_t numCodes){
     for(uint8_t ii=0; ii<numCodes; ii++){
-      _soundCodes[ii] = inCodes[ii];  
+      _soundCodes[ii] = inCodes[ii];
     }
   }
 
   void setSoundFreqs(uint16_t inFreqs[], uint8_t numFreqs){
     for(uint8_t ii=0; ii<numFreqs; ii++){
-      _soundFreqs[ii] = inFreqs[ii];  
+      _soundFreqs[ii] = inFreqs[ii];
     }
   }
 
   void setSoundDurs(uint16_t inDurs[], uint8_t numDurs){
     for(uint8_t ii=0; ii<numDurs; ii++){
-      _soundDurs[ii] = inDurs[ii];  
+      _soundDurs[ii] = inDurs[ii];
     }
   }
 
-  //--------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // GETTERS
-  //--------------------------------------------------------------------------------------------
   uint8_t getCurrSoundCode(){return _currSoundCode;}
   uint8_t getSoundCount(){return _soundCount;}
   uint8_t getNumCodes(){return _numCodes;}
   uint8_t getNumFreqs(){return _numFreqs;}
   uint8_t getNumDurs(){return _numDurs;}
-  
+
   uint32_t getTotalSoundDur(){
     uint32_t durSum = 0;
     for(uint8_t ii=0; ii<_numDurs; ii++){
@@ -128,9 +125,9 @@ public:
     return durSum;
   }
 
-  //--------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // MAIN SOUND - ON
-  //--------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   void makeSound(uint8_t inCode, uint16_t freq1, uint16_t freq2, uint16_t onDur, uint16_t offDur){
     if(_soundStart){
       _soundStart = false;
@@ -144,11 +141,11 @@ public:
       Serial.print(F(", F2:"));
       Serial.print(freq2);
       Serial.print(F(", OnD:"));
-      Serial.print(onDur);      
+      Serial.print(onDur);
       Serial.print(F(", OffD:"));
       Serial.print(offDur);
       Serial.println();
-      */ 
+      */
     }
 
     if(_noteTimer.finished()){
@@ -166,17 +163,17 @@ public:
         beep(freq1);
       }
       else if(inCode == SPEAKER_SLIDE){
-        slide(freq1,freq2,onDur);  
+        slide(freq1,freq2,onDur);
       }
       else if(inCode == SPEAKER_GROWL){
-        growl();  
+        growl();
       }
       else if(inCode == SPEAKER_SCREECH){
-        screech(freq1,freq2);  
+        screech(freq1,freq2);
       }
       else if(inCode == SPEAKER_SNORE){
-        snore();  
-      }    
+        snore();
+      }
       else{
         off();
       }
@@ -195,7 +192,7 @@ public:
     _soundCount = SOUND_PLAY;
     _soundCodeInd = 0;
   }
-  
+
   //--------------------------------------------------------------------------------------------
   // SUB-SOUND - BEEP
   //--------------------------------------------------------------------------------------------
@@ -206,11 +203,11 @@ public:
   //--------------------------------------------------------------------------------------------
   // SUB-SOUND - SLIDE
   //--------------------------------------------------------------------------------------------
-  void slide(uint16_t startFreq, uint16_t endFreq, uint16_t onDur){            
+  void slide(uint16_t startFreq, uint16_t endFreq, uint16_t onDur){
     uint16_t currFreq = _calcSlideFreq(startFreq,endFreq,onDur,_noteTimer.getTime());
     tone(SPEAKER_POUT,currFreq);
   }
- 
+
   //--------------------------------------------------------------------------------------------
   // SUB-SOUND - GROWL
   //--------------------------------------------------------------------------------------------
@@ -224,27 +221,27 @@ public:
     }
   }
 
-  //--------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // SUB-SOUND - RANDOM SCREECH
-  //-------------------------------------------------------------------------------------------- 
+  //----------------------------------------------------------------------------
   void screech(uint16_t freq1, uint16_t freq2){
     if(_randTimer.finished()){
       _randTimer.start(_screechRandInt);
       uint16_t currFreq = _genRandomFreq(freq1,freq2);
-      tone(SPEAKER_POUT,currFreq);  
+      tone(SPEAKER_POUT,currFreq);
     }
   }
 
-  //--------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // SUB-SOUND - SNORE
-  //--------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   void snore(){
     _snoreCurrFreq = round(float(_snoreStartFreq) + _snoreSlope*float(_noteTimer.getTime()));
     tone(SPEAKER_POUT,_snoreCurrFreq);
   }
 
 private:
-  //------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // Functions
   uint16_t _calcSlideFreq(uint16_t startNote, uint16_t endNote, uint16_t dur, uint16_t currTime){
     float slideSlope = (float(startNote)-float(endNote))/float(0.0-dur);
@@ -255,7 +252,7 @@ private:
   uint16_t _genRandomFreq(uint16_t freq1, uint16_t freq2){
     uint16_t randFreq = 0;
     if(freq1 > freq2){
-      randFreq = random(freq2,freq1);    
+      randFreq = random(freq2,freq1);
     }
     else if(freq2 > freq1){
       randFreq = random(freq1,freq2);
@@ -263,29 +260,30 @@ private:
     return randFreq;
   }
 
-  //------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // Variables
   uint8_t _currSoundCode = SPEAKER_OFF;
   bool _soundStart = false;
-  uint16_t _soundUpdateTime = 20; 
+  uint16_t _soundUpdateTime = 20;
 
   // FREQUENCIES AND TIMES
   uint8_t _soundCodeInd = 0;
   uint8_t _soundCount = 0;
+
   const static uint8_t _numCodes = 4;
   const static uint8_t _numFreqs = 8;
   const static uint8_t _numDurs = 8;
   uint8_t _soundCodes[_numCodes] = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
   uint16_t _soundFreqs[_numFreqs] = {NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5};
   uint16_t _soundDurs[_numDurs] = {100,100,100,100,100,100,100,100};
-  
+
   // TIMERS
   Timer _soundTimer;
   Timer _songTimer;
   Timer _noteTimer;
 
   // BEEP BEEP Variables
-  /* 
+  /*
   bool _bbStart = true;
   uint16_t _bbNoteDur = 100;
   uint16_t _bbPause = 100;
@@ -304,7 +302,7 @@ private:
   bool _growlOscillator = true;
   uint16_t _growlDur = 1000;
   uint16_t _growlFreq1 = NOTE_B2;
-  uint16_t _growlFreq2 = NOTE_B3; 
+  uint16_t _growlFreq2 = NOTE_B3;
 
   // SCREECH Variables
   bool _startScreech = true;
@@ -314,7 +312,7 @@ private:
   // SNORE Variables
   bool _startSnore = true;
   uint16_t _snoreDur = 2000;
-  uint16_t _snoreStartFreq = NOTE_C4; 
+  uint16_t _snoreStartFreq = NOTE_C4;
   uint16_t _snoreEndFreq = NOTE_B2;
   float _snoreSlope = -float(_snoreStartFreq -_snoreEndFreq)/float(_snoreDur);
   uint16_t _snoreCurrFreq = _snoreStartFreq;

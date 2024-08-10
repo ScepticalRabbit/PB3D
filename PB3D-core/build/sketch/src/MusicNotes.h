@@ -1,4 +1,12 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/MusicNotes.h"
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #define NOTE_C1  33
 #define NOTE_CS1 35

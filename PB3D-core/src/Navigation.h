@@ -1,12 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: NAVIGATION
-//---------------------------------------------------------------------------
-/*
-The ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef NAVIGATION_H
 #define NAVIGATION_H
@@ -66,14 +65,14 @@ public:
 
       // Update the predicted position
       _posXNext = _posXPrev + _velX*_dt;
-      _posYNext = _posYPrev + _velY*_dt;     
+      _posYNext = _posYPrev + _velY*_dt;
 
       // Debug prints update every X interations based on debugFreq
       if(_debugCount++ >= _debugFreq){
         _debugCount = 0; // Reset the debug count
 
         #if defined(NAV_DEBUG_TIMER)
-          Serial.print(F("NAV: update took ")); 
+          Serial.print(F("NAV: update took "));
           Serial.print(_navTimer.getTime());
           Serial.println(F("ms"));
         #endif
@@ -119,7 +118,7 @@ private:
   IMUSensor* _IMUObj;
 
   // Navigation Variables
-  int16_t _navUpdateTime = 20; 
+  int16_t _navUpdateTime = 20;
   float _dt = float(_navUpdateTime)/1000.0;
   Timer _navTimer = Timer();
 

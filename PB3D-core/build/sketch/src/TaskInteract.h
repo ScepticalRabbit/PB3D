@@ -1,18 +1,17 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskInteract.h"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskInteract
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKINTERACT_H
 #define TASKINTERACT_H
 
-#include <Wire.h> // I2C 
+#include <Wire.h> // I2C
 #include <Seeed_CY8C401XX.h> // Capcitive Touch Sensor
 #include "MoodManager.h"
 #include "TaskManager.h"
@@ -26,7 +25,7 @@ class TaskInteract{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskInteract(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+  TaskInteract(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
                Speaker* inSpeaker, TaskDance* inDance, PatSensor* inPatSens);
 
   //---------------------------------------------------------------------------
@@ -49,7 +48,7 @@ public:
   uint16_t getTimeOut(){return _patTimeOut;}
   void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
 
-  
+
 private:
   // MAIN OBJECT POINTERS
   MoodManager* _moodObj = NULL;
@@ -57,14 +56,14 @@ private:
   MoveManager* _moveObj = NULL;
   TaskDance* _taskDanceObj = NULL;
   Speaker* _speakerObj = NULL;
-  PatSensor* _patSensObj = NULL; 
+  PatSensor* _patSensObj = NULL;
 
   // TASK - INTERACT - Enabled Flag
   bool _isEnabled = true;
 
   // TASK - INTERACT Variables
   bool _interactStartFlag = true;
- 
+
   // 'Ask' update variables
   bool _askFlag = false;
   uint16_t _askSqueakInterval = 7000;
@@ -73,8 +72,8 @@ private:
   uint16_t _askWiggleRightDur = 500;
   uint16_t _askWiggleDuration = 2*(_askWiggleLeftDur+_askWiggleRightDur);
   Timer _askWiggleTimer = Timer();
- 
- 
+
+
   uint16_t _patTimeOut = 30000;
   Timer _patTimeOutTimer = Timer();
 };

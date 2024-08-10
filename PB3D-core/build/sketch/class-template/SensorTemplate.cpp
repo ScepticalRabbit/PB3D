@@ -1,13 +1,13 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/class-template/SensorTemplate.cpp"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TEMPLATE
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "SensorTemplate.h"
 
 //---------------------------------------------------------------------------

@@ -1,4 +1,13 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/CollisionEscaper.cpp"
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
+
 #include "CollisionEscaper.h"
 #include "CollisionDangerFlags.h"
 
@@ -24,7 +33,7 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
         _escapeDist = 1.0*_defRevDist;
         _escapeAngle = 1.0*_defHardTurn;
     }
-    // 7) LSRD: check cliff-close/far, check obstacle-close/far 
+    // 7) LSRD: check cliff-close/far, check obstacle-close/far
     else if(checkVec[6] >= DANGER_FAR){
         if(checkVec[6] == DANGER_CLOSE){
         _escapeCount = ESCAPE_REV;
@@ -34,8 +43,8 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
         else{
         _escapeCount = ESCAPE_NOREV;
         _escapeDist = 0.0;
-        _escapeAngle = _getRandTurnDir()*_defHardTurn;        
-        }    
+        _escapeAngle = _getRandTurnDir()*_defHardTurn;
+        }
     }
     // 4) LSRL: check far (norev,+45deg), check close (rev,+90deg)
     else if(checkVec[3] >= DANGER_FAR){
@@ -47,11 +56,11 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
         else{
         _escapeCount = ESCAPE_NOREV;
         _escapeDist = 0.0;
-        _escapeAngle = -1.0*_defModTurn;        
+        _escapeAngle = -1.0*_defModTurn;
         }
 
         if(checkVec[4] >= DANGER_FAR){ // If the right laser is tripped as well then we are in a corner, do a 180
-        _escapeAngle = -180.0 + _getRandTurnDir()*float(random(0,45));         
+        _escapeAngle = -180.0 + _getRandTurnDir()*float(random(0,45));
         }
         else if(checkVec[2] >= DANGER_FAR){ // If the ultrasonic sensor is tripped as well then turn harder
         _escapeAngle = -1.0*_defHardTurn;
@@ -67,11 +76,11 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
         else{
         _escapeCount = ESCAPE_NOREV;
         _escapeDist = 0.0;
-        _escapeAngle = 1.0*_defModTurn;        
-        }  
+        _escapeAngle = 1.0*_defModTurn;
+        }
 
         if(checkVec[3] >= DANGER_FAR){ // If the right laser is tripped as well then we are in a corner, do a 180
-        _escapeAngle = 180.0 + _getRandTurnDir()*float(random(0,45));         
+        _escapeAngle = 180.0 + _getRandTurnDir()*float(random(0,45));
         }
         else if(checkVec[2] >= DANGER_FAR){ // If the ultrasonic sensor is tripped as well then turn harder
         _escapeAngle = -1.0*_defHardTurn;
@@ -87,10 +96,10 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
         else{
         _escapeCount = ESCAPE_NOREV;
         _escapeDist = 0.0;
-        _escapeAngle = _getRandTurnDir()*_defHardTurn;        
+        _escapeAngle = _getRandTurnDir()*_defHardTurn;
         }
     }
-    // 6) LSRU: check overhang-close/far 
+    // 6) LSRU: check overhang-close/far
     else if(checkVec[5] >= DANGER_FAR){
         if(checkVec[5] == DANGER_CLOSE){
         _escapeCount = ESCAPE_REV;
@@ -100,14 +109,14 @@ void CollisionEscaper::updateEscapeDecision(uint8_t checkVec[]){
         else{
         _escapeCount = ESCAPE_NOREV;
         _escapeDist = 0.0;
-        _escapeAngle = _getRandTurnDir()*_defHardTurn;        
-        }         
+        _escapeAngle = _getRandTurnDir()*_defHardTurn;
+        }
     }
 }
 
 
 //-----------------------------------------------------------------------------
-void CollisionEscaper::setEscapeStart(uint8_t checkVec[]){   
+void CollisionEscaper::setEscapeStart(uint8_t checkVec[]){
     updateEscapeDecision(checkVec);  // This is the decision tree
 }
 
@@ -116,18 +125,18 @@ void CollisionEscaper::escape(){
     if(_escapeCount == 0){ // Use the first escape count to reverse by a set distance
         int8_t isComplete = _moveObj->toDistCtrlSpd(_escapeDist);
         if(isComplete > 0){ // this portion of the escape is complete
-            _escapeCount = 1;   
+            _escapeCount = 1;
         }
     }
-    else if(_escapeCount == 1){ 
+    else if(_escapeCount == 1){
         int8_t isComplete = _moveObj->turnToAngleCtrlSpd(_escapeAngle);
         if(isComplete > 0){ // this portion of the escape is complete
-            _escapeCount = 2; 
+            _escapeCount = 2;
         }
     }
     else{
         _moveObj->stop();
-    }  
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -136,7 +145,7 @@ bool CollisionEscaper::getEscapeFlag(){
     if(_escapeCount <= 1){
         outFlag = true;
     }
-    return outFlag;  
+    return outFlag;
 }
 
 //-----------------------------------------------------------------------------

@@ -1,13 +1,13 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskFindLight.h"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskFindLight
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #ifndef TASKFINDLIGHT_H
 #define TASKFINDLIGHT_H
 
@@ -22,14 +22,14 @@ Author: Lloyd Fletcher
 // TASKFINDLIGHT: specific defines/includes
 #define TCAADDR 0x70
 #define LIGHTSENS_L 1
-#define LIGHTSENS_R 0 
+#define LIGHTSENS_R 0
 #include "Adafruit_VEML7700.h"
 
 class TaskFindLight{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskFindLight(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+  TaskFindLight(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
                 Speaker* inSpeaker, PatSensor* inPatSens);
 
   //---------------------------------------------------------------------------

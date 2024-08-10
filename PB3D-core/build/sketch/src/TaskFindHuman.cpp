@@ -1,18 +1,18 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskFindHuman.cpp"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskFindHuman
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskFindHuman.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskFindHuman::TaskFindHuman(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+TaskFindHuman::TaskFindHuman(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker, TaskInteract* inTInt){
     _moodObj = inMood;
     _taskObj = inTask;
@@ -27,10 +27,10 @@ void TaskFindHuman::begin(){
     delay(500);
     _presDetector = PresenceDetector(_movementSensor, _sensitivityPresence, _sensitivityMovement, _detectInterval);
     if (_movementSensor.initialize() == false){
-        Serial.println(F("TASKFINDHUMAN: Failed to initialise presence sensor."));  
+        Serial.println(F("TASKFINDHUMAN: Failed to initialise presence sensor."));
         _isEnabled = false;
     }
-    Serial.println(F("TASKFINDHUMAN: IR presence sensor initialised."));  
+    Serial.println(F("TASKFINDHUMAN: IR presence sensor initialised."));
     _IRPFlags1 = false; _IRPFlags2 = false; _IRPFlags3 = false; _IRPFlags4 = false;
     _sensUpdateTimer.start(0);
 }
@@ -71,7 +71,7 @@ void TaskFindHuman::findHuman(){
     if(_startFlag){
         _startFlag = false;
 
-        _speakerObj->reset();                      
+        _speakerObj->reset();
         _callTimer.start(_callInterval);
     }
 
@@ -90,17 +90,17 @@ void TaskFindHuman::findHuman(){
     // NOTE SENSOR ORIENTATION DIFFERENT ON PB3D
     // Sensor 1 is pointing LEFT
     // Sensor 1: LEFT, Sensor 2: FRONT, Sensor 3: RIGHT, Sensor 4: BACK
-    if(_IRPFlags1 && _IRPFlags2 && _IRPFlags3 && _IRPFlags4){ 
+    if(_IRPFlags1 && _IRPFlags2 && _IRPFlags3 && _IRPFlags4){
         // If all flags are tripped a human has been found!
         _taskObj->setTask(TASK_INTERACT);
         // Overide the default task duration
         _taskObj->setTaskDuration(_taskInteractObj->getTimeOut());
         _taskObj->taskLEDInteract();
-        _taskInteractObj->setStartInteractFlag(true);  
+        _taskInteractObj->setStartInteractFlag(true);
         // Update mood score
         _moodObj->incMoodScore();
     }
-    else{ 
+    else{
         //--------------------------------------------------------------------
         // Speaker call = where you?
         //--------------------------------------------------------------------
@@ -108,31 +108,31 @@ void TaskFindHuman::findHuman(){
             _speakerObj->reset();
             _callTimer.start(_callInterval);
         }
-        
+
         //--------------------------------------------------------------------
         // Track based on IR sensor readings
         //--------------------------------------------------------------------
         // If grove connector points backwards then the sensors are:
         // 1: back, 2: left, 3: front, 4: right
         if(_diffIR13 > _sensitivityTrack){
-            // Sensor 1 greater than sensor 3 
-            _moveObj->left();     
+            // Sensor 1 greater than sensor 3
+            _moveObj->left();
         }
-        else if(_diffIR13 < -_sensitivityTrack){ 
-            // Sensor 3 greater than 1 
-            _moveObj->forward();  
+        else if(_diffIR13 < -_sensitivityTrack){
+            // Sensor 3 greater than 1
+            _moveObj->forward();
         }
-        else if(_diffIR24 > _sensitivityTrack){ 
+        else if(_diffIR24 > _sensitivityTrack){
             // Sensor 2 greater than sensor 4
-            _moveObj->left();  
+            _moveObj->left();
         }
         else if(_diffIR24 < -_sensitivityTrack){
-            // Sensor 4 greater than sensor 2 
-            _moveObj->right();  
+            // Sensor 4 greater than sensor 2
+            _moveObj->right();
         }
         else{
             _moveObj->updateMove();
-            _moveObj->go();  
+            _moveObj->go();
         }
     }
 }
@@ -153,4 +153,4 @@ void TaskFindHuman::_sensUpdateHumanIRSensor(){
     _IRPFlags2 = _presDetector.presentField2();
     _IRPFlags3 = _presDetector.presentField3();
     _IRPFlags4 = _presDetector.presentField4();
-}  
+}

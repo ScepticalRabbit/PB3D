@@ -1,15 +1,10 @@
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: PID
-//---------------------------------------------------------------------------
-/*
-The PID class is part of the PetBot (PB) program. It used to...
-
-Based on code found here:
-http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-introduction/
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Based on code found here:
+// http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-introduction/
+//------------------------------------------------------------------------------
 
 #ifndef PID_H
 #define PID_H
@@ -30,14 +25,14 @@ public:
   PID(bool inCmdOn);
   PID(bool inCmdOn, double kp, double ki, double kd);
   PID(bool inCmdOn, double kp, double ki, double kd, uint16_t sampTime);
-  
+
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
   void begin();
 
   //---------------------------------------------------------------------------
   // UPDATE: called during every LOOP
-  
+
   // This version directly returns the output, useful for position control
   void update(double input);
 
@@ -63,9 +58,9 @@ public:
   double getPropTerm(){return _propTerm;}
   double getIntTerm(){return _intTerm;}
   double getDerivTerm(){return _derivTerm;}
-  
+
 private:
-  // Used when turning the PID on 
+  // Used when turning the PID on
   void _intialise();
   // main part of the update method used for overloading
   double _computePID(double input);
@@ -83,7 +78,7 @@ private:
   double _outMin = 0.0, _outMax = 255.0;
   double _cmdMin = -127.0, _cmdMax = 127.0;
   double _error = 0.0;
-  uint16_t _sampleTimeMilliS = 10;  
+  uint16_t _sampleTimeMilliS = 10;
   uint8_t _controllerDir = PID_DIRECT;
 };
 #endif // PID_H

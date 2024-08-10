@@ -93,10 +93,8 @@ Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 // INTERNAL CLASSES
 
 // SENSORS AND CONTROLLERS
-// Digital pins for left and right encoders
 static int encPinAL = 2, encPinBL = 3;
 static int encPinAR = 4, encPinBR = 5;
-// Declare encoder objects in main, pass pointers to move object
 // NOTE: encoders must be in main to attach interrupts
 Encoder encoderL = Encoder(encPinAL,encPinBL);
 Encoder encoderR = Encoder(encPinAR,encPinBR);
@@ -130,45 +128,45 @@ TaskPause taskPauseObj = TaskPause(&collisionObj,&taskObj,&moveObj,&speakerObj);
 //-----------------------------------------------------------------------------
 // SETUP
 //-----------------------------------------------------------------------------
-#line 132 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 130 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void setup();
-#line 228 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 226 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void loop();
-#line 408 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 406 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncLA();
-#line 411 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 409 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncLB();
-#line 414 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 412 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncRA();
-#line 417 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 415 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncRB();
-#line 424 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 422 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void escapeCollision();
-#line 436 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 434 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void detectedCollision();
-#line 490 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 488 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void DEBUG_SpeedTest(uint8_t inPWR, uint8_t moveCode);
-#line 532 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 530 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void DEBUG_SpeedTest(float inSpeed, uint8_t moveCode);
-#line 574 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 572 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void DEBUG_PrintSpeedMMPS();
-#line 584 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 582 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void DEBUG_PrintSpeedCPS();
-#line 594 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 592 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void DEBUG_PlotSpeedBoth();
-#line 606 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 604 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void DEBUG_PlotSpeedPID_L();
-#line 622 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 620 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void DEBUG_PlotSpeedPID_R();
-#line 638 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 636 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void DEBUG_PlotSpeedMMPS();
-#line 650 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 648 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void DEBUG_PrintColCheck();
-#line 700 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 698 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void DEBUG_PrintAllRanges();
-#line 731 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 729 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void DEBUG_PrintLightSens();
-#line 132 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 130 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void setup() {
   // Start the serial
   Serial.begin(115200);

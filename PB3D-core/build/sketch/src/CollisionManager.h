@@ -1,14 +1,12 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/CollisionManager.h"
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D!
-// CLASS: CollisionManager
-//---------------------------------------------------------------------------
-/*
-The collision manager class is part of the PetBot (PB) program. It handles 
-all obstacle avoidance behaviours and the sensors used to detect obstacles.
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 #ifndef COLLISIONMANAGER_H
 #define COLLISIONMANAGER_H
 
@@ -28,7 +26,7 @@ Author: Lloyd Fletcher
 //-----------------------------------------------------------------------------
 // DEFINITIONS
 //-----------------------------------------------------------------------------
-// Address for digital out 
+// Address for digital out
 #ifndef ADDR_FOLLBOARD
   #define ADDR_FOLLBOARD 0x11
 #endif
@@ -40,13 +38,13 @@ Author: Lloyd Fletcher
 // LAST COLLISION: data structure
 //-----------------------------------------------------------------------------
 struct lastCollision_t{
-  uint8_t checkVec[7] = {0,0,0,0,0,0,0}; 
+  uint8_t checkVec[7] = {0,0,0,0,0,0,0};
   int16_t USRange = 0;
   int16_t LSRRangeL = 0,LSRRangeR = 0;
   int16_t LSRRangeU = 0,LSRRangeD = 0;
   int8_t LSRStatusL = 0,LSRStatusR = 0;
   int8_t LSRStatusU = 0,LSRStatusD = 0;
-  uint8_t escCount = 0; 
+  uint8_t escCount = 0;
   float escDist = 0.0, escAng = 0.0;
 };
 
@@ -61,32 +59,32 @@ public:
   CollisionManager(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove);
 
   //---------------------------------------------------------------------------
-  // BEGIN: called once during SETUP 
+  // BEGIN: called once during SETUP
   //---------------------------------------------------------------------------
   void begin();
 
   //---------------------------------------------------------------------------
-  // UPDATE: called during every LOOP 
+  // UPDATE: called during every LOOP
   //---------------------------------------------------------------------------
   void update();
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-  //--------------------------------------------------------------------------- 
+  //---------------------------------------------------------------------------
   bool getEnabledFlag(){return _isEnabled;}
   void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
 
-  bool getDetectFlag(){return _collisionDetected;} 
+  bool getDetectFlag(){return _collisionDetected;}
 
   uint16_t getCount(){return _collisionCount;}
   void incCount(){_collisionCount++;}
   void resetCount(){_collisionCount = 0;}
-  
+
   bool getBeepBeepFlag(){return _collisionBeepBeepFlag;}
   void setBeepBeepFlag(bool inFlag){_collisionBeepBeepFlag = inFlag;}
 
   bool getBumperFlag(){return _bumpers.getBumpFlag();}
-  
+
   int16_t getUSRange(){return _ultrasonicRanger.getRange();}
   int16_t getUSRangeMM(){return _ultrasonicRanger.getRangeMM();}
 
@@ -125,7 +123,7 @@ private:
   MoodManager* _moodObj = NULL;
   TaskManager* _taskObj = NULL;
   MoveManager* _moveObj = NULL;
-  
+
   // Collision management variables
   bool _isEnabled = true;
   bool _collisionDetected = false; // Key flag controlling collision escape
@@ -156,7 +154,7 @@ private:
   Timer _bumperTimer = Timer();
   int16_t _ultrasonicUpdateTime = 101;  // ms, set to prime number (100+timeout)
   Timer _ultrasonicTimer = Timer();
-  
+
   // Data structure for info on last collision
   lastCollision_t _lastCol;
 };

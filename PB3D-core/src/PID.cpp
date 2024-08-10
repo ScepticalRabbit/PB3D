@@ -1,15 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: PID
-//---------------------------------------------------------------------------
-/*
-The PID class is part of the PetBot (PB) program. It used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Based on code found here:
+// http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-introduction/
+//------------------------------------------------------------------------------
 
-Based on code found here:
-http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-introduction/
-
-Author: Lloyd Fletcher
-*/
 #include "PID.h"
 
  //---------------------------------------------------------------------------
@@ -36,7 +32,7 @@ PID::PID(bool inCmdOn, double kp, double ki, double kd, uint16_t sampTime){
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void PID::begin(){
-     
+
 }
 
 //---------------------------------------------------------------------------
@@ -62,7 +58,7 @@ void PID::update(double inCommand, double input){
 
     // Update the PID output on a fixed interval based on our timer
     if(_pidTimer.finished()){
-        
+
         double outPID = _computePID(input);
         outPID = inCommand + outPID;
         _output = constrain(outPID,_outMin,_outMax);
@@ -78,9 +74,9 @@ void PID::setOutput(double output){
     _output = output;
 
     // Reset the current output based on the new limits
-    _output = constrain(_output,_outMin,_outMax);  
+    _output = constrain(_output,_outMin,_outMax);
     // Reset the integral term based on the new output limits
-    _intTerm = _constrainByCommandMode(_intTerm);   
+    _intTerm = _constrainByCommandMode(_intTerm);
 }
 
 void PID::setPIDGains(double kp, double ki, double kd){
@@ -127,9 +123,9 @@ void PID::setOutputLimits(double outMin, double outMax){
     _outMax = outMax;
 
     // Reset the current output based on the new limits
-    _output = constrain(_output,_outMin,_outMax);  
+    _output = constrain(_output,_outMin,_outMax);
     // Reset the integral term based on the new output limits
-    _intTerm = _constrainByCommandMode(_intTerm);   
+    _intTerm = _constrainByCommandMode(_intTerm);
 }
 
 void PID::setCommandLimits(double cmdMin, double cmdMax){
@@ -141,9 +137,9 @@ void PID::setCommandLimits(double cmdMin, double cmdMax){
     _cmdMax = cmdMax;
 
     // Reset the current output based on the new limits
-    _output = constrain(_output,_outMin,_outMax);  
+    _output = constrain(_output,_outMin,_outMax);
     // Reset the integral term based on the new output limits
-    _intTerm = _constrainByCommandMode(_intTerm);  
+    _intTerm = _constrainByCommandMode(_intTerm);
 }
 
 void PID::setControllerOn(uint8_t inFlag){
@@ -168,7 +164,7 @@ void PID::setControllerDir(uint8_t inDir){
 //---------------------------------------------------------------------------
 // Private Functions
 
-// Used when turning the PID on 
+// Used when turning the PID on
 void PID::_intialise(){
     _lastInput = _input;
     _intTerm = _output;
@@ -214,6 +210,6 @@ double PID::_constrainByCommandMode(double inVal){
         return constrain(inVal,_cmdMin,_cmdMax);
     }
     else{
-        return constrain(inVal,_outMin,_outMax);  
+        return constrain(inVal,_outMin,_outMax);
     }
 }

@@ -1,12 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: LaserRanger
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef LASERSENSOR_H
 #define LASERSENSOR_H
@@ -17,7 +16,7 @@ Author: Lloyd Fletcher
 #include "Adafruit_VL53L0X.h"
 
 //---------------------------------------------------------------------------
-// LASER RANGER: 
+// LASER RANGER:
 //---------------------------------------------------------------------------
 class LaserSensor{
 public:
@@ -66,8 +65,8 @@ private:
     bool _rangeFlag = false;
     int8_t _rangeStatus = 0;
     uint32_t _rangeStartTime = 0;
-    uint32_t _rangeTime = 0; 
+    uint32_t _rangeTime = 0;
     int16_t _rangeLim = 40;
     int16_t _rangeMax = 2000;
 };
-#endif 
+#endif

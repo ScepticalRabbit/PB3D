@@ -1,19 +1,16 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/FilterMovAvg.cpp"
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: FilterMovAvg
-//---------------------------------------------------------------------------
-/*
-This class is part of the PetBot (PB) program. It is a moving average filter
-with a window size defined using the constructor. The window size must be an
-integer less than 255 and much smaller values are recommended to avoid memory
-issues.
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "FilterMovAvg.h"
 
- //---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // CONSTRUCTOR/DESTRUCTOR
 FilterMovAvg::FilterMovAvg(){
     _dataArray = new double[_window];

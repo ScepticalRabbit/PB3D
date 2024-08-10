@@ -1,12 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: PatSensor
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef PATSENSOR_H
 #define PATSENSOR_H
@@ -52,7 +51,7 @@ public:
   void setPatFlag(bool inFlag){_patFlag = inFlag;}
   void setPatCountThres(uint8_t inCount){_sensPatCountThres = inCount;}
   void setButtonsEnabled(bool inFlag){_buttonsEnabled = inFlag;}
-  
+
 private:
   //---------------------------------------------------------------------------
   // TOUCH SENSOR
@@ -68,7 +67,7 @@ private:
   bool _buttonOneFlag = false;
   bool _buttonTwoFlag = false;
   bool _buttonsEnabled = true;
-  
+
   uint8_t _sensPatCountThres = 3;
   uint8_t _sensPatCountThresMin = 2, _sensPatCountThresMax = 5;
   uint8_t _sensPatCount = 0;

@@ -1,13 +1,13 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskManager.cpp"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskManager
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskManager.h"
 
 //---------------------------------------------------------------------------
@@ -49,47 +49,47 @@ void TaskManager::setTask(int8_t taskIn){
         _taskCode = taskIn;
         _taskNewFlag = true;
         uint32_t tempDuration = random(_taskDurationMin,_taskDurationMax);
-        
+
         // Set default duraiton for each task and set the LEDs
         if(_taskCode == TASK_TEST){
             _taskDuration = 30000;
-            taskLEDTest();  
+            taskLEDTest();
         }
         else if(_taskCode == TASK_EXPLORE){
             _taskDuration = tempDuration;
-            taskLEDExplore();    
+            taskLEDExplore();
         }
         else if(_taskCode == TASK_REST){
-            _taskDuration = tempDuration;  
+            _taskDuration = tempDuration;
         }
         else if(_taskCode == TASK_DANCE){
-            _taskDuration = _danceDuration;  
+            _taskDuration = _danceDuration;
             taskLEDDance();
         }
         else if(_taskCode == TASK_TANTRUM){
             _taskDuration = _tantrumDuration;
-            taskLEDCollision();  
+            taskLEDCollision();
         }
         else if(_taskCode == TASK_FINDHUMAN){
             _taskDuration = 20000;
-            taskLEDFindHuman();  
+            taskLEDFindHuman();
         }
         else if(_taskCode == TASK_FINDLIGHT){
             _taskDuration = 20000;
-            taskLEDFindLight();  
+            taskLEDFindLight();
         }
         else if(_taskCode == TASK_FINDDARK){
             _taskDuration = 20000;
-            taskLEDFindDark();  
+            taskLEDFindDark();
         }
         else if(_taskCode == TASK_FINDSOUND){
             _taskDuration = 20000;
-            taskLEDFindSound();  
+            taskLEDFindSound();
         }
         else if(_taskCode == TASK_INTERACT){
             _taskDuration = 20000;
-            taskLEDInteract();  
-        }      
+            taskLEDInteract();
+        }
         else if(_taskCode == TASK_PICKEDUP){
             _taskDuration = 60000;
             // LEDs set based on state in the TaskPickedUp class
@@ -120,13 +120,13 @@ void TaskManager::assignProb(int8_t moodIn){
     // Moods: [neutral,happy,sad,angry,scared]
     // test is used for forcing task probability
     if(moodIn == MOOD_NEUTRAL){
-        _setTaskProb(_taskProbNeutral);  
+        _setTaskProb(_taskProbNeutral);
     }
     else if(moodIn == MOOD_HAPPY){
-        _setTaskProb(_taskProbHappy); 
+        _setTaskProb(_taskProbHappy);
     }
     else if(moodIn == MOOD_SAD){
-        _setTaskProb(_taskProbSad); 
+        _setTaskProb(_taskProbSad);
     }
     else if(moodIn == MOOD_ANGRY){
         _setTaskProb(_taskProbAngry);
@@ -148,13 +148,13 @@ void TaskManager::assignProb(int8_t moodIn){
 void TaskManager::taskLEDCollision(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));
-    _taskLEDs->show();    
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDExplore(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 255, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 255, 0));
-    _taskLEDs->show();    
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDRest(uint8_t intensity){
@@ -168,31 +168,31 @@ void TaskManager::taskLEDRest(uint8_t intensity){
 void TaskManager::taskLEDDance(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 255, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 255, 0));
-    _taskLEDs->show();    
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDTantrum(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));
-    _taskLEDs->show();     
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDFindHuman(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 255));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 255));
-    _taskLEDs->show();    
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDInteract(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 255, 255));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 255, 255));
-    _taskLEDs->show();    
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDPickedUpOk(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 255, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 255, 0));
-    _taskLEDs->show();    
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDPickedUpPanic(){
@@ -201,13 +201,13 @@ void TaskManager::taskLEDPickedUpPanic(){
         _LEDSwitch = !_LEDSwitch;
     }
 
-    if(_LEDSwitch){    
+    if(_LEDSwitch){
         _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
         _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));
         _taskLEDs->show();
     }
     else{
-        taskLEDOff();      
+        taskLEDOff();
     }
 }
 
@@ -219,27 +219,27 @@ void TaskManager::taskLEDPause(uint16_t pauseTime){
     uint8_t LEDVal = _calcRisingLEDVal(pauseTime);
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(LEDVal, LEDVal, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(LEDVal, LEDVal, 0));
-    _taskLEDs->show(); 
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDFindLight(){
     uint8_t intens = 255;
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(intens, intens, intens));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(intens, intens, intens));
-    _taskLEDs->show();    
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDFindDark(){
     uint8_t intens = 85;
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(intens, intens, intens));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(intens, intens, intens));
-    _taskLEDs->show();    
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDFindSound(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 0, 255));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 0, 255));
-    _taskLEDs->show();    
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDTest(){
@@ -248,7 +248,7 @@ void TaskManager::taskLEDTest(){
         _LEDSwitch = !_LEDSwitch;
     }
 
-    if(_LEDSwitch){  
+    if(_LEDSwitch){
         _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
         _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 0, 255));
         _taskLEDs->show();
@@ -256,14 +256,14 @@ void TaskManager::taskLEDTest(){
     else{
         _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 0, 255));
         _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));
-        _taskLEDs->show();  
+        _taskLEDs->show();
     }
 }
 
 void TaskManager::taskLEDOff(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 0, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 0, 0));
-    _taskLEDs->show();  
+    _taskLEDs->show();
 }
 
 //------------------------------------------------------------------------
@@ -271,20 +271,20 @@ void TaskManager::taskLEDOff(){
 void TaskManager::taskLEDHue(uint16_t hue){
     _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue)));
     _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue)));
-    _taskLEDs->show();   
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDHSV(uint16_t hue, uint8_t sat, uint8_t value){
     _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue,sat,value)));
     _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue,sat,value)));
-    _taskLEDs->show();     
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDCol(uint16_t col){
     uint16_t hue = 65536*col/12;
     _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue)));
     _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue)));
-    _taskLEDs->show();    
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDCol(uint16_t colL, uint16_t colR){
@@ -292,14 +292,14 @@ void TaskManager::taskLEDCol(uint16_t colL, uint16_t colR){
     uint16_t hueR = 65536*colR/12;
     _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hueR)));
     _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hueL)));
-    _taskLEDs->show();     
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDCSV(uint16_t col, uint8_t sat, uint8_t val){
     uint16_t hue = 65536*col/12;
     _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue,sat,val)));
     _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hue,sat,val)));
-    _taskLEDs->show();     
+    _taskLEDs->show();
 }
 
 void TaskManager::taskLEDCSV(uint16_t colL,uint16_t colR,uint8_t satL,uint8_t satR, uint8_t valL, uint8_t valR){
@@ -307,5 +307,5 @@ void TaskManager::taskLEDCSV(uint16_t colL,uint16_t colR,uint8_t satL,uint8_t sa
     uint16_t hueR = 65536*colR/12;
     _taskLEDs->setPixelColor(0, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hueR,satR,valR)));
     _taskLEDs->setPixelColor(3, _taskLEDs->gamma32(_taskLEDs->ColorHSV(hueL,satL,valL)));
-    _taskLEDs->show();     
+    _taskLEDs->show();
 }

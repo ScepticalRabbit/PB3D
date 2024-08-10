@@ -1,13 +1,12 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/MoveManager.h"
-//----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: MoveManager Manager
-//----------------------------------------------------------------------------
-/*
-The move manager class is part of the PetBot (PB) program. It used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef MOVE_H
 #define MOVE_H
@@ -18,7 +17,7 @@ Author: Lloyd Fletcher
 #include "Timer.h"
 #include "PID.h"
 
-// MOVEMENT CONTROL 
+// MOVEMENT CONTROL
 #define MOVE_CONTROL_POWER 0
 #define MOVE_CONTROL_SPEED 1
 
@@ -50,7 +49,7 @@ Author: Lloyd Fletcher
 #define MOVE_C_SPIRAL 3
 #define MOVE_C_LOOK 4
 // Increment with last code above +1
-#define MOVE_C_COUNT 5 
+#define MOVE_C_COUNT 5
 
 class MoveManager{
 public:
@@ -58,9 +57,9 @@ public:
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
   //---------------------------------------------------------------------------
   MoveManager(Adafruit_MotorShield* AFMS, Encoder* encL, Encoder* encR);
-  
+
   //---------------------------------------------------------------------------
-  // BEGIN: called once during SETUP  
+  // BEGIN: called once during SETUP
   //---------------------------------------------------------------------------
   void begin();
 
@@ -87,7 +86,7 @@ public:
   // MOTOR POWER CONTROL - Get/Set
   uint8_t getMinPower(){return _minPWR;}
   uint8_t getMaxPower(){return _maxPWR;}
-  
+
   uint8_t getForwardPWR(){return _curForwardPWR;}
   uint8_t getBackPWR(){return _curBackPWR;}
   uint8_t getTurnPWR(){return _curTurnPWR;}
@@ -95,15 +94,15 @@ public:
   void setForwardPWR(uint8_t inPower){_curForwardPWR = inPower;}
   void setBackPWR(uint8_t inPower){_curBackPWR = inPower;}
   void setTurnPWR(uint8_t inPower){_curTurnPWR = inPower;}
-  
+
   // MOTOR SPEED CONTROL - Get/Set
   float getMinSpeed(){return _minSpeed;}
   float getMaxSpeed(){return _maxSpeed;}
-  
+
   float getForwardSpeed(){return _curForwardSpeed;}
   float getBackSpeed(){return _curBackSpeed;}
   float getTurnSpeed(){return _curTurnSpeed;}
-  
+
   void setForwardSpeed(float inSpeed){_curForwardSpeed = fabs(inSpeed);}
   void setBackSpeed(float inSpeed){_curBackSpeed = -1.0*fabs(inSpeed);}
   void setTurnSpeed(float inSpeed){_curTurnSpeed = fabs(inSpeed);}
@@ -130,20 +129,20 @@ public:
 
   //---------------------------------------------------------------------------
   // CALCULATORS
-  //--------------------------------------------------------------------------- 
+  //---------------------------------------------------------------------------
   uint16_t calcTimeout(float inSpeed, float inDist);
-  
+
   //---------------------------------------------------------------------------
   // BASIC MOVEMENT FUNCTIONS - GENERIC (switched by _moveControl var)
   //---------------------------------------------------------------------------
-  
+
   //----------------------------------------------------------------------------
   // MoveManager Stop - same regardless of control mode
   void stop();
   void stopNoUpdate();
 
   //----------------------------------------------------------------------------
-  // MoveManager Forward 
+  // MoveManager Forward
   void forward();
   void forward(float inSpeed);
   void forward(uint8_t inPower);
@@ -165,7 +164,7 @@ public:
   void right();
   void right(float inSpeed);
   void right(uint8_t inPower);
-  
+
   //----------------------------------------------------------------------------
   // Move Forward Left
   void forwardLeft();
@@ -221,7 +220,7 @@ public:
   int8_t turnToAngleCtrlSpd(float setAngle);
 
   //============================================================================
-  // COMPOUND MOVEMENT FUNCTIONS 
+  // COMPOUND MOVEMENT FUNCTIONS
   //============================================================================
   // NOTE: these two functions already work with the default speed
   // ADD: compound move code to each of these
@@ -246,13 +245,13 @@ public:
   //----------------------------------------------------------------------------
   // MOVE ZIG/ZAG
   void zigZag();
-  
+
   //----------------------------------------------------------------------------
   // MOVE LOOK AROUND
   void lookAround();
   void forceLookMove();
   void resetLook();
-  
+
   // LOOK - Diagnostics
   bool lookIsMoving(){return _lookMoveSwitch;}
   bool lookIsPaused(){return !_lookMoveSwitch;}
@@ -268,7 +267,7 @@ public:
   uint16_t getLookPauseTime(){return _lookPauseTime;}
   uint16_t getLookTotTime(){return _lookTotTime;}
 
-  
+
   //----------------------------------------------------------------------------
   // PIDs - GET/SET FUNCTIONS
   //----------------------------------------------------------------------------
@@ -288,18 +287,18 @@ public:
 
   //----------------------------------------------------------------------------
   // Speed PID get functions - left/right motors
-  float getSpeedPIDSetPoint_L(){return _speedPID_L.getSetPoint();}  
+  float getSpeedPIDSetPoint_L(){return _speedPID_L.getSetPoint();}
   float getSpeedPIDOutput_L(){return _speedPID_L.getOutput();}
   float getSpeedPIDP_L(){return _speedPID_L.getPropTerm();}
   float getSpeedPIDI_L(){return _speedPID_L.getIntTerm();}
   float getSpeedPIDD_L(){return _speedPID_L.getDerivTerm();}
-          
+
   float getSpeedPIDSetPoint_R(){return _speedPID_R.getSetPoint();}
   float getSpeedPIDOutput_R(){return _speedPID_R.getOutput();}
   float getSpeedPIDP_R(){return _speedPID_R.getPropTerm();}
   float getSpeedPIDI_R(){return _speedPID_R.getIntTerm();}
   float getSpeedPIDD_R(){return _speedPID_R.getDerivTerm();}
-  
+
 private:
   //----------------------------------------------------------------------------
   // PRIVATE HELPER FUNCTIONS
@@ -311,12 +310,12 @@ private:
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Pointers to external objects
-  
-  // Adafruit Motor Shield Objects 
+
+  // Adafruit Motor Shield Objects
   Adafruit_MotorShield* _AFMS = NULL;
   Adafruit_DCMotor* _motorL = NULL;
   Adafruit_DCMotor* _motorR = NULL;
-  
+
   // Encoder Objects
   Encoder* _encoder_L = NULL;
   Encoder* _encoder_R = NULL;
@@ -325,7 +324,7 @@ private:
   // MOVE OBJ - Type and General Variables
   bool _isEnabled = true;
 
-  int8_t _moveControl = MOVE_CONTROL_SPEED;  
+  int8_t _moveControl = MOVE_CONTROL_SPEED;
   int8_t _moveBasic = MOVE_B_FORWARD;
   int8_t _moveCompound = MOVE_C_STRAIGHT;
   int8_t _moveCompoundCount = MOVE_C_COUNT;
@@ -348,29 +347,29 @@ private:
   uint8_t _defBackPWR = 120;
   uint8_t _defTurnPWR = 100;
   uint8_t _defTurnPWRDiff = 80;
-  
+
   uint8_t _curForwardPWR = _defForwardPWR;
   uint8_t _curBackPWR = _defBackPWR;
   uint8_t _curTurnPWR = _defTurnPWR;
   uint8_t _curTurnPWRDiff = _defTurnPWRDiff;
-  
+
   uint8_t _minPWR = 25;
   uint8_t _maxPWR = 255;
-  
+
   //----------------------------------------------------------------------------
   // MOVE OBJ - Motor Speed Variables in mm/s (millimeters per second)
   float _defForwardSpeed = 350.0;
   float _defBackSpeed = -225.0;
   float _defTurnSpeed = 250.0;
   float _defTurnSpeedDiff = 0.75*_defTurnSpeed;
-  
+
   float _curForwardSpeed = _defForwardSpeed;
   float _curBackSpeed = _defBackSpeed;
   float _curTurnSpeed = _defTurnSpeed;
   float _curTurnSpeedDiff = _defTurnSpeedDiff;
 
   float _speedMoodFact = 1.0;
-  float _speedColFact = 1.0; 
+  float _speedColFact = 1.0;
   float _speedColTrue = 0.8, _speedColFalse = 1.0;
   float _minSpeed = 50.0, _maxSpeed = 1000.0;
 
@@ -379,7 +378,7 @@ private:
   // Updated again 5th Jan 2023 - RF wood floor tests - slope=0.166,int=22.7
   // Used to be set with an offset of 50.0 and slope 0.0
   float _speedToPWRSlope = 0.166, _speedToPWROffset = 22.7, _speedToPWRMin = 22.7;
-  float _speedTimeoutAccel = 1220.0,  _speedTimeoutSF = 2.0;   
+  float _speedTimeoutAccel = 1220.0,  _speedTimeoutSF = 2.0;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Control PIDs
@@ -395,21 +394,21 @@ private:
   PID _posPID_L = PID(false,0.6,0.0,0.0,20);
   PID _posPID_R = PID(false,0.6,0.0,0.0,20);
   float _posPIDMinSpeed = 100.0, _posPIDMaxSpeed = 200.0;
-  int16_t _posTol = 3; 
+  int16_t _posTol = 3;
   int32_t _startEncCount_L = 0, _setPointRelCounts_L = 0, _currRelCount_L = 0;
   int32_t _startEncCount_R = 0, _setPointRelCounts_R = 0, _currRelCount_R = 0;
-  
+
   float _wheelBase = 172.0; // UPDATED: 1st Jan 2023 - new stable geom chassis with large wheels
   float _wheelCirc = _wheelBase*PI, _wheelCircAng = (_wheelBase*PI)/(360.0); // FIXED factor of 2 by adding encode interrupt
   bool _posAtL = false, _posAtR = false, _posAtBoth = false;
   // NOTE: D(inner) = 122mm, D(outer) = 160mm, D(avg) = 141mm
-  
+
   //----------------------------------------------------------------------------
   // MOVE OBJ - To Dist/Angle
-  float _toDistSetPtL = 0.0, _toDistSetPtR = 0.0; 
-  float _toDistTol = 5.0;  
+  float _toDistSetPtL = 0.0, _toDistSetPtR = 0.0;
+  float _toDistTol = 5.0;
   float _toAngSetPt = 0.0;
-  float _toAngTol = 1.0;       
+  float _toAngTol = 1.0;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Circle Variables
@@ -424,14 +423,14 @@ private:
   uint16_t _zzLeftTurnDur = _zzInitTurnDur;
   uint16_t _zzRightTurnDur = _zzInitTurnDur;
   uint16_t _zzTurnDuration = _zzLeftTurnDur;
-  
+
   bool _zzStraightFlag = false;
   uint32_t _zzStraightDuration = 1000;
   int8_t _zzTurnDir = MOVE_B_LEFT;
 
   uint8_t _zzTurnDiffPWR = round(_defForwardPWR/2);
   float _zzTurnDiffSpeed = 0.5*_defForwardSpeed;
-  
+
   //----------------------------------------------------------------------------
   // MOVE OBJ - Spiral Variables
   bool _spiralStart = true;
@@ -462,7 +461,7 @@ private:
   bool _FBForwardFlag = true;
   uint16_t _FBDefForwardDur = 500;
   uint16_t _FBDefBackDur = 500;
-  uint16_t _FBCurrDur = _FBDefForwardDur; 
+  uint16_t _FBCurrDur = _FBDefForwardDur;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Look Around

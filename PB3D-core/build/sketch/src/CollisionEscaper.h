@@ -1,4 +1,13 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/CollisionEscaper.h"
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
+
 #ifndef COLLISIONESCAPER_H
 #define COLLISIONESCAPER_H
 

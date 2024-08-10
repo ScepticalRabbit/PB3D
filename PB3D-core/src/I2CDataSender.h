@@ -1,13 +1,11 @@
-//-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: I2CDataSender
-//-----------------------------------------------------------------------------
-/*
-NOTE: the class must be written in a header only due to the way the statedata 
-and data packet structures are declared in the statedata header.
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef I2CDATASENDER_H
 #define I2CDATASENDER_H
@@ -74,10 +72,10 @@ public:
         Wire.endTransmission();
 
         #if defined(I2CDATASENDER_DEBUG_PRINT)
-        Serial.print(F("I2C Send Time: "));    
+        Serial.print(F("I2C Send Time: "));
         Serial.print(_sendTimer.getTime());
         Serial.println(F("ms"));
-        
+
         Serial.println(F("SENT DATA STRUCTURE:"));
         _printStateData(&_currState);
         #endif
@@ -110,8 +108,8 @@ private:
         inState->state.LSRRangeR = _lastCol->LSRRangeR;
         inState->state.LSRRangeU = _lastCol->LSRRangeU;
         inState->state.LSRRangeD = _lastCol->LSRRangeD;
-        inState->state.escCount = _lastCol->escCount; 
-        inState->state.escDist = _lastCol->escDist; 
+        inState->state.escCount = _lastCol->escCount;
+        inState->state.escDist = _lastCol->escDist;
         inState->state.escAng = _lastCol->escAng;
     #elif defined(STATEDATA_NAV)
         // TIME
@@ -129,14 +127,14 @@ private:
         inState->state.navVelX = _navObj->getVelX();
         inState->state.navVelY = _navObj->getVelY();
         inState->state.navVelC = _navObj->getVelC();
-        inState->state.navHead = _navObj->getHeading();  
+        inState->state.navHead = _navObj->getHeading();
     #else
         // TIME
         inState->state.onTime = millis();
         // MOOD
         inState->state.mood = _moodObj->getMood();
         inState->state.moodScore = _moodObj->getMoodScore();
-        // TASK  
+        // TASK
         inState->state.task = _taskObj->getTask();
         // MOVE
         inState->state.moveBasic = _moveObj->getBasicMove();
@@ -165,7 +163,7 @@ private:
         inState->state.colLSRDRng = _collisionObj->getLSRRangeD();
     #endif
   }
-  
+
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
   CollisionManager* _collisionObj = NULL;
@@ -175,9 +173,9 @@ private:
   IMUSensor* _IMUObj = NULL;
   Navigation* _navObj = NULL;
   lastCollision_t* _lastCol = NULL;
-  
+
   //---------------------------------------------------------------------------
-  // CLASS VARIABLES 
+  // CLASS VARIABLES
   bool _isEnabled = true;
   bool _startFlag = true;
 
@@ -190,4 +188,4 @@ private:
   Timer _I2CTimer = Timer();
   Timer _sendTimer = Timer();
 };
-#endif 
+#endif

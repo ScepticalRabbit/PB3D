@@ -1,13 +1,12 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskDance.h"
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: TaskDance
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKDANCE_H
 #define TASKDANCE_H
@@ -33,7 +32,7 @@ class TaskDance{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskDance(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+  TaskDance(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker);
 
   //---------------------------------------------------------------------------
@@ -64,7 +63,7 @@ private:
   void _generateTempo();
   void _generateDance();
   void _updateDance();
-  
+
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
   MoodManager* _moodObj = NULL;
@@ -83,7 +82,7 @@ private:
   float _danceBarMs = _dance4NoteMs*4.0;
   uint8_t _danceNumBars = 8;
   uint32_t _danceDuration = uint32_t(_danceBarMs*float(_danceNumBars));
-  
+
   int16_t _danceBPMMin = 120, _danceBPMMax = 180;
   uint8_t _danceCurrMove = 0;
   uint8_t _danceCurrBar = 0;
@@ -94,7 +93,7 @@ private:
 
   int8_t _danceTurnDir = MOVE_B_LEFT;
   int8_t _danceSpinDir = MOVE_B_LEFT;
-  
+
   bool _speakerFlag = false;
 };
 #endif // TASKDANCE

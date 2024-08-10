@@ -1,17 +1,17 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TEMPLATE
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "ClassTemplate.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
-ClassTemp::ClassTemp(Collision* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+ClassTemp::ClassTemp(Collision* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker){
 _collisionObj = inCollision;
 _moodObj = inMood;

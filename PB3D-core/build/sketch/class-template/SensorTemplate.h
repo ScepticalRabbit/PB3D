@@ -1,13 +1,12 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/class-template/SensorTemplate.h"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: 
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef CLASSTEMP_H
 #define CLASSTEMP_H
@@ -16,7 +15,7 @@ Author: Lloyd Fletcher
 #include <Wire.h> // I2C
 
 //---------------------------------------------------------------------------
-// CLASS: 
+// CLASS:
 //---------------------------------------------------------------------------
 class SensorTemp{
 public:
@@ -44,4 +43,4 @@ private:
   bool _startFlag = true;
 
 };
-#endif 
+#endif

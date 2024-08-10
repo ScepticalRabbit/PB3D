@@ -1,12 +1,12 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TEMPLATE
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "MoodManager.h"
 
 //---------------------------------------------------------------------------
@@ -42,12 +42,12 @@ void MoodManager::update(){
         // Determine where on the happy/sad axis
         if((_moodPc >= 0) && (_moodPc < _moodProbVec[0])){ // NEGATIVE MOOD
         _moodNegPc = random(0,100)+_moodScore;
-        
+
             if((_moodNegPc >= 0) && (_moodNegPc <= _moodProbVec[0])){
                 setMood(MOOD_SAD);
             }
             else if((_moodPc >= _moodProbVec[1]) && (_moodPc <= _moodProbVec[2])){
-                setMood(MOOD_ANGRY);  
+                setMood(MOOD_ANGRY);
             }
             else if((_moodPc >= _moodProbVec[2]) && (_moodPc <= _moodProbVec[3])){
                 setMood(MOOD_SCARED);
@@ -74,7 +74,7 @@ void MoodManager::update(){
 void MoodManager::setMood(int16_t moodIn){
     if(moodIn != _moodCode){
         _setMood(moodIn);
-        
+
         _moodNewFlag = true;
         _moodDuration = random(_moodMinDuration,_moodMaxDuration);
         _moodTimer.start(_moodDuration);
@@ -194,4 +194,3 @@ void MoodManager::_setMood(int8_t moodIn){
         moodLEDNeutral();
     }
 }
-  

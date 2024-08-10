@@ -1,13 +1,13 @@
 #line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/TaskRest.cpp"
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskRest
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskRest.h"
 
 //---------------------------------------------------------------------------
@@ -49,7 +49,7 @@ void TaskRest::rest(){
         if(_restLEDIncrease){
         // If we are increasing increment the LED intensity
         _restLEDVal = _restLEDVal+1;
-        
+
         // If we are above the max value reset and decrease
         if(_restLEDVal>=_restLEDMax){
             _restLEDVal = _restLEDMax;
@@ -60,12 +60,12 @@ void TaskRest::rest(){
         else{
         // If we are decreasing decrement the LED intensity
         _restLEDVal = _restLEDVal-1;
-        
+
         // If we are below the min intensity reset and increase
         if(_restLEDVal<=_restLEDMin){
             _restLEDVal = _restLEDMin;
             _restLEDIncrease = true;
-        }  
+        }
         }
         // Restart the timerr
         _timerObj.start(_restUpdateTime);
@@ -82,4 +82,3 @@ void TaskRest::reset(){
     _restLEDIncrease = false;
     _speakerObj->reset();
 }
-  

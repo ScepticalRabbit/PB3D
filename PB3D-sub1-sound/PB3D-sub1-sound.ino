@@ -1,14 +1,11 @@
-//-----------------------------------------------------------------------------
-// PB3D - Follower Board - Digital Out and Sound Loc
-// Author: Lloyd Fletcher
-// Version: v0.3a
-// Date Created: 23rd May 2021
-// Date Edited: 10th Dec 2022
-//-----------------------------------------------------------------------------
-/* 
-TODO
-*/ 
-//-----------------------------------------------------------------------------
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 // Include Arduino Wire library for I2C
 #include <Wire.h>
@@ -49,7 +46,7 @@ TODO
 #define DOUT_LSR_U 6
 #define DOUT_LSR_D 7
 
-// Byte to receive from main board 
+// Byte to receive from main board
 byte recByte = B00000000;
 
 //---------------------------------------------------------------------------
@@ -73,7 +70,7 @@ uint8_t modeFlag = 0;
 // 1: forward -> sound but uncertain direction
 // 2: left
 // 3: right
-byte earState = 0; // byte to send 
+byte earState = 0; // byte to send
 
 uint16_t sampInterval = 10;
 uint32_t sampLastTime = 0;
@@ -81,8 +78,8 @@ uint16_t numEnvSamples = 100;
 uint32_t LEnvSum = 0, REnvSum = 0;
 int16_t envSampInd = 0;
 int16_t LEnvAvg = LEnvAvgStd, REnvAvg = LEnvAvgStd;
-int16_t LEnvDiffSum = 0, REnvDiffSum = 0; 
-int16_t LEnvSD = 0, REnvSD = 0; 
+int16_t LEnvDiffSum = 0, REnvDiffSum = 0;
+int16_t LEnvSD = 0, REnvSD = 0;
 
 bool foundSoundBoth = false;
 int32_t soundLRTimeDiff = 0;
@@ -116,8 +113,8 @@ void setup(){
   // Function to run when data received from leader
   Wire.onReceive(receiveEvent);
   Wire.onRequest(requestEvent);
-  
-  // Setup Serial Monitor 
+
+  // Setup Serial Monitor
   Serial.begin(115200);
 
   // Setup Digital Output Pins
@@ -201,9 +198,9 @@ void loop(){
   // HACK: for some reason the recByte keeps being set to 255 (B11111111)
   // So we ignore this case here to prevent errors
   if((recByte != B11111111) && ((recByte & B01000000) == B01000000)){
-    modeFlag = EAR_MODE_ENVSAMP;  
+    modeFlag = EAR_MODE_ENVSAMP;
   }
-  
+
   if(modeFlag == EAR_MODE_SNDLOC){
     locSound();
   }
@@ -223,7 +220,7 @@ void loop(){
   tElapsed = tEnd - tStart;
   float tAvgMicroS = float(tElapsed)/float(numSamples);
   float tAvgS = tAvgMicroS/1000000.0;
-  float freqAvg = 1.0/tAvgS;   
+  float freqAvg = 1.0/tAvgS;
 
   Serial.print("Avg. Time per Sample: ");
   Serial.print(tAvgMicroS);
@@ -235,7 +232,7 @@ void loop(){
   delay(5000);
   */
   //tttttttttttttttttttttttttttttttttttttttttttttttt
-  
+
 }
 
 //---------------------------------------------------------------------------
@@ -252,13 +249,13 @@ void requestEvent() {
 // FUNCTIONS - SOUND LOCATION
 void sampleEnv(){
   earState = EAR_COM_SENV;
-  
+
   if((millis()-sampLastTime)>sampInterval){
     sampLastTime = millis();
     int16_t LSamp = analogRead(EAR_L_AIN);
     int16_t RSamp = analogRead(EAR_R_AIN);
     //int16_t RSamp = 0;
-    
+
     // Sum of values to calculate average
     LEnvSum = LEnvSum + LSamp;
     REnvSum = REnvSum + RSamp;
@@ -266,7 +263,7 @@ void sampleEnv(){
     // Difference to prelim average for SD calc
     LEnvDiffSum = LEnvDiffSum + abs(LEnvAvg - LSamp);
     REnvDiffSum = REnvDiffSum + abs(REnvAvg - RSamp);
-    
+
     envSampInd++;
   }
 
@@ -282,7 +279,7 @@ void sampleEnv(){
 
     if(6*LEnvSD >= soundLOffset){soundLOffset = 6*LEnvSD;}
     if(6*REnvSD >= soundROffset){soundROffset = 6*REnvSD;}
-    
+
     soundLUpper = LEnvAvg + soundLOffset;
     soundRUpper = REnvAvg + soundROffset;
     soundLLower = LEnvAvg - soundLOffset;
