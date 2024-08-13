@@ -210,7 +210,7 @@ void setup() {
   if(_debug_forceMove){
     moveObj.updateMove(_debug_moveType);
   }
-  taskObj.assignProb(moodObj.getMood());
+  taskObj.assignProb(moodObj.get_mood());
 
   tailObj.setState(0);
   Serial.println();
@@ -235,7 +235,7 @@ void loop(){
   // If mood has updated then modify the other classes
   if(moodObj.getNewMoodFlag()){
     moodObj.setNewMoodFlag(false); // Reset the flag
-    taskObj.assignProb(moodObj.getMood());
+    taskObj.assignProb(moodObj.get_mood());
     moveObj.setPWRByDiff(moodObj.getPowerDiff());
     moveObj.setSpeedByMoodFact(moodObj.getSpeedFact());
   }
@@ -246,7 +246,7 @@ void loop(){
   taskObj.update();
 
   // If task has changed update mood LEDs
-  if(taskObj.getNewTaskFlag()){moodObj.resetMood();}
+  if(taskObj.getNewTaskFlag()){moodObj.reset_mood();}
 
   // DEBUG MODE: force task to a particular value
   if(_debug_forceTask){
@@ -266,8 +266,8 @@ void loop(){
   patSensorObj.update();
   tailObj.update();
   IMUObj.update();
-  encoderL.updateSpeed();
-  encoderR.updateSpeed();
+  encoderL.update_speed();
+  encoderR.update_speed();
   navObj.update();
   senderObj.update();
 
@@ -308,7 +308,7 @@ void loop(){
   // handling of collisions while these modes are active - should be able to
   // make this smarter so certain things can re-enable collision avoidance
   if(taskObj.getTask() == -7){
-    DEBUG_SpeedTest(_test_value,0);
+    //DEBUG_SpeedTest(_test_value,MOVE_B_FORWARD);
   }
   else if(taskObj.getTask() == 1){
     taskRestObj.rest();
@@ -322,11 +322,11 @@ void loop(){
   else if(taskObj.getTask() == -2 /* Only called by other tasks*/){
     taskInteractObj.interact();
   }
-  else if(collisionObj.getEscapeFlag() && !_debug_collisionOff){
+  else if(collisionObj.get_escape_flag() && !_debug_collisionOff){
     //Serial.println("======================ESCAPE======================");
     escapeCollision(); // SEE FUNCTION DEF BELOW MAIN
   }
-  else if(collisionObj.getDetectFlag() && !_debug_collisionOff){
+  else if(collisionObj.get_detected() && !_debug_collisionOff){
     //DEBUG_PrintColFlags();
     detectedCollision(); // SEE FUNCTION DEF BELOW MAIN
   }
@@ -377,7 +377,7 @@ void loop(){
   //-------------------------------------------------------------------------
   // POST DECISION TREE OVERRIDES
   // Wag tail if happy - regardless of task use of tail
-  if(moodObj.getMood() == 1){
+  if(moodObj.get_mood() == 1){
     tailObj.setState(3);
     // wagmovetime,wagoffset,_test_pauseTime,wagcount
     tailObj.setWagParams(200,30,4000,6);
@@ -403,25 +403,25 @@ void loop(){
 //------------------------------------------------------------------------------
 // INTERRUPT FUNCTIONS
 void updateEncLA(){
-  encoderL.updateNEQ();
+  encoderL.update_not_equal();
 }
 void updateEncLB(){
-  encoderL.updateEQ();
+  encoderL.update_equal();
 }
 void updateEncRA(){
-  encoderR.updateEQ();
+  encoderR.update_equal();
 }
 void updateEncRB(){
-  encoderR.updateNEQ();
+  encoderR.update_not_equal();
 }
 
 //------------------------------------------------------------------------------
 // COLLISION HANDLING TASK TREE FUNCTIONS
 void escapeCollision(){
   taskObj.taskLEDCollision();
-  collisionObj.resetFlags();
+  collisionObj.reset_flags();
 
-  if(collisionObj.getBeepBeepFlag()){
+  if(collisionObj.get_beepbeep_flag()){
     uint8_t inCodes[] = {2,2,0,0};
     speakerObj.setSoundCodes(inCodes,4);
   }
@@ -432,7 +432,7 @@ void escapeCollision(){
 void detectedCollision(){
   // Turn on collision LEDs and set escape flags
   taskObj.taskLEDCollision();
-  collisionObj.setEscapeStart();
+  collisionObj.set_escape_start();
 
   // If we are moving in a circle or a spiral then switch direction
   moveObj.changeCircDir();
@@ -441,9 +441,9 @@ void detectedCollision(){
   moveObj.stop();
 
   // If the bumper flag was tripped we need to go beep,beep!
-  collisionObj.setBeepBeepFlag(false);
-  if(collisionObj.getBumperFlag()){
-    collisionObj.setBeepBeepFlag(true);
+  collisionObj.set_beepbeep_flag(false);
+  if(collisionObj.get_bumper_flag()){
+    collisionObj.set_beepbeep_flag(true);
 
     speakerObj.reset();
     uint8_t inCodes[] = {2,2,0,0};
@@ -462,7 +462,7 @@ void detectedCollision(){
     taskPounceObj.collisionResetToRealign();
 
     int16_t angCent = taskPounceObj.getAngCentForCollision();
-    if(collisionObj.getEscapeTurn() == 3){
+    if(collisionObj.get_escape_turn() == 3){
       taskPounceObj.setRealignCent(-1*angCent);
     }
     else{
@@ -471,10 +471,10 @@ void detectedCollision(){
   }
 
   // Reset the collision flags
-  collisionObj.resetFlags();
-  collisionObj.incCount();
-  if(collisionObj.getCount() >= taskTantrumObj.getThreshold()){
-    collisionObj.resetCount();
+  collisionObj.reset_flags();
+  collisionObj.inc_count();
+  if(collisionObj.get_count() >= taskTantrumObj.getThreshold()){
+    collisionObj.reset_Count();
     taskTantrumObj.setStartTantrumFlag();
     taskObj.setTask(-1 /* Only called by other tasks*/);
   }
@@ -482,250 +482,502 @@ void detectedCollision(){
 
 //------------------------------------------------------------------------------
 // DEBUG FUNCTIONS
+/*
+
 void DEBUG_SpeedTest(uint8_t inPWR, uint8_t moveCode){
+
   if(_test_pauseTimer.finished()){
+
     if(_test_pauseSwitch){
+
       _test_pauseSwitch = false;
+
       _test_timer.start(_test_time);
+
       _test_switch = true;
+
     }
+
     DEBUG_PlotSpeedMMPS();
 
+
+
     if(_test_timer.finished()){
+
       if(_test_retest){
+
         _test_timer.start(_test_time);
+
         _test_switch = !_test_switch;
+
       }
+
       else{
+
         _test_switch = false;
+
       }
+
     }
 
+
+
     if(_test_switch){
-      if(moveCode == 1){
+
+      if(moveCode == MOVE_B_BACK){
+
         moveObj.backPWR(inPWR);
+
       }
-      else if(moveCode == 3){
+
+      else if(moveCode == MOVE_B_LEFT){
+
         moveObj.leftPWR(inPWR);
+
       }
-      else if(moveCode == 4){
+
+      else if(moveCode == MOVE_B_RIGHT){
+
         moveObj.rightPWR(inPWR);
+
       }
+
       else{
+
         moveObj.forwardPWR(inPWR);
+
       }
+
     }
+
     else{
+
       moveObj.stop();
+
     }
+
   }
+
   else{
+
     moveObj.stop();
+
   }
+
 }
+
+
 
 void DEBUG_SpeedTest(float inSpeed, uint8_t moveCode){
+
   if(_test_pauseTimer.finished()){
+
     if(_test_pauseSwitch){
+
       _test_pauseSwitch = false;
+
       _test_timer.start(_test_time);
+
       _test_switch = true;
+
     }
+
     DEBUG_PlotSpeedMMPS();
 
+
+
     if(_test_timer.finished()){
+
       if(_test_retest){
+
         _test_timer.start(_test_time);
+
         _test_switch = !_test_switch;
+
       }
+
       else{
+
         _test_switch = false;
+
       }
+
     }
+
+
 
     if(_test_switch){
-      if(moveCode == 1){
+
+      if(moveCode == MOVE_B_BACK){
+
         moveObj.back(inSpeed);
+
       }
-      else if(moveCode == 3){
+
+      else if(moveCode == MOVE_B_LEFT){
+
         moveObj.left(inSpeed);
+
       }
-      else if(moveCode == 4){
+
+      else if(moveCode == MOVE_B_RIGHT){
+
         moveObj.right(inSpeed);
+
       }
+
       else{
+
         moveObj.forward(inSpeed);
+
       }
+
     }
+
     else{
+
       moveObj.stop();
+
     }
+
   }
+
   else{
+
     moveObj.stop();
+
   }
+
 }
+
+
 
 void DEBUG_PrintSpeedMMPS(){
+
   Serial.println();
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("ENCODER SPEED, L="))));
-  Serial.print(encoderL.getSmoothSpeedMMPS());
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>((" mm/s, R = "))));
-  Serial.print(encoderR.getSmoothSpeedMMPS());
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>((" mm/s"))));
+
+  Serial.print(F("ENCODER SPEED, L="));
+
+  Serial.print(encoderL.get_smooth_speed_mmps());
+
+  Serial.print(F(" mm/s, R = "));
+
+  Serial.print(encoderR.get_smooth_speed_mmps());
+
+  Serial.print(F(" mm/s"));
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PrintSpeedCPS(){
+
   Serial.println();
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("ENCODER SPEED, L="))));
-  Serial.print(encoderL.getSmoothSpeedMMPS());
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>((" mm/s, R = "))));
-  Serial.print(encoderR.getSmoothSpeedMMPS());
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>((" mm/s"))));
+
+  Serial.print(F("ENCODER SPEED, L="));
+
+  Serial.print(encoderL.get_smooth_speed_mmps());
+
+  Serial.print(F(" mm/s, R = "));
+
+  Serial.print(encoderR.get_smooth_speed_mmps());
+
+  Serial.print(F(" mm/s"));
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PlotSpeedBoth(){
-  Serial.print(encoderL.getSmoothSpeedCPS());
+
+  Serial.print(encoderL.get_smooth_speed_cps());
+
   Serial.print(",");
-  Serial.print(encoderL.getSmoothSpeedMMPS());
+
+  Serial.print(encoderL.get_smooth_speed_mmps());
+
   Serial.print(",");
-  Serial.print(encoderR.getSmoothSpeedCPS());
+
+  Serial.print(encoderR.get_smooth_speed_cps());
+
   Serial.print(",");
-  Serial.print(encoderR.getSmoothSpeedMMPS());
+
+  Serial.print(encoderR.get_smooth_speed_mmps());
+
   Serial.print(",");
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PlotSpeedPID_L(){
+
   Serial.print(moveObj.getSpeedPIDSetPoint_L());
+
   Serial.print(",");
+
   Serial.print(moveObj.getSpeedPIDOutput_L());
+
   Serial.print(",");
+
   Serial.print(moveObj.getSpeedPIDP_L());
+
   Serial.print(",");
+
   Serial.print(moveObj.getSpeedPIDI_L());
+
   Serial.print(",");
+
   Serial.print(moveObj.getSpeedPIDD_L());
+
   Serial.print(",");
-  Serial.print(encoderL.getSmoothSpeedMMPS());
+
+  Serial.print(encoderL.get_smooth_speed_mmps());
+
   Serial.print(",");
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PlotSpeedPID_R(){
+
   Serial.print(moveObj.getSpeedPIDSetPoint_R());
+
   Serial.print(",");
+
   Serial.print(moveObj.getSpeedPIDOutput_R());
+
   Serial.print(",");
+
   Serial.print(moveObj.getSpeedPIDP_R());
+
   Serial.print(",");
+
   Serial.print(moveObj.getSpeedPIDI_R());
+
   Serial.print(",");
+
   Serial.print(moveObj.getSpeedPIDD_R());
+
   Serial.print(",");
-  Serial.print(encoderR.getSmoothSpeedMMPS());
+
+  Serial.print(encoderR.get_smooth_speed_mmps());
+
   Serial.print(",");
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PlotSpeedMMPS(){
+
   uint32_t thisTime = millis();
+
   Serial.print(thisTime-_test_timeStamp);
+
   _test_timeStamp = thisTime;
+
   Serial.print(",");
-  Serial.print(encoderL.getSmoothSpeedMMPS());
+
+  Serial.print(encoderL.get_smooth_speed_mmps());
+
   Serial.print(",");
-  Serial.print(encoderR.getSmoothSpeedMMPS());
+
+  Serial.print(encoderR.get_smooth_speed_mmps());
+
   Serial.print(",");
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PrintColCheck(){
+
   Serial.println();
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>(("------------------------------"))));
+
+  Serial.println(F("------------------------------"));
+
   Serial.println("CheckVec=[BL,BR,US,LL,LR,LU,LD,]");
+
   Serial.print("CheckVec=[");
+
   for(uint8_t ii=0;ii<7;ii++){
-      Serial.print(" ");Serial.print(collisionObj.getColCheck(ii));Serial.print(",");
+
+      Serial.print(" ");Serial.print(collisionObj.get_col_check(ii));Serial.print(",");
+
   }
+
   Serial.println("]");
 
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("US: "))));
+
+
+  Serial.print(F("US: "));
+
   //Serial.print(collisionObj.getColUSFlag());
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>((" , "))));
-  Serial.print(collisionObj.getUSRangeMM());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("LSR,L: "))));
+  Serial.print(F(" , "));
+
+  Serial.print(collisionObj.get_ultrasonic_range_mm());
+
+  Serial.println(F(" mm"));
+
+
+
+  Serial.print(F("LSR,L: "));
+
   //Serial.print(collisionObj.getColLSRFlagL());
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>((" , "))));
+
+  Serial.print(F(" , "));
+
   Serial.print(collisionObj.getLSRRangeL());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("LSR,R: "))));
+  Serial.println(F(" mm"));
+
+
+
+  Serial.print(F("LSR,R: "));
+
   //Serial.print(collisionObj.getColLSRFlagR());
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>((" , "))));
+
+  Serial.print(F(" , "));
+
   Serial.print(collisionObj.getLSRRangeR());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("LSR,A: "))));
+  Serial.println(F(" mm"));
+
+
+
+  Serial.print(F("LSR,A: "));
+
   //Serial.print(collisionObj.getColLSRFlagB());
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>((" , "))));
+
+  Serial.print(F(" , "));
+
   Serial.print(collisionObj.getLSRRangeA());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("LSR,U: "))));
+  Serial.println(F(" mm"));
+
+
+
+  Serial.print(F("LSR,U: "));
+
   //Serial.print(collisionObj.getColLSRFlagU());
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>((" , "))));
+
+  Serial.print(F(" , "));
+
   Serial.print(collisionObj.getLSRRangeU());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("LSR,D: "))));
+  Serial.println(F(" mm"));
+
+
+
+  Serial.print(F("LSR,D: "));
+
   //Serial.print(collisionObj.getColLSRFlagD());
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>((" , "))));
-  Serial.print(collisionObj.getLSRRangeD());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>(("------------------------------"))));
+  Serial.print(F(" , "));
+
+  Serial.print(collisionObj.getLSRRangeD());
+
+  Serial.println(F(" mm"));
+
+
+
+  Serial.println(F("------------------------------"));
+
   Serial.println();
+
 }//---------------------------------------------------------------------------
 
+
+
 void DEBUG_PrintAllRanges(){
-  Serial.println();
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>(("------------------------------"))));
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("US: "))));
-  Serial.print(collisionObj.getUSRangeMM());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("LSR,L: "))));
+  Serial.println();
+
+  Serial.println(F("------------------------------"));
+
+  Serial.print(F("US: "));
+
+  Serial.print(collisionObj.get_ultrasonic_range_mm());
+
+  Serial.println(F(" mm"));
+
+
+
+  Serial.print(F("LSR,L: "));
+
   Serial.print(collisionObj.getLSRRangeL());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("LSR,R: "))));
+  Serial.println(F(" mm"));
+
+
+
+  Serial.print(F("LSR,R: "));
+
   Serial.print(collisionObj.getLSRRangeR());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("LSR,A: "))));
+  Serial.println(F(" mm"));
+
+
+
+  Serial.print(F("LSR,A: "));
+
   Serial.print(collisionObj.getLSRRangeA());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("LSR,U: "))));
+  Serial.println(F(" mm"));
+
+
+
+  Serial.print(F("LSR,U: "));
+
   Serial.print(collisionObj.getLSRRangeU());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.print((reinterpret_cast<const __FlashStringHelper *>(("LSR,D: "))));
+  Serial.println(F(" mm"));
+
+
+
+  Serial.print(F("LSR,D: "));
+
   Serial.print(collisionObj.getLSRRangeD());
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>((" mm"))));
 
-  Serial.println((reinterpret_cast<const __FlashStringHelper *>(("------------------------------"))));
+  Serial.println(F(" mm"));
+
+
+
+  Serial.println(F("------------------------------"));
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PrintLightSens(){
+
   Serial.print("Light Sens L-");
+
   Serial.print("Lux: "); Serial.print(taskFindLightObj.getLuxLeft());
+
   Serial.print(", R-");
+
   Serial.print("Lux: "); Serial.println(taskFindLightObj.getLuxRight());
+
 }
+
+
+
+*/

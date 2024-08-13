@@ -13,9 +13,9 @@
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
 TaskFindHuman::TaskFindHuman(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker, TaskInteract* inTInt){
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
+    _mood_manager = inMood;
+    _task_manager = inTask;
+    _move_manager = inMove;
     _speakerObj = inSpeaker;
     _taskInteractObj = inTInt;
 }
@@ -42,7 +42,7 @@ void TaskFindHuman::update(){
         return;
     }
 
-    if(_taskObj->getNewTaskFlag()){
+    if(_task_manager->getNewTaskFlag()){
         _start_flag = true;
     }
 
@@ -58,11 +58,11 @@ void TaskFindHuman::update(){
 // FIND HUMAN - called during task decision tree
 void TaskFindHuman::findHuman(){
     // Set the LEDs on every loop regardless
-    _taskObj->taskLEDFindHuman();
+    _task_manager->taskLEDFindHuman();
 
     // If the human presence sensor wasn't found then bypass the rest of the function
     if(!_is_enabled){
-        _taskObj->forceUpdate();
+        _task_manager->forceUpdate();
         return;
     }
 
@@ -91,13 +91,13 @@ void TaskFindHuman::findHuman(){
     // Sensor 1: LEFT, Sensor 2: FRONT, Sensor 3: RIGHT, Sensor 4: BACK
     if(_IRPFlags1 && _IRPFlags2 && _IRPFlags3 && _IRPFlags4){
         // If all flags are tripped a human has been found!
-        _taskObj->setTask(TASK_INTERACT);
+        _task_manager->setTask(TASK_INTERACT);
         // Overide the default task duration
-        _taskObj->setTaskDuration(_taskInteractObj->getTimeOut());
-        _taskObj->taskLEDInteract();
+        _task_manager->setTaskDuration(_taskInteractObj->getTimeOut());
+        _task_manager->taskLEDInteract();
         _taskInteractObj->setStartInteractFlag(true);
         // Update mood score
-        _moodObj->incMoodScore();
+        _mood_manager->incMoodScore();
     }
     else{
         //--------------------------------------------------------------------
@@ -115,23 +115,23 @@ void TaskFindHuman::findHuman(){
         // 1: back, 2: left, 3: front, 4: right
         if(_diffIR13 > _sensitivityTrack){
             // Sensor 1 greater than sensor 3
-            _moveObj->left();
+            _move_manager->left();
         }
         else if(_diffIR13 < -_sensitivityTrack){
             // Sensor 3 greater than 1
-            _moveObj->forward();
+            _move_manager->forward();
         }
         else if(_diffIR24 > _sensitivityTrack){
             // Sensor 2 greater than sensor 4
-            _moveObj->left();
+            _move_manager->left();
         }
         else if(_diffIR24 < -_sensitivityTrack){
             // Sensor 4 greater than sensor 2
-            _moveObj->right();
+            _move_manager->right();
         }
         else{
-            _moveObj->updateMove();
-            _moveObj->go();
+            _move_manager->updateMove();
+            _move_manager->go();
         }
     }
 }

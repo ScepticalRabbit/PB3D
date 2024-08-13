@@ -10,7 +10,8 @@
 #ifndef PB3D_I2CADDR_H
 #define PB3D_I2CADDR_H
 
-#define ADDR_BUMPERS 0x09
+// Bumpers
+#define ADDR_FOLLOW_XIAO_1 0x09
 
 #define ADDR_GPIO 0x21
 

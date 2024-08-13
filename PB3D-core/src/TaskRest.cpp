@@ -12,9 +12,9 @@
 //---------------------------------------------------------------------------
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
 TaskRest::TaskRest(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker){
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
+    _mood_manager = inMood;
+    _task_manager = inTask;
+    _move_manager = inMove;
     _speakerObj = inSpeaker;
 }
 
@@ -28,7 +28,7 @@ void TaskRest::begin(){
 // UPDATE: called during every LOOP
 void TaskRest::update(){
     // If the task has changed then modify other classes as needed
-    if(_taskObj->getNewTaskFlag()){
+    if(_task_manager->getNewTaskFlag()){
         reset();
         _speakerObj->reset();
     }
@@ -42,7 +42,7 @@ void TaskRest::rest(){
     _speakerObj->setSoundCodes(inCodes,4);
 
     // Stop moving while sleeping
-    _moveObj->stop();
+    _move_manager->stop();
 
     if(_timerObj.finished()){
         if(_restLEDIncrease){
@@ -69,7 +69,7 @@ void TaskRest::rest(){
         // Restart the timerr
         _timerObj.start(_restUpdateTime);
         // Set the current LED value
-        _taskObj->taskLEDRest(_restLEDVal);
+        _task_manager->taskLEDRest(_restLEDVal);
     }
 }
 

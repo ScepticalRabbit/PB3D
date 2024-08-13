@@ -59,7 +59,7 @@ private:
     uint8_t _address = 0;
     int16_t _range = -1;
     uint8_t _init_num = 0;
-    ELaserIndex _laser_ind = LSR_CENTRE;
+    ELaserIndex _laser_ind = LASER_CENTRE;
 
     bool _range_timeout = false;
     bool _range_flag = false;

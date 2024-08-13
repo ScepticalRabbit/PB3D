@@ -72,18 +72,18 @@ private:
     //--------------------------------------------------------------------------
 
     // Objects for the laser rangers
-    LaserSensor _laser_CC = LaserSensor(ADDR_LSR_UC,LSR_UP_CENTRE);
-    LaserSensor _laser_UC = LaserSensor(ADDR_LSR_CC,LSR_CENTRE);
-    LaserSensor _laser_DL = LaserSensor(ADDR_LSR_DL,LSR_DOWN_LEFT);
-    LaserSensor _laser_DR = LaserSensor(ADDR_LSR_DR,LSR_DOWN_RIGHT);
-    LaserSensor _laser_HL = LaserSensor(ADDR_LSR_HL,LSR_HALF_LEFT);
-    LaserSensor _laser_HR = LaserSensor(ADDR_LSR_HR,LSR_HALF_RIGHT);
-    LaserSensor _laser_LL = LaserSensor(ADDR_LSR_LL,LSR_LEFT);
-    LaserSensor _laser_RR = LaserSensor(ADDR_LSR_RR,LSR_RIGHT);
-    LaserSensor _laser_BB = LaserSensor(ADDR_LSR_BB,LSR_BACK);
-    LaserSensor _laser_AA = LaserSensor(ADDR_LSR_AA,LSR_ALT);
+    LaserSensor _laser_CC = LaserSensor(ADDR_LSR_UC,LASER_UP_CENTRE);
+    LaserSensor _laser_UC = LaserSensor(ADDR_LSR_CC,LASER_CENTRE);
+    LaserSensor _laser_DL = LaserSensor(ADDR_LSR_DL,LASER_DOWN_LEFT);
+    LaserSensor _laser_DR = LaserSensor(ADDR_LSR_DR,LASER_DOWN_RIGHT);
+    LaserSensor _laser_HL = LaserSensor(ADDR_LSR_HL,LASER_HALF_LEFT);
+    LaserSensor _laser_HR = LaserSensor(ADDR_LSR_HR,LASER_HALF_RIGHT);
+    LaserSensor _laser_LL = LaserSensor(ADDR_LSR_LL,LASER_LEFT);
+    LaserSensor _laser_RR = LaserSensor(ADDR_LSR_RR,LASER_RIGHT);
+    LaserSensor _laser_BB = LaserSensor(ADDR_LSR_BB,LASER_BACK);
+    LaserSensor _laser_AA = LaserSensor(ADDR_LSR_AA,LASER_ALT);
 
-    const static uint8_t _num_lasers = LSR_COUNT;
+    const static uint8_t _num_lasers = LASER_COUNT;
     LaserSensor* _laser_ptr_array[_num_lasers] = {&_laser_CC,
                                                   &_laser_UC,
                                                   &_laser_DL,

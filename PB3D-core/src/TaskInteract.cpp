@@ -13,9 +13,9 @@
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
 TaskInteract::TaskInteract(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker, TaskDance* inDance, PatSensor* inPatSens){
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
+    _mood_manager = inMood;
+    _task_manager = inTask;
+    _move_manager = inMove;
     _taskDanceObj = inDance;
     _speakerObj = inSpeaker;
     _patSensObj = inPatSens;
@@ -35,8 +35,8 @@ void TaskInteract::update(){
 
     // SENSOR: Check for start of pat
     if(_patSensObj->getButtonTwoFlag()){
-        _taskObj->setTask(TASK_INTERACT);
-        _taskObj->setTaskDuration(_patTimeOut);
+        _task_manager->setTask(TASK_INTERACT);
+        _task_manager->setTaskDuration(_patTimeOut);
     }
 }
 
@@ -44,14 +44,14 @@ void TaskInteract::update(){
 // INTERACT - called during the main during decision tree
 void TaskInteract::interact(){
     // Set the LEDs on every loop
-    _taskObj->taskLEDInteract();
+    _task_manager->taskLEDInteract();
 
     // If this is the first time we enter the function set key variables
     if(_interactStartFlag){
         _interactStartFlag = false;
 
-        _moveObj-> stop();
-        _moveObj->resetSubMoveTimer();
+        _move_manager-> stop();
+        _move_manager->resetSubMoveTimer();
 
         _patSensObj->reset();
         _patSensObj->setButtonsEnabled(false);
@@ -90,12 +90,12 @@ void TaskInteract::interact(){
         }
         else{
         // Otherwise 'wiggle' to ask for a pat
-        _moveObj->wiggle(_askWiggleLeftDur,_askWiggleRightDur);
+        _move_manager->wiggle(_askWiggleLeftDur,_askWiggleRightDur);
         }
     }
     else{
         // Wait for a pat until next wiggle time
-        _moveObj->stop();
+        _move_manager->stop();
     }
 
     //-----------------------------------------------------------------------
@@ -113,18 +113,18 @@ void TaskInteract::interact(){
         // Update mood to happy
         int8_t prob = random(0,100);
         if(prob <= 80){
-        _moodObj->setMood(MOOD_HAPPY);
+        _mood_manager->setMood(MOOD_HAPPY);
         }
         else{
-        _moodObj->setMood(MOOD_NEUTRAL);
+        _mood_manager->setMood(MOOD_NEUTRAL);
         }
-        _moodObj->incMoodScore();
+        _mood_manager->incMoodScore();
 
         // Update task to dance
-        _taskObj->setTask(TASK_DANCE);
+        _task_manager->setTask(TASK_DANCE);
         // Overide default task duration to be a specific number of bars
-        _taskObj->setTaskDuration(round(4*_taskDanceObj->getDanceBarMs()));
-        _taskObj->setDanceUpdateFlag(false);
+        _task_manager->setTaskDuration(round(4*_taskDanceObj->getDanceBarMs()));
+        _task_manager->setDanceUpdateFlag(false);
         _taskDanceObj->setStartFlag(true);
         _taskDanceObj->setSpeakerFlag(true);
     }
@@ -141,15 +141,15 @@ void TaskInteract::interact(){
         // Update mood to sad
         int8_t prob = random(0,100);
         if(prob <= 75){
-        _moodObj->setMood(MOOD_SAD);
+        _mood_manager->setMood(MOOD_SAD);
         }
         else{
-        _moodObj->setMood(MOOD_NEUTRAL);
+        _mood_manager->setMood(MOOD_NEUTRAL);
         }
-        _moodObj->decMoodScore();
+        _mood_manager->decMoodScore();
 
         // Update task to explore
-        _taskObj->setTask(TASK_EXPLORE);
+        _task_manager->setTask(TASK_EXPLORE);
     }
 }
 

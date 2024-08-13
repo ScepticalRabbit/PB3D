@@ -13,9 +13,9 @@
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
 TaskFindLight::TaskFindLight(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker, PatSensor* inPatSens){
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
+    _mood_manager = inMood;
+    _task_manager = inTask;
+    _move_manager = inMove;
     _speakerObj = inSpeaker;
     _patSensObj = inPatSens;
 }
@@ -81,23 +81,23 @@ void TaskFindLight::update(){
     }
 
     if(_patSensObj->getButtonOneFlag()){
-        _taskObj->setTask(TASK_FINDLIGHT);
+        _task_manager->setTask(TASK_FINDLIGHT);
         // Increase mood score when asked to play light game
-        _moodObj->incMoodScore();
+        _mood_manager->incMoodScore();
     }
 }
 
 //---------------------------------------------------------------------------
 // FINDLIGHT - called during the main during decision tree
 void TaskFindLight::findLight(){
-    _taskObj->taskLEDFindLight();
+    _task_manager->taskLEDFindLight();
     if(!_is_enabled){return;}
 
     _findLux(true);
 }
 
 void TaskFindLight::findDark(){
-    _taskObj->taskLEDFindDark();
+    _task_manager->taskLEDFindDark();
     if(!_is_enabled){return;}
 
     _findLux(false);
@@ -147,32 +147,32 @@ void TaskFindLight::_findLux(bool seekLightFlag){
 
     // If either threshold was tripped then turn
     if(_gradMoveFlag){
-        _moveObj->turnToAngleCtrlPos(180.0);
+        _move_manager->turnToAngleCtrlPos(180.0);
 
-        if(_moveObj->getPosPIDAttainSP_Both() || _gradMoveTimeout.finished()){
+        if(_move_manager->getPosPIDAttainSP_Both() || _gradMoveTimeout.finished()){
             _gradMoveFlag = false;
         }
     }
     else if(thresTrip){
         if(_luxDiff > 0){
             if(seekLightFlag){ // Turn towards light
-                _moveObj->forwardLeftDiffFrac(speedDiffFrac);
+                _move_manager->forwardLeftDiffFrac(speedDiffFrac);
             }
             else{ // Turn away from light
-                _moveObj->forwardRightDiffFrac(speedDiffFrac);
+                _move_manager->forwardRightDiffFrac(speedDiffFrac);
             }
         }
         else{
             if(seekLightFlag){ // Turn towards light
-                _moveObj->forwardRightDiffFrac(speedDiffFrac);
+                _move_manager->forwardRightDiffFrac(speedDiffFrac);
             }
             else{ // Turn away from light
-                _moveObj->forwardLeftDiffFrac(speedDiffFrac);
+                _move_manager->forwardLeftDiffFrac(speedDiffFrac);
             }
         }
     }
     else{
-        _moveObj->forward();
+        _move_manager->forward();
     }
 }
 

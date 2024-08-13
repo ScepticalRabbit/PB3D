@@ -14,9 +14,9 @@
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
 TaskDance::TaskDance(MoodManager* inMood, TaskManager* inTask,
                      MoveManager* inMove, Speaker* inSpeaker){
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
+    _mood_manager = inMood;
+    _task_manager = inTask;
+    _move_manager = inMove;
     _speakerObj = inSpeaker;
 }
 
@@ -31,15 +31,15 @@ void TaskDance::begin(){
 // UPDATE: called during every loop
 void TaskDance::update(){
     // Get new task flag reset after first main loop update
-    if(_taskObj->getNewTaskFlag()){
+    if(_task_manager->getNewTaskFlag()){
         // Reset the dance start flag in case this is the current task.
         _danceStartFlag = true;
 
-        if(_taskObj->getTask() == TASK_DANCE){
+        if(_task_manager->getTask() == TASK_DANCE){
         _generateTempo();
         _generateDance();
-        _taskObj->setDanceDuration(_danceDuration);
-        _taskObj->setTaskDuration(_danceDuration);
+        _task_manager->setDanceDuration(_danceDuration);
+        _task_manager->setTaskDuration(_danceDuration);
         }
     }
 }
@@ -53,7 +53,7 @@ void TaskDance::dance(){
     }
 
     // Set the task LEDs on every loop
-    _taskObj->taskLEDDance();
+    _task_manager->taskLEDDance();
 
     // If needed set the speaker flags on every loop
     if(_speakerFlag){
@@ -68,39 +68,39 @@ void TaskDance::dance(){
 
     // MAIN DANCE DECISION TREE
     if(_danceCurrMove == DANCE_STOP){
-        _moveObj->stop();
+        _move_manager->stop();
     }
     else if(_danceCurrMove == DANCE_FORBACK){
         //Serial.println("DANCE_FORBACK");
-        _moveObj->forwardBack(int(_dance4NoteMs),int(_dance4NoteMs));
+        _move_manager->forwardBack(int(_dance4NoteMs),int(_dance4NoteMs));
     }
     else if(_danceCurrMove == DANCE_CIRCLE){
         //Serial.println("DANCE_CIRCLE");
-        _moveObj->circle();
+        _move_manager->circle();
     }
     else if(_danceCurrMove == DANCE_TURN){
         //Serial.println("DANCE_TURN");
         if(_danceTurnDir == MOVE_B_RIGHT){
         //Serial.println("DANCE TURN RIGHT.");
-        _moveObj->turnToAngleCtrlSpd(90.0);
+        _move_manager->turnToAngleCtrlSpd(90.0);
         }
         else{
         //Serial.println("DANCE TURN LEFT.");
-        _moveObj->turnToAngleCtrlSpd(-90.0);
+        _move_manager->turnToAngleCtrlSpd(-90.0);
         }
     }
     else if(_danceCurrMove == DANCE_SPIN){
         //Serial.println("DANCE_SPIN");
         if(_danceSpinDir == MOVE_B_RIGHT){
-        _moveObj->right();
+        _move_manager->right();
         }
         else{
-        _moveObj->left();
+        _move_manager->left();
         }
     }
     else{
         //Serial.println("DANCE_WIGGLE");
-        _moveObj->wiggle(int(_dance4NoteMs),int(_dance4NoteMs));
+        _move_manager->wiggle(int(_dance4NoteMs),int(_dance4NoteMs));
     }
 }
 
@@ -113,10 +113,10 @@ void TaskDance::_startDance(){
     _danceCurrBar = 0;
     _danceMoveInd = 0;
     _danceCurrMove = _danceMoveVec[_danceMoveInd];
-    _moveObj->resetSubMoveTimer();
+    _move_manager->resetSubMoveTimer();
 
     // Increase mood when dance starts
-    _moodObj->incMoodScore();
+    _mood_manager->incMoodScore();
 
     // Set speaker
     if(_speakerFlag){

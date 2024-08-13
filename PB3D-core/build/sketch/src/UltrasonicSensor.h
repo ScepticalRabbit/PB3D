@@ -45,8 +45,8 @@ public:
     bool get_enabled_flag(){return _is_enabled;}
     void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
 
-    int16_t getRange(){return _range;}
-    int16_t getRangeMM(){return _range*10;}
+    int16_t get_range(){return _range;}
+    int16_t get_range_mm(){return _range*10;}
 
     uint8_t get_collision_code();
 
@@ -57,7 +57,7 @@ private:
     bool _is_enabled = true;
     bool _start_flag = true;
 
-    Ultrasonic _ultrasonicRanger = Ultrasonic(COLL_USSENS);
+    Ultrasonic _ultrasonic_ranger = Ultrasonic(COLL_USSENS);
 
     uint16_t _halfBodyLengMM = 80;
     int16_t _range = 2000;

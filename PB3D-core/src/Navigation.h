@@ -55,8 +55,8 @@ public:
       _posYPrev = _posYNext;
 
       // Get the speed of the robots centroid and current heading
-      _velC = (_encoder_L->getSmoothSpeedMMPS()+
-                    _encoder_R->getSmoothSpeedMMPS()) / 2.0;
+      _velC = (_encoder_L->get_smooth_speed_mmps()+
+                    _encoder_R->get_smooth_speed_mmps()) / 2.0;
       _heading = _IMUObj->getHeadAng();
 
       // Calculate the velocity components (X points to front face of robot)

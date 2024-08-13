@@ -14,9 +14,9 @@
 TaskPounce::TaskPounce(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker){
     _collisionObj = inCollision;
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
+    _mood_manager = inMood;
+    _task_manager = inTask;
+    _move_manager = inMove;
     _speakerObj = inSpeaker;
 }
 
@@ -30,7 +30,7 @@ void TaskPounce::begin(){
 void TaskPounce::update(){
     if(!_is_enabled){return;}
 
-    if(_taskObj->getNewTaskFlag()){
+    if(_task_manager->getNewTaskFlag()){
         _startAllFlag = true;
     }
 }
@@ -76,7 +76,7 @@ void TaskPounce::seekAndPounce(){
         _realign();
     }
     else{
-        _moveObj->stop();
+        _move_manager->stop();
     }
 }
 
@@ -109,7 +109,7 @@ void TaskPounce::_startAll(){
 _state = POUNCE_SEEK;
 // Seek
 _seekStart = true;
-_moveObj->resetLook();
+_move_manager->resetLook();
 // Lock On
 _lockStartFlag = true;
 // Run to Target
@@ -124,45 +124,45 @@ setRealignCent(180);
 void TaskPounce::_seekTarget(){
 if(_seekStart){
     _seekStart = false;
-    _moveObj->resetLook();
-    _moveObj->resetPIDs();
+    _move_manager->resetLook();
+    _move_manager->resetPIDs();
     _collisionObj->set_enabled_flag(false);
 }
 _collisionObj->set_enabled_flag(false); // Disable collision detection
 
 // TASK LEDS
 uint8_t seekCol = 1;
-if(_moveObj->getLookCurrAngInd() == 0){
-    //_taskObj->taskLEDCSV(_seekCol,_seekCol,255,_lowSat,255,255);
-    _taskObj->taskLEDCSV(_seekCol,_seekCol,255,_lowSat,0,255);
+if(_move_manager->getLookCurrAngInd() == 0){
+    //_task_manager->taskLEDCSV(_seekCol,_seekCol,255,_lowSat,255,255);
+    _task_manager->taskLEDCSV(_seekCol,_seekCol,255,_lowSat,0,255);
 }
-else if(_moveObj->getLookCurrAngInd() == 1){
-    _taskObj->taskLEDCSV(_seekCol,_seekCol,_lowSat,_lowSat,255,255);
+else if(_move_manager->getLookCurrAngInd() == 1){
+    _task_manager->taskLEDCSV(_seekCol,_seekCol,_lowSat,_lowSat,255,255);
 }
-else if(_moveObj->getLookCurrAngInd() == 2){
-    //_taskObj->taskLEDCSV(_seekCol,_seekCol,_lowSat,255,255,255);
-    _taskObj->taskLEDCSV(_seekCol,_seekCol,_lowSat,255,255,0);
+else if(_move_manager->getLookCurrAngInd() == 2){
+    //_task_manager->taskLEDCSV(_seekCol,_seekCol,_lowSat,255,255,255);
+    _task_manager->taskLEDCSV(_seekCol,_seekCol,_lowSat,255,255,0);
 }
-else if(_moveObj->getLookCurrAngInd() == 3){
-    _taskObj->taskLEDCSV(_seekCol,_seekCol,_lowSat,_lowSat,255,255);
+else if(_move_manager->getLookCurrAngInd() == 3){
+    _task_manager->taskLEDCSV(_seekCol,_seekCol,_lowSat,_lowSat,255,255);
 }
 else{
-    _taskObj->taskLEDOff();
+    _task_manager->taskLEDOff();
 }
 
 // Move to different angles and take measurements.
-if(!_moveObj->getLookFinished()){
-    _moveObj->lookAround();
+if(!_move_manager->getLookFinished()){
+    _move_manager->lookAround();
 
     if(_measCurInd < _measNumVals){
     // Get to the set point and start the measurement timer
     if(!_measFlag){
-        if(_moveObj->getPosPIDAttainSP_Both()){
+        if(_move_manager->getPosPIDAttainSP_Both()){
         //Serial.print("SP ATTAINED for "),Serial.println(_measCurInd);
         _measFlag = true;
         _measTimer.start(_measPrePauseTime);
         }
-        else if(_moveObj->lookIsPaused()){
+        else if(_move_manager->lookIsPaused()){
         //Serial.print("SP TIMEOUT for "),Serial.println(_measCurInd);
         _measFlag = true;
         _measTimer.start(_measPrePauseTime);
@@ -172,7 +172,7 @@ if(!_moveObj->getLookFinished()){
     // If measurement timer is finished take a measurement
     if(_measFlag && _measTimer.finished()){
         _measTimer.start(_measInterval);
-        int16_t sample = _collisionObj->getUSRangeMM();
+        int16_t sample = _collisionObj->get_ultrasonic_range_mm();
         _measSumForAvg = _measSumForAvg + sample;
 
         Serial.print("Sample "), Serial.print(_measCountForAvg);
@@ -195,7 +195,7 @@ if(!_moveObj->getLookFinished()){
         _measCountForAvg = 0;
 
         // Measurement complete - force move to next pos
-        _moveObj->forceLookMove();
+        _move_manager->forceLookMove();
         }
     }
     }
@@ -203,7 +203,7 @@ if(!_moveObj->getLookFinished()){
 else{ // EXIT CONDITION: LOOK FINISHED, TO NEXT STATE
     _measCurInd = 0;
     _state = POUNCE_LOCKON; // Move to next state
-    _moveObj->resetLook();
+    _move_manager->resetLook();
 }
 }
 
@@ -234,7 +234,7 @@ void TaskPounce::_lockOn(){
         _lockOnRange = float(_measVec[_lockValidRangeMinInd]);
         _lockOnTimer.start(_lockSpoolUpTime);  // Start timer
 
-        _moveObj->resetPIDs(); // Reset PIDs
+        _move_manager->resetPIDs(); // Reset PIDs
         _collisionObj->set_enabled_flag(false); // Disable collisition detection
 
         // DEBUG: Lock on start
@@ -251,13 +251,13 @@ void TaskPounce::_lockOn(){
     }
     else{
         // Spool up - flash lights and wag tail - TODO
-        _taskObj->taskLEDCSV(_lockCol,_lockCol,_lowSat,_lowSat,255,255);
+        _task_manager->taskLEDCSV(_lockCol,_lockCol,_lowSat,_lowSat,255,255);
 
         // Turn to target
-        _moveObj->turnToAngleCtrlPos(_lockOnAng);
+        _move_manager->turnToAngleCtrlPos(_lockOnAng);
 
         // EXIT CONDITION: SET POINT REACHED
-        if(_moveObj->getPosPIDAttainSP_Both()){
+        if(_move_manager->getPosPIDAttainSP_Both()){
         _state = POUNCE_RUN;
         }
 
@@ -279,8 +279,8 @@ void TaskPounce::_runToTarget(){
         _runTimer.start(_runTimeout); // Start timer
 
         // Calculate encoder counts to get to target
-        int32_t runEncCounts = int32_t((_lockOnRange-float(_runRangeLim))/(_moveObj->getEncMMPerCount()));
-        int32_t encAvgCounts = (_moveObj->getEncCountL()+_moveObj->getEncCountR())/2;
+        int32_t runEncCounts = int32_t((_lockOnRange-float(_runRangeLim))/(_move_manager->getEncMMPerCount()));
+        int32_t encAvgCounts = (_move_manager->getEncCountL()+_move_manager->getEncCountR())/2;
         _runEndEncCount = encAvgCounts+runEncCounts;
 
         _collisionObj->set_enabled_flag(true); // Re-enable collision detection
@@ -293,19 +293,19 @@ void TaskPounce::_runToTarget(){
     }
 
     // TASK LEDS
-    _taskObj->taskLEDCSV(_runCol,_runCol,_lowSat,_lowSat,255,255);
+    _task_manager->taskLEDCSV(_runCol,_runCol,_lowSat,_lowSat,255,255);
 
     // EXIT CONDITION: Found target
-    if(_collisionObj->getUSRangeMM() <= _runRangeLim){
+    if(_collisionObj->get_ultrasonic_range_mm() <= _runRangeLim){
         _state = POUNCE_REALIGN;
         Serial.println("RUN END: US Range");
     }
-    else if((_moveObj->getEncCountL() >= _runEndEncCount) || (_moveObj->getEncCountR() >= _runEndEncCount)){
+    else if((_move_manager->getEncCountL() >= _runEndEncCount) || (_move_manager->getEncCountR() >= _runEndEncCount)){
         _state = POUNCE_REALIGN;
         Serial.println("RUN END: Enc Counts");
     }
     else{ // Go forward fast
-        _moveObj->forward(_runSpeed);
+        _move_manager->forward(_runSpeed);
     }
 
     // EXIT CONDITION: TIMEOUT
@@ -329,7 +329,7 @@ void TaskPounce::_realign(){
         _realignTimer.start(_realignPrePauseTime);
 
         _collisionObj->set_enabled_flag(false); // Disable collision detection
-        _moveObj->resetPIDs();  // Reset move PIDs
+        _move_manager->resetPIDs();  // Reset move PIDs
 
         // DEBUG: Run to start
         Serial.println("REALIGN: Start, Pre-pause");
@@ -337,11 +337,11 @@ void TaskPounce::_realign(){
     _collisionObj->set_enabled_flag(false); // Disable collision detection
 
     // TASK LEDS
-    _taskObj->taskLEDCSV(_realignCol,_realignCol,_lowSat,_lowSat,255,255);
+    _task_manager->taskLEDCSV(_realignCol,_realignCol,_lowSat,_lowSat,255,255);
 
     // Move to the randomly generate angle to reorient
     if(_realignState == 0){ // Pre-pause
-        _moveObj->stop();
+        _move_manager->stop();
 
         if(_realignTimer.finished()){
         _realignTimer.start(_realignTimeout);
@@ -352,17 +352,17 @@ void TaskPounce::_realign(){
         }
     }
     else if(_realignState == 1){// Move to angle
-        _moveObj->turnToAngleCtrlPos(_realignAng);
+        _move_manager->turnToAngleCtrlPos(_realignAng);
 
         // If angle is obtained or timeout go back to the start
-        if(_moveObj->getPosPIDAttainSP_Both() || _realignTimer.finished()){
+        if(_move_manager->getPosPIDAttainSP_Both() || _realignTimer.finished()){
         _realignTimer.start(_realignPostPauseTime);
         _realignState++;
         Serial.println("REALIGN: Post pause");
         }
     }
     else if(_realignState == 2){// Post-pause
-        _moveObj->stop();
+        _move_manager->stop();
 
         if(_realignTimer.finished()){
         _realignTimer.start(_realignTimeout);
@@ -374,14 +374,14 @@ void TaskPounce::_realign(){
         }
     }
     else{
-        _moveObj->stop();
+        _move_manager->stop();
     }
     /*
     if(_realignPrePauseTimer.finished()){
-        _moveObj->turnToAnglePosCtrl(_realignAng);
+        _move_manager->turnToAnglePosCtrl(_realignAng);
 
         // If angle is obtained or timeout go back to the start
-        if(_moveObj->getPosPIDAttainSP_Both() || _realignTimer.finished()){
+        if(_move_manager->getPosPIDAttainSP_Both() || _realignTimer.finished()){
         _realignPostPauseTimer.start(_realignPostPauseTime);
         }
     }
@@ -392,7 +392,7 @@ void TaskPounce::_realign(){
     }
     else{
         // Stop moving and wait for motors/momentum to settle
-        _moveObj->stop();
+        _move_manager->stop();
     }
     */
 }

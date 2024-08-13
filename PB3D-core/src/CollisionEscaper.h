@@ -21,27 +21,28 @@ class CollisionEscaper{
     public:
         CollisionEscaper(){};
 
-        void setMoveObj(MoveManager* inMove);
-        void updateEscapeDecision(uint8_t checkVec[]);
-        void setEscapeStart(uint8_t checkVec[]);
+        void set_move_obj(MoveManager* inMove);
+        void update_escape_decision(uint8_t check_vec[]);
+        void set_escape_start(uint8_t check_vec[]);
         void escape();
-        bool getEscapeFlag();
-        int8_t getEscapeTurn(uint8_t checkVec[]);
+        bool get_escape_flag();
+        int8_t get_escape_turn(uint8_t check_vec[]);
 
-        uint8_t getEscapeCount(){return _escapeCount;}
-        float getEscapeDist(){return _escapeDist;}
-        float getEscapeAngle(){return _escapeAngle;}
+        uint8_t get_escape_count(){return _escape_count;}
+        float get_escape_dist(){return _escape_dist;}
+        float get_escape_angle(){return _escape_angle;}
 
     private:
-        float _getRandTurnDir();
+        float _get_rand_turn_dir();
 
-        MoveManager* _moveObj = NULL;
-        uint8_t _escapeCount = 3;
-        float _escapeAngle = 45.0;
-        float _escapeDist = 180.0;
-        const static uint8_t _escapeNumSteps = 3;
-        float _defModTurn = 45.0, _defHardTurn = 90.0;
-        float _defRevDist = -180.0;
+        MoveManager* _move_manager = NULL;
+        uint8_t _escape_count = 3;
+        float _escape_angle = 45.0;
+        float _escape_dist = 180.0;
+        const static uint8_t _escape_num_steps = 3;
+        float _def_mod_turn = 45.0;
+        float _def_hard_turn = 90.0;
+        float _def_rev_dist = -180.0;
 };
 
 #endif

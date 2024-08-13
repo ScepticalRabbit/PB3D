@@ -31,19 +31,19 @@ void updateEncRB();
 //---------------------------------------------------------------------------
 // SETUP
 void setup(){
-    // Start the serial 
+    // Start the serial
     Serial.begin(115200);
-    // Only use below to stop start up until UDB cable connected 
+    // Only use below to stop start up until UDB cable connected
     while(!Serial){}
     Serial.println("TEST ENCODER");
 
     // Encoders - Attach Interrupt Pins - CHANGE,RISING,FALLING
     attachInterrupt(digitalPinToInterrupt(encPinAL),
-                updateEncLA,CHANGE); 
+                updateEncLA,CHANGE);
     attachInterrupt(digitalPinToInterrupt(encPinAR),
                 updateEncRA,CHANGE);
     attachInterrupt(digitalPinToInterrupt(encPinBL),
-                updateEncLB,CHANGE); 
+                updateEncLB,CHANGE);
     attachInterrupt(digitalPinToInterrupt(encPinBR),
                 updateEncRB,CHANGE);
 }
@@ -57,23 +57,23 @@ void loop(){
 //---------------------------------------------------------------------------
 // INTERRUPT FUNCTIONS
 void updateEncLA(){
-  encoderL.updateNEQ(); 
+  encoderL.update_not_equal();
   printEncCount(&encoderL);
 }
 void updateEncLB(){
-  encoderL.updateEQ();
-  printEncCount(&encoderL); 
+  encoderL.update_equal();
+  printEncCount(&encoderL);
 }
 void updateEncRA(){
-  encoderR.updateEQ();
+  encoderR.update_equal();
   printEncCount(&encoderR);
 }
 void updateEncRB(){
-  encoderR.updateNEQ();
+  encoderR.update_not_equal();
   printEncCount(&encoderR);
 }
 
 void printEncCount(Encoder* inEnc){
-    Serial.println(inEnc->getCount());
+    Serial.println(inEnc->get_count());
 }
 

@@ -14,9 +14,9 @@
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
 TaskFindSound::TaskFindSound(MoodManager* inMood, TaskManager* inTask,
                             MoveManager* inMove, Speaker* inSpeaker){
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
+    _mood_manager = inMood;
+    _task_manager = inTask;
+    _move_manager = inMove;
     _speakerObj = inSpeaker;
 }
 
@@ -68,13 +68,13 @@ void TaskFindSound::update(){
         #endif
     }
 
-    if(_taskObj->getTask() != TASK_FINDSOUND){
+    if(_task_manager->getTask() != TASK_FINDSOUND){
         // ENABLE: If X claps in this interval then start finding sound
         if(_clapEnableTimer.finished()){
         _clapEnableTimer.start(_clapEnableUpdateTime);
 
         if(_clapCount >= _clapThres){
-            _taskObj->setTask(TASK_FINDSOUND);
+            _task_manager->setTask(TASK_FINDSOUND);
         }
         _clapCount = 0;
         }
@@ -90,7 +90,7 @@ void TaskFindSound::update(){
     }
 
     // NEW TASK: if task is new set the start flag
-    if(_taskObj->getNewTaskFlag()){
+    if(_task_manager->getNewTaskFlag()){
         _start_flag = true;
     }
 }
@@ -99,7 +99,7 @@ void TaskFindSound::update(){
 // FINDSOUND - called during task decision tree
 void TaskFindSound::findSound(){
     // Set the LEDs on every loop regardless
-    _taskObj->taskLEDFindSound();
+    _task_manager->taskLEDFindSound();
 
     // If the sensor wasn't found then sxit the function
     if(!_is_enabled){return;}
@@ -138,25 +138,25 @@ void TaskFindSound::findSound(){
     // FIND SOUND: Track based on ear state from Xiao
     // EAR STATE = 0: uncertain, 1: forward, 2: left, 3: right
     if(_earState == EAR_COM_LEFT){
-        //_moveObj->left();
-        //_moveObj->forwardLeft(_speedDiffLR);
-        _moveObj->forwardLeftDiffFrac(_speedDiffFracLR);
+        //_move_manager->left();
+        //_move_manager->forwardLeft(_speedDiffLR);
+        _move_manager->forwardLeftDiffFrac(_speedDiffFracLR);
     }
     else if(_earState == EAR_COM_RIGHT){
-        //_moveObj->right();
-        //_moveObj->forwardRight(_speedDiffLR);
-        _moveObj->forwardRightDiffFrac(_speedDiffFracLR);
+        //_move_manager->right();
+        //_move_manager->forwardRight(_speedDiffLR);
+        _move_manager->forwardRightDiffFrac(_speedDiffFracLR);
     }
     else if(_earState == EAR_COM_FORWARD){
-        _moveObj->forward();
+        _move_manager->forward();
     }
     else if(_earState == EAR_COM_SENV){
-        _moveObj->forward();
+        _move_manager->forward();
     }
     else{
-        //_moveObj->updateMove();
-        //_moveObj->go();
-        _moveObj->forward();
+        //_move_manager->updateMove();
+        //_move_manager->go();
+        _move_manager->forward();
     }
 }
 

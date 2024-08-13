@@ -16,7 +16,7 @@
 void UltrasonicSensor::update(){
     if(!_is_enabled){return;}
 
-    _range = _ultrasonicRanger.MeasureInCentimeters();
+    _range = _ultrasonic_ranger.MeasureInCentimeters();
     if(_range <= _colDistLim){_range = 400;}
 }
 

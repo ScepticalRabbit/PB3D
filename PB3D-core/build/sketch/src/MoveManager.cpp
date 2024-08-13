@@ -52,15 +52,15 @@ void MoveManager::begin(){
     _speedPID_R.begin();
     _speedPID_L.setOutputLimits(_minPWR, 255.0);
     _speedPID_R.setOutputLimits(_minPWR, 255.0);
-    _speedPID_L.setSampleTime(_encoder_L->getSpeedUpdateTime());
-    _speedPID_R.setSampleTime(_encoder_R->getSpeedUpdateTime());
+    _speedPID_L.setSampleTime(_encoder_L->get_speed_update_time());
+    _speedPID_R.setSampleTime(_encoder_R->get_speed_update_time());
     // Start the position PIDs
     _posPID_L.begin();
     _posPID_R.begin();
     _posPID_L.setOutputLimits(-1.0*_posPIDMaxSpeed,_posPIDMaxSpeed);
     _posPID_R.setOutputLimits(-1.0*_posPIDMaxSpeed,_posPIDMaxSpeed);
-    _posPID_L.setSampleTime(_encoder_L->getSpeedUpdateTime()*2);
-    _posPID_R.setSampleTime(_encoder_R->getSpeedUpdateTime()*2);
+    _posPID_L.setSampleTime(_encoder_L->get_speed_update_time()*2);
+    _posPID_R.setSampleTime(_encoder_R->get_speed_update_time()*2);
 }
 
 //---------------------------------------------------------------------------
@@ -499,13 +499,13 @@ int8_t MoveManager::toDistCtrlSpd(float speedL, float speedR,
         }
 
         _encCountStart = false;
-        _encCountDiffL = int32_t(setDistL/_encoder_L->getMMPerCount());
-        _encCountDiffR = int32_t(setDistR/_encoder_R->getMMPerCount());
+        _encCountDiffL = int32_t(setDistL/_encoder_L->get_mm_per_count());
+        _encCountDiffR = int32_t(setDistR/_encoder_R->get_mm_per_count());
         _endEncCountL = _startEncCountL + _encCountDiffL;
         _endEncCountR = _startEncCountR + _encCountDiffR;
 
         /*
-        Serial.print("MMPCount= "); Serial.print(_encoder_L->getMMPerCount());
+        Serial.print("MMPCount= "); Serial.print(_encoder_L->get_mm_per_count());
         Serial.print(",SetDistL= "); Serial.print(setDistL); Serial.print(",SetDistR= "); Serial.print(setDistR);
         Serial.print(",ECDiffL= "); Serial.print(_encCountDiffL); Serial.print(",ECDiffR= "); Serial.print(_encCountDiffR);
         Serial.println();
@@ -522,7 +522,7 @@ int8_t MoveManager::toDistCtrlSpd(float speedL, float speedR,
     }
     else{
         if((setDistL > 0.0) && (setDistR > 0.0)){ // Go forward
-        if((_encoder_L->getCount() <= _endEncCountL)||(_encoder_R->getCount() <= _endEncCountR)){
+        if((_encoder_L->get_count() <= _endEncCountL)||(_encoder_R->get_count() <= _endEncCountR)){
             _atSpeed(abs(speedL),abs(speedR));
         }
         else{
@@ -531,7 +531,7 @@ int8_t MoveManager::toDistCtrlSpd(float speedL, float speedR,
         }
         }
         else if((setDistL < 0.0) && (setDistR > 0.0)){ // Turn left
-            if((_encoder_L->getCount() >= _endEncCountL)||(_encoder_R->getCount() <= _endEncCountR)){
+            if((_encoder_L->get_count() >= _endEncCountL)||(_encoder_R->get_count() <= _endEncCountR)){
                 _atSpeed(-1.0*abs(speedL),abs(speedR));
             }
             else{
@@ -540,7 +540,7 @@ int8_t MoveManager::toDistCtrlSpd(float speedL, float speedR,
             }
         }
         else if((setDistL > 0.0) && (setDistR < 0.0)){
-            if((_encoder_L->getCount() <= _endEncCountL)||(_encoder_R->getCount() >= _endEncCountR)){
+            if((_encoder_L->get_count() <= _endEncCountL)||(_encoder_R->get_count() >= _endEncCountR)){
                 _atSpeed(abs(speedL),-1.0*abs(speedR));
             }
             else{
@@ -549,7 +549,7 @@ int8_t MoveManager::toDistCtrlSpd(float speedL, float speedR,
             }
         }
         else if((setDistL < 0.0) && (setDistR < 0.0)){ // Turn right
-            if((_encoder_L->getCount() >= _endEncCountL)||(_encoder_R->getCount() >= _endEncCountR)){
+            if((_encoder_L->get_count() >= _endEncCountL)||(_encoder_R->get_count() >= _endEncCountR)){
                 _atSpeed(-1.0*abs(speedL),-1.0*abs(speedR));
             }
             else{
@@ -876,8 +876,8 @@ void MoveManager::_updateBasicMove(int8_t inMove){
     if(_moveBasic != inMove){
         _moveBasic = inMove;
         _encCountStart = true;
-        _startEncCountL = _encoder_L->getCount();
-        _startEncCountR = _encoder_R->getCount();
+        _startEncCountL = _encoder_L->get_count();
+        _startEncCountR = _encoder_R->get_count();
         resetPIDs();
     }
 }
@@ -942,8 +942,8 @@ void MoveManager::_atSpeed(float inSpeedL,float inSpeedR){
     _speedPID_R.setSetPoint(inSpeedR);
 
     // Update left and right speed PIDs
-    _speedPID_L.update(_encoder_L->getSmoothSpeedMMPS());
-    _speedPID_R.update(_encoder_R->getSmoothSpeedMMPS());
+    _speedPID_L.update(_encoder_L->get_smooth_speed_mmps());
+    _speedPID_R.update(_encoder_R->get_smooth_speed_mmps());
 
     // If the speed is negative then set motors to run backward
     if(inSpeedL < 0.0){
@@ -979,33 +979,33 @@ void MoveManager::_toPos(float setPosL, float setPosR){
 
     // Check if the set point passed to the function has changed
     // LEFT
-    int32_t checkSetPointL =  round(setPosL/_encoder_L->getMMPerCount());
+    int32_t checkSetPointL =  round(setPosL/_encoder_L->get_mm_per_count());
     if(checkSetPointL != _setPointRelCounts_L){
         _setPointRelCounts_L = checkSetPointL;
-        _startEncCount_L = _encoder_L->getCount();
+        _startEncCount_L = _encoder_L->get_count();
         _posPID_L.setSetPoint(float(_setPointRelCounts_L));
     }
     // RIGHT
-    int32_t checkSetPointR =  round(setPosR/_encoder_R->getMMPerCount());
+    int32_t checkSetPointR =  round(setPosR/_encoder_R->get_mm_per_count());
     if(checkSetPointR != _setPointRelCounts_R){
         _setPointRelCounts_R = checkSetPointR;
-        _startEncCount_R = _encoder_R->getCount();
+        _startEncCount_R = _encoder_R->get_count();
         _posPID_R.setSetPoint(float(_setPointRelCounts_R));
     }
 
     // Update the relative count and send it to the PIDs
     // LEFT
-    _currRelCount_L = _encoder_L->getCount()-_startEncCount_L;
+    _currRelCount_L = _encoder_L->get_count()-_startEncCount_L;
     _posPID_L.update(_currRelCount_L);
     // RIGHT
-    _currRelCount_R = _encoder_R->getCount()-_startEncCount_R;
+    _currRelCount_R = _encoder_R->get_count()-_startEncCount_R;
     _posPID_R.update(_currRelCount_R);
 
     // Update the speed PIDs
     // LEFT
-    _speedPID_L.update(_encoder_L->getSmoothSpeedMMPS());
+    _speedPID_L.update(_encoder_L->get_smooth_speed_mmps());
     // RIGHT
-    _speedPID_R.update(_encoder_R->getSmoothSpeedMMPS());
+    _speedPID_R.update(_encoder_R->get_smooth_speed_mmps());
 
     // Check that the PID is sending a signal above the min speed
     // LEFT

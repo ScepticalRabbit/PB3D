@@ -14,7 +14,8 @@ enum EDangerFlag{
     DANGER_NONE = 0,
     DANGER_SLOW,
     DANGER_FAR,
-    DANGER_CLOSE
+    DANGER_CLOSE,
+    DANGER_COUNT
 };
 
 enum EBumpCode{

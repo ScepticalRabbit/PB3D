@@ -14,9 +14,9 @@
 ClassTemp::ClassTemp(Collision* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker){
 _collisionObj = inCollision;
-_moodObj = inMood;
-_taskObj = inTask;
-_moveObj = inMove;
+_mood_manager = inMood;
+_task_manager = inTask;
+_move_manager = inMove;
 _speakerObj = inSpeaker;
 }
 
@@ -31,7 +31,7 @@ void ClassTemp::begin(){
 void ClassTemp::update(){
     if(!_is_enabled){return;}
 
-    if(_taskObj->getNewTaskFlag()){
+    if(_task_manager->getNewTaskFlag()){
         _start_flag = true;
     }
 

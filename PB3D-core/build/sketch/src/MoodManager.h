@@ -48,8 +48,8 @@ public:
   //---------------------------------------------------------------------------
   bool get_enabled_flag(){return _is_enabled;}
   void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
-  void resetMood(){_setMood(_moodCode);}
-  int8_t getMood(){return _moodCode;}
+  void reset_mood(){_setMood(_moodCode);}
+  int8_t get_mood(){return _moodCode;}
   int8_t getPowerDiff(){return _moodPowerDiffVec[_moodCode];}
   float getSpeedFact(){return _moodSpeedFactVec[_moodCode];}
   uint8_t getMoodCount(){return _moodCount;}

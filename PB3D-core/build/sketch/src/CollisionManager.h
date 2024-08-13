@@ -22,6 +22,7 @@
 #include "LaserManager.h"
 #include "BumperSensor.h"
 #include "UltrasonicSensor.h"
+#include "LaserIndex.h"
 
 //------------------------------------------------------------------------------
 // DEFINITIONS
@@ -35,15 +36,13 @@
 
 //------------------------------------------------------------------------------
 // LAST COLLISION: data structure
-struct lastCollision_t{
-  uint8_t checkVec[7] = {0,0,0,0,0,0,0};
-  int16_t USRange = 0;
-  int16_t LSRRangeL = 0,LSRRangeR = 0;
-  int16_t LSRRangeU = 0,LSRRangeD = 0;
-  int8_t LSRStatusL = 0,LSRStatusR = 0;
-  int8_t LSRStatusU = 0,LSRStatusD = 0;
-  uint8_t escCount = 0;
-  float escDist = 0.0, escAng = 0.0;
+struct SLastCollision{
+  uint8_t check_vec[7] = {0,0,0,0,0,0,0};
+  int16_t ultrasonic_range = 0;
+  int16_t laser_range_array[LASER_COUNT] = {0,0,0,0,0,0,0,0,0,0};
+  uint8_t escape_count = 0;
+  float escape_dist = 0.0;
+  float escape_angle = 0.0;
 };
 
 //------------------------------------------------------------------------------
@@ -52,7 +51,7 @@ class CollisionManager{
 public:
   //----------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
-  CollisionManager(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove);
+  CollisionManager(MoodManager* mood, TaskManager* task, MoveManager* move);
 
   //----------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -65,63 +64,65 @@ public:
   //----------------------------------------------------------------------------
   // Get, set and reset
   bool get_enabled_flag(){return _is_enabled;}
-  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
+  void set_enabled_flag(bool flag){_is_enabled = flag;}
 
-  bool getDetectFlag(){return _collisionDetected;}
+  bool get_detected(){return _collision_detected;}
 
-  uint16_t getCount(){return _collisionCount;}
-  void incCount(){_collisionCount++;}
-  void resetCount(){_collisionCount = 0;}
+  uint16_t get_count(){return _collision_count;}
+  void inc_count(){_collision_count++;}
+  void reset_Count(){_collision_count = 0;}
 
-  bool getBeepBeepFlag(){return _collisionBeepBeepFlag;}
-  void setBeepBeepFlag(bool inFlag){_collisionBeepBeepFlag = inFlag;}
+  bool get_beepbeep_flag(){return _collision_beepbeep_flag;}
+  void set_beepbeep_flag(bool flag){_collision_beepbeep_flag = flag;}
 
-  bool getBumperFlag(){return _bumpers.get_bump_flag();}
+  bool get_bumper_flag(){return _bumpers.get_bump_flag();}
 
-  int16_t getUSRange(){return _ultrasonicRanger.getRange();}
-  int16_t getUSRangeMM(){return _ultrasonicRanger.getRangeMM();}
+  int16_t get_ultrasonic_range(){return _ultrasonic_ranger.get_range();}
+  int16_t get_ultrasonic_range_mm(){return _ultrasonic_ranger.get_range_mm();}
 
-  int16_t getLSRRange(ELaserIndex _ind){return _laserManager.get_range(_ind);}
-  lastCollision_t* getLastCollision(){return &_lastCol;}
+  int16_t get_laser_range(ELaserIndex _ind){
+    return _laser_manager.get_range(_ind);
+  }
+  SLastCollision* get_last_collision(){return &_last_col;}
 
-  uint8_t getColCheck(uint8_t pos){return _checkVec[pos];}
+  uint8_t get_col_check(uint8_t pos){return _checkVec[pos];}
 
-  bool getAltFlag();
-  void resetFlags();
+  bool get_altitude_flag();
+  void reset_flags();
 
   //----------------------------------------------------------------------------
   // Command forwarding to escaper
-  void setEscapeStart();
+  void set_escape_start();
   void escape();
-  bool getEscapeFlag();
-  int8_t getEscapeTurn();
+  bool get_escape_flag();
+  int8_t get_escape_turn();
 
 private:
   //----------------------------------------------------------------------------
   // Check all ranges and escape decision tree
-  void _updateCheckVec();
-  void _updateEscapeDecision(); // Escape decision tree
+  void _update_check_vec();
+  void _update_escape_decision(); // Escape decision tree
 
   //----------------------------------------------------------------------------
   // CLASS VARIABLES
   // Main object and sensor pointers
-  MoodManager* _moodObj = NULL;
-  TaskManager* _taskObj = NULL;
-  MoveManager* _moveObj = NULL;
+  MoodManager* _mood_manager = NULL;
+  TaskManager* _task_manager = NULL;
+  MoveManager* _move_manager = NULL;
 
   // Collision management variables
   bool _is_enabled = true;
-  bool _collisionDetected = false; // Key flag controlling collision escape
+  bool _collision_detected = false; // Key flag controlling collision escape
   bool _collisionSlowDown = false;
 
   uint16_t _halfBodyLengMM = 80;
-  bool _collisionBeepBeepFlag = false;
-  uint16_t _collisionCount = 0;
+  bool _collision_beepbeep_flag = false;
+  uint16_t _collision_count = 0;
 
   // Helper Objects
   CollisionEscaper _escaper = CollisionEscaper();
-  LaserManager _laserManager = LaserManager();
-  UltrasonicSensor _ultrasonicRanger = UltrasonicSensor();
+  LaserManager _laser_manager = LaserManager();
+  UltrasonicSensor _ultrasonic_ranger = UltrasonicSensor();
   BumperSensor _bumpers = BumperSensor();
 
   // Check flags for all collision sensors
@@ -141,6 +142,6 @@ private:
   Timer _ultrasonicTimer = Timer();
 
   // Data structure for info on last collision
-  lastCollision_t _lastCol;
+  SLastCollision _last_col;
 };
 #endif // COLLISIONMANAGER_H

@@ -22,11 +22,11 @@
         // TIME
         uint32_t onTime;
         // LAST COLLISION
-        uint8_t checkVec[7];
-        uint16_t USRange;
+        uint8_t check_vec[7];
+        uint16_t ultrasonic_range;
         uint16_t LSRRangeL, LSRRangeR;
         uint16_t LSRRangeU, LSRRangeD;
-        float escCount, escDist, escAng;
+        float escape_count, escape_dist, escape_angle;
     };
 
     union dataPacket_t{
@@ -41,16 +41,16 @@
         inState->state.onTime = 0;
         // LAST COLLISION
         for(uint8_t ii=0;ii<7;ii++){
-            inState->state.checkVec[ii] = 0;
+            inState->state.check_vec[ii] = 0;
         }
-        inState->state.USRange = 0;
+        inState->state.ultrasonic_range = 0;
         inState->state.LSRRangeL = 0;
         inState->state.LSRRangeR = 0;
         inState->state.LSRRangeU = 0;
         inState->state.LSRRangeD = 0;
-        inState->state.escCount = 0;
-        inState->state.escDist = 0.0;
-        inState->state.escAng = 0.0;
+        inState->state.escape_count = 0;
+        inState->state.escape_dist = 0.0;
+        inState->state.escape_angle = 0.0;
     }
 
     void _printStateData(dataPacket_t* inState){
@@ -63,20 +63,20 @@
         Serial.println(F("CheckVec=[BL,BR,US,LL,LR,LU,LD,]"));
         Serial.print("CheckVec=[");
         for(uint8_t ii=0;ii<7;ii++){
-            Serial.print(" ");Serial.print(inState->state.checkVec[ii]);Serial.print(",");
+            Serial.print(" ");Serial.print(inState->state.check_vec[ii]);Serial.print(",");
         }
         Serial.println("]");
 
-        Serial.print("US="); Serial.print(inState->state.USRange); Serial.print("mm, ");
+        Serial.print("US="); Serial.print(inState->state.ultrasonic_range); Serial.print("mm, ");
         Serial.print("LL="); Serial.print(inState->state.LSRRangeL); Serial.print("mm, ");
         Serial.print("LR="); Serial.print(inState->state.LSRRangeR); Serial.print("mm");
         Serial.println();
         Serial.print("LU="); Serial.print(inState->state.LSRRangeU); Serial.print("mm, ");
         Serial.print("LD="); Serial.print(inState->state.LSRRangeD); Serial.print("mm");
         Serial.println();
-        Serial.print("Esc,Count="); Serial.print(inState->state.escCount);
-        Serial.print(", Dist="); Serial.print(inState->state.escDist);
-        Serial.print(", Angle="); Serial.print(inState->state.escAng);
+        Serial.print("Esc,Count="); Serial.print(inState->state.escape_count);
+        Serial.print(", Dist="); Serial.print(inState->state.escape_dist);
+        Serial.print(", Angle="); Serial.print(inState->state.escape_angle);
         Serial.println();
 
         Serial.println(F("----------------------------------------"));
@@ -86,17 +86,17 @@
     void _serialLogData(dataPacket_t* inState){
         Serial.print(inState->state.onTime); Serial.print(",");
         for(uint8_t ii=0;ii<7;ii++){
-            Serial.print(inState->state.checkVec[ii]);Serial.print(",");
+            Serial.print(inState->state.check_vec[ii]);Serial.print(",");
         }
-        Serial.print(inState->state.USRange); Serial.print(",");
+        Serial.print(inState->state.ultrasonic_range); Serial.print(",");
         Serial.print(inState->state.LSRRangeL); Serial.print(",");
         Serial.print(inState->state.LSRRangeR); Serial.print(",");
         Serial.print(inState->state.LSRRangeU); Serial.print(",");
         Serial.print(inState->state.LSRRangeD); Serial.print(",");
 
-        Serial.print(inState->state.escCount); Serial.print(",");
-        Serial.print(inState->state.escDist); Serial.print(",");
-        Serial.print(inState->state.escAng); Serial.print(",");
+        Serial.print(inState->state.escape_count); Serial.print(",");
+        Serial.print(inState->state.escape_dist); Serial.print(",");
+        Serial.print(inState->state.escape_angle); Serial.print(",");
         Serial.println();
     }
 

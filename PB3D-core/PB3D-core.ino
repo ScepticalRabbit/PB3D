@@ -209,7 +209,7 @@ void setup() {
   if(_debug_forceMove){
     moveObj.updateMove(_debug_moveType);
   }
-  taskObj.assignProb(moodObj.getMood());
+  taskObj.assignProb(moodObj.get_mood());
 
   tailObj.setState(TAIL_CENT);
   Serial.println();
@@ -234,7 +234,7 @@ void loop(){
   // If mood has updated then modify the other classes
   if(moodObj.getNewMoodFlag()){
     moodObj.setNewMoodFlag(false); // Reset the flag
-    taskObj.assignProb(moodObj.getMood());
+    taskObj.assignProb(moodObj.get_mood());
     moveObj.setPWRByDiff(moodObj.getPowerDiff());
     moveObj.setSpeedByMoodFact(moodObj.getSpeedFact());
   }
@@ -245,7 +245,7 @@ void loop(){
   taskObj.update();
 
   // If task has changed update mood LEDs
-  if(taskObj.getNewTaskFlag()){moodObj.resetMood();}
+  if(taskObj.getNewTaskFlag()){moodObj.reset_mood();}
 
   // DEBUG MODE: force task to a particular value
   if(_debug_forceTask){
@@ -265,8 +265,8 @@ void loop(){
   patSensorObj.update();
   tailObj.update();
   IMUObj.update();
-  encoderL.updateSpeed();
-  encoderR.updateSpeed();
+  encoderL.update_speed();
+  encoderR.update_speed();
   navObj.update();
   senderObj.update();
 
@@ -321,11 +321,11 @@ void loop(){
   else if(taskObj.getTask() == TASK_INTERACT){
     taskInteractObj.interact();
   }
-  else if(collisionObj.getEscapeFlag() && !_debug_collisionOff){
+  else if(collisionObj.get_escape_flag() && !_debug_collisionOff){
     //Serial.println("======================ESCAPE======================");
     escapeCollision(); // SEE FUNCTION DEF BELOW MAIN
   }
-  else if(collisionObj.getDetectFlag() && !_debug_collisionOff){
+  else if(collisionObj.get_detected() && !_debug_collisionOff){
     //DEBUG_PrintColFlags();
     detectedCollision(); // SEE FUNCTION DEF BELOW MAIN
   }
@@ -376,7 +376,7 @@ void loop(){
   //-------------------------------------------------------------------------
   // POST DECISION TREE OVERRIDES
   // Wag tail if happy - regardless of task use of tail
-  if(moodObj.getMood() == MOOD_HAPPY){
+  if(moodObj.get_mood() == MOOD_HAPPY){
     tailObj.setState(TAIL_WAG_INT);
     // wagmovetime,wagoffset,_test_pauseTime,wagcount
     tailObj.setWagParams(200,30,4000,6);
@@ -402,25 +402,25 @@ void loop(){
 //------------------------------------------------------------------------------
 // INTERRUPT FUNCTIONS
 void updateEncLA(){
-  encoderL.updateNEQ();
+  encoderL.update_not_equal();
 }
 void updateEncLB(){
-  encoderL.updateEQ();
+  encoderL.update_equal();
 }
 void updateEncRA(){
-  encoderR.updateEQ();
+  encoderR.update_equal();
 }
 void updateEncRB(){
-  encoderR.updateNEQ();
+  encoderR.update_not_equal();
 }
 
 //------------------------------------------------------------------------------
 // COLLISION HANDLING TASK TREE FUNCTIONS
 void escapeCollision(){
   taskObj.taskLEDCollision();
-  collisionObj.resetFlags();
+  collisionObj.reset_flags();
 
-  if(collisionObj.getBeepBeepFlag()){
+  if(collisionObj.get_beepbeep_flag()){
     uint8_t inCodes[] = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
     speakerObj.setSoundCodes(inCodes,4);
   }
@@ -431,7 +431,7 @@ void escapeCollision(){
 void detectedCollision(){
   // Turn on collision LEDs and set escape flags
   taskObj.taskLEDCollision();
-  collisionObj.setEscapeStart();
+  collisionObj.set_escape_start();
 
   // If we are moving in a circle or a spiral then switch direction
   moveObj.changeCircDir();
@@ -440,9 +440,9 @@ void detectedCollision(){
   moveObj.stop();
 
   // If the bumper flag was tripped we need to go beep,beep!
-  collisionObj.setBeepBeepFlag(false);
-  if(collisionObj.getBumperFlag()){
-    collisionObj.setBeepBeepFlag(true);
+  collisionObj.set_beepbeep_flag(false);
+  if(collisionObj.get_bumper_flag()){
+    collisionObj.set_beepbeep_flag(true);
 
     speakerObj.reset();
     uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
@@ -461,7 +461,7 @@ void detectedCollision(){
     taskPounceObj.collisionResetToRealign();
 
     int16_t angCent = taskPounceObj.getAngCentForCollision();
-    if(collisionObj.getEscapeTurn() == MOVE_B_LEFT){
+    if(collisionObj.get_escape_turn() == MOVE_B_LEFT){
       taskPounceObj.setRealignCent(-1*angCent);
     }
     else{
@@ -470,10 +470,10 @@ void detectedCollision(){
   }
 
   // Reset the collision flags
-  collisionObj.resetFlags();
-  collisionObj.incCount();
-  if(collisionObj.getCount() >= taskTantrumObj.getThreshold()){
-    collisionObj.resetCount();
+  collisionObj.reset_flags();
+  collisionObj.inc_count();
+  if(collisionObj.get_count() >= taskTantrumObj.getThreshold()){
+    collisionObj.reset_Count();
     taskTantrumObj.setStartTantrumFlag();
     taskObj.setTask(TASK_TANTRUM);
   }
@@ -569,9 +569,9 @@ void DEBUG_SpeedTest(float inSpeed, uint8_t moveCode){
 void DEBUG_PrintSpeedMMPS(){
   Serial.println();
   Serial.print(F("ENCODER SPEED, L="));
-  Serial.print(encoderL.getSmoothSpeedMMPS());
+  Serial.print(encoderL.get_smooth_speed_mmps());
   Serial.print(F(" mm/s, R = "));
-  Serial.print(encoderR.getSmoothSpeedMMPS());
+  Serial.print(encoderR.get_smooth_speed_mmps());
   Serial.print(F(" mm/s"));
   Serial.println();
 }
@@ -579,21 +579,21 @@ void DEBUG_PrintSpeedMMPS(){
 void DEBUG_PrintSpeedCPS(){
   Serial.println();
   Serial.print(F("ENCODER SPEED, L="));
-  Serial.print(encoderL.getSmoothSpeedMMPS());
+  Serial.print(encoderL.get_smooth_speed_mmps());
   Serial.print(F(" mm/s, R = "));
-  Serial.print(encoderR.getSmoothSpeedMMPS());
+  Serial.print(encoderR.get_smooth_speed_mmps());
   Serial.print(F(" mm/s"));
   Serial.println();
 }
 
 void DEBUG_PlotSpeedBoth(){
-  Serial.print(encoderL.getSmoothSpeedCPS());
+  Serial.print(encoderL.get_smooth_speed_cps());
   Serial.print(",");
-  Serial.print(encoderL.getSmoothSpeedMMPS());
+  Serial.print(encoderL.get_smooth_speed_mmps());
   Serial.print(",");
-  Serial.print(encoderR.getSmoothSpeedCPS());
+  Serial.print(encoderR.get_smooth_speed_cps());
   Serial.print(",");
-  Serial.print(encoderR.getSmoothSpeedMMPS());
+  Serial.print(encoderR.get_smooth_speed_mmps());
   Serial.print(",");
   Serial.println();
 }
@@ -609,7 +609,7 @@ void DEBUG_PlotSpeedPID_L(){
   Serial.print(",");
   Serial.print(moveObj.getSpeedPIDD_L());
   Serial.print(",");
-  Serial.print(encoderL.getSmoothSpeedMMPS());
+  Serial.print(encoderL.get_smooth_speed_mmps());
   Serial.print(",");
   Serial.println();
 }
@@ -625,7 +625,7 @@ void DEBUG_PlotSpeedPID_R(){
   Serial.print(",");
   Serial.print(moveObj.getSpeedPIDD_R());
   Serial.print(",");
-  Serial.print(encoderR.getSmoothSpeedMMPS());
+  Serial.print(encoderR.get_smooth_speed_mmps());
   Serial.print(",");
   Serial.println();
 }
@@ -635,9 +635,9 @@ void DEBUG_PlotSpeedMMPS(){
   Serial.print(thisTime-_test_timeStamp);
   _test_timeStamp = thisTime;
   Serial.print(",");
-  Serial.print(encoderL.getSmoothSpeedMMPS());
+  Serial.print(encoderL.get_smooth_speed_mmps());
   Serial.print(",");
-  Serial.print(encoderR.getSmoothSpeedMMPS());
+  Serial.print(encoderR.get_smooth_speed_mmps());
   Serial.print(",");
   Serial.println();
 }
@@ -648,14 +648,14 @@ void DEBUG_PrintColCheck(){
   Serial.println("CheckVec=[BL,BR,US,LL,LR,LU,LD,]");
   Serial.print("CheckVec=[");
   for(uint8_t ii=0;ii<7;ii++){
-      Serial.print(" ");Serial.print(collisionObj.getColCheck(ii));Serial.print(",");
+      Serial.print(" ");Serial.print(collisionObj.get_col_check(ii));Serial.print(",");
   }
   Serial.println("]");
 
   Serial.print(F("US: "));
   //Serial.print(collisionObj.getColUSFlag());
   Serial.print(F(" , "));
-  Serial.print(collisionObj.getUSRangeMM());
+  Serial.print(collisionObj.get_ultrasonic_range_mm());
   Serial.println(F(" mm"));
 
   Serial.print(F("LSR,L: "));
@@ -696,7 +696,7 @@ void DEBUG_PrintAllRanges(){
   Serial.println();
   Serial.println(F("------------------------------"));
   Serial.print(F("US: "));
-  Serial.print(collisionObj.getUSRangeMM());
+  Serial.print(collisionObj.get_ultrasonic_range_mm());
   Serial.println(F(" mm"));
 
   Serial.print(F("LSR,L: "));

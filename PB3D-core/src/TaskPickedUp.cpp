@@ -14,9 +14,9 @@
 TaskPickedUp::TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker, PatSensor* inPatSens){
     _collisionObj = inCollision;
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
+    _mood_manager = inMood;
+    _task_manager = inTask;
+    _move_manager = inMove;
     _speakerObj = inSpeaker;
     _patSensObj = inPatSens;
 }
@@ -51,7 +51,7 @@ void TaskPickedUp::update(){
     if(!_is_enabled){return;}
 
     // Check the altirude to see if PB has been picked up
-    if(_collisionObj->getAltFlag() && !_isPickedUp){
+    if(_collisionObj->get_altitude_flag() && !_isPickedUp){
         _isPickedUp = true;
         _startPickedUpFlag = true;
 
@@ -59,7 +59,7 @@ void TaskPickedUp::update(){
         _collisionObj->set_enabled_flag(false);
 
         // Based on the current task set the panic flag
-        if((_taskObj->getTask() == TASK_INTERACT)||(_taskObj->getTask() == TASK_DANCE)){
+        if((_task_manager->getTask() == TASK_INTERACT)||(_task_manager->getTask() == TASK_DANCE)){
         _panicFlag = false;
         }
         else{
@@ -67,7 +67,7 @@ void TaskPickedUp::update(){
         }
 
         // Set the task to "picked up"
-        _taskObj->setTask(TASK_PICKEDUP);
+        _task_manager->setTask(TASK_PICKEDUP);
     }
 }
 
@@ -88,7 +88,7 @@ void TaskPickedUp::pickedUp(){
         _patSensObj->setButtonsEnabled(false);
 
         if(_panicFlag){
-        _moodObj->decMoodScore();
+        _mood_manager->decMoodScore();
         }
     }
 
@@ -97,14 +97,14 @@ void TaskPickedUp::pickedUp(){
     if(_panicFlag){
         // MOOD UPDATE (PANIC): 50/50 angry or scared
         int8_t prob = random(0,100);
-        if(prob <= 50){_moodObj->setMood(MOOD_SCARED);}
-        else{_moodObj->setMood(MOOD_ANGRY);}
+        if(prob <= 50){_mood_manager->setMood(MOOD_SCARED);}
+        else{_mood_manager->setMood(MOOD_ANGRY);}
 
         // TaskManager LEDS - Panic
-        _taskObj->taskLEDPickedUpPanic();
+        _task_manager->taskLEDPickedUpPanic();
 
         // Wiggle to get free
-        _moveObj->wiggle(_panicWiggleLeftDur,_panicWiggleRightDur);
+        _move_manager->wiggle(_panicWiggleLeftDur,_panicWiggleRightDur);
 
         // Speaker updates
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_BEEP,SPEAKER_SLIDE,SPEAKER_BEEP};
@@ -117,12 +117,12 @@ void TaskPickedUp::pickedUp(){
     }
     else{
         // MoodManager - Neutral
-        _moodObj->setMood(MOOD_NEUTRAL);
+        _mood_manager->setMood(MOOD_NEUTRAL);
         // TaskManager LEDS - Ok
-        _taskObj->taskLEDPickedUpOk();
+        _task_manager->taskLEDPickedUpOk();
 
         // Stop motor
-        _moveObj->stop();
+        _move_manager->stop();
 
         // Speaker updates
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_SLIDE};
@@ -152,8 +152,8 @@ void TaskPickedUp::pickedUp(){
 
         // MOOD UPDATE: 75% chance go to happy
         int8_t prob = random(0,100);
-        if(prob<75){_moodObj->setMood(MOOD_HAPPY);}
-        _moodObj->incMoodScore();
+        if(prob<75){_mood_manager->setMood(MOOD_HAPPY);}
+        _mood_manager->incMoodScore();
     }
 
     // If picked up turn off collision detection
@@ -215,7 +215,7 @@ void TaskPickedUp::pickedUp(){
 
     //--------------------------------------------
     // EXIT TIMER
-    if(!_collisionObj->getAltFlag()){
+    if(!_collisionObj->get_altitude_flag()){
         if(!_exitTimerOn){
         _exitTimerOn = true;
         _exitTimer.start(_exitTime);
@@ -238,20 +238,20 @@ void TaskPickedUp::pickedUp(){
         // Re-enable collision detection
         _collisionObj->set_enabled_flag(true);
         // Set task to pause
-        _taskObj->setTask(TASK_PAUSE);
+        _task_manager->setTask(TASK_PAUSE);
 
         // Based on the state on exit set different conditions
         int8_t prob = random(0,100);
         if(_panicFlag){
-        if(prob<50){_moodObj->setMood(MOOD_SCARED);}
-        else{_moodObj->setMood(MOOD_ANGRY);}
+        if(prob<50){_mood_manager->setMood(MOOD_SCARED);}
+        else{_mood_manager->setMood(MOOD_ANGRY);}
         }
         else if(_patComplete){
-        if(prob<80){_moodObj->setMood(MOOD_HAPPY);}
-        else{_moodObj->setMood(MOOD_NEUTRAL);}
+        if(prob<80){_mood_manager->setMood(MOOD_HAPPY);}
+        else{_mood_manager->setMood(MOOD_NEUTRAL);}
         }
         else{
-        _moodObj->setMood(MOOD_NEUTRAL);
+        _mood_manager->setMood(MOOD_NEUTRAL);
         }
     }
 }

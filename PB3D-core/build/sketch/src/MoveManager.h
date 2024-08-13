@@ -108,11 +108,11 @@ public:
   void setTurnSpeed(float inSpeed){_curTurnSpeed = fabs(inSpeed);}
 
   // ENCODERS - Get/Set
-  int32_t getEncCountL(){return _encoder_L->getCount();}
-  int32_t getEncCountR(){return _encoder_R->getCount();}
-  float getEncSpeedL(){return _encoder_L->getSmoothSpeedMMPS();}
-  float getEncSpeedR(){return _encoder_R->getSmoothSpeedMMPS();}
-  float getEncMMPerCount(){return _encoder_L->getMMPerCount();}
+  int32_t getEncCountL(){return _encoder_L->get_count();}
+  int32_t getEncCountR(){return _encoder_R->get_count();}
+  float getEncSpeedL(){return _encoder_L->get_smooth_speed_mmps();}
+  float getEncSpeedR(){return _encoder_R->get_smooth_speed_mmps();}
+  float getEncMMPerCount(){return _encoder_L->get_mm_per_count();}
 
   // MOVE TIMERS - Reset
   void resetMoveTimer(){_moveTimer.start(0);}
@@ -399,7 +399,7 @@ private:
   int32_t _startEncCount_R = 0, _setPointRelCounts_R = 0, _currRelCount_R = 0;
 
   float _wheelBase = 172.0; // UPDATED: 1st Jan 2023 - new stable geom chassis with large wheels
-  float _wheelCirc = _wheelBase*PI, _wheelCircAng = (_wheelBase*PI)/(360.0); // FIXED factor of 2 by adding encode interrupt
+  float _wheel_circ = _wheelBase*PI, _wheelCircAng = (_wheelBase*PI)/(360.0); // FIXED factor of 2 by adding encode interrupt
   bool _posAtL = false, _posAtR = false, _posAtBoth = false;
   // NOTE: D(inner) = 122mm, D(outer) = 160mm, D(avg) = 141mm
 

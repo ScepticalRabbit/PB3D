@@ -13,10 +13,10 @@
 //---------------------------------------------------------------------------
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
 TaskTantrum::TaskTantrum(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker){
-    _moodObj = inMood;
-    _moveObj = inMove;
-    _taskObj = inTask;
-    _moveObj = inMove;
+    _mood_manager = inMood;
+    _move_manager = inMove;
+    _task_manager = inTask;
+    _move_manager = inMove;
     _speakerObj = inSpeaker;
 }
 
@@ -41,8 +41,8 @@ if(_startTantrumFlag){
 
     // MOOD UPDATE: 30% chance of angry
     int8_t prob = random(0,100);
-    if(prob<30){_moodObj->setMood(MOOD_ANGRY);}
-    _moodObj->decMoodScore();
+    if(prob<30){_mood_manager->setMood(MOOD_ANGRY);}
+    _mood_manager->decMoodScore();
 
     _speakerObj->reset();
     uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
@@ -56,7 +56,7 @@ uint8_t inCodes[]   = {SPEAKER_GROWL,SPEAKER_GROWL,SPEAKER_OFF,SPEAKER_OFF};
 _speakerObj->setSoundCodes(inCodes,4);
 
 // Set the task LEDs on every loop regardless
-_taskObj->taskLEDTantrum();
+_task_manager->taskLEDTantrum();
 
 if(_timerObj2.finished()){
     _growlFlag = !_growlFlag;
@@ -72,7 +72,7 @@ if(_timerObj1.finished()){
     _tantrumComplete = true;
 }
 else{
-    _moveObj->forwardBack(_tantrumFBDuration,_tantrumFBDuration);
+    _move_manager->forwardBack(_tantrumFBDuration,_tantrumFBDuration);
 }
 }
 

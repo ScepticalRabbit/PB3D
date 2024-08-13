@@ -28,34 +28,36 @@ void BumperSensor::update(){
     while(Wire.available()){
         bumperByte  = Wire.read();
     }
-    _bumperReadByte = bumperByte;
+    _bumper_read_byte = bumperByte;
 
-    if((_bumperReadByte & _bumperBytes[_bumpLeft]) == _bumperBytes[_bumpLeft]){
-        _bumperFlags[_bumpLeft] = true;
+    if((_bumper_read_byte & _bumper_bytes[_bump_left])
+        == _bumper_bytes[_bump_left]) {
+        _bumper_flags[_bump_left] = true;
     }
-    if ((_bumperReadByte & _bumperBytes[_bumpRight]) == _bumperBytes[_bumpRight]){
-        _bumperFlags[_bumpRight] = true;
+    if ((_bumper_read_byte & _bumper_bytes[_bump_right])
+        == _bumper_bytes[_bump_right]){
+        _bumper_flags[_bump_right] = true;
     }
 
     // Loop over bumper flags to see if any are tripped
-    for(uint8_t ii=0; ii<_numBumpers; ii++){
-        if(_bumperFlags[ii]){
-            _bumperAnyFlag = true;
+    for(uint8_t ii=0; ii<_num_bumpers; ii++){
+        if(_bumper_flags[ii]){
+            _bumper_any_flag = true;
         }
     }
 
     // If the bumpers are hit too many times decrease mood
-    if(_bumperAnyFlag){
-        _bumpCount++;
+    if(_bumper_any_flag){
+        _bump_count++;
     }
 }
 
-//---------------------------------------------------------------------------
+
 uint8_t BumperSensor::get_collision_code(uint8_t bumpCode){
-    if(bumpCode >= _numBumpers){
+    if(bumpCode >= _num_bumpers){
         return DANGER_NONE;
     }
-    if(_bumperFlags[bumpCode]){
+    if(_bumper_flags[bumpCode]){
         return DANGER_CLOSE;
     }
     else{
@@ -63,10 +65,10 @@ uint8_t BumperSensor::get_collision_code(uint8_t bumpCode){
     }
 }
 
-//---------------------------------------------------------------------------
+
 void BumperSensor::reset(){
-    _bumperAnyFlag = false;
-    for(uint8_t ii=0; ii<_numBumpers; ii++){
-        _bumperFlags[ii] = false;
+    _bumper_any_flag = false;
+    for(uint8_t ii=0; ii<_num_bumpers; ii++){
+        _bumper_flags[ii] = false;
     }
 }

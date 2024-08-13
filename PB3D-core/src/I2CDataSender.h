@@ -17,9 +17,7 @@
 #include "IMUSensor.h"
 #include "Navigation.h"
 #include "StateData.h"
-
-// Address for nervous system peripherial Xiao
-#define NERVSYS_ADDR 9
+#include "I2CAddress.h"
 
 // Debug flags
 //#define I2CDATASENDER_DEBUG_PRINT
@@ -33,9 +31,9 @@ public:
   I2CDataSender(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
               IMUSensor* inIMU, Navigation* inNav){
       _collisionObj = inCollision;
-      _moodObj = inMood;
-      _taskObj = inTask;
-      _moveObj = inMove;
+      _mood_manager = inMood;
+      _task_manager = inTask;
+      _move_manager = inMove;
       _IMUObj = inIMU;
       _navObj = inNav;
   }
@@ -53,7 +51,7 @@ public:
         _printStateData(&_currState);
     #endif
 
-    _lastCol = _collisionObj->getLastCollision();
+    _last_col = _collisionObj->get_last_collision();
   }
 
   //---------------------------------------------------------------------------
@@ -67,7 +65,7 @@ public:
 
         _updateStateData(&_currState);
 
-        Wire.beginTransmission(NERVSYS_ADDR);
+        Wire.beginTransmission(ADDR_FOLLOW_XIAO_1);
         Wire.write(_currState.dataPacket,PACKET_SIZE);
         Wire.endTransmission();
 
@@ -101,22 +99,22 @@ private:
         inState->state.onTime = millis();
         // LAST COLLISION
         for(uint8_t ii=0;ii<7;ii++){
-            inState->state.checkVec[ii] = _lastCol->checkVec[ii];
+            inState->state.checkVec[ii] = _last_col->check_vec[ii];
         }
-        inState->state.USRange = _lastCol->USRange;
-        inState->state.LSRRangeL = _lastCol->LSRRangeL;
-        inState->state.LSRRangeR = _lastCol->LSRRangeR;
-        inState->state.LSRRangeU = _lastCol->LSRRangeU;
-        inState->state.LSRRangeD = _lastCol->LSRRangeD;
-        inState->state.escCount = _lastCol->escCount;
-        inState->state.escDist = _lastCol->escDist;
-        inState->state.escAng = _lastCol->escAng;
+        inState->state.ultrasonic_range = _last_col->ultrasonic_range;
+        inState->state.LSRRangeL = _last_col->LSRRangeL;
+        inState->state.LSRRangeR = _last_col->LSRRangeR;
+        inState->state.LSRRangeU = _last_col->LSRRangeU;
+        inState->state.LSRRangeD = _last_col->LSRRangeD;
+        inState->state.escape_count = _last_col->escape_count;
+        inState->state.escape_dist = _last_col->escape_dist;
+        inState->state.escape_angle = _last_col->escape_angle;
     #elif defined(STATEDATA_NAV)
         // TIME
         inState->state.onTime = millis();
         // MOVE
-        inState->state.wheelSpeedL = _moveObj->getEncSpeedL();
-        inState->state.wheelSpeedR = _moveObj->getEncSpeedR();
+        inState->state.wheelSpeedL = _move_manager->getEncSpeedL();
+        inState->state.wheelSpeedR = _move_manager->getEncSpeedR();
         // IMU
         inState->state.IMUHead = _IMUObj->getHeadAng();
         inState->state.IMUPitch = _IMUObj->getPitchAng();
@@ -132,22 +130,22 @@ private:
         // TIME
         inState->state.onTime = millis();
         // MOOD
-        inState->state.mood = _moodObj->getMood();
-        inState->state.moodScore = _moodObj->getMoodScore();
+        inState->state.mood = _mood_manager->getMood();
+        inState->state.moodScore = _mood_manager->getMoodScore();
         // TASK
-        inState->state.task = _taskObj->getTask();
+        inState->state.task = _task_manager->getTask();
         // MOVE
-        inState->state.moveBasic = _moveObj->getBasicMove();
-        inState->state.moveCompound = _moveObj->getCompoundMove();
-        inState->state.escapeFlag = _moveObj->getEscapeFlag();
-        inState->state.setForwardSpeed = _moveObj->getForwardSpeed();
-        inState->state.wheelSpeedL = _moveObj->getEncSpeedL();
-        inState->state.wheelSpeedR = _moveObj->getEncSpeedL();
-        inState->state.wheelECountL = _moveObj->getEncCountL();
-        inState->state.wheelECountR = _moveObj->getEncCountR();
+        inState->state.moveBasic = _move_manager->getBasicMove();
+        inState->state.moveCompound = _move_manager->getCompoundMove();
+        inState->state.escapeFlag = _move_manager->get_escape_flag();
+        inState->state.setForwardSpeed = _move_manager->getForwardSpeed();
+        inState->state.wheelSpeedL = _move_manager->getEncSpeedL();
+        inState->state.wheelSpeedR = _move_manager->getEncSpeedL();
+        inState->state.wheelECountL = _move_manager->getEncCountL();
+        inState->state.wheelECountR = _move_manager->getEncCountR();
         // COLLISON - Latches
-        inState->state.colFlag = _collisionObj->getDetectFlag();
-        inState->state.colBMPRs = _collisionObj->getBumperFlag();
+        inState->state.colFlag = _collisionObj->get_detected();
+        inState->state.colBMPRs = _collisionObj->get_bumper_flag();
         inState->state.colUSR = _collisionObj->getColUSFlag();
         inState->state.colLSRL = _collisionObj->getColLSRFlagL();
         inState->state.colLSRR = _collisionObj->getColLSRFlagR();
@@ -155,7 +153,7 @@ private:
         inState->state.colLSRU = _collisionObj->getColLSRFlagU();
         inState->state.colLSRD = _collisionObj->getColLSRFlagD();
         // COLLISION - Ranges
-        inState->state.colUSRRng = _collisionObj->getUSRangeMM();
+        inState->state.colUSRRng = _collisionObj->get_ultrasonic_range_mm();
         inState->state.colLSRLRng = _collisionObj->getLSRRangeL();
         inState->state.colLSRRRng = _collisionObj->getLSRRangeR();
         inState->state.colLSRBRng = _collisionObj->getLSRRangeB();
@@ -167,12 +165,12 @@ private:
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
   CollisionManager* _collisionObj = NULL;
-  MoodManager* _moodObj = NULL;
-  TaskManager* _taskObj = NULL;
-  MoveManager* _moveObj = NULL;
+  MoodManager* _mood_manager = NULL;
+  TaskManager* _task_manager = NULL;
+  MoveManager* _move_manager = NULL;
   IMUSensor* _IMUObj = NULL;
   Navigation* _navObj = NULL;
-  lastCollision_t* _lastCol = NULL;
+  SLastCollision* _last_col = NULL;
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
