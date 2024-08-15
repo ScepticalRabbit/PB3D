@@ -153,8 +153,8 @@
             Serial.print(F("Time: ")); Serial.print(inState->state.onTime); Serial.print(F("; "));
             Serial.println();
 
-            Serial.print(F("W_SpdL: ")); Serial.print(inState->state.wheelSpeedL); Serial.print(F("; "));
-            Serial.print(F("W_SpdR: ")); Serial.print(inState->state.wheelSpeedR); Serial.print(F("; "));
+            Serial.print(F("W_SpeedL: ")); Serial.print(inState->state.wheelSpeedL); Serial.print(F("; "));
+            Serial.print(F("W_SpeedR: ")); Serial.print(inState->state.wheelSpeedR); Serial.print(F("; "));
             Serial.println();
 
             Serial.print(F("IMU,H: ")); Serial.print(inState->state.IMUHead); Serial.print(F("; "));
@@ -189,7 +189,7 @@
             int8_t moveBasic;
             int8_t moveCompound;
             bool escapeFlag;
-            float setForwardSpeed;
+            float set_forward_speed;
             float wheelSpeedL;
             float wheelSpeedR;
             int32_t wheelECountL;
@@ -230,7 +230,7 @@
             inState->state.moveBasic = 0;
             inState->state.moveCompound = 0;
             inState->state.escapeFlag = false;
-            inState->state.setForwardSpeed = 0.0;
+            inState->state.set_forward_speed = 0.0;
             inState->state.wheelSpeedL = 0.0;
             inState->state.wheelSpeedR = 0.0;
             inState->state.wheelECountL = 0;
@@ -268,9 +268,9 @@
             Serial.print(F("MoveEsc: ")); Serial.print(inState->state.escapeFlag); Serial.print(F("; "));
             Serial.println();
 
-            Serial.print(F("FwdSpd: ")); Serial.print(inState->state.setForwardSpeed); Serial.print(F("; "));
-            Serial.print(F("W_SpdL: ")); Serial.print(inState->state.wheelSpeedL); Serial.print(F("; "));
-            Serial.print(F("W_SpdR: ")); Serial.print(inState->state.wheelSpeedR); Serial.print(F("; "));
+            Serial.print(F("FwdSpeed: ")); Serial.print(inState->state.set_forward_speed); Serial.print(F("; "));
+            Serial.print(F("W_SpeedL: ")); Serial.print(inState->state.wheelSpeedL); Serial.print(F("; "));
+            Serial.print(F("W_SpeedR: ")); Serial.print(inState->state.wheelSpeedR); Serial.print(F("; "));
             Serial.println();
 
             Serial.print(F("W_EncCL: ")); Serial.print(inState->state.wheelECountL); Serial.print(F("; "));

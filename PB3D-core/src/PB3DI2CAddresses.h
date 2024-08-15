@@ -7,8 +7,8 @@
 // Copyright (C) 2024 ScepticalRabbit
 //------------------------------------------------------------------------------
 
-#ifndef PB3D_I2CADDR_H
-#define PB3D_I2CADDR_H
+#ifndef PB3DI2CADDR_H
+#define PB3DI2CADDR_H
 
 // Bumpers
 #define ADDR_FOLLOW_XIAO_1 0x09

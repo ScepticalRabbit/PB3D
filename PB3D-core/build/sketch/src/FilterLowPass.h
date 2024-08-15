@@ -16,8 +16,6 @@
 
 class FilterLowPass{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTORS
   FilterLowPass();
   FilterLowPass(double inAlpha);
   FilterLowPass(double inAlpha, uint16_t inUpdateTime);
@@ -26,12 +24,8 @@ public:
   // BEGIN: called once during SETUP
   void begin();
 
-  //---------------------------------------------------------------------------
-  // FILTER
   double filter(double inData);
 
-  //---------------------------------------------------------------------------
-  // Get, set and reset
   void set_alpha(double inAlpha){_alpha = inAlpha;}
   double get_alpha(){return _alpha;}
   double get_current_value(){return _curr_filtered;}

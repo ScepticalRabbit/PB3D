@@ -18,9 +18,7 @@
 #include "IMUSensor.h"
 #include "Navigation.h"
 #include "StateData.h"
-
-// Address for nervous system peripherial Xiao
-#define NERVSYS_ADDR 9
+#include "PB3DI2CAddresses.h"
 
 // Debug flags
 //#define I2CDATASENDER_DEBUG_PRINT
@@ -68,7 +66,7 @@ public:
 
         _updateStateData(&_currState);
 
-        Wire.beginTransmission(NERVSYS_ADDR);
+        Wire.beginTransmission(ADDR_FOLLOW_XIAO_1);
         Wire.write(_currState.dataPacket,PACKET_SIZE);
         Wire.endTransmission();
 
@@ -116,8 +114,8 @@ private:
         // TIME
         inState->state.onTime = millis();
         // MOVE
-        inState->state.wheelSpeedL = _move_manager->getEncSpeedL();
-        inState->state.wheelSpeedR = _move_manager->getEncSpeedR();
+        inState->state.wheelSpeedL = _move_manager->get_encoder_speed_left();
+        inState->state.wheelSpeedR = _move_manager->get_encoder_speed_right();
         // IMU
         inState->state.IMUHead = _IMUObj->getHeadAng();
         inState->state.IMUPitch = _IMUObj->getPitchAng();
@@ -133,19 +131,19 @@ private:
         // TIME
         inState->state.onTime = millis();
         // MOOD
-        inState->state.mood = _mood_manager->get_mood();
+        inState->state.mood = _mood_manager->getMood();
         inState->state.moodScore = _mood_manager->getMoodScore();
         // TASK
         inState->state.task = _task_manager->getTask();
         // MOVE
-        inState->state.moveBasic = _move_manager->getBasicMove();
-        inState->state.moveCompound = _move_manager->getCompoundMove();
+        inState->state.moveBasic = _move_manager->get_basic_move();
+        inState->state.moveCompound = _move_manager->get_compound_move();
         inState->state.escapeFlag = _move_manager->get_escape_flag();
-        inState->state.setForwardSpeed = _move_manager->getForwardSpeed();
-        inState->state.wheelSpeedL = _move_manager->getEncSpeedL();
-        inState->state.wheelSpeedR = _move_manager->getEncSpeedL();
-        inState->state.wheelECountL = _move_manager->getEncCountL();
-        inState->state.wheelECountR = _move_manager->getEncCountR();
+        inState->state.set_forward_speed = _move_manager->get_forward_speed();
+        inState->state.wheelSpeedL = _move_manager->get_encoder_speed_left();
+        inState->state.wheelSpeedR = _move_manager->get_encoder_speed_left();
+        inState->state.wheelECountL = _move_manager->get_encoder_count_left();
+        inState->state.wheelECountR = _move_manager->get_encoder_count_right();
         // COLLISON - Latches
         inState->state.colFlag = _collisionObj->get_detected();
         inState->state.colBMPRs = _collisionObj->get_bumper_flag();

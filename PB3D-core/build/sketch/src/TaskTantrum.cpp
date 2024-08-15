@@ -72,7 +72,7 @@ if(_timerObj1.finished()){
     _tantrumComplete = true;
 }
 else{
-    _move_manager->forwardBack(_tantrumFBDuration,_tantrumFBDuration);
+    _move_manager->forward_back(_tantrumFBDuration,_tantrumFBDuration);
 }
 }
 

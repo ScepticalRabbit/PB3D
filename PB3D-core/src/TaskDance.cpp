@@ -71,7 +71,7 @@ void TaskDance::dance(){
     }
     else if(_danceCurrMove == DANCE_FORBACK){
         //Serial.println("DANCE_FORBACK");
-        _move_manager->forwardBack(int(_dance4NoteMs),int(_dance4NoteMs));
+        _move_manager->forward_back(int(_dance4NoteMs),int(_dance4NoteMs));
     }
     else if(_danceCurrMove == DANCE_CIRCLE){
         //Serial.println("DANCE_CIRCLE");
@@ -81,11 +81,11 @@ void TaskDance::dance(){
         //Serial.println("DANCE_TURN");
         if(_danceTurnDir == MOVE_B_RIGHT){
         //Serial.println("DANCE TURN RIGHT.");
-        _move_manager->turnToAngleCtrlSpd(90.0);
+        _move_manager->turn_to_angle_ctrl_speed(90.0);
         }
         else{
         //Serial.println("DANCE TURN LEFT.");
-        _move_manager->turnToAngleCtrlSpd(-90.0);
+        _move_manager->turn_to_angle_ctrl_speed(-90.0);
         }
     }
     else if(_danceCurrMove == DANCE_SPIN){
@@ -112,7 +112,7 @@ void TaskDance::_startDance(){
     _danceCurrBar = 0;
     _danceMoveInd = 0;
     _danceCurrMove = _danceMoveVec[_danceMoveInd];
-    _move_manager->resetSubMoveTimer();
+    _move_manager->reset_submove_timer();
 
     // Increase mood when dance starts
     _mood_manager->incMoodScore();

@@ -14,30 +14,15 @@
 #include <Wire.h>
 #include <Adafruit_PCF8574.h>
 
-#include "I2CAddress.h"
+
+#include "PB3DI2CAddresses.h"
+#include "PB3DConstants.h"
 #include "Timer.h"
 #include "LaserSensor.h"
-#include "LaserIndex.h"
-#include "CollisionDangerCodes.h"
 #include "CollisionStrategy.h"
 
 // DEBUG Flag: used to print debugging info to serial on laser status and range
 // #define DEBUG_LSRMANAGER
-
-enum ELaserIndex{
-    LASER_CENTRE = 0,
-    LASER_UP_CENTRE,
-    LASER_DOWN_LEFT,
-    LASER_DOWN_RIGHT,
-    LASER_HALF_LEFT,
-    LASER_HALF_RIGHT,
-    LASER_LEFT,
-    LASER_RIGHT,
-    LASER_BACK,
-    LASER_ALT,
-    LASER_COUNT
-};
-
 
 class LaserManager{
 public:
@@ -61,7 +46,7 @@ public:
     int8_t get_status(ELaserIndex laser_loc){
         return _laser_ptr_array[laser_loc]->get_range_status();}
 
-    EDangerFlag get_collision_code(ELaserIndex _ind);
+    EDangerCode get_collision_code(ELaserIndex _ind);
 
 private:
     //--------------------------------------------------------------------------

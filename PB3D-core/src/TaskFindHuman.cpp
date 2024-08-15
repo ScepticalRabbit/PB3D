@@ -130,7 +130,7 @@ void TaskFindHuman::findHuman(){
             _move_manager->right();
         }
         else{
-            _move_manager->updateMove();
+            _move_manager->update_move();
             _move_manager->go();
         }
     }

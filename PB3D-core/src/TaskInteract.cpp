@@ -51,7 +51,7 @@ void TaskInteract::interact(){
         _interactStartFlag = false;
 
         _move_manager-> stop();
-        _move_manager->resetSubMoveTimer();
+        _move_manager->reset_submove_timer();
 
         _patSensObj->reset();
         _patSensObj->setButtonsEnabled(false);

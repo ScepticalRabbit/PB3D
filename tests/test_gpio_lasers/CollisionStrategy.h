@@ -16,7 +16,7 @@
 
 class ICollisionStrategy{
     public:
-        virtual EDangerFlag get_collision_code(int16_t range) = 0;
+        virtual EDangerCode get_collision_code(int16_t range) = 0;
 };
 
 
@@ -27,7 +27,7 @@ class CollisionAvoidBasic : public ICollisionStrategy{
             _far = far;
         }
 
-        EDangerFlag get_collision_code(int16_t range);
+        EDangerCode get_collision_code(int16_t range);
 
     private:
         int16_t _close = 0;
@@ -43,7 +43,7 @@ class CollisionAvoidSlow : public ICollisionStrategy{
             _slow = slow;
         }
 
-        EDangerFlag get_collision_code(int16_t range);
+        EDangerCode get_collision_code(int16_t range);
 
     private:
         int16_t _close = 0;
@@ -59,7 +59,7 @@ class CliffAvoid : public ICollisionStrategy{
             _far = far;
         }
 
-        EDangerFlag get_collision_code(int16_t range);
+        EDangerCode get_collision_code(int16_t range);
 
     private:
         int16_t _close = 0;
@@ -78,7 +78,7 @@ class CollisionCliffAvoid : public ICollisionStrategy{
             _cliff_far = cliff_far;
         }
 
-        EDangerFlag get_collision_code(int16_t range);
+        EDangerCode get_collision_code(int16_t range);
 
     private:
         int16_t _col_close = 0;

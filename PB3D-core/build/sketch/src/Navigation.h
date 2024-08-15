@@ -25,8 +25,8 @@ public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
   Navigation(Encoder* encL, Encoder* encR, IMUSensor* inIMU){
-    _encoder_L = encL;
-    _encoder_R = encR;
+    _encoder_left = encL;
+    _encoder_right = encR;
     _IMUObj = inIMU;
   }
 
@@ -56,8 +56,8 @@ public:
       _posYPrev = _posYNext;
 
       // Get the speed of the robots centroid and current heading
-      _velC = (_encoder_L->get_smooth_speed_mmps()+
-                    _encoder_R->get_smooth_speed_mmps()) / 2.0;
+      _velC = (_encoder_left->get_smooth_speed_mmps()+
+                    _encoder_right->get_smooth_speed_mmps()) / 2.0;
       _heading = _IMUObj->getHeadAng();
 
       // Calculate the velocity components (X points to front face of robot)
@@ -114,8 +114,8 @@ private:
   uint8_t _debugFreq = 10;
 
   // Navigation Objects - Encoders and IMU
-  Encoder* _encoder_L;
-  Encoder* _encoder_R;
+  Encoder* _encoder_left;
+  Encoder* _encoder_right;
   IMUSensor* _IMUObj;
 
   // Navigation Variables

@@ -139,13 +139,13 @@ void TaskFindSound::findSound(){
     // EAR STATE = 0: uncertain, 1: forward, 2: left, 3: right
     if(_earState == EAR_COM_LEFT){
         //_move_manager->left();
-        //_move_manager->forwardLeft(_speedDiffLR);
-        _move_manager->forwardLeftDiffFrac(_speedDiffFracLR);
+        //_move_manager->forward_left(_speedDiffLR);
+        _move_manager->forward_left_diff_frac(_speedDiffFracLR);
     }
     else if(_earState == EAR_COM_RIGHT){
         //_move_manager->right();
-        //_move_manager->forwardRight(_speedDiffLR);
-        _move_manager->forwardRightDiffFrac(_speedDiffFracLR);
+        //_move_manager->forward_right(_speedDiffLR);
+        _move_manager->forward_right_diff_frac(_speedDiffFracLR);
     }
     else if(_earState == EAR_COM_FORWARD){
         _move_manager->forward();
@@ -154,7 +154,7 @@ void TaskFindSound::findSound(){
         _move_manager->forward();
     }
     else{
-        //_move_manager->updateMove();
+        //_move_manager->update_move();
         //_move_manager->go();
         _move_manager->forward();
     }

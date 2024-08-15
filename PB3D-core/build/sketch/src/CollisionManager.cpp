@@ -75,14 +75,14 @@ void CollisionManager::update(){
 
         if(_collisionSlowDown && _slowDownTimer.finished()){
             _slowDownTimer.start(_slowDownInt);
-            _move_manager->setSpeedByColFlag(true);
+            _move_manager->set_speed_by_col_code(true);
         }
         else if(!_collisionSlowDown && _slowDownTimer.finished()){
-            _move_manager->setSpeedByColFlag(false);
+            _move_manager->set_speed_by_col_code(false);
         }
     }
     if(!_slowDownTimer.finished()){
-        _move_manager->setSpeedByColFlag(true);
+        _move_manager->set_speed_by_col_code(true);
     }
 
     // DISABLED: If collision detection is turned off set flags to false and return
@@ -159,7 +159,7 @@ void CollisionManager::_update_check_vec(){
     _collision_detected = false;
     _collisionSlowDown = false;
     for(uint8_t ii=0;ii<_checkNum;ii++){
-        if(_checkVec[ii] >= DANGER_SLOWD){
+        if(_checkVec[ii] >= DANGER_SLOW){
             _collisionSlowDown = true;
         }
         if(_checkVec[ii] >= DANGER_FAR){

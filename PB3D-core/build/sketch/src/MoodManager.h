@@ -19,24 +19,26 @@
 #define MOOD_PIN 6
 #define MOOD_NUMPIX 4
 
-// MOOD Codes - Save some memory
-#define MOOD_TEST -1
-#define MOOD_NEUTRAL 0
-#define MOOD_HAPPY 1
-#define MOOD_SAD 2
-#define MOOD_ANGRY 3
-#define MOOD_SCARED 4
+
+enum EMood{
+    MOOD_TEST = 0,
+    MOOD_NEUTRAL,
+    MOOD_HAPPY,
+    MOOD_SAD,
+    MOOD_ANGRY,
+    MOOD_SCARED,
+    MOOD_COUNT
+};
+
 
 class MoodManager{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  //---------------------------------------------------------------------------
   MoodManager(Adafruit_NeoPixel_ZeroDMA* RGBLEDs){_moodLEDs = RGBLEDs;}
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
-  //---------------------------------------------------------------------------
   void begin();
 
   //---------------------------------------------------------------------------

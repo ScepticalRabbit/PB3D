@@ -207,7 +207,7 @@ void setup() {
     taskObj.setTask(_debug_taskCode);
   }
   if(_debug_forceMove){
-    moveObj.updateMove(_debug_moveType);
+    moveObj.update_move(_debug_moveType);
   }
   taskObj.assignProb(moodObj.get_mood());
 
@@ -235,8 +235,8 @@ void loop(){
   if(moodObj.getNewMoodFlag()){
     moodObj.setNewMoodFlag(false); // Reset the flag
     taskObj.assignProb(moodObj.get_mood());
-    moveObj.setPWRByDiff(moodObj.getPowerDiff());
-    moveObj.setSpeedByMoodFact(moodObj.getSpeedFact());
+    moveObj.set_power_by_diff(moodObj.getPowerDiff());
+    moveObj.set_speed_by_mood_fact(moodObj.getSpeedFact());
   }
   if(_debug_forceMood){moodObj.setMood(_debug_moodCode);}
 
@@ -364,10 +364,10 @@ void loop(){
 
     // MOVEMENT: Type Update
     if(_debug_forceMove){
-      moveObj.updateMove(_debug_moveType);
+      moveObj.update_move(_debug_moveType);
     }
     else{
-      moveObj.updateMove();
+      moveObj.update_move();
     }
     // MOVEMENT: Call current movement function
     moveObj.go();
@@ -434,7 +434,7 @@ void detectedCollision(){
   collisionObj.set_escape_start();
 
   // If we are moving in a circle or a spiral then switch direction
-  moveObj.changeCircDir();
+  moveObj.change_circ_dir();
 
   // Reset the PIDs and stop the motors
   moveObj.stop();
@@ -482,7 +482,7 @@ void detectedCollision(){
 //------------------------------------------------------------------------------
 // DEBUG FUNCTIONS
 /*
-void DEBUG_SpeedTest(uint8_t inPWR, uint8_t moveCode){
+void DEBUG_SpeedTest(uint8_t inPower, uint8_t moveCode){
   if(_test_pauseTimer.finished()){
     if(_test_pauseSwitch){
       _test_pauseSwitch = false;
@@ -503,16 +503,16 @@ void DEBUG_SpeedTest(uint8_t inPWR, uint8_t moveCode){
 
     if(_test_switch){
       if(moveCode == MOVE_B_BACK){
-        moveObj.backPWR(inPWR);
+        moveObj.back_power(inPower);
       }
       else if(moveCode == MOVE_B_LEFT){
-        moveObj.leftPWR(inPWR);
+        moveObj.left_power(inPower);
       }
       else if(moveCode == MOVE_B_RIGHT){
-        moveObj.rightPWR(inPWR);
+        moveObj.right_power(inPower);
       }
       else{
-        moveObj.forwardPWR(inPWR);
+        moveObj.forward_power(inPower);
       }
     }
     else{

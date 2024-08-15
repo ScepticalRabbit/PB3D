@@ -122,13 +122,13 @@ void CollisionEscaper::set_escape_start(uint8_t check_vec[]){
 
 void CollisionEscaper::escape(){
     if(_escape_count == 0){ // Use the first escape count to reverse by a set distance
-        int8_t isComplete = _move_manager->toDistCtrlSpd(_escape_dist);
+        int8_t isComplete = _move_manager->to_dist_ctrl_speed(_escape_dist);
         if(isComplete > 0){ // this portion of the escape is complete
             _escape_count = 1;
         }
     }
     else if(_escape_count == 1){
-        int8_t isComplete = _move_manager->turnToAngleCtrlSpd(_escape_angle);
+        int8_t isComplete = _move_manager->turn_to_angle_ctrl_speed(_escape_angle);
         if(isComplete > 0){ // this portion of the escape is complete
             _escape_count = 2;
         }

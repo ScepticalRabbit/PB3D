@@ -147,27 +147,27 @@ void TaskFindLight::_findLux(bool seekLightFlag){
 
     // If either threshold was tripped then turn
     if(_gradMoveFlag){
-        _move_manager->turnToAngleCtrlPos(180.0);
+        _move_manager->turn_to_angle_ctrl_pos(180.0);
 
-        if(_move_manager->getPosPIDAttainSP_Both() || _gradMoveTimeout.finished()){
+        if(_move_manager->get_pos_PID_attained_set_point() || _gradMoveTimeout.finished()){
             _gradMoveFlag = false;
         }
     }
     else if(thresTrip){
         if(_luxDiff > 0){
             if(seekLightFlag){ // Turn towards light
-                _move_manager->forwardLeftDiffFrac(speedDiffFrac);
+                _move_manager->forward_left_diff_frac(speedDiffFrac);
             }
             else{ // Turn away from light
-                _move_manager->forwardRightDiffFrac(speedDiffFrac);
+                _move_manager->forward_right_diff_frac(speedDiffFrac);
             }
         }
         else{
             if(seekLightFlag){ // Turn towards light
-                _move_manager->forwardRightDiffFrac(speedDiffFrac);
+                _move_manager->forward_right_diff_frac(speedDiffFrac);
             }
             else{ // Turn away from light
-                _move_manager->forwardLeftDiffFrac(speedDiffFrac);
+                _move_manager->forward_left_diff_frac(speedDiffFrac);
             }
         }
     }

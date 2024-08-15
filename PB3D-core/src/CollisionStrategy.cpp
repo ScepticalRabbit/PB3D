@@ -9,7 +9,7 @@
 
 #include "CollisionStrategy.h"
 
-EDangerFlag CollisionAvoidBasic::get_collision_code(int16_t range){
+EDangerCode CollisionAvoidBasic::get_collision_code(int16_t range){
 
     if(range < 0 ){return DANGER_NONE;}
 
@@ -18,7 +18,7 @@ EDangerFlag CollisionAvoidBasic::get_collision_code(int16_t range){
     else{return DANGER_NONE;}
 }
 
-EDangerFlag CollisionAvoidSlow::get_collision_code(int16_t range){
+EDangerCode CollisionAvoidSlow::get_collision_code(int16_t range){
 
     if(range < 0 ){return DANGER_NONE;}
 
@@ -28,7 +28,7 @@ EDangerFlag CollisionAvoidSlow::get_collision_code(int16_t range){
     else{return DANGER_NONE;}
 }
 
-EDangerFlag CliffAvoid::get_collision_code(int16_t range){
+EDangerCode CliffAvoid::get_collision_code(int16_t range){
 
     if(range < 0 ){return DANGER_NONE;}
 
@@ -37,7 +37,7 @@ EDangerFlag CliffAvoid::get_collision_code(int16_t range){
     else{return DANGER_NONE;}
 }
 
-EDangerFlag CollisionCliffAvoid::get_collision_code(int16_t range){
+EDangerCode CollisionCliffAvoid::get_collision_code(int16_t range){
     if(range < 0 ){return DANGER_NONE;}
 
     if(range >= _cliff_close){return DANGER_FAR;}

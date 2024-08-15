@@ -87,7 +87,7 @@ void LaserManager::update(){
 
 //---------------------------------------------------------------------------
 // Get, set and reset
-EDangerFlag LaserManager::get_collision_code(ELaserIndex _ind){
+EDangerCode LaserManager::get_collision_code(ELaserIndex _ind){
     return _laser_strategy_array[_ind]->get_collision_code(
         _laser_ptr_array[_ind]->get_range());
 }

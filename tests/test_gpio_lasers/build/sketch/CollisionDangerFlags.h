@@ -11,7 +11,7 @@
 #ifndef DANGER_FLAGS
 #define DANGER_FLAGS
 
-enum EDangerFlag{
+enum EDangerCode{
     DANGER_NONE = 0,
     DANGER_SLOW,
     DANGER_FAR,

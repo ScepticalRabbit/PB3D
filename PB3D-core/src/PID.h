@@ -50,10 +50,10 @@ public:
   void setControllerOn(uint8_t inFlag);
   void setControllerDir(uint8_t inDir);
 
-  double getOutput(){return _output;}
+  double get_output(){return _output;}
   double getError(){return _error;}
   void setSetPoint(double setPoint){_setPoint = setPoint;}
-  double getSetPoint(){return _setPoint;}
+  double get_set_point(){return _setPoint;}
   bool getControllerOn(){return _autoOn;}
   double getPropTerm(){return _propTerm;}
   double getIntTerm(){return _intTerm;}

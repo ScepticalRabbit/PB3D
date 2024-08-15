@@ -16,10 +16,15 @@
 #include "FilterMovAvg.h"
 #include "FilterLowPass.h"
 
+
+enum EEncoderDirection{
+    ENCODER_FORWARD = 0,
+    ENCODER_BACK
+};
+
+
 class Encoder{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR
   Encoder(int8_t pinA, int8_t pinB);
 
   //---------------------------------------------------------------------------
@@ -56,7 +61,7 @@ public:
 private:
   // CORE VARIABLES - Used by all types of encoder
   volatile int32_t _current_count;
-  char _direction = 'F';
+  EEncoderDirection _direction = ENCODER_FORWARD;
   int8_t _pin_a = -1;
   int8_t _pin_b = -1;
 
@@ -66,7 +71,8 @@ private:
   // Characteristics of the motor/gears/wheel/encoder
   double _wheel_diam = 60.0;
   double _wheel_circ = _wheel_diam*PI;
-  double _gear_ratio = 50.0, _counts_per_rev = 12.0;
+  double _gear_ratio = 50.0;
+  double _counts_per_rev = 12.0;
   double _counts_per_rev = _gear_ratio*_counts_per_rev;
   double _mm_per_count = _wheel_circ/_counts_per_rev;
 
@@ -80,9 +86,14 @@ private:
   // be less than the speed one so we update the filter at the same rate
   // as the speed
   //FilterMovAvg _speedFilt = FilterMovAvg(_speed_filt_win,_speed_update_time/2);
-  FilterLowPass _speed_filt_mmps = FilterLowPass(_speed_filt_alpha,_speed_filt_update_time);
-  double _raw_speed_mmps = 0.0, _smooth_speed_mmps = 0.0;
-  FilterLowPass _speed_filt_cps = FilterLowPass(_speed_filt_alpha,_speed_filt_update_time);
-  double _raw_speed_cps = 0.0, _smooth_speed_cps = 0.0;
+  FilterLowPass _speed_filt_mmps =
+        FilterLowPass(_speed_filt_alpha,_speed_filt_update_time);
+  double _raw_speed_mmps = 0.0;
+  double _smooth_speed_mmps = 0.0;
+
+  FilterLowPass _speed_filt_cps =
+        FilterLowPass(_speed_filt_alpha,_speed_filt_update_time);
+  double _raw_speed_cps = 0.0;
+  double _smooth_speed_cps = 0.0;
 };
 #endif // ENCODER_H
