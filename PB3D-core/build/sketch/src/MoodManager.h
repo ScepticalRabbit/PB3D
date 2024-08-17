@@ -13,23 +13,13 @@
 
 #include <Arduino.h>
 #include <Adafruit_NeoPixel_ZeroDMA.h>
+
+#include "PB3DConstants.h"
 #include "Timer.h"
 
 // Mood LEDs
 #define MOOD_PIN 6
 #define MOOD_NUMPIX 4
-
-
-enum EMood{
-    MOOD_TEST = 0,
-    MOOD_NEUTRAL,
-    MOOD_HAPPY,
-    MOOD_SAD,
-    MOOD_ANGRY,
-    MOOD_SCARED,
-    MOOD_COUNT
-};
-
 
 class MoodManager{
 public:
@@ -96,7 +86,7 @@ private:
   // Moods: [neutral,happy,sad,angry,scared]
   // Mood changes task probabilities
   bool _is_enabled = true;
-  int8_t _moodCode = MOOD_NEUTRAL;
+  EMoodCode _moodCode = MOOD_NEUTRAL;
   int16_t _moodPc = 0, _moodNegPc = 0;
   uint8_t _moodCount = 5;
   bool  _moodNewFlag = true;

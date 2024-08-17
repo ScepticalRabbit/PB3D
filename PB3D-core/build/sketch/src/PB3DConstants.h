@@ -1,3 +1,4 @@
+#line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/src/PB3DConstants.h"
 //==============================================================================
 // PB3D: A pet robot that is 3D printed
 //==============================================================================
@@ -81,19 +82,6 @@ enum EMoveCompound{
     MOVE_C_SPIRAL = 3,
     MOVE_C_LOOK = 4,
     MOVE_C_COUNT = 5,
-};
-
-
-//------------------------------------------------------------------------------
-// PIDs
-enum EPIDCode{
-    PID_OFF = 0,
-    PID_ON,
-};
-
-enum EPIDCommand{
-    PID_DIRECT = 0,
-    PID_REVERSE,
 };
 
 //------------------------------------------------------------------------------

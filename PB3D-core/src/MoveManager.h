@@ -94,7 +94,7 @@ public:
   uint16_t calc_timeout(float speed, float dist);
 
   //---------------------------------------------------------------------------
-  // BASIC MOVEMENT FUNCTIONS - GENERIC (switched by _moveControl var)
+  // BASIC MOVEMENT FUNCTIONS - GENERIC (switched by _move_control var)
   //---------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -250,34 +250,34 @@ public:
   // Speed PID get functions - left/right motors
     // REFACTOR START
 
-  float getSpeedPIDSetPoint_L(){return _speedPID_L.get_set_point();}
-  float getSpeedPIDOutput_L(){return _speedPID_L.get_output();}
-  float getSpeedPIDP_L(){return _speedPID_L.getPropTerm();}
-  float getSpeedPIDI_L(){return _speedPID_L.getIntTerm();}
-  float getSpeedPIDD_L(){return _speedPID_L.getDerivTerm();}
+  float get_speed_PID_set_point_left(){return _speed_PID_left.get_set_point();}
+  float get_speed_PID_output_left(){return _speed_PID_left.get_output();}
+  float get_speed_PID_Pterm_left(){return _speed_PID_left.get_prop_term();}
+  float get_speed_PID_Iterm_left(){return _speed_PID_left.get_int_term();}
+  float get_speed_PID_Dterm_left(){return _speed_PID_left.get_deriv_term();}
 
-  float getSpeedPIDSetPoint_R(){return _speedPID_R.get_set_point();}
-  float getSpeedPIDOutput_R(){return _speedPID_R.get_output();}
-  float getSpeedPIDP_R(){return _speedPID_R.getPropTerm();}
-  float getSpeedPIDI_R(){return _speedPID_R.getIntTerm();}
-  float getSpeedPIDD_R(){return _speedPID_R.getDerivTerm();}
+  float get_speed_PID_set_point_right(){return _speed_PID_right.get_set_point();}
+  float get_speed_PID_output_right(){return _speed_PID_right.get_output();}
+  float get_speed_PID_Pterm_right(){return _speed_PID_right.get_prop_term();}
+  float get_speed_PID_Iterm_right(){return _speed_PID_right.get_int_term();}
+  float get_speed_PID_Dterm_right(){return _speed_PID_right.get_deriv_term();}
 
 private:
   //----------------------------------------------------------------------------
   // PRIVATE HELPER FUNCTIONS
-  void _updateBasicMove(int8_t inMove);
-  void _updateCompoundMove();
-  void _atSpeed(float inSpeedL,float inSpeedR);
-  void _toPos(float setPosL, float setPosR);
-  void _updateCurrSpeed();
+  void _update_basic_move(EMoveBasic move);
+  void _update_compound_move();
+  void _at_speed(float speed_left,float speed_right);
+  void _to_pos(float set_pos_left, float set_pos_right);
+  void _update_speed();
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Pointers to external objects
 
   // Adafruit Motor Shield Objects
-  Adafruit_MotorShield* _AFMS = NULL;
-  Adafruit_DCMotor* _motorL = NULL;
-  Adafruit_DCMotor* _motorR = NULL;
+  Adafruit_MotorShield* _motor_shield = NULL;
+  Adafruit_DCMotor* _motor_left = NULL;
+  Adafruit_DCMotor* _motor_right = NULL;
 
   // Encoder Objects
   Encoder* _encoder_left = NULL;
@@ -287,22 +287,25 @@ private:
   // MOVE OBJ - Type and General Variables
   bool _is_enabled = true;
 
-  int8_t _moveControl = MOVE_CONTROL_SPEED;
+  int8_t _move_control = MOVE_CONTROL_SPEED;
   int8_t _move_basic = MOVE_B_FORWARD;
   int8_t _move_compound = MOVE_C_STRAIGHT;
-  int8_t _moveCompoundCount = MOVE_C_COUNT;
-  uint32_t _moveUpdateTime = 5000;
-  uint32_t _moveUpdateMinTime = 4000;
-  uint32_t _moveUpdateMaxTime = 12000;
+  int8_t _move_compound_count = MOVE_C_COUNT;
+  uint32_t _move_update_time = 5000;
+  uint32_t _move_update_min_time = 4000;
+  uint32_t _move_update_max_time = 12000;
   Timer _move_timer = Timer();
   Timer _submove_timer = Timer();
-  Timer _timeoutTimer = Timer();
+  Timer _timeout_timer = Timer();
 
   // Encoder counter variables
-  bool _encCountStart = true;
-  int32_t _startEncCountL = 0, _startEncCountR = 0;
-  int32_t _endEncCountL = 0, _endEncCountR = 0;
-  int32_t _encCountDiffL = 0, _encCountDiffR = 0;
+  bool _encoder_count_start = true;
+  int32_t _start_encoder_count_left = 0;
+  int32_t _start_encoder_count_right = 0;
+  int32_t _end_encoder_count_left = 0;
+  int32_t _end_encoder_count_right = 0;
+  int32_t _encoder_count_diff_left = 0;
+  int32_t _enc_count_diff_right = 0;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Motor Power (Speed) Variables
@@ -350,8 +353,8 @@ private:
   //double _speedP = 0.45*2.5, _speedI = 50.0e-3/1.2, _speedD = 0.0; // Ziegler-Nichols tuning [0.45,/1.2,0.0]
   double _speedP = 0.6*0.8, _speedI = 0.5*50.0e-3, _speedD = 50.0e-3/8.0; // Ziegler-Nichols tuning [0.6,0.5,/8]
   double _speedPRev = _speedP*0.9; // NOTE: turned off setting gains! Caused problems
-  PID _speedPID_L = PID(false,_speedP,_speedI,_speedD,10);
-  PID _speedPID_R = PID(false,_speedP,_speedI,_speedD,10);
+  PID _speed_PID_left = PID(false,_speedP,_speedI,_speedD,10);
+  PID _speed_PID_right = PID(false,_speedP,_speedI,_speedD,10);
 
   // Position Control PIDs and Variables
   PID _pos_PID_left = PID(false,0.6,0.0,0.0,20);

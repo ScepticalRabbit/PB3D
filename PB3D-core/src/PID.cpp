@@ -11,22 +11,22 @@
  //---------------------------------------------------------------------------
 // CONSTRUCTORS
 PID::PID(bool inCmdOn){
-    _commandOn = inCmdOn;
+    _command_on = inCmdOn;
 }
 
 PID::PID(bool inCmdOn, double kp, double ki, double kd){
-    _commandOn = inCmdOn;
+    _command_on = inCmdOn;
     _kp = kp;
     _ki = ki;
     _kd = kd;
 }
 
 PID::PID(bool inCmdOn, double kp, double ki, double kd, uint16_t sampTime){
-    _commandOn = inCmdOn;
+    _command_on = inCmdOn;
     _kp = kp;
     _ki = ki;
     _kd = kd;
-    _sampleTimeMilliS = sampTime;
+    _sample_time_ms = sampTime;
 }
 
 //---------------------------------------------------------------------------
@@ -41,124 +41,124 @@ void PID::begin(){
 // This version directly returns the output, useful for position control
 void PID::update(double input){
     // If the PID is turned off do nothing
-    if(!_autoOn){return;}
+    if(!_auto_on){return;}
 
     // Update the PID output on a fixed interval based on our timer
-    if(_pidTimer.finished()){
-        _output = _computePID(input);
+    if(_pid_timer.finished()){
+        _output = _compute_PID(input);
         // Start the timer again
-        _pidTimer.start(_sampleTimeMilliS);
+        _pid_timer.start(_sample_time_ms);
     }
 }
 
 // This version of update adds the PID output to the command value, for velocity control
 void PID::update(double inCommand, double input){
     // If the PID is turned off do nothing
-    if(!_autoOn){return;}
+    if(!_auto_on){return;}
 
     // Update the PID output on a fixed interval based on our timer
-    if(_pidTimer.finished()){
+    if(_pid_timer.finished()){
 
-        double outPID = _computePID(input);
+        double outPID = _compute_PID(input);
         outPID = inCommand + outPID;
-        _output = constrain(outPID,_outMin,_outMax);
+        _output = constrain(outPID,_out_min,_out_max);
 
         // Start the timer again
-        _pidTimer.start(_sampleTimeMilliS);
+        _pid_timer.start(_sample_time_ms);
     }
 }
 
 //---------------------------------------------------------------------------
 // Get, set and reset
-void PID::setOutput(double output){
+void PID::set_output(double output){
     _output = output;
 
     // Reset the current output based on the new limits
-    _output = constrain(_output,_outMin,_outMax);
+    _output = constrain(_output,_out_min,_out_max);
     // Reset the integral term based on the new output limits
-    _intTerm = _constrainByCommandMode(_intTerm);
+    _int_term = _constrain_by_command_mode(_int_term);
 }
 
-void PID::setPIDGains(double kp, double ki, double kd){
+void PID::set_PID_gains(double kp, double ki, double kd){
     if(kp<0 || ki<0 || kd<0){return;}
 
-    double sampleTimeInSec = ((double)_sampleTimeMilliS)/1000;
+    double sampleTimeInSec = ((double)_sample_time_ms)/1000;
     _kp = kp;
     _ki = ki * sampleTimeInSec;
     _kd = kd / sampleTimeInSec;
 
-    if(_controllerDir == PID_REVERSE){
+    if(_controller_dir == PID_REVERSE){
         _kp = (0.0 - _kp);
         _ki = (0.0 - _ki);
         _kd = (0.0 - _kd);
     }
 }
 
-void PID::setPGainOnly(double kp){
+void PID::set_Pgain_only(double kp){
     if(kp<0){return;}
 
     _kp = kp;
 
-    if(_controllerDir == PID_REVERSE){
+    if(_controller_dir == PID_REVERSE){
         _kp = (0.0 - _kp);
     }
 }
 
-void PID::setSampleTime(int newSampleTime){
+void PID::set_sample_time(int newSampleTime){
     if (newSampleTime > 0){
         double ratio  = (double)newSampleTime
-                        / (double)_sampleTimeMilliS;
+                        / (double)_sample_time_ms;
         _ki *= ratio;
         _kd /= ratio;
-        _sampleTimeMilliS = (unsigned long)newSampleTime;
+        _sample_time_ms = (unsigned long)newSampleTime;
     }
 }
 
-void PID::setOutputLimits(double outMin, double outMax){
+void PID::set_output_limits(double outMin, double outMax){
     // Error check that the limits are the correct way round
     if(outMin > outMax){return;}
 
     // Store the new limits
-    _outMin = outMin;
-    _outMax = outMax;
+    _out_min = outMin;
+    _out_max = outMax;
 
     // Reset the current output based on the new limits
-    _output = constrain(_output,_outMin,_outMax);
+    _output = constrain(_output,_out_min,_out_max);
     // Reset the integral term based on the new output limits
-    _intTerm = _constrainByCommandMode(_intTerm);
+    _int_term = _constrain_by_command_mode(_int_term);
 }
 
-void PID::setCommandLimits(double cmdMin, double cmdMax){
+void PID::set_command_limits(double cmdMin, double cmdMax){
     // Error check that the limits are the correct way round
     if(cmdMin > cmdMax){return;}
 
     // Store the new limits
-    _cmdMin = cmdMin;
-    _cmdMax = cmdMax;
+    _cmd_min = cmdMin;
+    _cmd_max = cmdMax;
 
     // Reset the current output based on the new limits
-    _output = constrain(_output,_outMin,_outMax);
+    _output = constrain(_output,_out_min,_out_max);
     // Reset the integral term based on the new output limits
-    _intTerm = _constrainByCommandMode(_intTerm);
+    _int_term = _constrain_by_command_mode(_int_term);
 }
 
-void PID::setControllerOn(uint8_t inFlag){
+void PID::set_controller_on(uint8_t inFlag){
     bool onFlag = (inFlag == PID_ON);
     // If we go from manual to auto then initialise PID
-    if(onFlag && !_autoOn){
+    if(onFlag && !_auto_on){
         _intialise();
     }
-    _autoOn = onFlag;
+    _auto_on = onFlag;
 }
 
-void PID::setControllerDir(uint8_t inDir){
+void PID::set_controller_dir(uint8_t inDir){
     // If we are changing direction flip the sign of the gains
-    if(inDir != _controllerDir){
+    if(inDir != _controller_dir){
         _kp = (0.0 - _kp);
         _ki = (0.0 - _ki);
         _kd = (0.0 - _kd);
     }
-    _controllerDir = inDir;
+    _controller_dir = inDir;
 }
 
 //---------------------------------------------------------------------------
@@ -166,50 +166,50 @@ void PID::setControllerDir(uint8_t inDir){
 
 // Used when turning the PID on
 void PID::_intialise(){
-    _lastInput = _input;
-    _intTerm = _output;
+    _last_input = _input;
+    _int_term = _output;
     // Reset the integral term based on the new output limits
-    _intTerm = _constrainByCommandMode(_intTerm);
-    if (_commandOn){
+    _int_term = _constrain_by_command_mode(_int_term);
+    if (_command_on){
         _input = 0.0;
-        _lastInput = 0.0;
-        _intTerm = 0.0;
+        _last_input = 0.0;
+        _int_term = 0.0;
         _output = 0.0;
     }
     // Reset the integral term based on the new output limits
-    _intTerm = _constrainByCommandMode(_intTerm);
+    _int_term = _constrain_by_command_mode(_int_term);
 }
 
 // main part of the update method used for overloading
-double PID::_computePID(double input){
+double PID::_compute_PID(double input){
     // Compute the error between the input and the set point
-    _error = _setPoint - input;
-    _propTerm = _kp*_error;
+    _error = _set_point - input;
+    _prop_term = _kp*_error;
 
     // Calculate the integral term using the cummulative error
-    _intTerm += (_ki*_error);
+    _int_term += (_ki*_error);
     // Clamp the integral term to avoid windup
-    _intTerm = _constrainByCommandMode(_intTerm);
+    _int_term = _constrain_by_command_mode(_int_term);
 
     // Calculate the difference in input and use this for the derivative term
-    double inputDiff = (input - _lastInput);
-    _derivTerm = _kd*inputDiff;
+    double inputDiff = (input - _last_input);
+    _deriv_term = _kd*inputDiff;
 
     // Compute PID output using the previous error terms
-    double outPID = _propTerm+_intTerm+_derivTerm;
+    double outPID = _prop_term+_int_term+_deriv_term;
     // Clamp the output to avoid unrealistic values
-    outPID = _constrainByCommandMode(outPID);
+    outPID = _constrain_by_command_mode(outPID);
 
     // Save variables for next update and return the command
-    _lastInput = input;
+    _last_input = input;
     return outPID;
 }
 
-double PID::_constrainByCommandMode(double inVal){
-    if (_commandOn){
-        return constrain(inVal,_cmdMin,_cmdMax);
+double PID::_constrain_by_command_mode(double inVal){
+    if (_command_on){
+        return constrain(inVal,_cmd_min,_cmd_max);
     }
     else{
-        return constrain(inVal,_outMin,_outMax);
+        return constrain(inVal,_out_min,_out_max);
     }
 }

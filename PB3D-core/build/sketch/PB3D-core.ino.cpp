@@ -208,7 +208,7 @@ void setup() {
     taskObj.setTask(_debug_taskCode);
   }
   if(_debug_forceMove){
-    moveObj.updateMove(_debug_moveType);
+    moveObj.update_move(_debug_moveType);
   }
   taskObj.assignProb(moodObj.get_mood());
 
@@ -365,10 +365,10 @@ void loop(){
 
     // MOVEMENT: Type Update
     if(_debug_forceMove){
-      moveObj.updateMove(_debug_moveType);
+      moveObj.update_move(_debug_moveType);
     }
     else{
-      moveObj.updateMove();
+      moveObj.update_move();
     }
     // MOVEMENT: Call current movement function
     moveObj.go();
@@ -600,15 +600,15 @@ void DEBUG_PlotSpeedBoth(){
 }
 
 void DEBUG_PlotSpeedPID_L(){
-  Serial.print(moveObj.getSpeedPIDSetPoint_L());
+  Serial.print(moveObj.get_speed_PID_set_point_left());
   Serial.print(",");
-  Serial.print(moveObj.getSpeedPIDOutput_L());
+  Serial.print(moveObj.get_speed_PID_output_left());
   Serial.print(",");
-  Serial.print(moveObj.getSpeedPIDP_L());
+  Serial.print(moveObj.get_speed_PID_Pterm_left());
   Serial.print(",");
-  Serial.print(moveObj.getSpeedPIDI_L());
+  Serial.print(moveObj.get_speed_PID_Iterm_left());
   Serial.print(",");
-  Serial.print(moveObj.getSpeedPIDD_L());
+  Serial.print(moveObj.get_speed_PID_Dterm_left());
   Serial.print(",");
   Serial.print(encoderL.get_smooth_speed_mmps());
   Serial.print(",");
@@ -616,15 +616,15 @@ void DEBUG_PlotSpeedPID_L(){
 }
 
 void DEBUG_PlotSpeedPID_R(){
-  Serial.print(moveObj.getSpeedPIDSetPoint_R());
+  Serial.print(moveObj.get_speed_PID_set_point_right());
   Serial.print(",");
-  Serial.print(moveObj.getSpeedPIDOutput_R());
+  Serial.print(moveObj.get_speed_PID_output_right());
   Serial.print(",");
-  Serial.print(moveObj.getSpeedPIDP_R());
+  Serial.print(moveObj.get_speed_PID_Pterm_right());
   Serial.print(",");
-  Serial.print(moveObj.getSpeedPIDI_R());
+  Serial.print(moveObj.get_speed_PID_Iterm_right());
   Serial.print(",");
-  Serial.print(moveObj.getSpeedPIDD_R());
+  Serial.print(moveObj.get_speed_PID_Dterm_right());
   Serial.print(",");
   Serial.print(encoderR.get_smooth_speed_mmps());
   Serial.print(",");

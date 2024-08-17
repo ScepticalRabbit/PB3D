@@ -10,9 +10,6 @@
 
 #include "MoveBasic.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR: pass in pointers to main objects and other sensors
-//---------------------------------------------------------------------------
 MoveBasic::MoveBasic(){
 
 }

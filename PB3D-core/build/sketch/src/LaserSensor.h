@@ -16,7 +16,7 @@
 
 #include "Adafruit_VL53L0X.h"
 
-#include "LaserIndex.h"
+#include "PB3DConstants.h"
 
 //---------------------------------------------------------------------------
 // LASER RANGER:

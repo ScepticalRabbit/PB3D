@@ -13,74 +13,36 @@
 
 #include <Arduino.h>
 #include <Adafruit_MotorShield.h>
+
+#include "PB3DConstants.h"
 #include "Encoder.h"
 #include "Timer.h"
 #include "PID.h"
 
-// MOVEMENT CONTROL
-#define MOVE_CONTROL_POWER 0
-#define MOVE_CONTROL_SPEED 1
-
-// MOVEMENT escape codes
-#define MOVE_E_RANDDIR -1
-#define MOVE_E_NOREV -2
-
-// BASIC movement codes
-#define MOVE_B_STOP -10
-#define MOVE_B_FORCEUPD -1
-#define MOVE_B_FORWARD 0
-#define MOVE_B_BACK 1
-#define MOVE_B_LEFT 3
-#define MOVE_B_RIGHT 4
-#define MOVE_B_FORLEFT 5
-#define MOVE_B_FORRIGHT 6
-#define MOVE_B_BACKLEFT 7
-#define MOVE_B_BACKRIGHT 8
-#define MOVE_B_TODIST_CPOS 9
-#define MOVE_B_TODIST_CSpeed 10
-#define MOVE_B_TOANG_CPOS 11
-#define MOVE_B_TOANG_CSpeed 12
-
-// COMPOUND movement codes
-#define MOVE_C_ESCAPE -1
-#define MOVE_C_STRAIGHT 0
-#define MOVE_C_ZIGZAG 1
-#define MOVE_C_CIRCLE 2
-#define MOVE_C_SPIRAL 3
-#define MOVE_C_LOOK 4
-// Increment with last code above +1
-#define MOVE_C_COUNT 5
 
 class MoveManager{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  //---------------------------------------------------------------------------
   MoveManager(Adafruit_MotorShield* AFMS, Encoder* encL, Encoder* encR);
 
-  //---------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // BEGIN: called once during SETUP
-  //---------------------------------------------------------------------------
   void begin();
 
-  //---------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // UPDATE: Called during LOOP
-  //---------------------------------------------------------------------------
   void update_move();
-  void update_move(int8_t inMoveType);
+  void update_move(int8_t move_type);
 
-  //---------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // GO: Called during explore or other task to randomise movements
-  //---------------------------------------------------------------------------
-   void go();
+  void go();
 
-  //---------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // GET,SET and RESET functions: Inline
-  //---------------------------------------------------------------------------
   // MOVE TYPE - Get/Set
   int8_t get_basic_move(){return _move_basic;}
   int8_t get_compound_move(){return _move_compound;}
-  void set_compound_move(int8_t inMoveCode){_move_compound = inMoveCode;}
+  void set_compound_move(int8_t move_code){_move_compound = move_code;}
 
 
   // MOTOR POWER CONTROL - Get/Set
@@ -91,9 +53,9 @@ public:
   uint8_t get_back_power(){return _cur_back_power;}
   uint8_t get_turn_power(){return _cur_turn_power;}
 
-  void set_forward_power(uint8_t inPower){_cur_forward_power = inPower;}
-  void set_back_power(uint8_t inPower){_cur_back_power = inPower;}
-  void set_turn_power(uint8_t inPower){_cur_turn_power = inPower;}
+  void set_forward_power(uint8_t power){_cur_forward_power = power;}
+  void set_back_power(uint8_t power){_cur_back_power = power;}
+  void set_turn_power(uint8_t power){_cur_turn_power = power;}
 
   // MOTOR SPEED CONTROL - Get/Set
   float get_min_speed(){return _min_speed;}
@@ -103,15 +65,17 @@ public:
   float get_back_speed(){return _cur_back_speed;}
   float get_turn_speed(){return _cur_turn_speed;}
 
-  void set_forward_speed(float inSpeed){_cur_forward_speed = fabs(inSpeed);}
-  void set_back_speed(float inSpeed){_cur_back_speed = -1.0*fabs(inSpeed);}
-  void set_turn_speed(float inSpeed){_cur_turn_speed = fabs(inSpeed);}
+  void set_forward_speed(float speed){_cur_forward_speed = fabs(speed);}
+  void set_back_speed(float speed){_cur_back_speed = -1.0*fabs(speed);}
+  void set_turn_speed(float speed){_cur_turn_speed = fabs(speed);}
 
   // ENCODERS - Get/Set
   int32_t get_encoder_count_left(){return _encoder_left->get_count();}
   int32_t get_encoder_count_right(){return _encoder_right->get_count();}
-  float get_encoder_speed_left(){return _encoder_left->get_smooth_speed_mmps();}
-  float get_encoder_speed_right(){return _encoder_right->get_smooth_speed_mmps();}
+  float get_encoder_speed_left(){
+    return _encoder_left->get_smooth_speed_mmps();}
+  float get_encoder_speed_right(){
+    return _encoder_right->get_smooth_speed_mmps();}
   float get_encoder_mm_per_count(){return _encoder_left->get_mm_per_count();}
 
   // MOVE TIMERS - Reset
@@ -120,20 +84,18 @@ public:
 
   //---------------------------------------------------------------------------
   // GET,SET and RESET functions: full implementation
-  //---------------------------------------------------------------------------
-  void set_power_by_diff(int8_t inDiff);
-  void set_speed_by_col_code(bool obstacleClose);
-  void set_move_control(int8_t inMoveControl);
+  void set_power_by_diff(int8_t diff);
+  void set_speed_by_col_code(bool obstacle_close);
+  void set_move_control(int8_t move_control);
   void change_circ_dir();
-  void set_speed_by_mood_fact(float inFact);
+  void set_speed_by_mood_fact(float moode_fact);
 
   //---------------------------------------------------------------------------
   // CALCULATORS
-  //---------------------------------------------------------------------------
-  uint16_t calc_timeout(float inSpeed, float inDist);
+  uint16_t calc_timeout(float speed, float dist);
 
   //---------------------------------------------------------------------------
-  // BASIC MOVEMENT FUNCTIONS - GENERIC (switched by _moveControl var)
+  // BASIC MOVEMENT FUNCTIONS - GENERIC (switched by _move_control var)
   //---------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -144,80 +106,81 @@ public:
   //----------------------------------------------------------------------------
   // MoveManager Forward
   void forward();
-  void forward(float inSpeed);
-  void forward(uint8_t inPower);
+  void forward(float speed);
+  void forward(uint8_t power);
 
   //----------------------------------------------------------------------------
   // Move Back
   void back();
-  void back(float inSpeed);
-  void back(uint8_t inPower);
+  void back(float speed);
+  void back(uint8_t power);
 
   //----------------------------------------------------------------------------
   // Move Left
   void left();
-  void left(float inSpeed);
-  void left(uint8_t inPower);
+  void left(float speed);
+  void left(uint8_t power);
 
   //----------------------------------------------------------------------------
   // Move Right
   void right();
-  void right(float inSpeed);
-  void right(uint8_t inPower);
+  void right(float speed);
+  void right(uint8_t power);
 
   //----------------------------------------------------------------------------
   // Move Forward Left
   void forward_left();
-  void forward_left_diff_frac(float diffFrac);
-  void forward_left(float inSpeedDiff);
-  void forward_left(float inSpeed, float inSpeedDiff);
-  void forward_left(uint8_t inPowerDiff);
-  void forward_left(uint8_t inPower, uint8_t inPowerDiff);
+  void forward_left_diff_frac(float diff_frac);
+  void forward_left(float speed_diff);
+  void forward_left(float speed, float speed_diff);
+  void forward_left(uint8_t power_diff);
+  void forward_left(uint8_t power, uint8_t power_diff);
 
   //----------------------------------------------------------------------------
   // Move Forward Right
   void forward_right();
-  void forward_right_diff_frac(float diffFrac);
-  void forward_right(float inSpeedDiff);
-  void forward_right(float inSpeed, float inSpeedDiff);
-  void forward_right(uint8_t inPowerDiff);
-  void forward_right(uint8_t inPower, uint8_t inPowerDiff);
+  void forward_right_diff_frac(float diff_frac);
+  void forward_right(float speed_diff);
+  void forward_right(float speed, float speed_diff);
+  void forward_right(uint8_t power_diff);
+  void forward_right(uint8_t power, uint8_t power_diff);
 
   //----------------------------------------------------------------------------
   // Move Circle
   void circle();
-  void circle(int8_t turnDir);
+  void circle(int8_t turn_dir);
 
   //============================================================================
   // BASIC MOVEMENT FUNCTIONS - CONTROL BY POWER
   //============================================================================
    // MOVE - POWER CONTROL - SPECIFY POWER
-  void forward_power(uint8_t inPower);
-  void back_power(uint8_t inPower);
-  void left_power(uint8_t inPower);
-  void right_power(uint8_t inPower);
-  void forward_left_power(uint8_t inPower, uint8_t inPowerDiff);
-  void forward_right_power(uint8_t inPower, uint8_t inPowerDiff);
-  void circle_power(uint8_t inPower, int8_t inPowerDiff, int8_t turnDir);
+  void forward_power(uint8_t power);
+  void back_power(uint8_t power);
+  void left_power(uint8_t power);
+  void right_power(uint8_t power);
+  void forward_left_power(uint8_t power, uint8_t power_diff);
+  void forward_right_power(uint8_t power, uint8_t power_diff);
+  void circle_power(uint8_t power, int8_t power_diff, int8_t turn_dir);
 
   //============================================================================
   // BASIC MOVEMENT - SPEED CONTROL with PID
   //============================================================================
   // MOVE - SPEED CONTROL - SPECIFY SPEED
-  void forward_speed(float inSpeed);
-  void back_speed(float inSpeed);
-  void left_speed(float inSpeed);
-  void forward_left_speed(float inSpeed, float inSpeedDiff);
-  void right_speed(float inSpeed);
-  void forward_right_speed(float inSpeed, float inSpeedDiff);
-  void circle_speed(float inSpeed, float inSpeedDiff, int8_t turnDir);
+  void forward_speed(float speed);
+  void back_speed(float speed);
+  void left_speed(float speed);
+  void forward_left_speed(float speed, float speed_diff);
+  void right_speed(float speed);
+  void forward_right_speed(float speed, float speed_diff);
+  void circle_speed(float speed, float speed_diff, int8_t turn_dir);
   // NOTE: position can be negative to move backwards
-  void to_dist_ctrl_pos(float setDist);
-  void to_dist_ctrl_pos(float setDistL, float setDistR);
-  void turn_to_angle_ctrl_pos(float setAngle);
-  int8_t to_dist_ctrl_speed(float speedL, float speedR, float setDistL, float setDistR);
-  int8_t to_dist_ctrl_speed(float setDist);
-  int8_t turn_to_angle_ctrl_speed(float setAngle);
+  void to_dist_ctrl_pos(float set_dist);
+  void to_dist_ctrl_pos(float set_dist_left, float set_dist_right);
+  void turn_to_angle_ctrl_pos(float set_angle);
+  int8_t to_dist_ctrl_speed(float speed_left, float speed_right,
+    float set_dist_left, float set_dist_right);
+  int8_t to_dist_ctrl_speed(float set_dist);
+  int8_t turn_to_angle_ctrl_speed(float set_angle);
 
   //============================================================================
   // COMPOUND MOVEMENT FUNCTIONS
@@ -228,19 +191,19 @@ public:
   //----------------------------------------------------------------------------
   // MOVE WIGGLE LEFT/RIGHT
   void wiggle();
-  void wiggle(uint16_t leftDur, uint16_t rightDur);
+  void wiggle(uint16_t left_dur, uint16_t right_dur);
 
   //----------------------------------------------------------------------------
   // MOVE FORWARD/BACK
   void forward_back();
-  void forward_back(uint16_t forwardDur, uint16_t backDur);
+  void forward_back(uint16_t forward_dur, uint16_t back_dur);
 
   //----------------------------------------------------------------------------
   // MOVE SPIRAL
   void spiral();
-  void spiral(int8_t turnDir);
-  void spiral_speed(int8_t turnDir);
-  void spiral_power(int8_t turnDir);
+  void spiral(int8_t turn_dir);
+  void spiral_speed(int8_t turn_dir);
+  void spiral_power(int8_t turn_dir);
 
   //----------------------------------------------------------------------------
   // MOVE ZIG/ZAG
@@ -262,11 +225,10 @@ public:
   uint8_t get_look_curr_ang_ind(){return _look_cur_ang;}
   uint8_t get_look_num_angs(){return _look_num_angs;}
   uint8_t get_look_max_angs(){return _look_max_angs;}
-  float get_look_ang_from_ind(uint8_t inInd){return _look_angles[inInd];}
+  float get_look_ang_from_ind(uint8_t index){return _look_angles[index];}
   uint16_t get_look_move_time(){return _look_move_time;}
   uint16_t get_look_pause_time(){return _look_pause_time;}
   uint16_t get_look_tot_time(){return _look_tot_time;}
-
 
   //----------------------------------------------------------------------------
   // PIDs - GET/SET FUNCTIONS
@@ -287,34 +249,36 @@ public:
 
   //----------------------------------------------------------------------------
   // Speed PID get functions - left/right motors
-  float getSpeedPIDSetPoint_L(){return _speedPID_L.get_set_point();}
-  float getSpeedPIDOutput_L(){return _speedPID_L.get_output();}
-  float getSpeedPIDP_L(){return _speedPID_L.getPropTerm();}
-  float getSpeedPIDI_L(){return _speedPID_L.getIntTerm();}
-  float getSpeedPIDD_L(){return _speedPID_L.getDerivTerm();}
+    // REFACTOR START
 
-  float getSpeedPIDSetPoint_R(){return _speedPID_R.get_set_point();}
-  float getSpeedPIDOutput_R(){return _speedPID_R.get_output();}
-  float getSpeedPIDP_R(){return _speedPID_R.getPropTerm();}
-  float getSpeedPIDI_R(){return _speedPID_R.getIntTerm();}
-  float getSpeedPIDD_R(){return _speedPID_R.getDerivTerm();}
+  float get_speed_PID_set_point_left(){return _speed_PID_left.get_set_point();}
+  float get_speed_PID_output_left(){return _speed_PID_left.get_output();}
+  float get_speed_PID_Pterm_left(){return _speed_PID_left.get_prop_term();}
+  float get_speed_PID_Iterm_left(){return _speed_PID_left.get_int_term();}
+  float get_speed_PID_Dterm_left(){return _speed_PID_left.get_deriv_term();}
+
+  float get_speed_PID_set_point_right(){return _speed_PID_right.get_set_point();}
+  float get_speed_PID_output_right(){return _speed_PID_right.get_output();}
+  float get_speed_PID_Pterm_right(){return _speed_PID_right.get_prop_term();}
+  float get_speed_PID_Iterm_right(){return _speed_PID_right.get_int_term();}
+  float get_speed_PID_Dterm_right(){return _speed_PID_right.get_deriv_term();}
 
 private:
   //----------------------------------------------------------------------------
   // PRIVATE HELPER FUNCTIONS
-  void _updateBasicMove(int8_t inMove);
-  void _updateCompoundMove();
-  void _atSpeed(float inSpeedL,float inSpeedR);
-  void _toPos(float setPosL, float setPosR);
-  void _updateCurrSpeed();
+  void _update_basic_move(int8_t inMove);
+  void _update_compound_move();
+  void _at_speed(float inSpeedL,float inSpeedR);
+  void _to_pos(float setPosL, float setPosR);
+  void _update_speed();
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Pointers to external objects
 
   // Adafruit Motor Shield Objects
-  Adafruit_MotorShield* _AFMS = NULL;
-  Adafruit_DCMotor* _motorL = NULL;
-  Adafruit_DCMotor* _motorR = NULL;
+  Adafruit_MotorShield* _motor_shield = NULL;
+  Adafruit_DCMotor* _motor_left = NULL;
+  Adafruit_DCMotor* _motor_right = NULL;
 
   // Encoder Objects
   Encoder* _encoder_left = NULL;
@@ -324,22 +288,22 @@ private:
   // MOVE OBJ - Type and General Variables
   bool _is_enabled = true;
 
-  int8_t _moveControl = MOVE_CONTROL_SPEED;
+  int8_t _move_control = MOVE_CONTROL_SPEED;
   int8_t _move_basic = MOVE_B_FORWARD;
   int8_t _move_compound = MOVE_C_STRAIGHT;
-  int8_t _moveCompoundCount = MOVE_C_COUNT;
-  uint32_t _moveUpdateTime = 5000;
-  uint32_t _moveUpdateMinTime = 4000;
-  uint32_t _moveUpdateMaxTime = 12000;
+  int8_t _move_compound_count = MOVE_C_COUNT;
+  uint32_t _move_update_time = 5000;
+  uint32_t _move_update_min_time = 4000;
+  uint32_t _move_update_max_time = 12000;
   Timer _move_timer = Timer();
   Timer _submove_timer = Timer();
-  Timer _timeoutTimer = Timer();
+  Timer _timeout_timer = Timer();
 
   // Encoder counter variables
-  bool _encCountStart = true;
-  int32_t _startEncCountL = 0, _startEncCountR = 0;
-  int32_t _endEncCountL = 0, _endEncCountR = 0;
-  int32_t _encCountDiffL = 0, _encCountDiffR = 0;
+  bool _encoder_count_start = true;
+  int32_t _start_encoder_count_left = 0, _start_encoder_count_right = 0;
+  int32_t _end_encoder_count_left = 0, _end_encoder_count_right = 0;
+  int32_t _encoder_count_diff_left = 0, _enc_count_diff_right = 0;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Motor Power (Speed) Variables
@@ -387,8 +351,8 @@ private:
   //double _speedP = 0.45*2.5, _speedI = 50.0e-3/1.2, _speedD = 0.0; // Ziegler-Nichols tuning [0.45,/1.2,0.0]
   double _speedP = 0.6*0.8, _speedI = 0.5*50.0e-3, _speedD = 50.0e-3/8.0; // Ziegler-Nichols tuning [0.6,0.5,/8]
   double _speedPRev = _speedP*0.9; // NOTE: turned off setting gains! Caused problems
-  PID _speedPID_L = PID(false,_speedP,_speedI,_speedD,10);
-  PID _speedPID_R = PID(false,_speedP,_speedI,_speedD,10);
+  PID _speed_PID_left = PID(false,_speedP,_speedI,_speedD,10);
+  PID _speed_PID_right = PID(false,_speedP,_speedI,_speedD,10);
 
   // Position Control PIDs and Variables
   PID _pos_PID_left = PID(false,0.6,0.0,0.0,20);
