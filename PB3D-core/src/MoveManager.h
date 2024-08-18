@@ -21,7 +21,7 @@
 
 class MoveManager{
 public:
-  MoveManager(Adafruit_MotorShield* AFMS, Encoder* encL, Encoder* encR);
+  MoveManager(Adafruit_MotorShield* motor_shield, Encoder* encL, Encoder* encR);
 
   //----------------------------------------------------------------------------
   // BEGIN: called once during SETUP

@@ -53,7 +53,7 @@ private:
   MoodManager* _mood_manager = NULL;
   TaskManager* _task_manager = NULL;
   MoveManager* _move_manager = NULL;
-  Speaker* _speakerObj = NULL;
+  Speaker* _speaker = NULL;
   TaskInteract* _taskInteractObj = NULL;
 
   // Timers

@@ -54,7 +54,7 @@ private:
   TaskManager* _task_manager = NULL;
   MoveManager* _move_manager = NULL;
   TaskDance* _taskDanceObj = NULL;
-  Speaker* _speakerObj = NULL;
+  Speaker* _speaker = NULL;
   PatSensor* _patSensObj = NULL;
 
   // TASK - INTERACT - Enabled Flag

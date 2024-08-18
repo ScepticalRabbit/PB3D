@@ -68,7 +68,7 @@ void receiveEvent(int bytesRec){
   int16_t ii = 0;
   while(0<Wire.available()){
     if(ii < PACKET_SIZE){
-      //_currState.dataPacket[ii] = Wire.read();
+      //_curr_state.dataPacket[ii] = Wire.read();
       sender.setStateByte(Wire.read(),ii);
     }
     else{

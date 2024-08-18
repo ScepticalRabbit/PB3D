@@ -88,8 +88,8 @@ public:
       _radioTimer.start(_radioSendInt);
 
       Serial.println(F("INITIAL DATA STRUCT"));
-      _initStateData(&_currState);
-      _printStateData(&_currState);
+      _init_state_data(&_curr_state);
+      _print_state_data(&_curr_state);
 
       // Send the struct and see if there is a listener
       if(!_sendStateStruct()){
@@ -127,13 +127,13 @@ public:
   void setNewPacket(bool inFlag){_newPacket = inFlag;}
 
   void setStateByte(byte inByte, int16_t index){
-    _currState.dataPacket[index] = inByte;
+    _curr_state.dataPacket[index] = inByte;
   }
 
   //---------------------------------------------------------------------------
   // DIAGNOSTICS
   void printStateData(){
-    _printStateData(&_currState);
+    _print_state_data(&_curr_state);
   }
 
 private:
@@ -144,12 +144,12 @@ private:
 
     // Print the data structure to be sent
     //Serial.println(F("SENDING DATA STRUCTURE:"));
-    //_printStateData(&_currState);
+    //_print_state_data(&_curr_state);
 
     _radioStart = millis();
 
     // Send data structure to the destination as a byte array
-    if (_rf69_manager.sendtoWait(_currState.dataPacket,PACKET_SIZE,DEST_RF_ADDR)) {
+    if (_rf69_manager.sendtoWait(_curr_state.dataPacket,PACKET_SIZE,DEST_RF_ADDR)) {
       /*
       uint8_t len = sizeof(_buf);
       uint8_t from;
@@ -190,7 +190,7 @@ private:
 
   // DATA PACKET - I2C and Radio
   bool _newPacket = false;
-  dataPacket_t _currState;
+  dataPacket_t _curr_state;
 
   // RADIO VARIABLES
   // Radio class and radio data manager class

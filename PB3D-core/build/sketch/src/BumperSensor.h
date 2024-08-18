@@ -40,7 +40,8 @@ public:
     int8_t get_bump_count(){return _bump_count;}
     void reset_bump_count(){_bump_count= 0;}
 
-    uint8_t get_collision_code(uint8_t bumpCode);
+    EDangerCode get_collision_code(EBumpCode bump_code);
+
     void reset();
 
 private:

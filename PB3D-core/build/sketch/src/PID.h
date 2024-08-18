@@ -11,14 +11,13 @@
 #define PID_H
 
 #include <Arduino.h>
-#include "Timer.h"
 
+#include "PB3DConstants.h"
+#include "Timer.h"
 
 
 class PID{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTORS
   PID(bool cmd_on);
   PID(bool cmd_on, double kp, double ki, double kd);
   PID(bool cmd_on, double kp, double ki, double kd, uint16_t sample_time);

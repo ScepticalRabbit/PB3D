@@ -1,6 +1,6 @@
 #include "IMU.h"  // NXP 9-DoF breakout
 
-IMU IMUObj = IMU();
+IMU IMU = IMU();
 /*
 #include <Adafruit_Sensor_Calibration.h>
 #include <Adafruit_AHRS.h>
@@ -32,8 +32,8 @@ void setup() {
   Serial.begin(115200);
   while(!Serial){delay(10);}
 
-  IMUObj.begin();
-  
+  IMU.begin();
+
   /*
   if (!cal.begin()) {
     Serial.println("Failed to initialize calibration helper");
@@ -45,7 +45,7 @@ void setup() {
     Serial.println("Failed to find sensors");
     while (1) delay(10);
   }
-  
+
   accelerometer->printSensorDetails();
   gyroscope->printSensorDetails();
   magnetometer->printSensorDetails();
@@ -53,15 +53,15 @@ void setup() {
   filter.begin(FILTER_UPDATE_RATE_HZ);
   timestamp = millis();
   */
-  
+
   // Final setup - increase I2C clock speed
   Wire.setClock(400000); // 400KHz
 }
 
 
 void loop(){
-  IMUObj.update();
-  
+  IMU.update();
+
 /*
   float roll, pitch, heading;
   float gx, gy, gz;
@@ -77,13 +77,13 @@ void loop(){
   accelerometer->getEvent(&accel);
   gyroscope->getEvent(&gyro);
   magnetometer->getEvent(&mag);
-  
+
 #if defined(AHRS_DEBUG_OUTPUT)
   Serial.print("I2C took "); Serial.print(millis()-sensReadStart); Serial.println(" ms");
 #endif
 
   updateStart = millis();
-  
+
   cal.calibrate(mag);
   cal.calibrate(accel);
   cal.calibrate(gyro);
@@ -94,10 +94,10 @@ void loop(){
   gz = gyro.gyro.z * SENSORS_RADS_TO_DPS;
 
   // Update the SensorFusion filter
-  filter.update(gx, gy, gz, 
-                accel.acceleration.x, accel.acceleration.y, accel.acceleration.z, 
+  filter.update(gx, gy, gz,
+                accel.acceleration.x, accel.acceleration.y, accel.acceleration.z,
                 mag.magnetic.x, mag.magnetic.y, mag.magnetic.z);
-                
+
 #if defined(AHRS_DEBUG_OUTPUT)
   Serial.print("Update took "); Serial.print(millis()-updateStart); Serial.println(" ms");
 #endif
@@ -147,8 +147,8 @@ void loop(){
   Serial.print(", ");
   Serial.print(qy, 4);
   Serial.print(", ");
-  Serial.println(qz, 4);  
-  
+  Serial.println(qz, 4);
+
 #if defined(AHRS_DEBUG_OUTPUT)
   Serial.print("Took "); Serial.print(millis()-timestamp); Serial.println(" ms");
 #endif

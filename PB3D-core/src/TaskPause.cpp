@@ -12,10 +12,10 @@
 //---------------------------------------------------------------------------
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
 TaskPause::TaskPause(CollisionManager* inCollision, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker){
-    _collisionObj = inCollision;
+    _collision_manager = inCollision;
     _task_manager = inTask;
     _move_manager = inMove;
-    _speakerObj = inSpeaker;
+    _speaker = inSpeaker;
 }
 
 //---------------------------------------------------------------------------
@@ -41,11 +41,11 @@ void TaskPause::pause(){
     if(!_enabled){return;}
 
     if(_pauseTimer.finished()){
-        _task_manager->forceUpdate();
+        _task_manager->force_update();
     }
     else{
         _task_manager->taskLEDPause(_pauseDur);
-        _collisionObj->set_enabled_flag(false);
+        _collision_manager->set_enabled_flag(false);
         _move_manager->stop();
     }
 }

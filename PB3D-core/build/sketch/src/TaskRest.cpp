@@ -16,7 +16,7 @@ TaskRest::TaskRest(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove
     _mood_manager = inMood;
     _task_manager = inTask;
     _move_manager = inMove;
-    _speakerObj = inSpeaker;
+    _speaker = inSpeaker;
 }
 
 //---------------------------------------------------------------------------
@@ -31,7 +31,7 @@ void TaskRest::update(){
     // If the task has changed then modify other classes as needed
     if(_task_manager->getNewTaskFlag()){
         reset();
-        _speakerObj->reset();
+        _speaker->reset();
     }
 }
 
@@ -40,7 +40,7 @@ void TaskRest::update(){
 void TaskRest::rest(){
     // Reset the speaker flags
     uint8_t inCodes[] = {SPEAKER_SNORE,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
-    _speakerObj->setSoundCodes(inCodes,4);
+    _speaker->setSoundCodes(inCodes,4);
 
     // Stop moving while sleeping
     _move_manager->stop();
@@ -54,7 +54,7 @@ void TaskRest::rest(){
         if(_restLEDVal>=_restLEDMax){
             _restLEDVal = _restLEDMax;
             _restLEDIncrease = false;
-            _speakerObj->reset();
+            _speaker->reset();
         }
         }
         else{
@@ -80,5 +80,5 @@ void TaskRest::reset(){
     _timerObj.start(0);
     _restLEDVal = _restLEDMax;
     _restLEDIncrease = false;
-    _speakerObj->reset();
+    _speaker->reset();
 }

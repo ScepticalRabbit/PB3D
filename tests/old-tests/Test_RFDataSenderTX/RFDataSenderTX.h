@@ -103,13 +103,13 @@ public:
     _radioTimer.start(_radioSendInt);
 
     // INIT CLASS:
-    _currState.state.mood = 1;
-    _currState.state.task = 2;
-    _currState.state.collisionFlags[0] = true;
-    _currState.state.collisionFlags[1] = false;
-    _currState.state.collisionFlags[2] = true;
-    _currState.state.collisionFlags[3] = false;
-    _currState.state.wheelSpeed = 202.2;
+    _curr_state.state.mood = 1;
+    _curr_state.state.task = 2;
+    _curr_state.state.collisionFlags[0] = true;
+    _curr_state.state.collisionFlags[1] = false;
+    _curr_state.state.collisionFlags[2] = true;
+    _curr_state.state.collisionFlags[3] = false;
+    _curr_state.state.wheelSpeed = 202.2;
 
     Serial.println(F("INITIAL DATA STRUCT"));
     printDataStruct();
@@ -136,7 +136,7 @@ public:
       printDataStruct();
 
       // Send data structure to the destination as a byte array
-      if (_rf69_manager.sendtoWait(_currState.dataPacket,PACKET_SIZE,DEST_RF_ADDR)) {
+      if (_rf69_manager.sendtoWait(_curr_state.dataPacket,PACKET_SIZE,DEST_RF_ADDR)) {
         uint8_t len = sizeof(_buf);
         uint8_t from;
 
@@ -185,23 +185,23 @@ public:
   void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
   void setStateByte(byte inByte,int16_t index){
-    _currState.dataPacket[index] = inByte;
+    _curr_state.dataPacket[index] = inByte;
   }
 
   //---------------------------------------------------------------------------
   // DIAGNOSTIC FUNCTIONS
   void printDataStruct(){
     Serial.print(F("Mood: "));
-    Serial.print(_currState.state.mood);
+    Serial.print(_curr_state.state.mood);
     Serial.print(F("; "));
 
     Serial.print(F("TaskManager: "));
-    Serial.print(_currState.state.task);
+    Serial.print(_curr_state.state.task);
     Serial.print(F("; "));
 
     Serial.print(F("Col Flags: "));
     for(uint8_t ii = 0; ii < 4; ii++){
-      if(_currState.state.collisionFlags[ii]){
+      if(_curr_state.state.collisionFlags[ii]){
         Serial.print(F("1"));
       }
       else{
@@ -211,7 +211,7 @@ public:
     Serial.print(F("; "));
 
     Serial.print(F("Speed: "));
-    Serial.print(_currState.state.wheelSpeed);
+    Serial.print(_curr_state.state.wheelSpeed);
     Serial.print(F("; "));
     Serial.println();
   }
@@ -227,7 +227,7 @@ private:
     printDataStruct();
 
     // Send data structure to the destination as a byte array
-    if (_rf69_manager.sendtoWait(_currState.dataPacket,PACKET_SIZE,DEST_RF_ADDR)) {
+    if (_rf69_manager.sendtoWait(_curr_state.dataPacket,PACKET_SIZE,DEST_RF_ADDR)) {
       uint8_t len = sizeof(_buf);
       uint8_t from;
 
@@ -265,7 +265,7 @@ private:
   bool _start_flag = true;
 
   // DATA PACKET - I2C and Radio
-  dataPacket_t _currState;
+  dataPacket_t _curr_state;
 
   // RADIO VARIABLES
   // Radio class and radio data manager class

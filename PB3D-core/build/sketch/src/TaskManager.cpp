@@ -36,7 +36,7 @@ void TaskManager::update(){
     }
 }
 
-void TaskManager::forceUpdate(){
+void TaskManager::force_update(){
     _update();
 }
 

@@ -175,8 +175,6 @@
  /home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/vl53l0x_platform_log.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionStrategy.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/BumperSensor.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/UltrasonicSensor.h \
- /home/lloydf/Arduino/libraries/Grove_Ultrasonic_Ranger/Ultrasonic.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Encoder.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterLowPass.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterMovAvg.h \

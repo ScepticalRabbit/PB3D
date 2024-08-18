@@ -17,7 +17,7 @@ TaskDance::TaskDance(MoodManager* inMood, TaskManager* inTask,
     _mood_manager = inMood;
     _task_manager = inTask;
     _move_manager = inMove;
-    _speakerObj = inSpeaker;
+    _speaker = inSpeaker;
 }
 
 //---------------------------------------------------------------------------
@@ -58,7 +58,7 @@ void TaskDance::dance(){
     // If needed set the speaker flags on every loop
     if(_speakerFlag){
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-        _speakerObj->setSoundCodes(inCodes,4);
+        _speaker->setSoundCodes(inCodes,4);
     }
 
     // Update the dance move at given time interval, should be 1/4 note
@@ -116,17 +116,17 @@ void TaskDance::_startDance(){
     _move_manager->reset_submove_timer();
 
     // Increase mood when dance starts
-    _mood_manager->incMoodScore();
+    _mood_manager->inc_mood_score();
 
     // Set speaker
     if(_speakerFlag){
-        _speakerObj->reset();
+        _speaker->reset();
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-        _speakerObj->setSoundCodes(inCodes,4);
+        _speaker->setSoundCodes(inCodes,4);
         uint16_t inFreqs[]  = {NOTE_G4,NOTE_G7,NOTE_G5,NOTE_G7,0,0,0,0};
         uint16_t inDurs[]   = {200,150,300,150,0,0,0,0};
-        _speakerObj->setSoundFreqs(inFreqs,8);
-        _speakerObj->setSoundDurs(inDurs,8);
+        _speaker->setSoundFreqs(inFreqs,8);
+        _speaker->setSoundDurs(inDurs,8);
     }
 }
 
@@ -206,6 +206,6 @@ void TaskDance::_updateDance(){
     }
 
     // Reset the speaker to sync with dance bars
-    _speakerObj->reset();
+    _speaker->reset();
 }
 

@@ -151,4 +151,13 @@ enum ELaserIndex{
     LASER_COUNT
 };
 
+//------------------------------------------------------------------------------
+// TASK: Pounce
+enum ETaskPounce{
+    POUNCE_SEEK = 0,
+    POUNCE_LOCKON,
+    POUNCE_RUN,
+    POUNCE_REALIGN,
+};
+
 #endif

@@ -15,42 +15,22 @@
 #include "MoodManager.h"
 #include "Timer.h"
 
-// Define task codes
-#define TASK_TEST -7
-#define TASK_PAUSE -4     // Only called by other tasks
-#define TASK_PICKEDUP -3  // Only called by other tasks
-#define TASK_INTERACT -2  // Only called by other tasks
-#define TASK_TANTRUM -1   // Only called by other tasks
-#define TASK_EXPLORE 0
-#define TASK_REST 1
-#define TASK_DANCE 2
-#define TASK_FINDHUMAN 3
-#define TASK_FINDSOUND 4
-#define TASK_FINDLIGHT 5
-#define TASK_FINDDARK 6
-#define TASK_POUNCE 7
 
 class TaskManager{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  //---------------------------------------------------------------------------
   TaskManager(Adafruit_NeoPixel_ZeroDMA* RGBLEDs);
 
-  //---------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // BEGIN: called once during SETUP
-  //---------------------------------------------------------------------------
   void begin();
 
-  //---------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // UPDATE: called during every LOOP
-  //---------------------------------------------------------------------------
   void update();
-  void forceUpdate();
+  void force_update();
 
-  //---------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // Get, set and reset
-  //---------------------------------------------------------------------------
   // Default setTask function uses default task durations
   void setTask(int8_t taskIn);
   void setTaskDuration(uint32_t taskDur);
@@ -64,9 +44,8 @@ public:
   void setDanceUpdateFlag(bool inFlag){_danceUpdateFlag = inFlag;}
   bool getDanceUpdateFlag(){return _danceUpdateFlag;}
 
-  //------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // TASK LED FUNCTIONS
-  //---------------------------------------------------------------------------
   void taskLEDCollision();
   void taskLEDExplore();
   void taskLEDRest(uint8_t intensity);

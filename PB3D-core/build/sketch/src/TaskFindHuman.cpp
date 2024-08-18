@@ -17,7 +17,7 @@ TaskFindHuman::TaskFindHuman(MoodManager* inMood, TaskManager* inTask, MoveManag
     _mood_manager = inMood;
     _task_manager = inTask;
     _move_manager = inMove;
-    _speakerObj = inSpeaker;
+    _speaker = inSpeaker;
     _taskInteractObj = inTInt;
 }
 
@@ -63,7 +63,7 @@ void TaskFindHuman::findHuman(){
 
     // If the human presence sensor wasn't found then bypass the rest of the function
     if(!_enabled){
-        _task_manager->forceUpdate();
+        _task_manager->force_update();
         return;
     }
 
@@ -71,18 +71,18 @@ void TaskFindHuman::findHuman(){
     if(_start_flag){
         _start_flag = false;
 
-        _speakerObj->reset();
+        _speaker->reset();
         _callTimer.start(_callInterval);
     }
 
 
     // Set the speaker codes on every loop
     uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-    _speakerObj->setSoundCodes(inCodes,4);
+    _speaker->setSoundCodes(inCodes,4);
     uint16_t inFreqs[]  = {NOTE_A4,NOTE_A4,NOTE_A4,NOTE_CS7,0,0,0,0};
     uint16_t inDurs[]   = {300,0,200,0,0,0,0,0};
-    _speakerObj->setSoundFreqs(inFreqs,8);
-    _speakerObj->setSoundDurs(inDurs,8);
+    _speaker->setSoundFreqs(inFreqs,8);
+    _speaker->setSoundDurs(inDurs,8);
 
     //--------------------------------------------------------------------
     // Found you!
@@ -98,14 +98,14 @@ void TaskFindHuman::findHuman(){
         _task_manager->taskLEDInteract();
         _taskInteractObj->setStartInteractFlag(true);
         // Update mood score
-        _mood_manager->incMoodScore();
+        _mood_manager->inc_mood_score();
     }
     else{
         //--------------------------------------------------------------------
         // Speaker call = where you?
         //--------------------------------------------------------------------
         if(_callTimer.finished()){
-            _speakerObj->reset();
+            _speaker->reset();
             _callTimer.start(_callInterval);
         }
 

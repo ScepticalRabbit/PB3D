@@ -36,7 +36,7 @@
 
     #define PACKET_SIZE sizeof(stateData_t)
 
-    void _initStateData(dataPacket_t* inState){
+    void _init_state_data(dataPacket_t* inState){
         // TIME
         inState->state.onTime = 0;
         // LAST COLLISION
@@ -53,7 +53,7 @@
         inState->state.escape_angle = 0.0;
     }
 
-    void _printStateData(dataPacket_t* inState){
+    void _print_state_data(dataPacket_t* inState){
         Serial.println();
         Serial.println(F("----------------------------------------"));
 
@@ -83,7 +83,7 @@
         Serial.println();
     }
 
-    void _serialLogData(dataPacket_t* inState){
+    void _serial_log_data(dataPacket_t* inState){
         Serial.print(inState->state.onTime); Serial.print(",");
         for(uint8_t ii=0;ii<7;ii++){
             Serial.print(inState->state.check_vec[ii]);Serial.print(",");
@@ -127,7 +127,7 @@
 
     #define PACKET_SIZE sizeof(stateData_t)
 
-    void _initStateData(dataPacket_t* inState){
+    void _init_state_data(dataPacket_t* inState){
         // TIME
         inState->state.onTime = 0;
         // MOVE
@@ -146,7 +146,7 @@
         inState->state.navHead = 0.0;
     }
 
-    void _printStateData(dataPacket_t* inState){
+    void _print_state_data(dataPacket_t* inState){
         Serial.println();
         Serial.println(F("----------------------------------------"));
 
@@ -218,7 +218,7 @@
 
     #define PACKET_SIZE sizeof(stateData_t)
 
-    void _initStateData(dataPacket_t* inState){
+    void _init_state_data(dataPacket_t* inState){
         // TIME
         inState->state.onTime = 0;
         // MOOD
@@ -253,7 +253,7 @@
         inState->state.colLSRDRng = 0;
     }
 
-    void _printStateData(dataPacket_t* inState){
+    void _print_state_data(dataPacket_t* inState){
         Serial.println();
         Serial.println(F("----------------------------------------"));
 
@@ -319,11 +319,11 @@
 
     #define PACKET_SIZE sizeof(stateData_t)
 
-    void _initStateData(dataPacket_t* inState){
+    void _init_state_data(dataPacket_t* inState){
 
     }
 
-    void _printStateData(dataPacket_t* inState){
+    void _print_state_data(dataPacket_t* inState){
 
     }
 */

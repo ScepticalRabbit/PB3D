@@ -13,11 +13,11 @@
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
 TaskPickedUp::TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker, PatSensor* inPatSens){
-    _collisionObj = inCollision;
+    _collision_manager = inCollision;
     _mood_manager = inMood;
     _task_manager = inTask;
     _move_manager = inMove;
-    _speakerObj = inSpeaker;
+    _speaker = inSpeaker;
     _patSensObj = inPatSens;
 }
 
@@ -51,12 +51,12 @@ void TaskPickedUp::update(){
     if(!_enabled){return;}
 
     // Check the altirude to see if PB has been picked up
-    if(_collisionObj->get_altitude_flag() && !_isPickedUp){
+    if(_collision_manager->get_altitude_flag() && !_isPickedUp){
         _isPickedUp = true;
         _startPickedUpFlag = true;
 
         // If picked up turn off collision detection
-        _collisionObj->set_enabled_flag(false);
+        _collision_manager->set_enabled_flag(false);
 
         // Based on the current task set the panic flag
         if((_task_manager->getTask() == TASK_INTERACT)||(_task_manager->getTask() == TASK_DANCE)){
@@ -88,7 +88,7 @@ void TaskPickedUp::pickedUp(){
         _patSensObj->setButtonsEnabled(false);
 
         if(_panicFlag){
-        _mood_manager->decMoodScore();
+        _mood_manager->dec_mood_score();
         }
     }
 
@@ -97,8 +97,8 @@ void TaskPickedUp::pickedUp(){
     if(_panicFlag){
         // MOOD UPDATE (PANIC): 50/50 angry or scared
         int8_t prob = random(0,100);
-        if(prob <= 50){_mood_manager->setMood(MOOD_SCARED);}
-        else{_mood_manager->setMood(MOOD_ANGRY);}
+        if(prob <= 50){_mood_manager->set_mood(MOOD_SCARED);}
+        else{_mood_manager->set_mood(MOOD_ANGRY);}
 
         // TaskManager LEDS - Panic
         _task_manager->taskLEDPickedUpPanic();
@@ -108,16 +108,16 @@ void TaskPickedUp::pickedUp(){
 
         // Speaker updates
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_BEEP,SPEAKER_SLIDE,SPEAKER_BEEP};
-        _speakerObj->setSoundCodes(inCodes,4);
-        _speakerObj->setSoundFreqs(_panicFreqs,8);
+        _speaker->setSoundCodes(inCodes,4);
+        _speaker->setSoundFreqs(_panicFreqs,8);
         _panicDurs[_pauseInd] = _randPausePanic;
-        _speakerObj->setSoundDurs(_panicDurs,8);
+        _speaker->setSoundDurs(_panicDurs,8);
 
-        _callUpdateTime = _speakerObj->getTotalSoundDur();
+        _callUpdateTime = _speaker->getTotalSoundDur();
     }
     else{
         // MoodManager - Neutral
-        _mood_manager->setMood(MOOD_NEUTRAL);
+        _mood_manager->set_mood(MOOD_NEUTRAL);
         // TaskManager LEDS - Ok
         _task_manager->taskLEDPickedUpOk();
 
@@ -126,12 +126,12 @@ void TaskPickedUp::pickedUp(){
 
         // Speaker updates
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_SLIDE};
-        _speakerObj->setSoundCodes(inCodes,4);
-        _speakerObj->setSoundFreqs(_callFreqs,8);
+        _speaker->setSoundCodes(inCodes,4);
+        _speaker->setSoundFreqs(_callFreqs,8);
         _callDurs[_pauseInd] = _randPauseCall;
-        _speakerObj->setSoundDurs(_callDurs,8);
+        _speaker->setSoundDurs(_callDurs,8);
 
-        _callUpdateTime = _speakerObj->getTotalSoundDur();
+        _callUpdateTime = _speaker->getTotalSoundDur();
     }
 
     //--------------------------------------------
@@ -152,12 +152,12 @@ void TaskPickedUp::pickedUp(){
 
         // MOOD UPDATE: 75% chance go to happy
         int8_t prob = random(0,100);
-        if(prob<75){_mood_manager->setMood(MOOD_HAPPY);}
-        _mood_manager->incMoodScore();
+        if(prob<75){_mood_manager->set_mood(MOOD_HAPPY);}
+        _mood_manager->inc_mood_score();
     }
 
     // If picked up turn off collision detection
-    _collisionObj->set_enabled_flag(false);
+    _collision_manager->set_enabled_flag(false);
 
     //--------------------------------------------
     // VIBRATION MOTOR: PURRING
@@ -198,24 +198,24 @@ void TaskPickedUp::pickedUp(){
 
         if(_panicFlag){
         _panicDurs[_pauseInd] = _randPausePanic;
-        _speakerObj->setSoundDurs(_panicDurs,8);
+        _speaker->setSoundDurs(_panicDurs,8);
         }
         else{
         _callDurs[_pauseInd] = _randPauseCall;
-        _speakerObj->setSoundDurs(_callDurs,8);
+        _speaker->setSoundDurs(_callDurs,8);
         }
 
         // Restart call timer with new times
-        _callUpdateTime = _speakerObj->getTotalSoundDur();
+        _callUpdateTime = _speaker->getTotalSoundDur();
         _callTimer.start(_callUpdateTime);
 
         // Reset the speaker
-        _speakerObj->reset();
+        _speaker->reset();
     }
 
     //--------------------------------------------
     // EXIT TIMER
-    if(!_collisionObj->get_altitude_flag()){
+    if(!_collision_manager->get_altitude_flag()){
         if(!_exitTimerOn){
         _exitTimerOn = true;
         _exitTimer.start(_exitTime);
@@ -236,22 +236,22 @@ void TaskPickedUp::pickedUp(){
         // Re-enable pat sensor buttons
         _patSensObj->setButtonsEnabled(true);
         // Re-enable collision detection
-        _collisionObj->set_enabled_flag(true);
+        _collision_manager->set_enabled_flag(true);
         // Set task to pause
         _task_manager->setTask(TASK_PAUSE);
 
         // Based on the state on exit set different conditions
         int8_t prob = random(0,100);
         if(_panicFlag){
-        if(prob<50){_mood_manager->setMood(MOOD_SCARED);}
-        else{_mood_manager->setMood(MOOD_ANGRY);}
+        if(prob<50){_mood_manager->set_mood(MOOD_SCARED);}
+        else{_mood_manager->set_mood(MOOD_ANGRY);}
         }
         else if(_patComplete){
-        if(prob<80){_mood_manager->setMood(MOOD_HAPPY);}
-        else{_mood_manager->setMood(MOOD_NEUTRAL);}
+        if(prob<80){_mood_manager->set_mood(MOOD_HAPPY);}
+        else{_mood_manager->set_mood(MOOD_NEUTRAL);}
         }
         else{
-        _mood_manager->setMood(MOOD_NEUTRAL);
+        _mood_manager->set_mood(MOOD_NEUTRAL);
         }
     }
 }

@@ -18,7 +18,7 @@ TaskInteract::TaskInteract(MoodManager* inMood, TaskManager* inTask, MoveManager
     _task_manager = inTask;
     _move_manager = inMove;
     _taskDanceObj = inDance;
-    _speakerObj = inSpeaker;
+    _speaker = inSpeaker;
     _patSensObj = inPatSens;
 }
 
@@ -62,17 +62,17 @@ void TaskInteract::interact(){
         _askSqueakTimer.start(_askSqueakInterval);
         _askWiggleTimer.start(_askWiggleDuration);
 
-        _speakerObj->reset();
+        _speaker->reset();
     }
 
     // Set the speaker codes on every loop
     uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-    _speakerObj->setSoundCodes(inCodes,4);
+    _speaker->setSoundCodes(inCodes,4);
     //uint16_t inFreqs[]  = {NOTE_C5,NOTE_C7,NOTE_C4,NOTE_G7,0,0,0,0};
     uint16_t inFreqs[]  = {NOTE_B4,NOTE_B6,NOTE_B3,NOTE_F7,0,0,0,0};
     uint16_t inDurs[]   = {200,200,300,200,0,0,0,0};
-    _speakerObj->setSoundFreqs(inFreqs,8);
-    _speakerObj->setSoundDurs(inDurs,8);
+    _speaker->setSoundFreqs(inFreqs,8);
+    _speaker->setSoundDurs(inDurs,8);
 
     // Check if we need to ask for a pat again
     if(_askSqueakTimer.finished()){
@@ -81,7 +81,7 @@ void TaskInteract::interact(){
         _askWiggleTimer.start(_askWiggleDuration);
 
         // Reset the speaker
-        _speakerObj->reset();
+        _speaker->reset();
     }
 
     if(_askFlag){
@@ -114,12 +114,12 @@ void TaskInteract::interact(){
         // Update mood to happy
         int8_t prob = random(0,100);
         if(prob <= 80){
-        _mood_manager->setMood(MOOD_HAPPY);
+        _mood_manager->set_mood(MOOD_HAPPY);
         }
         else{
-        _mood_manager->setMood(MOOD_NEUTRAL);
+        _mood_manager->set_mood(MOOD_NEUTRAL);
         }
-        _mood_manager->incMoodScore();
+        _mood_manager->inc_mood_score();
 
         // Update task to dance
         _task_manager->setTask(TASK_DANCE);
@@ -142,12 +142,12 @@ void TaskInteract::interact(){
         // Update mood to sad
         int8_t prob = random(0,100);
         if(prob <= 75){
-        _mood_manager->setMood(MOOD_SAD);
+        _mood_manager->set_mood(MOOD_SAD);
         }
         else{
-        _mood_manager->setMood(MOOD_NEUTRAL);
+        _mood_manager->set_mood(MOOD_NEUTRAL);
         }
-        _mood_manager->decMoodScore();
+        _mood_manager->dec_mood_score();
 
         // Update task to explore
         _task_manager->setTask(TASK_EXPLORE);

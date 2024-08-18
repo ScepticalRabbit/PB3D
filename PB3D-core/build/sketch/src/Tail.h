@@ -54,13 +54,13 @@ public:
       _updateTimer.start(_updateInt);
 
       // Decision tree based on tail state - set by tasks+mood
-      if(_currState == TAIL_SET_POS){
+      if(_curr_state == TAIL_SET_POS){
         _tailServo.write(_tailPosCurr);
       }
-      else if(_currState == TAIL_WAG_CON){
+      else if(_curr_state == TAIL_WAG_CON){
         wagContinuous();
       }
-      else if(_currState == TAIL_WAG_INT){
+      else if(_curr_state == TAIL_WAG_INT){
         wagInterval();
       }
       else{
@@ -116,7 +116,7 @@ public:
   // SET FUNCTIONS
   void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
-  void setState(uint8_t inState){_currState = inState;}
+  void setState(uint8_t inState){_curr_state = inState;}
   void setPos(int16_t inPos){_tailPosCurr = inPos;}
 
   void setWagMoveTime(uint16_t inMoveTime){_wagMoveTime = inMoveTime;}
@@ -144,7 +144,7 @@ public:
   }
 
   void reset(){
-    _currState = TAIL_CENT;
+    _curr_state = TAIL_CENT;
     _wagCount = 0;
   }
 
@@ -155,7 +155,7 @@ private:
 
   Servo _tailServo;
 
-  uint8_t _currState = TAIL_CENT;
+  uint8_t _curr_state = TAIL_CENT;
   uint16_t _updateInt = 50;
   Timer _updateTimer = Timer();
 

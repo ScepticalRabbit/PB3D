@@ -13,11 +13,11 @@
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
 ClassTemp::ClassTemp(Collision* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker){
-_collisionObj = inCollision;
+_collision_manager = inCollision;
 _mood_manager = inMood;
 _task_manager = inTask;
 _move_manager = inMove;
-_speakerObj = inSpeaker;
+_speaker = inSpeaker;
 }
 
 //---------------------------------------------------------------------------

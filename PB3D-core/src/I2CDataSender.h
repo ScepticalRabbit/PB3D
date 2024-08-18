@@ -30,28 +30,28 @@ public:
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
   I2CDataSender(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
               IMUSensor* inIMU, Navigation* inNav){
-      _collisionObj = inCollision;
+      _collision_manager = inCollision;
       _mood_manager = inMood;
       _task_manager = inTask;
       _move_manager = inMove;
-      _IMUObj = inIMU;
-      _navObj = inNav;
+      _IMU = inIMU;
+      _navigator = inNav;
   }
 
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
   void begin(){
-    _initStateData(&_currState);
-    _updateStateData(&_currState);
-    _I2CTimer.start(_I2CTime);
+    _init_state_data(&_curr_state);
+    _update_state_data(&_curr_state);
+    _I2C_timer.start(_I2C_time);
 
     #if defined(I2CDATASENDER_DEBUG_PRINT)
         Serial.println(F("INITIAL DATA STRUCT"));
-        _printStateData(&_currState);
+        _print_state_data(&_curr_state);
     #endif
 
-    _last_col = _collisionObj->get_last_collision();
+    _last_col = _collision_manager->get_last_collision();
   }
 
   //---------------------------------------------------------------------------
@@ -59,23 +59,23 @@ public:
   void update(){
     if(!_enabled){return;}
 
-    if(_I2CTimer.finished()){
-        _I2CTimer.start(_I2CTime);
-        _sendTimer.start(0);
+    if(_I2C_timer.finished()){
+        _I2C_timer.start(_I2C_time);
+        _send_timer.start(0);
 
-        _updateStateData(&_currState);
+        _update_state_data(&_curr_state);
 
         Wire.beginTransmission(ADDR_FOLLOW_XIAO_1);
-        Wire.write(_currState.dataPacket,PACKET_SIZE);
+        Wire.write(_curr_state.dataPacket,PACKET_SIZE);
         Wire.endTransmission();
 
         #if defined(I2CDATASENDER_DEBUG_PRINT)
-        Serial.print(F("I2C Send Time: "));
-        Serial.print(_sendTimer.get_time());
-        Serial.println(F("ms"));
+            Serial.print(F("I2C Send Time: "));
+            Serial.print(_send_timer.get_time());
+            Serial.println(F("ms"));
 
-        Serial.println(F("SENT DATA STRUCTURE:"));
-        _printStateData(&_currState);
+            Serial.println(F("SENT DATA STRUCTURE:"));
+            _print_state_data(&_curr_state);
         #endif
     }
   }
@@ -93,83 +93,89 @@ private:
   // PRIVATE FUNCTIONS
 
   // UPDATE: only used by this class so not in the header
-  void _updateStateData(dataPacket_t* inState){
+  void _update_state_data(dataPacket_t* in_state){
+
     #if defined(STATEDATA_LASTCOL)
-        // TIME
-        inState->state.onTime = millis();
-        // LAST COLLISION
-        for(uint8_t ii=0;ii<7;ii++){
-            inState->state.checkVec[ii] = _last_col->check_vec[ii];
+        in_state->state.onTime = millis();
+
+        for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
+            in_state->state.check_bumpers[ii] = _last_col->check_bumpers[ii];
         }
-        inState->state.ultrasonic_range = _last_col->ultrasonic_range;
-        inState->state.LSRRangeL = _last_col->LSRRangeL;
-        inState->state.LSRRangeR = _last_col->LSRRangeR;
-        inState->state.LSRRangeU = _last_col->LSRRangeU;
-        inState->state.LSRRangeD = _last_col->LSRRangeD;
-        inState->state.escape_count = _last_col->escape_count;
-        inState->state.escape_dist = _last_col->escape_dist;
-        inState->state.escape_angle = _last_col->escape_angle;
+
+        for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
+            in_state->state.check_lasers[ii] =
+                    _last_col->check_lasers[ii];
+            in_state->state.laser_range_array[ii] =
+                    _last_col->laser_range_array[ii];
+            in_state->state.laser_status_array[ii] =
+                    _last_col->laser_status_array[ii];
+        }
+
+        in_state->state.escape_count = _last_col->escape_count;
+        in_state->state.escape_dist = _last_col->escape_dist;
+        in_state->state.escape_angle = _last_col->escape_angle;
+
     #elif defined(STATEDATA_NAV)
         // TIME
-        inState->state.onTime = millis();
+        in_state->state.onTime = millis();
         // MOVE
-        inState->state.wheelSpeedL = _move_manager->get_encoder_speed_left();
-        inState->state.wheelSpeedR = _move_manager->get_encoder_speed_right();
+        in_state->state.wheelSpeedL = _move_manager->get_encoder_speed_left();
+        in_state->state.wheelSpeedR = _move_manager->get_encoder_speed_right();
         // IMU
-        inState->state.IMUHead = _IMUObj->getHeadAng();
-        inState->state.IMUPitch = _IMUObj->getPitchAng();
-        inState->state.IMURoll = _IMUObj->getRollAng();
+        in_state->state.IMUHead = _IMU->getHeadAng();
+        in_state->state.IMUPitch = _IMU->getPitchAng();
+        in_state->state.IMURoll = _IMU->getRollAng();
         // Navigation
-        inState->state.navPosX = _navObj->getPosX();
-        inState->state.navPosY = _navObj->getPosY();
-        inState->state.navVelX = _navObj->getVelX();
-        inState->state.navVelY = _navObj->getVelY();
-        inState->state.navVelC = _navObj->getVelC();
-        inState->state.navHead = _navObj->getHeading();
+        in_state->state.navPosX = _navigator->getPosX();
+        in_state->state.navPosY = _navigator->getPosY();
+        in_state->state.navVelX = _navigator->getVelX();
+        in_state->state.navVelY = _navigator->getVelY();
+        in_state->state.navVelC = _navigator->getVelC();
+        in_state->state.navHead = _navigator->getHeading();
     #else
         // TIME
-        inState->state.onTime = millis();
+        in_state->state.onTime = millis();
         // MOOD
-        inState->state.mood = _mood_manager->getMood();
-        inState->state.moodScore = _mood_manager->getMoodScore();
+        in_state->state.mood = _mood_manager->getMood();
+        in_state->state.moodScore = _mood_manager->get_mood_score();
         // TASK
-        inState->state.task = _task_manager->getTask();
+        in_state->state.task = _task_manager->getTask();
         // MOVE
-        inState->state.moveBasic = _move_manager->get_basic_move();
-        inState->state.moveCompound = _move_manager->get_compound_move();
-        inState->state.escapeFlag = _move_manager->get_escape_flag();
-        inState->state.set_forward_speed = _move_manager->get_forward_speed();
-        inState->state.wheelSpeedL = _move_manager->get_encoder_speed_left();
-        inState->state.wheelSpeedR = _move_manager->get_encoder_speed_left();
-        inState->state.wheelECountL = _move_manager->get_encoder_count_left();
-        inState->state.wheelECountR = _move_manager->get_encoder_count_right();
+        in_state->state.moveBasic = _move_manager->get_basic_move();
+        in_state->state.moveCompound = _move_manager->get_compound_move();
+        in_state->state.escapeFlag = _move_manager->get_escape_flag();
+        in_state->state.set_forward_speed = _move_manager->get_forward_speed();
+        in_state->state.wheelSpeedL = _move_manager->get_encoder_speed_left();
+        in_state->state.wheelSpeedR = _move_manager->get_encoder_speed_left();
+        in_state->state.wheelECountL = _move_manager->get_encoder_count_left();
+        in_state->state.wheelECountR = _move_manager->get_encoder_count_right();
         // COLLISON - Latches
-        inState->state.colFlag = _collisionObj->get_detected();
-        inState->state.colBMPRs = _collisionObj->get_bumper_flag();
-        inState->state.colUSR = _collisionObj->getColUSFlag();
-        inState->state.colLSRL = _collisionObj->getColLSRFlagL();
-        inState->state.colLSRR = _collisionObj->getColLSRFlagR();
-        inState->state.colLSRB = _collisionObj->getColLSRFlagB();
-        inState->state.colLSRU = _collisionObj->getColLSRFlagU();
-        inState->state.colLSRD = _collisionObj->getColLSRFlagD();
+        in_state->state.colFlag = _collisionObj->get_detected();
+        in_state->state.colBMPRs = _collisionObj->get_bumper_flag();
+        in_state->state.colUSR = _collisionObj->getColUSFlag();
+        in_state->state.colLSRL = _collisionObj->getColLSRFlagL();
+        in_state->state.colLSRR = _collisionObj->getColLSRFlagR();
+        in_state->state.colLSRB = _collisionObj->getColLSRFlagB();
+        in_state->state.colLSRU = _collisionObj->getColLSRFlagU();
+        in_state->state.colLSRD = _collisionObj->getColLSRFlagD();
         // COLLISION - Ranges
-        inState->state.colUSRRng = _collisionObj->get_ultrasonic_range_mm();
-        inState->state.colLSRLRng = _collisionObj->getLSRRangeL();
-        inState->state.colLSRRRng = _collisionObj->getLSRRangeR();
-        inState->state.colLSRBRng = _collisionObj->getLSRRangeB();
-        inState->state.colLSRURng = _collisionObj->getLSRRangeU();
-        inState->state.colLSRDRng = _collisionObj->getLSRRangeD();
+        in_state->state.colUSRRng = _collisionObj->get_ultrasonic_range_mm();
+        in_state->state.colLSRLRng = _collisionObj->getLSRRangeL();
+        in_state->state.colLSRRRng = _collisionObj->getLSRRangeR();
+        in_state->state.colLSRBRng = _collisionObj->getLSRRangeB();
+        in_state->state.colLSRURng = _collisionObj->getLSRRangeU();
+        in_state->state.colLSRDRng = _collisionObj->getLSRRangeD();
     #endif
   }
 
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
-  CollisionManager* _collisionObj = NULL;
+  CollisionManager* _collision_manager = NULL;
   MoodManager* _mood_manager = NULL;
   TaskManager* _task_manager = NULL;
   MoveManager* _move_manager = NULL;
-  IMUSensor* _IMUObj = NULL;
-  Navigation* _navObj = NULL;
+  IMUSensor* _IMU = NULL;
+  Navigation* _navigator = NULL;
   SLastCollision* _last_col = NULL;
 
   //---------------------------------------------------------------------------
@@ -178,12 +184,12 @@ private:
   bool _start_flag = true;
 
   // DATA PACKET
-  dataPacket_t _currState;
-  bool _dataSwitch = false;
+  dataPacket_t _curr_state;
+  bool _data_switch = false;
 
   // I2C VARIABLES
-  uint16_t _I2CTime = STATEDATA_UPD_TIME;
-  Timer _I2CTimer = Timer();
-  Timer _sendTimer = Timer();
+  uint16_t _I2C_time = STATEDATA_UPD_TIME;
+  Timer _I2C_timer = Timer();
+  Timer _send_timer = Timer();
 };
 #endif

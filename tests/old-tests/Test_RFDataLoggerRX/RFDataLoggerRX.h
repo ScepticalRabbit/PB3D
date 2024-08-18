@@ -93,13 +93,13 @@ public:
     Serial.print("RFM69 RX radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
 
     // INIT CLASS:
-    _currState.state.mood = 0;
-    _currState.state.task = 0;
-    _currState.state.collisionFlags[0] = false;
-    _currState.state.collisionFlags[1] = false;
-    _currState.state.collisionFlags[2] = false;
-    _currState.state.collisionFlags[3] = false;
-    _currState.state.wheelSpeed = 0.0;
+    _curr_state.state.mood = 0;
+    _curr_state.state.task = 0;
+    _curr_state.state.collisionFlags[0] = false;
+    _curr_state.state.collisionFlags[1] = false;
+    _curr_state.state.collisionFlags[2] = false;
+    _curr_state.state.collisionFlags[3] = false;
+    _curr_state.state.wheelSpeed = 0.0;
 
     Serial.println(F("INITIAL DATA STRUCT"));
     printDataStruct();
@@ -112,7 +112,7 @@ public:
       uint8_t len = sizeof(_buf);
       uint8_t from;
 
-      if (_rf69Manager.recvfromAck(_currState.rfPacket, &len, &from)) {
+      if (_rf69Manager.recvfromAck(_curr_state.rfPacket, &len, &from)) {
         _buf[len] = 0; // zero out remaining string
 
         Serial.println();
@@ -144,16 +144,16 @@ public:
   // DIAGNOSTIC FUNCTIONS
   void printDataStruct(){
     Serial.print(F("Mood: "));
-    Serial.print(_currState.state.mood);
+    Serial.print(_curr_state.state.mood);
     Serial.print(F("; "));
 
     Serial.print(F("TaskManager: "));
-    Serial.print(_currState.state.task);
+    Serial.print(_curr_state.state.task);
     Serial.print(F("; "));
 
     Serial.print(F("Col Flags: "));
     for(uint8_t ii = 0; ii < 4; ii++){
-      if(_currState.state.collisionFlags[ii]){
+      if(_curr_state.state.collisionFlags[ii]){
         Serial.print(F("1"));
       }
       else{
@@ -163,7 +163,7 @@ public:
     Serial.print(F("; "));
 
     Serial.print(F("Speed: "));
-    Serial.print(_currState.state.wheelSpeed);
+    Serial.print(_curr_state.state.wheelSpeed);
     Serial.print(F("; "));
     Serial.println();
   }
@@ -175,7 +175,7 @@ private:
   bool _start_flag = true;
 
   // Declare instance of the packet to send
-  radioPacket_t _currState;
+  radioPacket_t _curr_state;
 
   // Radio class and radio ackMsg manager class
   // RH_RF69_MAX_MESSAGE_LEN = 60

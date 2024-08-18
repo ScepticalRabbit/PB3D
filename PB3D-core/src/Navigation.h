@@ -26,13 +26,13 @@ public:
   Navigation(Encoder* encL, Encoder* encR, IMUSensor* inIMU){
     _encoder_left = encL;
     _encoder_right = encR;
-    _IMUObj = inIMU;
+    _IMU = inIMU;
   }
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
   void begin(){
-    if(!_IMUObj->get_enabled_flag()){
+    if(!_IMU->get_enabled_flag()){
       Serial.println(F("NAV: IMU disabled, navigation disabled."));
     }
     else{
@@ -57,7 +57,7 @@ public:
       // Get the speed of the robots centroid and current heading
       _velC = (_encoder_left->get_smooth_speed_mmps()+
                     _encoder_right->get_smooth_speed_mmps()) / 2.0;
-      _heading = _IMUObj->getHeadAng();
+      _heading = _IMU->getHeadAng();
 
       // Calculate the velocity components (X points to front face of robot)
       _velX = _velC*cos((_heading/180.0)*float(PI));
@@ -115,7 +115,7 @@ private:
   // Navigation Objects - Encoders and IMU
   Encoder* _encoder_left;
   Encoder* _encoder_right;
-  IMUSensor* _IMUObj;
+  IMUSensor* _IMU;
 
   // Navigation Variables
   int16_t _navUpdateTime = 20;

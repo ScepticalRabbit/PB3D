@@ -44,11 +44,11 @@ public:
 
 private:
   // MAIN OBJECT POINTERS
-  CollisionManager* _collisionObj = NULL;
+  CollisionManager* _collision_manager = NULL;
   MoodManager* _mood_manager = NULL;
   TaskManager* _task_manager = NULL;
   MoveManager* _move_manager = NULL;
-  Speaker* _speakerObj = NULL;
+  Speaker* _speaker = NULL;
 
   // TASK - PAUSE
   bool _enabled = true;

@@ -17,7 +17,7 @@ TaskFindSound::TaskFindSound(MoodManager* inMood, TaskManager* inTask,
     _mood_manager = inMood;
     _task_manager = inTask;
     _move_manager = inMove;
-    _speakerObj = inSpeaker;
+    _speaker = inSpeaker;
 }
 
 //---------------------------------------------------------------------------
@@ -113,7 +113,7 @@ void TaskFindSound::findSound(){
         // Send the flag to sample environment
         _I2CSendSampEnvFlag();
 
-        _speakerObj->reset();
+        _speaker->reset();
         _callTimer.start(_callInterval);
     }
 
@@ -122,15 +122,15 @@ void TaskFindSound::findSound(){
     // Set the speaker codes on every loop
     // uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
     uint8_t inCodes[]   = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
-    _speakerObj->setSoundCodes(inCodes,4);
+    _speaker->setSoundCodes(inCodes,4);
     uint16_t inFreqs[]  = {NOTE_A4,NOTE_G4,NOTE_G4,NOTE_A6,0,0,0,0};
     uint16_t inDurs[]   = {300,0,200,0,0,0,0,0};
-    _speakerObj->setSoundFreqs(inFreqs,8);
-    _speakerObj->setSoundDurs(inDurs,8);
+    _speaker->setSoundFreqs(inFreqs,8);
+    _speaker->setSoundDurs(inDurs,8);
 
 
     if(_callTimer.finished()){
-        _speakerObj->reset();
+        _speaker->reset();
         _callTimer.start(_callInterval);
     }
 

@@ -79,8 +79,8 @@ public:
     Serial.print("RFM69 RX radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
 
     Serial.println(F("INITIAL DATA STRUCT"));
-    _initStateData(&_currState);
-    _printStateData(&_currState);
+    _init_state_data(&_curr_state);
+    _print_state_data(&_curr_state);
   }
 
   //---------------------------------------------------------------------------
@@ -90,7 +90,7 @@ public:
       uint8_t len = sizeof(_buf);
       uint8_t from;
 
-      if (_rf69Manager.recvfromAck(_currState.dataPacket, &len, &from)) {
+      if (_rf69Manager.recvfromAck(_curr_state.dataPacket, &len, &from)) {
         _buf[len] = 0; // zero out remaining string
 
         #if defined(RFRX_DEBUG_PRINT)
@@ -100,13 +100,13 @@ public:
 
         Serial.println();
         Serial.println(F("REC DATA STRUCTURE:"));
-        _printStateData(&_currState);
+        _print_state_data(&_curr_state);
         #endif
 
         #if defined(RFRX_DEBUG_SPEED)
         _DEBUG_PlotSpeed();
         #else
-        _serialLogData(&_currState);
+        _serial_log_data(&_curr_state);
         #endif
 
         // end a reply back to the originator client
@@ -137,7 +137,7 @@ private:
   bool _start_flag = true;
 
   // Declare instance of the packet to send
-  dataPacket_t _currState;
+  dataPacket_t _curr_state;
 
   // Radio class and radio ackMsg manager class
   // RH_RF69_MAX_MESSAGE_LEN = 60
@@ -155,10 +155,10 @@ private:
   // PRIVATE FUNCTIONS
   #if defined(RFRX_DEBUG_SPEED)
   void _DEBUG_PlotSpeed(){
-    Serial.print(_currState.state.onTime-_lastTime); Serial.print(",");
-    _lastTime = _currState.state.onTime;
-    Serial.print(_currState.state.wheelSpeedL); Serial.print(",");
-    Serial.print(_currState.state.wheelSpeedR); Serial.print(",");
+    Serial.print(_curr_state.state.onTime-_lastTime); Serial.print(",");
+    _lastTime = _curr_state.state.onTime;
+    Serial.print(_curr_state.state.wheelSpeedL); Serial.print(",");
+    Serial.print(_curr_state.state.wheelSpeedR); Serial.print(",");
     Serial.println();
   }
   #endif

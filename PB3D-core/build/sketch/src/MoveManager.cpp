@@ -10,10 +10,10 @@
 
 #include "MoveManager.h"
 
-MoveManager::MoveManager(Adafruit_MotorShield* AFMS,
+MoveManager::MoveManager(Adafruit_MotorShield* motor_shield,
                         Encoder* encL,
                         Encoder* encR){
-    _motor_shield = AFMS;
+    _motor_shield = motor_shield;
     _encoder_left = encL;
     _encoder_right = encR;
 }
@@ -847,8 +847,8 @@ void MoveManager::reset_look(){
 //----------------------------------------------------------------------------
 void MoveManager::reset_PIDs(){
     // Reset Position Control PIDs and Variables
-    _set_point_rel_counts_left = 0;
-    _set_point_rel_counts_right = 0;
+    _PID_set_point_rel_counts_left = 0;
+    _PID_set_point_rel_counts_right = 0;
     _pos_PID_left.set_set_point(0.0);
     _pos_PID_right.set_set_point(0.0);
     _pos_PID_left.set_output(0.0);
@@ -977,26 +977,26 @@ void MoveManager::_to_pos(float setPosL, float setPosR){
     // Check if the set point passed to the function has changed
     // LEFT
     int32_t checkSetPointL =  round(setPosL/_encoder_left->get_mm_per_count());
-    if(checkSetPointL != _set_point_rel_counts_left){
-        _set_point_rel_counts_left = checkSetPointL;
+    if(checkSetPointL != _PID_set_point_rel_counts_left){
+        _PID_set_point_rel_counts_left = checkSetPointL;
         _start_encoder_count_left = _encoder_left->get_count();
-        _pos_PID_left.set_set_point(float(_set_point_rel_counts_left));
+        _pos_PID_left.set_set_point(float(_PID_set_point_rel_counts_left));
     }
     // RIGHT
     int32_t checkSetPointR =  round(setPosR/_encoder_right->get_mm_per_count());
-    if(checkSetPointR != _set_point_rel_counts_right){
-        _set_point_rel_counts_right = checkSetPointR;
+    if(checkSetPointR != _PID_set_point_rel_counts_right){
+        _PID_set_point_rel_counts_right = checkSetPointR;
         _start_encoder_count_right = _encoder_right->get_count();
-        _pos_PID_right.set_set_point(float(_set_point_rel_counts_right));
+        _pos_PID_right.set_set_point(float(_PID_set_point_rel_counts_right));
     }
 
     // Update the relative count and send it to the PIDs
     // LEFT
-    _curr_relative_count_left = _encoder_left->get_count()-_start_encoder_count_left;
-    _pos_PID_left.update(_curr_relative_count_left);
+    _PID_curr_relative_count_left = _encoder_left->get_count()-_start_encoder_count_left;
+    _pos_PID_left.update(_PID_curr_relative_count_left);
     // RIGHT
-    _curr_relative_count_right = _encoder_right->get_count()-_start_encoder_count_right;
-    _pos_PID_right.update(_curr_relative_count_right);
+    _PID_curr_relative_count_right = _encoder_right->get_count()-_start_encoder_count_right;
+    _pos_PID_right.update(_PID_curr_relative_count_right);
 
     // Update the speed PIDs
     // LEFT
@@ -1026,13 +1026,13 @@ void MoveManager::_to_pos(float setPosL, float setPosR){
 
     // Move forward or back based on the PID value
     // LEFT
-    if(_curr_relative_count_left < (_set_point_rel_counts_left-_pos_tol)){
+    if(_PID_curr_relative_count_left < (_PID_set_point_rel_counts_left-_pos_tol)){
         _speed_PID_left.set_set_point(_pos_PID_left.get_output());
         _speed_PID_left.set_controller_dir(PID_DIRECT);
         _motor_left->run(FORWARD);
         _motor_left->setSpeed(int(_speed_PID_left.get_output()));
     }
-    else if(_curr_relative_count_left > (_set_point_rel_counts_left+_pos_tol)){
+    else if(_PID_curr_relative_count_left > (_PID_set_point_rel_counts_left+_pos_tol)){
         _speed_PID_left.set_set_point(_pos_PID_left.get_output());
         _speed_PID_left.set_controller_dir(PID_REVERSE);
         _motor_left->run(BACKWARD);
@@ -1047,13 +1047,13 @@ void MoveManager::_to_pos(float setPosL, float setPosR){
         _pos_at_left = true;
     }
     // RIGHT
-    if(_curr_relative_count_right < (_set_point_rel_counts_right-_pos_tol)){
+    if(_PID_curr_relative_count_right < (_PID_set_point_rel_counts_right-_pos_tol)){
         _speed_PID_right.set_set_point(_pos_PID_right.get_output());
         _speed_PID_right.set_controller_dir(PID_DIRECT);
         _motor_right->run(FORWARD);
         _motor_right->setSpeed(int(_speed_PID_right.get_output()));
     }
-    else if(_curr_relative_count_right > (_set_point_rel_counts_right+_pos_tol)){
+    else if(_PID_curr_relative_count_right > (_PID_set_point_rel_counts_right+_pos_tol)){
         _speed_PID_right.set_set_point(_pos_PID_right.get_output());
         _speed_PID_right.set_controller_dir(PID_REVERSE);
         _motor_right->run(BACKWARD);

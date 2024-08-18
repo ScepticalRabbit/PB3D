@@ -9,16 +9,12 @@
 
 #include "TaskManager.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
-//---------------------------------------------------------------------------
 TaskManager::TaskManager(Adafruit_NeoPixel_ZeroDMA* RGBLEDs){
     _taskLEDs = RGBLEDs;
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // BEGIN: called once during SETUP
-//---------------------------------------------------------------------------
 void TaskManager::begin(){
     // Generate a probability, start the task timer and set the task
     _taskPc = random(0,100); // NOTE: random num between (min,max-1)
@@ -26,22 +22,20 @@ void TaskManager::begin(){
     _LEDTimer.start(0);
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // UPDATE: called during every LOOP
-//---------------------------------------------------------------------------
 void TaskManager::update(){
     if(_taskTimer.finished()){
         _update();
     }
 }
 
-void TaskManager::forceUpdate(){
+void TaskManager::force_update(){
     _update();
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Get, set and reset
-//---------------------------------------------------------------------------
 // Default setTask function uses default task durations
 void TaskManager::setTask(int8_t taskIn){
     if(taskIn != _taskCode){
@@ -141,9 +135,8 @@ void TaskManager::assignProb(int8_t moodIn){
     }
 }
 
-//------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // TASK LED FUNCTIONS
-//---------------------------------------------------------------------------
 void TaskManager::taskLEDCollision(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));

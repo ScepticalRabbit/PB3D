@@ -12,7 +12,9 @@
 
 //------------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
-CollisionManager::CollisionManager(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove){
+CollisionManager::CollisionManager(MoodManager* inMood,
+                                   TaskManager* inTask,
+                                   MoveManager* inMove){
     _mood_manager = inMood;
     _task_manager = inTask;
     _move_manager = inMove;
@@ -40,9 +42,8 @@ void CollisionManager::begin(){
     //_ultrasonic_ranger.set_enabled_flag(false);
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // UPDATE: called during every LOOP
-//-----------------------------------------------------------------------------
 void CollisionManager::update(){
     //uint32_t startTime = micros();
 
@@ -61,7 +62,7 @@ void CollisionManager::update(){
         _bumpers.update();
 
         if(_bumpers.get_bump_thres_check()){
-            _mood_manager->decMoodScore();
+            _mood_manager->dec_mood_score();
             _bumpers.reset_bump_count();
         }
     }
@@ -84,17 +85,17 @@ void CollisionManager::update(){
         _move_manager->set_speed_by_col_code(true);
     }
 
-    // DISABLED: If collision detection is turned off set flags to false and return
-    // Doing this last allows ranges to update but resets flags
+    // DISABLED: If collision detection is turned off set flags to false and
+    // return. Doing this last allows ranges to update but resets flags
     if(!_enabled){reset_flags();}
 
     //uint32_t endTime = micros();
     //Serial.println(endTime-startTime);
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Get, set and reset
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 bool CollisionManager::get_altitude_flag(){
     if(_laser_manager.get_collision_code(LASER_ALT) > DANGER_NONE){
         return true;
@@ -112,27 +113,27 @@ void CollisionManager::reset_flags(){
 
 //-----------------------------------------------------------------------------
 void CollisionManager::set_escape_start(){
-    _update_check_vec();    // Check all collision sensors - used for decision tree
+    _update_check_vec();
     _update_escape_decision();
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void CollisionManager::escape(){
     _escaper.escape();
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 bool CollisionManager::get_escape_flag(){
     return _escaper.get_escape_flag();
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 int8_t CollisionManager::get_escape_turn(){
-    _update_check_vec();    // Check all collision sensors - used for decision tree
+    _update_check_vec();
     return _escaper.get_escape_turn(_check_lasers);
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void CollisionManager::_update_check_vec(){
 
     _collision_detected = false;
@@ -158,7 +159,7 @@ void CollisionManager::_update_check_vec(){
     }
 }
 
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // ESCAPE DECISION TREE
 void CollisionManager::_update_escape_decision(){
     // Forward to escaper
@@ -179,36 +180,10 @@ void CollisionManager::_update_escape_decision(){
 
     _last_col.escape_count = _escaper.get_escape_count();
 
-    // Plot debug information
     #if defined(COLL_DEBUG_DECISIONTREE)
         Serial.println();
         Serial.println(F("======================================="));
-
-        Serial.println(F("CheckVec=[BL,BR,US,LL,LR,LU,LD,]"));
-        Serial.print("CheckVec=[");
-        for(uint8_t ii=0;ii<_checkNum;ii++){
-            Serial.print(" ");Serial.print(_check_lasers[ii]);Serial.print(",");
-        }
-        Serial.println("]");
-        Serial.println();
-
-        Serial.print("US= "); Serial.print(_last_col.ultrasonic_range); Serial.println(" mm");
-
-        Serial.print("LL= "); Serial.print(_last_col.LSRStatusL); Serial.print(", ");
-        Serial.print(_last_col.LSRRangeL); Serial.println(" mm");
-        Serial.print("LR= " ); Serial.print(_last_col.LSRStatusR); Serial.print(", ");
-        Serial.print(_last_col.LSRRangeR); Serial.println(" mm");
-        Serial.print("LU= "); Serial.print(_last_col.LSRStatusU); Serial.print(", ");
-        Serial.print(_last_col.LSRRangeU); Serial.println(" mm");
-        Serial.print("LD= "); Serial.print(_last_col.LSRStatusD); Serial.print(", ");
-        Serial.print(_last_col.LSRRangeD); Serial.println(" mm");
-
-        Serial.println();
-        Serial.print("Esc,Count="); Serial.print(_last_col.escape_count);
-        Serial.print(", Dist="); Serial.print(_last_col.escape_dist);
-        Serial.print(", Angle="); Serial.print(_last_col.escape_angle);
-        Serial.println();
-
+        Serial.println(F("TODO"));
         Serial.println(F("======================================="));
         Serial.println();
     #endif

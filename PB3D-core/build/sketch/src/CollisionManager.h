@@ -21,7 +21,6 @@
 #include "CollisionEscaper.h"
 #include "LaserManager.h"
 #include "BumperSensor.h"
-#include "UltrasonicSensor.h"
 
 
 // DEBUG Flags
@@ -30,9 +29,10 @@
 //------------------------------------------------------------------------------
 // LAST COLLISION: data structure
 struct SLastCollision{
-  uint8_t check_vec[7] = {0,0,0,0,0,0,0};
-  int16_t ultrasonic_range = 0;
-  int16_t laser_range_array[LASER_COUNT] = {0,0,0,0,0,0,0,0,0,0};
+  uint8_t check_bumpers[BUMP_COUNT];
+  uint8_t check_lasers[LASER_COUNT];
+  int16_t laser_range_array[LASER_COUNT];
+  uint8_t laser_status_array[LASER_COUNT];
   uint8_t escape_count = 0;
   float escape_dist = 0.0;
   float escape_angle = 0.0;
@@ -69,9 +69,6 @@ public:
   void set_beepbeep_flag(bool flag){_collision_beepbeep_flag = flag;}
 
   bool get_bumper_flag(){return _bumpers.get_bump_flag();}
-
-  int16_t get_ultrasonic_range(){return _ultrasonic_ranger.get_range();}
-  int16_t get_ultrasonic_range_mm(){return _ultrasonic_ranger.get_range_mm();}
 
   int16_t get_laser_range(ELaserIndex _ind){
     return _laser_manager.get_range(_ind);
@@ -112,29 +109,23 @@ private:
   bool _collision_beepbeep_flag = false;
   uint16_t _collision_count = 0;
 
-  // Helper Objects
   CollisionEscaper _escaper = CollisionEscaper();
   LaserManager _laser_manager = LaserManager();
-  UltrasonicSensor _ultrasonic_ranger = UltrasonicSensor();
   BumperSensor _bumpers = BumperSensor();
 
   // Check flags for all collision sensors
-  uint8_t _checkNum = 7;
-  uint8_t _check_lasers[7] = {0,0,0,0,0,0,0}; //_check_lasers[7] = {BL,BR,US,LL,LR,LU,LD}
+  uint8_t _check_lasers[LASER_COUNT];
+  uint8_t _check_bumpers[BUMP_COUNT];
   uint16_t _check_interval = 50;
   Timer _check_timer = Timer();
 
-  // Time to slow down if sensor tripped
+  // Time to slow down if collision sensor tripped
   uint16_t _slow_down_int = 500;
   Timer _slow_down_timer = Timer();
 
-  // Collision Sensor Timers
   int16_t _bumper_update_time = 101;
   Timer _bumper_timer = Timer();
-  int16_t _ultrasonicUpdateTime = 101;  // ms, set to prime number (100+timeout)
-  Timer _ultrasonicTimer = Timer();
 
-  // Data structure for info on last collision
   SLastCollision _last_col;
 };
 #endif // COLLISIONMANAGER_H

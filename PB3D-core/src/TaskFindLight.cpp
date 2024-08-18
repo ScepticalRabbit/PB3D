@@ -16,7 +16,7 @@ TaskFindLight::TaskFindLight(MoodManager* inMood, TaskManager* inTask, MoveManag
     _mood_manager = inMood;
     _task_manager = inTask;
     _move_manager = inMove;
-    _speakerObj = inSpeaker;
+    _speaker = inSpeaker;
     _patSensObj = inPatSens;
 }
 
@@ -83,7 +83,7 @@ void TaskFindLight::update(){
     if(_patSensObj->getButtonOneFlag()){
         _task_manager->setTask(TASK_FINDLIGHT);
         // Increase mood score when asked to play light game
-        _mood_manager->incMoodScore();
+        _mood_manager->inc_mood_score();
     }
 }
 

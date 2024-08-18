@@ -6,9 +6,9 @@
  * Pololu encode = 12 counts per revolution =>
  * Multiply gear ratio by 12 to get counts per wheel rev
  * Micrometal motors are 50:1
- * Total Counts Per Rev = 12 x 50 (gear ratio) 
- * Total Counts Per Rev = 600  
- * 
+ * Total Counts Per Rev = 12 x 50 (gear ratio)
+ * Total Counts Per Rev = 600
+ *
  * Largest storable enoder count:
  * -2,147,483,648 to 2,147,483,647
  * With 600 counts per rev = 3579139 revs
@@ -18,14 +18,14 @@
  */
 
 // Create the motor shield object with the default I2C address
-Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
+Adafruit_MotorShield motor_shield = Adafruit_MotorShield();
 // Or, create it with a different I2C address (say for stacking)
-// Adafruit_MotorShield AFMS = Adafruit_MotorShield(0x61); 
+// Adafruit_MotorShield motor_shield = Adafruit_MotorShield(0x61);
 
 // Select which 'port' M1, M2, M3 or M4. In this case, M1
-Adafruit_DCMotor *myMotorR = AFMS.getMotor(1);
+Adafruit_DCMotor *myMotorR = motor_shield.getMotor(1);
 // You can also make another motor on port M2
-Adafruit_DCMotor *myMotorL = AFMS.getMotor(2);
+Adafruit_DCMotor *myMotorL = motor_shield.getMotor(2);
 
 char commandDir = 'F';
 // Gear ratio = 50, Encoder has 12 counts per rev
@@ -46,7 +46,7 @@ volatile bool lastStateAL = false;
 char encDirL = 'F';
 long oldEncCounterL = 0;
 
-uint8_t maxMotorSpeed = 200; 
+uint8_t maxMotorSpeed = 200;
 uint16_t speedUpdateTime = 20;
 uint16_t pauseTime = 1000;
 
@@ -61,16 +61,16 @@ void updateEncoderL();
 void setup() {
   pinMode(pinAR, INPUT); // set pinA as an input, pulled HIGH to the logic voltage (5V or 3.3V for most cases)
   pinMode(pinBR, INPUT); // set pinB as an input, pulled HIGH to the logic voltage (5V or 3.3V for most cases)
-  attachInterrupt(digitalPinToInterrupt(pinAR),updateEncoderR,CHANGE); 
+  attachInterrupt(digitalPinToInterrupt(pinAR),updateEncoderR,CHANGE);
   pinMode(pinAL,INPUT); // set pinA as an input, pulled HIGH to the logic voltage (5V or 3.3V for most cases)
   pinMode(pinBL, INPUT); // set pinB as an input, pulled HIGH to the logic voltage (5V or 3.3V for most cases)
-  attachInterrupt(digitalPinToInterrupt(pinAL),updateEncoderL,CHANGE); 
-  
+  attachInterrupt(digitalPinToInterrupt(pinAL),updateEncoderL,CHANGE);
+
   Serial.begin(115200);           // set up Serial library at 9600 bps
   Serial.println("Adafruit Motorshield v2 - DC Motor test");
 
-  AFMS.begin();  // create with the default frequency 1.6KHz
-  
+  motor_shield.begin();  // create with the default frequency 1.6KHz
+
   // Set the speed to start, from 0 (off) to 255 (max speed)
   myMotorR->setSpeed(150);
   myMotorR->run(FORWARD);
@@ -89,17 +89,17 @@ void loop() {
 
   Serial.println(F("FORWARD"));
   commandDir = 'F';
-  
+
   if(runRight){myMotorR->run(FORWARD);}
   if(runLeft){myMotorL->run(FORWARD);}
   for (i=0; i<maxMotorSpeed; i++) {
     if(runRight){myMotorR->setSpeed(i);}
-    if(runLeft){myMotorL->setSpeed(i);}    
+    if(runLeft){myMotorL->setSpeed(i);}
     delay(speedUpdateTime);
   }
   for (i=maxMotorSpeed; i!=0; i--) {
     if(runRight){myMotorR->setSpeed(i);}
-    if(runLeft){myMotorL->setSpeed(i);}  
+    if(runLeft){myMotorL->setSpeed(i);}
     delay(speedUpdateTime);
   }
   delay(1000);
@@ -111,12 +111,12 @@ void loop() {
   if(runLeft){myMotorL->run(BACKWARD);}
   for (i=0; i<maxMotorSpeed; i++) {
     if(runRight){myMotorR->setSpeed(i);}
-    if(runLeft){myMotorL->setSpeed(i);}  
+    if(runLeft){myMotorL->setSpeed(i);}
     delay(speedUpdateTime);
   }
   for (i=maxMotorSpeed; i!=0; i--) {
-    if(runRight){myMotorR->setSpeed(i);} 
-    if(runLeft){myMotorL->setSpeed(i);}  
+    if(runRight){myMotorR->setSpeed(i);}
+    if(runLeft){myMotorL->setSpeed(i);}
     delay(speedUpdateTime);
   }
 
@@ -134,7 +134,7 @@ void updateEncoderR(){
   else{
     encCounterR--;
     encDirR = 'B';
-  } 
+  }
 
 
   if(printRight&&(oldEncCounterR != encCounterR)) {
@@ -156,7 +156,7 @@ void updateEncoderL(){
   else{
     encCounterL--;
     encDirL = 'B';
-  } 
+  }
 
   if(printLeft&&(oldEncCounterL != encCounterL)) {
     Serial.print(F("L CDir: "));
