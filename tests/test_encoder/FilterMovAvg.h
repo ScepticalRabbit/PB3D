@@ -38,7 +38,7 @@ public:
   void reset();
   void reset(float inVal);
 
-  uint8_t getWindow(){return _window;}
+  uint8_t get_window(){return _window;}
   double get_current_value(){return _curr_filtered;}
 
 private:

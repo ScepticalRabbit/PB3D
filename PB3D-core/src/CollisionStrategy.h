@@ -11,16 +11,11 @@
 #define COLLISIONSTRATEGY_H
 
 #include <Arduino.h>
-#include "CollisionDangerCodes.h"
+
+#include "PB3DConstants.h"
 
 
-class ICollisionStrategy{
-    public:
-        virtual EDangerCode get_collision_code(int16_t range) = 0;
-};
-
-
-class CollisionAvoidBasic : public ICollisionStrategy{
+class CollisionAvoidBasic{
     public:
         CollisionAvoidBasic(int16_t close, int16_t far){
             _close = close;
@@ -35,7 +30,7 @@ class CollisionAvoidBasic : public ICollisionStrategy{
 };
 
 
-class CollisionAvoidSlow : public ICollisionStrategy{
+class CollisionAvoidSlow{
     public:
         CollisionAvoidSlow(int16_t close, int16_t far, int16_t slow){
             _close = close;
@@ -52,7 +47,7 @@ class CollisionAvoidSlow : public ICollisionStrategy{
 };
 
 
-class CliffAvoid : public ICollisionStrategy{
+class CliffAvoid{
     public:
         CliffAvoid(int16_t close, int16_t far){
             _close = close;
@@ -66,7 +61,7 @@ class CliffAvoid : public ICollisionStrategy{
         int16_t _far = 0;
 };
 
-class CollisionCliffAvoid : public ICollisionStrategy{
+class CollisionCliffAvoid{
     public:
         CollisionCliffAvoid(int16_t col_close,
                             int16_t col_far,

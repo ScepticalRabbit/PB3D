@@ -72,7 +72,7 @@ public:
 
         #if defined(I2CDATASENDER_DEBUG_PRINT)
         Serial.print(F("I2C Send Time: "));
-        Serial.print(_sendTimer.getTime());
+        Serial.print(_sendTimer.get_time());
         Serial.println(F("ms"));
 
         Serial.println(F("SENT DATA STRUCTURE:"));

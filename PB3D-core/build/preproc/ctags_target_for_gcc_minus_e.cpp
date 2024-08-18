@@ -1,4 +1,4 @@
-#line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+# 1 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 //==============================================================================
 // PB3D: A pet robot that is 3D printed
 //==============================================================================
@@ -8,40 +8,40 @@
 // Copyright (C) 2024 ScepticalRabbit
 //------------------------------------------------------------------------------
 
-#include <Arduino.h>
-#include <Wire.h>
+# 11 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 12 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 
 // External Classes - Sensor and Module Libraries
-#include <Adafruit_MotorShield.h>
-#include <Adafruit_NeoPixel_ZeroDMA.h>
+# 15 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 16 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 
 // Internal Classes - Basic Functions
-#include "src/CollisionManager.h"
-#include "src/Encoder.h"
-#include "src/FilterLowPass.h"
-#include "src/FilterMovAvg.h"
-#include "src/MoodManager.h"
-#include "src/MoveManager.h"
-#include "src/PatSensor.h"
-#include "src/PID.h"
-#include "src/Speaker.h"
-#include "src/Tail.h"
-#include "src/TaskManager.h"
-#include "src/Timer.h"
-#include "src/I2CDataSender.h"
-#include "src/IMUSensor.h"
-#include "src/Navigation.h"
+# 19 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 20 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 21 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 22 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 23 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 24 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 25 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 26 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 27 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 28 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 29 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 30 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 31 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 32 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 33 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 // Internal Classes - Tasks
-#include "src/TaskDance.h"
-#include "src/TaskRest.h"
-#include "src/TaskTantrum.h"
-#include "src/TaskInteract.h"
-#include "src/TaskFindHuman.h"
-#include "src/TaskFindLight.h"
-#include "src/TaskFindSound.h"
-#include "src/TaskPickedUp.h"
-#include "src/TaskPounce.h"
-#include "src/TaskPause.h"
+# 35 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 36 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 37 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 38 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 39 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 40 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 41 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 42 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 43 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 44 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 
 //-----------------------------------------------------------------------------
 // VARIABLES
@@ -52,7 +52,7 @@ bool _debug_collisionOff = false;
 bool _debug_forceMood = true;
 int8_t _debug_moodCode = MOOD_NEUTRAL;
 bool _debug_forceTask = true;
-int8_t _debug_taskCode = TASK_EXPLORE;
+int8_t _debug_taskCode = 0;
 bool _debug_forceMove = false;
 int8_t _debug_moveType = MOVE_C_CIRCLE;
 
@@ -86,7 +86,7 @@ uint32_t _test_timeStamp = 0;
 
 // MOOD LEDs
 Adafruit_NeoPixel_ZeroDMA leds = Adafruit_NeoPixel_ZeroDMA(
-  MOOD_NUMPIX, MOOD_PIN, NEO_GRB + NEO_KHZ800);
+  4, 6, ((1 << 6) | (1 << 4) | (0 << 2) | (2)) /*|< Transmit as G,R,B*/ + 0x0000 /*|< 800 KHz data transmission*/);
 
 // MOTORS - Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
@@ -129,23 +129,6 @@ TaskPause taskPauseObj = TaskPause(&collisionObj,&taskObj,&moveObj,&speakerObj);
 
 //-----------------------------------------------------------------------------
 // SETUP
-#line 131 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void setup();
-#line 225 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void loop();
-#line 404 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void updateEncLA();
-#line 407 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void updateEncLB();
-#line 410 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void updateEncRA();
-#line 413 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void updateEncRB();
-#line 419 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void escapeCollision();
-#line 431 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
-void detectedCollision();
-#line 131 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void setup() {
   // Start the serial
   Serial.begin(115200);
@@ -153,13 +136,13 @@ void setup() {
   // while(!Serial){}
 
   // Initialize I2C communications for sensors and sub boards
-  Wire.begin();  // Join I2C bus as leader
-  delay(2000);   // Needed to ensure sensors work, delay allows sub-processors to start up
+  Wire.begin(); // Join I2C bus as leader
+  delay(2000); // Needed to ensure sensors work, delay allows sub-processors to start up
 
   // SERIAL: POST SETUP
   Serial.println();
-  Serial.println(F("PB3D: SETUP"));
-  Serial.println(F("------------------------------"));
+  Serial.println((reinterpret_cast<const __FlashStringHelper *>(("PB3D: SETUP"))));
+  Serial.println((reinterpret_cast<const __FlashStringHelper *>(("------------------------------"))));
 
   // Seed the random generator - used by many classes 'begin' function
   randomSeed(analogRead(A1));
@@ -194,7 +177,7 @@ void setup() {
   taskPauseObj.begin();
 
   // Make sure all the laser sensors are left on
-  taskFindSoundObj.setSendByte(B00111110);
+  taskFindSoundObj.setSendByte(62);
   taskFindSoundObj.begin();
 
   // Pass durations to the master task object
@@ -207,14 +190,14 @@ void setup() {
   _test_pauseTimer.start(_test_pauseTime);
 
   // Encoders - Attach Interrupt Pins - CHANGE,RISING,FALLING
-  attachInterrupt(digitalPinToInterrupt(encPinAL),
-                  updateEncLA,CHANGE);
-  attachInterrupt(digitalPinToInterrupt(encPinAR),
-                  updateEncRA,CHANGE);
-  attachInterrupt(digitalPinToInterrupt(encPinBL),
-                  updateEncLB,CHANGE);
-  attachInterrupt(digitalPinToInterrupt(encPinBR),
-                  updateEncRB,CHANGE);
+  attachInterrupt(( encPinAL ),
+                  updateEncLA,2);
+  attachInterrupt(( encPinAR ),
+                  updateEncRA,2);
+  attachInterrupt(( encPinBL ),
+                  updateEncLB,2);
+  attachInterrupt(( encPinBR ),
+                  updateEncRB,2);
 
   //-------------------------------------------------------------------------
   // DEBUG MODE:
@@ -229,7 +212,7 @@ void setup() {
   }
   taskObj.assignProb(moodObj.get_mood());
 
-  tailObj.setState(TAIL_CENT);
+  tailObj.setState(0);
   Serial.println();
 
   // Final setup - increase I2C clock speed
@@ -313,10 +296,10 @@ void loop(){
   //----------------------------------------------------------------------------
   // RESET FLAGS
   // Reset the sound code and let the decision tree update it for the next loop
-  uint8_t inCodes[] = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
+  uint8_t inCodes[] = {0,0,0,0};
   speakerObj.setSoundCodes(inCodes,4);
   // Reset the tail to the central position - allow tasks and mood control
-  tailObj.setState(TAIL_CENT);
+  tailObj.setState(0);
 
   //----------------------------------------------------------------------------
   // MAIN DECISION TREE
@@ -324,19 +307,19 @@ void loop(){
   // NOTE: Rest and Interact are placed before collision avoidance to disable
   // handling of collisions while these modes are active - should be able to
   // make this smarter so certain things can re-enable collision avoidance
-  if(taskObj.getTask() == TASK_TEST){
+  if(taskObj.getTask() == -7){
     //DEBUG_SpeedTest(_test_value,MOVE_B_FORWARD);
   }
-  else if(taskObj.getTask() == TASK_REST){
+  else if(taskObj.getTask() == 1){
     taskRestObj.rest();
   }
-  else if(taskObj.getTask() == TASK_PAUSE){
+  else if(taskObj.getTask() == -4 /* Only called by other tasks*/){
     taskPauseObj.pause();
   }
-  else if(taskObj.getTask() == TASK_PICKEDUP){
+  else if(taskObj.getTask() == -3 /* Only called by other tasks*/){
     taskPickedUpObj.pickedUp();
   }
-  else if(taskObj.getTask() == TASK_INTERACT){
+  else if(taskObj.getTask() == -2 /* Only called by other tasks*/){
     taskInteractObj.interact();
   }
   else if(collisionObj.get_escape_flag() && !_debug_collisionOff){
@@ -347,29 +330,29 @@ void loop(){
     //DEBUG_PrintColFlags();
     detectedCollision(); // SEE FUNCTION DEF BELOW MAIN
   }
-  else if(taskObj.getTask() == TASK_DANCE){
+  else if(taskObj.getTask() == 2){
     if(taskObj.getDanceUpdateFlag()){
       taskObj.setDanceUpdateFlag(false);
       taskDanceObj.setSpeakerFlag(false);
     }
     taskDanceObj.dance();
   }
-  else if(taskObj.getTask() == TASK_FINDHUMAN){
+  else if(taskObj.getTask() == 3){
     taskFindHumanObj.findHuman();
   }
-  else if(taskObj.getTask() == TASK_FINDLIGHT){
+  else if(taskObj.getTask() == 5){
     taskFindLightObj.findLight();
   }
-  else if(taskObj.getTask() == TASK_FINDDARK){
+  else if(taskObj.getTask() == 6){
     taskFindLightObj.findDark();
   }
-  else if(taskObj.getTask() == TASK_FINDSOUND){
+  else if(taskObj.getTask() == 4){
     taskFindSoundObj.findSound();
   }
-  else if(taskObj.getTask() == TASK_POUNCE){
+  else if(taskObj.getTask() == 7){
     taskPounceObj.seekAndPounce();
   }
-  else if(taskObj.getTask() == TASK_TANTRUM){
+  else if(taskObj.getTask() == -1 /* Only called by other tasks*/){
     if(taskTantrumObj.getCompleteFlag()){
       taskObj.forceUpdate();
     }
@@ -395,14 +378,14 @@ void loop(){
   // POST DECISION TREE OVERRIDES
   // Wag tail if happy - regardless of task use of tail
   if(moodObj.get_mood() == MOOD_HAPPY){
-    tailObj.setState(TAIL_WAG_INT);
+    tailObj.setState(3);
     // wagmovetime,wagoffset,_test_pauseTime,wagcount
     tailObj.setWagParams(200,30,4000,6);
   }
 
   // If sleeping don't wag tail
-  if(taskObj.getTask() == TASK_REST){
-    tailObj.setState(TAIL_CENT);
+  if(taskObj.getTask() == 1){
+    tailObj.setState(0);
   }
 
   //-------------------------------------------------------------------------
@@ -439,7 +422,7 @@ void escapeCollision(){
   collisionObj.reset_flags();
 
   if(collisionObj.get_beepbeep_flag()){
-    uint8_t inCodes[] = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
+    uint8_t inCodes[] = {2,2,0,0};
     speakerObj.setSoundCodes(inCodes,4);
   }
 
@@ -463,19 +446,19 @@ void detectedCollision(){
     collisionObj.set_beepbeep_flag(true);
 
     speakerObj.reset();
-    uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
+    uint8_t inCodes[] = {2,2,0,0};
     speakerObj.setSoundCodes(inCodes,4);
-    uint16_t inFreqs[]  = {NOTE_G4,NOTE_FS4,NOTE_G4,NOTE_FS4,0,0,0,0};
+    uint16_t inFreqs[] = {392,370,392,370,0,0,0,0};
     speakerObj.setSoundFreqs(inFreqs,8);
-    uint16_t inDurs[]   = {200,100,200,100,0,0,0,0};
+    uint16_t inDurs[] = {200,100,200,100,0,0,0,0};
     speakerObj.setSoundDurs(inDurs,8);
   }
 
   // Call specific tasks that need to handle collision events
-  if((taskObj.getTask() == TASK_FINDLIGHT)||(taskObj.getTask() == TASK_FINDDARK)){
+  if((taskObj.getTask() == 5)||(taskObj.getTask() == 6)){
     taskFindLightObj.resetGrad();
   }
-  if((taskObj.getTask() == TASK_POUNCE) && (taskPounceObj.getState() == POUNCE_RUN)){
+  if((taskObj.getTask() == 7) && (taskPounceObj.getState() == 2)){
     taskPounceObj.collisionResetToRealign();
 
     int16_t angCent = taskPounceObj.getAngCentForCollision();
@@ -493,260 +476,508 @@ void detectedCollision(){
   if(collisionObj.get_count() >= taskTantrumObj.getThreshold()){
     collisionObj.reset_Count();
     taskTantrumObj.setStartTantrumFlag();
-    taskObj.setTask(TASK_TANTRUM);
+    taskObj.setTask(-1 /* Only called by other tasks*/);
   }
 }
 
 //------------------------------------------------------------------------------
 // DEBUG FUNCTIONS
 /*
+
 void DEBUG_SpeedTest(uint8_t inPower, uint8_t moveCode){
+
   if(_test_pauseTimer.finished()){
+
     if(_test_pauseSwitch){
+
       _test_pauseSwitch = false;
+
       _test_timer.start(_test_time);
+
       _test_switch = true;
+
     }
+
     DEBUG_PlotSpeedMMPS();
 
+
+
     if(_test_timer.finished()){
+
       if(_test_retest){
+
         _test_timer.start(_test_time);
+
         _test_switch = !_test_switch;
+
       }
+
       else{
+
         _test_switch = false;
+
       }
+
     }
 
+
+
     if(_test_switch){
+
       if(moveCode == MOVE_B_BACK){
+
         moveObj.back_power(inPower);
+
       }
+
       else if(moveCode == MOVE_B_LEFT){
+
         moveObj.left_power(inPower);
+
       }
+
       else if(moveCode == MOVE_B_RIGHT){
+
         moveObj.right_power(inPower);
+
       }
+
       else{
+
         moveObj.forward_power(inPower);
+
       }
+
     }
+
     else{
+
       moveObj.stop();
+
     }
+
   }
+
   else{
+
     moveObj.stop();
+
   }
+
 }
+
+
 
 void DEBUG_SpeedTest(float inSpeed, uint8_t moveCode){
+
   if(_test_pauseTimer.finished()){
+
     if(_test_pauseSwitch){
+
       _test_pauseSwitch = false;
+
       _test_timer.start(_test_time);
+
       _test_switch = true;
+
     }
+
     DEBUG_PlotSpeedMMPS();
 
+
+
     if(_test_timer.finished()){
+
       if(_test_retest){
+
         _test_timer.start(_test_time);
+
         _test_switch = !_test_switch;
+
       }
+
       else{
+
         _test_switch = false;
+
       }
+
     }
+
+
 
     if(_test_switch){
+
       if(moveCode == MOVE_B_BACK){
+
         moveObj.back(inSpeed);
+
       }
+
       else if(moveCode == MOVE_B_LEFT){
+
         moveObj.left(inSpeed);
+
       }
+
       else if(moveCode == MOVE_B_RIGHT){
+
         moveObj.right(inSpeed);
+
       }
+
       else{
+
         moveObj.forward(inSpeed);
+
       }
+
     }
+
     else{
+
       moveObj.stop();
+
     }
+
   }
+
   else{
+
     moveObj.stop();
+
   }
+
 }
+
+
 
 void DEBUG_PrintSpeedMMPS(){
+
   Serial.println();
+
   Serial.print(F("ENCODER SPEED, L="));
+
   Serial.print(encoderL.get_smooth_speed_mmps());
+
   Serial.print(F(" mm/s, R = "));
+
   Serial.print(encoderR.get_smooth_speed_mmps());
+
   Serial.print(F(" mm/s"));
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PrintSpeedCPS(){
+
   Serial.println();
+
   Serial.print(F("ENCODER SPEED, L="));
+
   Serial.print(encoderL.get_smooth_speed_mmps());
+
   Serial.print(F(" mm/s, R = "));
+
   Serial.print(encoderR.get_smooth_speed_mmps());
+
   Serial.print(F(" mm/s"));
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PlotSpeedBoth(){
+
   Serial.print(encoderL.get_smooth_speed_cps());
+
   Serial.print(",");
+
   Serial.print(encoderL.get_smooth_speed_mmps());
+
   Serial.print(",");
+
   Serial.print(encoderR.get_smooth_speed_cps());
+
   Serial.print(",");
+
   Serial.print(encoderR.get_smooth_speed_mmps());
+
   Serial.print(",");
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PlotSpeedPID_L(){
+
   Serial.print(moveObj.get_speed_PID_set_point_left());
+
   Serial.print(",");
+
   Serial.print(moveObj.get_speed_PID_output_left());
+
   Serial.print(",");
+
   Serial.print(moveObj.get_speed_PID_Pterm_left());
+
   Serial.print(",");
+
   Serial.print(moveObj.get_speed_PID_Iterm_left());
+
   Serial.print(",");
+
   Serial.print(moveObj.get_speed_PID_Dterm_left());
+
   Serial.print(",");
+
   Serial.print(encoderL.get_smooth_speed_mmps());
+
   Serial.print(",");
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PlotSpeedPID_R(){
+
   Serial.print(moveObj.get_speed_PID_set_point_right());
+
   Serial.print(",");
+
   Serial.print(moveObj.get_speed_PID_output_right());
+
   Serial.print(",");
+
   Serial.print(moveObj.get_speed_PID_Pterm_right());
+
   Serial.print(",");
+
   Serial.print(moveObj.get_speed_PID_Iterm_right());
+
   Serial.print(",");
+
   Serial.print(moveObj.get_speed_PID_Dterm_right());
+
   Serial.print(",");
+
   Serial.print(encoderR.get_smooth_speed_mmps());
+
   Serial.print(",");
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PlotSpeedMMPS(){
+
   uint32_t thisTime = millis();
+
   Serial.print(thisTime-_test_timeStamp);
+
   _test_timeStamp = thisTime;
+
   Serial.print(",");
+
   Serial.print(encoderL.get_smooth_speed_mmps());
+
   Serial.print(",");
+
   Serial.print(encoderR.get_smooth_speed_mmps());
+
   Serial.print(",");
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PrintColCheck(){
+
   Serial.println();
+
   Serial.println(F("------------------------------"));
+
   Serial.println("CheckVec=[BL,BR,US,LL,LR,LU,LD,]");
+
   Serial.print("CheckVec=[");
+
   for(uint8_t ii=0;ii<7;ii++){
+
       Serial.print(" ");Serial.print(collisionObj.get_col_check(ii));Serial.print(",");
+
   }
+
   Serial.println("]");
 
+
+
   Serial.print(F("US: "));
+
   //Serial.print(collisionObj.getColUSFlag());
+
   Serial.print(F(" , "));
+
   Serial.print(collisionObj.get_ultrasonic_range_mm());
+
   Serial.println(F(" mm"));
+
+
 
   Serial.print(F("LSR,L: "));
+
   //Serial.print(collisionObj.getColLSRFlagL());
+
   Serial.print(F(" , "));
+
   Serial.print(collisionObj.getLSRRangeL());
+
   Serial.println(F(" mm"));
+
+
 
   Serial.print(F("LSR,R: "));
+
   //Serial.print(collisionObj.getColLSRFlagR());
+
   Serial.print(F(" , "));
+
   Serial.print(collisionObj.getLSRRangeR());
+
   Serial.println(F(" mm"));
+
+
 
   Serial.print(F("LSR,A: "));
+
   //Serial.print(collisionObj.getColLSRFlagB());
+
   Serial.print(F(" , "));
+
   Serial.print(collisionObj.getLSRRangeA());
+
   Serial.println(F(" mm"));
+
+
 
   Serial.print(F("LSR,U: "));
+
   //Serial.print(collisionObj.getColLSRFlagU());
+
   Serial.print(F(" , "));
+
   Serial.print(collisionObj.getLSRRangeU());
+
   Serial.println(F(" mm"));
+
+
 
   Serial.print(F("LSR,D: "));
+
   //Serial.print(collisionObj.getColLSRFlagD());
+
   Serial.print(F(" , "));
+
   Serial.print(collisionObj.getLSRRangeD());
+
   Serial.println(F(" mm"));
 
+
+
   Serial.println(F("------------------------------"));
+
   Serial.println();
+
 }//---------------------------------------------------------------------------
 
+
+
 void DEBUG_PrintAllRanges(){
+
   Serial.println();
+
   Serial.println(F("------------------------------"));
+
   Serial.print(F("US: "));
+
   Serial.print(collisionObj.get_ultrasonic_range_mm());
+
   Serial.println(F(" mm"));
+
+
 
   Serial.print(F("LSR,L: "));
+
   Serial.print(collisionObj.getLSRRangeL());
+
   Serial.println(F(" mm"));
+
+
 
   Serial.print(F("LSR,R: "));
+
   Serial.print(collisionObj.getLSRRangeR());
+
   Serial.println(F(" mm"));
+
+
 
   Serial.print(F("LSR,A: "));
+
   Serial.print(collisionObj.getLSRRangeA());
+
   Serial.println(F(" mm"));
+
+
 
   Serial.print(F("LSR,U: "));
+
   Serial.print(collisionObj.getLSRRangeU());
+
   Serial.println(F(" mm"));
+
+
 
   Serial.print(F("LSR,D: "));
+
   Serial.print(collisionObj.getLSRRangeD());
+
   Serial.println(F(" mm"));
 
+
+
   Serial.println(F("------------------------------"));
+
   Serial.println();
+
 }
+
+
 
 void DEBUG_PrintLightSens(){
+
   Serial.print("Light Sens L-");
+
   Serial.print("Lux: "); Serial.print(taskFindLightObj.getLuxLeft());
+
   Serial.print(", R-");
+
   Serial.print("Lux: "); Serial.println(taskFindLightObj.getLuxRight());
+
 }
 
-*/
 
+
+*/

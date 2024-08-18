@@ -18,8 +18,8 @@ public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR/DESTRUCTOR
   FilterMovAvg();
-  FilterMovAvg(uint8_t inWin);
-  FilterMovAvg(uint8_t inWin, uint16_t inUpdateTime);
+  FilterMovAvg(uint8_t window);
+  FilterMovAvg(uint8_t window, uint16_t update_time);
   ~FilterMovAvg();
 
   //---------------------------------------------------------------------------
@@ -28,14 +28,14 @@ public:
 
   //---------------------------------------------------------------------------
   // FILTER
-  double filter(double inData);
+  double filter(double data);
 
   //---------------------------------------------------------------------------
   // Get, set and reset
   void reset();
-  void reset(float inVal);
+  void reset(float val);
 
-  uint8_t getWindow(){return _window;}
+  uint8_t get_window(){return _window;}
   double get_current_value(){return _curr_filtered;}
 
 private:

@@ -11,7 +11,6 @@
 #include <Arduino.h>
 #include <Adafruit_PCF8574.h>
 #include "LaserManager.h"
-#include "CollisionDangerCodes.h"
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
@@ -87,8 +86,35 @@ void LaserManager::update(){
 
 //---------------------------------------------------------------------------
 // Get, set and reset
-EDangerCode LaserManager::get_collision_code(ELaserIndex _ind){
-    return _laser_strategy_array[_ind]->get_collision_code(
-        _laser_ptr_array[_ind]->get_range());
+EDangerCode LaserManager::get_collision_code(ELaserIndex index){
+
+    EDangerCode danger_code = DANGER_NONE;
+    switch(_laser_strategy_array[index]) {
+        case AVOID_BASIC:
+            danger_code = _avoid_basic.get_collision_code(
+                            _laser_ptr_array[index]->get_range());
+            break;
+        case AVOID_FLAT_SLOW:
+            danger_code = _avoid_flat_slow.get_collision_code(
+                            _laser_ptr_array[index]->get_range());
+            break;
+        case AVOID_OVERHEAD:
+            danger_code = _avoid_overhead.get_collision_code(
+                            _laser_ptr_array[index]->get_range());
+            break;
+        case AVOID_CLIFF:
+            danger_code = _avoid_cliff.get_collision_code(
+                            _laser_ptr_array[index]->get_range());
+            break;
+        case AVOID_PICKUP:
+            danger_code = _avoid_pickup.get_collision_code(
+                            _laser_ptr_array[index]->get_range());
+            break;
+        default:
+            danger_code = DANGER_NONE;
+            break;
+    }
+
+    return danger_code;
 }
 

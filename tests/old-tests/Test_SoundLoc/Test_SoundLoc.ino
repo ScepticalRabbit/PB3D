@@ -43,7 +43,7 @@ int16_t earSpacingMm = 100;
 int16_t earTimeOutMUS = 300;
 
 uint32_t soundDiffTimeMUS = 0;
-MicroTimer locSoundMicroTimer = MicroTimer(); 
+MicroTimer locSoundMicroTimer = MicroTimer();
 
 void setup()
 {
@@ -59,7 +59,7 @@ void setup()
 }
 
 void loop()
-{  
+{
   sampleEnv();
   locSound();
 }
@@ -67,18 +67,18 @@ void loop()
 void sampleEnv(){
   if(!envUpdateOn && envUpdateTimer.finished()){
     envUpdateTimer.start(sampleEnvTime);
-    
+
     envSampleTimer.start(0);
     envUpdateOn = true;
     modeFlag = EARS_ENVSAMP;
-    
+
     LEnvSum = 0;
     REnvSum = 0;
   }
 
   if(envUpdateOn && envSampleTimer.finished()){
     envSampleTimer.start(sampleInterval);
-    
+
     LEnvSum = LEnvSum + analogRead(EAR_L_AIN);
     REnvSum = REnvSum + analogRead(EAR_R_AIN);
     envSampInd++;
@@ -124,25 +124,25 @@ void locSound(){
       soundDiffTimeMUS = 0;
       firstEar = EAR_N;
     }
-    
+
     if(!locSoundL && !locSoundR){
       //soundL = analogRead(EAR_L_AIN);
       //soundR = analogRead(EAR_R_AIN);
       soundL = abs(analogRead(EAR_L_AIN)-LEnvAvg);
       soundR = abs(analogRead(EAR_R_AIN)-REnvAvg);
-      
+
       if(soundL > soundLThres){
         locSoundMicroTimer.start(earTimeOutMUS);
         locSoundL = true;
         firstEar = EAR_L;
-        
-        locSoundMicroTimer.start(earTimeOutMUS); 
+
+        locSoundMicroTimer.start(earTimeOutMUS);
         while(true){
           if(!locSoundMicroTimer.finished()){
             //soundR = analogRead(EAR_R_AIN);
             soundR = abs(analogRead(EAR_R_AIN)-REnvAvg);
             if(soundR > soundRThres){
-              soundDiffTimeMUS = locSoundMicroTimer.getTime();
+              soundDiffTimeMUS = locSoundMicroTimer.get_time();
               locSoundR = true;
               soundFound = true;
             }
@@ -155,16 +155,16 @@ void locSound(){
         }
       }
       else if(soundR > soundRThres){
-        locSoundMicroTimer.start(earTimeOutMUS); 
+        locSoundMicroTimer.start(earTimeOutMUS);
         locSoundR = true;
         firstEar = EAR_R;
-        
+
         while(true){
           if(!locSoundMicroTimer.finished()){
             //soundL = analogRead(EAR_L_AIN);
             soundL = abs(analogRead(EAR_L_AIN)-LEnvAvg);
             if(soundL > soundLThres){
-              soundDiffTimeMUS = locSoundMicroTimer.getTime();
+              soundDiffTimeMUS = locSoundMicroTimer.get_time();
               locSoundL = true;
               soundFound = true;
             }
@@ -172,7 +172,7 @@ void locSound(){
           else{
             locSoundL = false;
             locSoundR = false;
-            break;    
+            break;
           }
         }
       }

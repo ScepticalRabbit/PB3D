@@ -11,7 +11,7 @@ typedef struct stateData_t{
   uint8_t mood;
   uint8_t task;
   bool collisionFlags[4];
-  float wheelSpeed;  
+  float wheelSpeed;
 };
 
 typedef union dataPacket_t{
@@ -46,7 +46,7 @@ void setup(){
   _currState.state.collisionFlags[2] = true;
   _currState.state.collisionFlags[3] = false;
   _currState.state.wheelSpeed = 202.2;
-  
+
   Serial.println(F("INITIAL DATA STRUCT"));
   printDataStruct();
 
@@ -62,10 +62,10 @@ void loop(){
     Wire.write(_currState.dataPacket,PACKET_SIZE);
     Wire.endTransmission();
 
-    Serial.print(F("I2C Send Time: "));    
-    Serial.print(_sendTimer.getTime());
+    Serial.print(F("I2C Send Time: "));
+    Serial.print(_sendTimer.get_time());
     Serial.println(F("ms"));
-    
+
     Serial.println(F("SENT DATA STRUCTURE:"));
     printDataStruct();
     changeData();
@@ -78,7 +78,7 @@ void printDataStruct(){
   Serial.print(F("Mood: "));
   Serial.print(_currState.state.mood);
   Serial.print(F("; "));
-  
+
   Serial.print(F("TaskManager: "));
   Serial.print(_currState.state.task);
   Serial.print(F("; "));

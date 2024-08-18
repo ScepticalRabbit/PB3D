@@ -7,8 +7,8 @@
 // Copyright (C) 2024 ScepticalRabbit
 //------------------------------------------------------------------------------
 
+#include "PB3DConstants.h"
 #include "CollisionEscaper.h"
-#include "CollisionDangerCodes.h"
 
 
 void CollisionEscaper::set_move_obj(MoveManager* inMove){

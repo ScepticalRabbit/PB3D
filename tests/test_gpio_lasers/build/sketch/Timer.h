@@ -17,11 +17,11 @@ class Timer{
 public:
   Timer();
   void start(uint32_t timerDuration);
-  uint32_t getTime();
+  uint32_t get_time();
   bool finished();
 
 private:
-  uint32_t _timerStart = 0;
-  uint32_t _timerDuration = 0;
+  uint32_t _timer_start = 0;
+  uint32_t _timer_duration = 0;
 };
 #endif // TIMER_H

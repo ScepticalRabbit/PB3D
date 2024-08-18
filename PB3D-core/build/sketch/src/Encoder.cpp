@@ -34,11 +34,11 @@ void Encoder::begin(){
 void Encoder::update_not_equal(){
     if(digitalRead(_pin_a) != digitalRead(_pin_b)){
         _current_count++;
-        _direction = 'F';
+        _direction = ENCODER_FORWARD;
     }
     else{
         _current_count--;
-        _direction = 'B';
+        _direction = ENCODER_BACK;
     }
 }
 
@@ -46,11 +46,11 @@ void Encoder::update_not_equal(){
 void Encoder::update_equal(){
     if(digitalRead(_pin_a) == digitalRead(_pin_b)){
         _current_count++;
-        _direction = 'F';
+        _direction = ENCODER_FORWARD;
     }
     else{
         _current_count--;
-        _direction = 'B';
+        _direction = ENCODER_BACK;
     }
 }
 
@@ -59,7 +59,7 @@ void Encoder::update_equal(){
 void Encoder::update_speed(){
     if(_speed_timer.finished()){
         // Get the current time and restart the timer
-        double timeIntS = double(_speed_timer.getTime())/1000.0;
+        double timeIntS = double(_speed_timer.get_time())/1000.0;
         _speed_timer.start(_speed_update_time);
 
         // Calculate distance travelled using the encoder count difference
@@ -87,7 +87,7 @@ void Encoder::reset_filter(){
     _speed_filt_cps.reset();
 }
 
-void Encoder::reset_filter(float inVal){
-    _speed_filt_mmps.reset(inVal);
-    _speed_filt_cps.reset(inVal);
+void Encoder::reset_filter(float val){
+    _speed_filt_mmps.reset(val);
+    _speed_filt_cps.reset(val);
 }

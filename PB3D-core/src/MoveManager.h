@@ -236,11 +236,11 @@ public:
 
   //----------------------------------------------------------------------------
   // Position PID get functions - left/right motors
-  int32_t get_pos_count_left(){return _curr_relative_count_left;}
+  int32_t get_pos_count_left(){return _PID_curr_relative_count_left;}
   float get_pos_PID_set_point_left(){return _pos_PID_left.get_set_point();}
   float get_pos_PID_output_left(){return _pos_PID_left.get_output();}
 
-  int32_t get_pos_count_right(){return _curr_relative_count_right;}
+  int32_t get_pos_count_right(){return _PID_curr_relative_count_right;}
   float get_pos_PID_set_point_right(){return _pos_PID_right.get_set_point();}
   float get_pos_PID_output_right(){return _pos_PID_right.get_output();}
 
@@ -309,130 +309,152 @@ private:
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Motor Power (Speed) Variables
-  uint8_t _defForwardPower = 120;
-  uint8_t _defBackPower = 120;
-  uint8_t _defTurnPower = 100;
-  uint8_t _defTurnPowerDiff = 80;
+  uint8_t _def_forward_power = 120;
+  uint8_t _def_back_power = 120;
+  uint8_t _def_turn_power = 100;
+  uint8_t _def_turn_power_diff = 80;
 
-  uint8_t _cur_forward_power = _defForwardPower;
-  uint8_t _cur_back_power = _defBackPower;
-  uint8_t _cur_turn_power = _defTurnPower;
-  uint8_t _curTurnPowerDiff = _defTurnPowerDiff;
+  uint8_t _cur_forward_power = _def_forward_power;
+  uint8_t _cur_back_power = _def_back_power;
+  uint8_t _cur_turn_power = _def_turn_power;
+  uint8_t _cur_turn_power_diff = _def_turn_power_diff;
 
   uint8_t _min_power = 25;
   uint8_t _max_power = 255;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Motor Speed Variables in mm/s (millimeters per second)
-  float _defForwardSpeed = 350.0;
-  float _defBackSpeed = -225.0;
-  float _defTurnSpeed = 250.0;
-  float _defTurnSpeedDiff = 0.75*_defTurnSpeed;
+  float _def_forward_speed = 350.0;
+  float _def_back_speed = -225.0;
+  float _def_turn_speed = 250.0;
+  float _def_turn_speed_diff = 0.75*_def_turn_speed;
 
-  float _cur_forward_speed = _defForwardSpeed;
-  float _cur_back_speed = _defBackSpeed;
-  float _cur_turn_speed = _defTurnSpeed;
-  float _curTurnSpeedDiff = _defTurnSpeedDiff;
+  float _cur_forward_speed = _def_forward_speed;
+  float _cur_back_speed = _def_back_speed;
+  float _cur_turn_speed = _def_turn_speed;
+  float _curTurnSpeedDiff = _def_turn_speed_diff;
 
-  float _speedMoodFact = 1.0;
-  float _speedColFact = 1.0;
-  float _speedColTrue = 0.8, _speedColFalse = 1.0;
-  float _min_speed = 50.0, _max_speed = 1000.0;
+  float _speed_mood_fact = 1.0;
+  float _speed_col_fact = 1.0;
+  float _speed_col_true = 0.8;
+  float _speed_col_false = 1.0;
+  float _min_speed = 50.0;
+  float _max_speed = 1000.0;
 
   // Estimating power for given speed - updated for new wheels - 24th Sept 2022
   // NOTE: turned speed estimation off because PID has less overshoot without
   // Updated again 5th Jan 2023 - RF wood floor tests - slope=0.166,int=22.7
   // Used to be set with an offset of 50.0 and slope 0.0
-  float _speedToPowerSlope = 0.166, _speedToPowerOffset = 22.7, _speedToPowerMin = 22.7;
-  float _speedTimeoutAccel = 1220.0,  _speedTimeoutSF = 2.0;
+  float _speed_to_power_slope = 0.166;
+  float _speed_to_power_offset = 22.7;
+  float _speed_to_power_min = 22.7;
+  float _speed_timeout_accel = 1220.0;
+  float _speed_timeout_SF = 2.0;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Control PIDs
   // TODO: 1st Jan 2023 - need to update gains based on new encoder counts, halved gain as temporary fix (was 0.02)
-  //double _speedP = 2.5, _speedI = 0.0, _speedD = 0.0; // NOTE: 2.5 causes osc with 50ms period
-  //double _speedP = 0.45*2.5, _speedI = 50.0e-3/1.2, _speedD = 0.0; // Ziegler-Nichols tuning [0.45,/1.2,0.0]
-  double _speedP = 0.6*0.8, _speedI = 0.5*50.0e-3, _speedD = 50.0e-3/8.0; // Ziegler-Nichols tuning [0.6,0.5,/8]
-  double _speedPRev = _speedP*0.9; // NOTE: turned off setting gains! Caused problems
-  PID _speed_PID_left = PID(false,_speedP,_speedI,_speedD,10);
-  PID _speed_PID_right = PID(false,_speedP,_speedI,_speedD,10);
+  //double _speed_P = 2.5, _speed_I = 0.0, _speed_D = 0.0; // NOTE: 2.5 causes osc with 50ms period
+  //double _speed_P = 0.45*2.5, _speed_I = 50.0e-3/1.2, _speed_D = 0.0; // Ziegler-Nichols tuning [0.45,/1.2,0.0]
+  double _speed_P = 0.6*0.8;
+  double _speed_I = 0.5*50.0e-3;
+  double _speed_D = 50.0e-3/8.0; // Ziegler-Nichols tuning [0.6,0.5,/8]
+  double _speed_P_rev = _speed_P*0.9; // NOTE: turned off setting gains! Caused problems
+
+  PID _speed_PID_left = PID(false,_speed_P,_speed_I,_speed_D,10);
+  PID _speed_PID_right = PID(false,_speed_P,_speed_I,_speed_D,10);
 
   // Position Control PIDs and Variables
   PID _pos_PID_left = PID(false,0.6,0.0,0.0,20);
   PID _pos_PID_right = PID(false,0.6,0.0,0.0,20);
-  float _posPIDMinSpeed = 100.0, _posPIDMaxSpeed = 200.0;
-  int16_t _posTol = 3;
-  int32_t _startEncCount_L = 0, _setPointRelCounts_L = 0, _curr_relative_count_left = 0;
-  int32_t _startEncCount_R = 0, _setPointRelCounts_R = 0, _curr_relative_count_right = 0;
 
-  float _wheelBase = 172.0; // UPDATED: 1st Jan 2023 - new stable geom chassis with large wheels
-  float _wheel_circ = _wheelBase*PI, _wheelCircAng = (_wheelBase*PI)/(360.0); // FIXED factor of 2 by adding encode interrupt
-  bool _posAtL = false, _posAtR = false, _pos_at_both = false;
+  float _pos_PID_min_speed = 100.0;
+  float _pos_PID_max_speed = 200.0;
+  int16_t _pos_tol = 3;
+
+  float _wheel_base = 172.0; // UPDATED: 1st Jan 2023 - new stable geom chassis with large wheels
+  float _wheel_circ = _wheel_base*PI;
+  float _wheel_circ_ang = (_wheel_base*PI)/(360.0); // FIXED factor of 2 by adding encode interrupt
+  bool _pos_at_left = false;
+  bool _pos_at_right = false;
+  bool _pos_at_both = false;
   // NOTE: D(inner) = 122mm, D(outer) = 160mm, D(avg) = 141mm
+
+  //TODO: Fix naming mishap here when refactoring out move code. There was a
+  //conflict with the encoder variables defined previously
+  int32_t _PID_start_encoder_count_left = 0;
+  int32_t _PID_set_point_rel_counts_left = 0;
+  int32_t _PID_curr_relative_count_left = 0;
+  int32_t _PID_start_encoder_count_right = 0;
+  int32_t _PID_set_point_rel_counts_right = 0;
+  int32_t _PID_curr_relative_count_right = 0;
+
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - To Dist/Angle
-  float _toDistSetPtL = 0.0, _toDistSetPtR = 0.0;
-  float _toDistTol = 5.0;
-  float _toAngSetPt = 0.0;
-  float _toAngTol = 1.0;
+  float _to_dist_set_pt_left = 0.0;
+  float _to_dist_set_pt_right = 0.0;
+  float _to_dist_tol = 5.0;
+  float _to_ang_set_pt = 0.0;
+  float _to_ang_tol = 1.0;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Circle Variables
-  uint8_t _circleDiffPower = 30;
-  float _circleDiffSpeed = _defForwardSpeed*0.5;
-  int8_t _circleDirection = MOVE_B_LEFT;
+  uint8_t _circle_diff_power = 30;
+  float _circle_diff_speed = _def_forward_speed*0.5;
+  int8_t _circle_direction = MOVE_B_LEFT;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Zig Zag Variables
-  bool _zzTurnFlag = true;
-  uint16_t _zzInitTurnDur = 800;
-  uint16_t _zzLeftTurnDur = _zzInitTurnDur;
-  uint16_t _zzRightTurnDur = _zzInitTurnDur;
-  uint16_t _zzTurnDuration = _zzLeftTurnDur;
+  bool _zz_turn_flag = true;
+  uint16_t _zz_init_turn_dur = 800;
+  uint16_t _zz_left_turn_dur = _zz_init_turn_dur;
+  uint16_t _zz_right_turn_dur = _zz_init_turn_dur;
+  uint16_t _zz_turn_duration = _zz_left_turn_dur;
 
-  bool _zzStraightFlag = false;
-  uint32_t _zzStraightDuration = 1000;
-  int8_t _zzTurnDir = MOVE_B_LEFT;
+  bool _zz_straight_flag = false;
+  uint32_t _zz_straight_duration = 1000;
+  int8_t _zz_turn_dir = MOVE_B_LEFT;
 
-  uint8_t _zzTurnDiffPower = round(_defForwardPower/2);
-  float _zzTurnDiffSpeed = 0.5*_defForwardSpeed;
+  uint8_t _zz_turn_diff_power = round(_def_forward_power/2);
+  float _zz_turn_diff_speed = 0.5*_def_forward_speed;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Spiral Variables
-  bool _spiralStart = true;
-  uint32_t _spiralStartTime = 0;
-  uint32_t _spiralDuration = 20000;
-  uint32_t _spiralCurrTime = 0;
-  int8_t _spiralDirection = MOVE_B_LEFT;
+  bool _spiral_start = true;
+  uint32_t _spiral_start_time = 0;
+  uint32_t _spiral_duration = 20000;
+  uint32_t _spiral_curr_time = 0;
+  int8_t _spiral_direction = MOVE_B_LEFT;
 
-  float _spiralMinSpeed = 5.0;
-  float _spiralSlope = 0.0;
-  float _initSpiralSpeedDiff = _defForwardSpeed-_min_speed;
-  float _curSpiralSpeedDiff = 0.0;
+  float _spiral_min_speed = 5.0;
+  float _spiral_slope = 0.0;
+  float _init_spiral_speed_diff = _def_forward_speed-_min_speed;
+  float _cur_spiral_speed_diff = 0.0;
 
-  uint8_t _spiralMinPower = 5.0;
-  float _spiralSlopePower = 0.0;
-  uint8_t _initSpiralSpeedDiffPower = _defForwardPower-_min_power;
-  uint8_t _curSpiralSpeedDiffPower = 0;
+  uint8_t _spiral_min_power = 5.0;
+  float _spiral_slope_power = 0.0;
+  uint8_t _init_spiral_speed_diff_power = _def_forward_power-_min_power;
+  uint8_t _cur_spiral_speed_diff_power = 0;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Wiggle Variables
-  bool _wiggleLeftFlag = true;
-  uint16_t _wiggleDefLeftDur = 600;
-  uint16_t _wiggleDefRightDur = 600;
-  uint16_t _wiggleCurrDur = _wiggleDefLeftDur;
+  bool _wiggle_left_flag = true;
+  uint16_t _wiggle_def_left_dur = 600;
+  uint16_t _wiggle_def_right_dur = 600;
+  uint16_t _wiggle_curr_dur = _wiggle_def_left_dur;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Forward/Back Variables
-  bool _FBForwardFlag = true;
-  uint16_t _FBDefForwardDur = 500;
-  uint16_t _FBDefBackDur = 500;
-  uint16_t _FBCurrDur = _FBDefForwardDur;
+  bool _FB_forward_flag = true;
+  uint16_t _FB_def_forward_dur = 500;
+  uint16_t _FB_def_back_dur = 500;
+  uint16_t _FB_curr_dur = _FB_def_forward_dur;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Look Around
-  bool _lookStartFlag = true;
-  Timer _lookTimer = Timer();
+  bool _look_start_flag = true;
+  Timer _look_timer = Timer();
   uint16_t _look_move_time = 2200;
   uint16_t _look_pause_time = 500;
   bool _look_move_switch = false;

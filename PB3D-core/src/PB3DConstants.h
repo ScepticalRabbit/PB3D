@@ -83,6 +83,12 @@ enum EMoveCompound{
     MOVE_C_COUNT = 5,
 };
 
+//------------------------------------------------------------------------------
+// Encoders
+enum EEncoderDirection{
+    ENCODER_FORWARD = 0,
+    ENCODER_BACK
+};
 
 //------------------------------------------------------------------------------
 // PIDs
@@ -106,6 +112,21 @@ enum EDangerCode{
     DANGER_COUNT
 };
 
+enum EEscapeCode{
+    ESCAPE_REV = 0,
+    ESCAPE_NOREV
+};
+
+enum ECollisionStrategy{
+    AVOID_BASIC = 0,
+    AVOID_FLAT_SLOW,
+    AVOID_OVERHEAD,
+    AVOID_CLIFF,
+    AVOID_PICKUP,
+};
+
+//------------------------------------------------------------------------------
+// Sensors: Bumpers
 enum EBumpCode{
     BUMP_LEFT = 0,
     BUMP_RIGHT,

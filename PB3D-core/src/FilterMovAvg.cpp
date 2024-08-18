@@ -18,19 +18,19 @@ FilterMovAvg::FilterMovAvg(){
     }
 }
 
-FilterMovAvg::FilterMovAvg(uint8_t inWin){
-    _window = inWin;
-    _dataArray = new double[inWin];
-    for(uint8_t ii=0 ; ii<inWin ; ii++){
+FilterMovAvg::FilterMovAvg(uint8_t window){
+    _window = window;
+    _dataArray = new double[window];
+    for(uint8_t ii=0 ; ii<window ; ii++){
         _dataArray[ii] = 0.0;
     }
 }
 
-FilterMovAvg::FilterMovAvg(uint8_t inWin, uint16_t inUpdateTime){
-    _window = inWin;
+FilterMovAvg::FilterMovAvg(uint8_t window, uint16_t inUpdateTime){
+    _window = window;
     _update_time = inUpdateTime;
-    _dataArray = new double[inWin];
-    for(uint8_t ii=0 ; ii<inWin ; ii++){
+    _dataArray = new double[window];
+    for(uint8_t ii=0 ; ii<window ; ii++){
         _dataArray[ii] = 0.0;
     }
 }

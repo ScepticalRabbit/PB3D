@@ -9,18 +9,15 @@
 
 #include "MoveManager.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR: pass in pointers to main objects and other sensors
-//---------------------------------------------------------------------------
-MoveManager::MoveManager(Adafruit_MotorShield* AFMS, Encoder* encL, Encoder* encR){
+MoveManager::MoveManager(Adafruit_MotorShield* AFMS,
+                        Encoder* encL,
+                        Encoder* encR){
     _motor_shield = AFMS;
     _encoder_left = encL;
     _encoder_right = encR;
 }
 
-//---------------------------------------------------------------------------
-// BEGIN: called once during SETUP
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 void MoveManager::begin(){
     // Start the motor shield object
     _motor_shield->begin();  // create with the default frequency 1.6KHz
@@ -28,10 +25,10 @@ void MoveManager::begin(){
     _motor_right = _motor_shield->getMotor(1);
     _motor_left = _motor_shield->getMotor(2);
     // Set the speed to start, from 0 (off) to 255 (max  speed)
-    _motor_right->setSpeed(_defForwardPower);
+    _motor_right->setSpeed(_def_forward_power);
     _motor_right->run(FORWARD);
     _motor_right->run(RELEASE);
-    _motor_left->setSpeed(_defForwardPower);
+    _motor_left->setSpeed(_def_forward_power);
     _motor_left->run(FORWARD);
     _motor_left->run(RELEASE);
 
@@ -40,7 +37,7 @@ void MoveManager::begin(){
     _move_update_time = random(_move_update_min_time,_move_update_max_time);
     _move_timer.start(_move_update_time);
     _submove_timer.start(0);
-    _lookTimer.start(0);
+    _look_timer.start(0);
     _timeout_timer.start(0);
 
     // Start/setup the encoders
@@ -56,8 +53,8 @@ void MoveManager::begin(){
     // Start the position PIDs
     _pos_PID_left.begin();
     _pos_PID_right.begin();
-    _pos_PID_left.set_output_limits(-1.0*_posPIDMaxSpeed,_posPIDMaxSpeed);
-    _pos_PID_right.set_output_limits(-1.0*_posPIDMaxSpeed,_posPIDMaxSpeed);
+    _pos_PID_left.set_output_limits(-1.0*_pos_PID_max_speed,_pos_PID_max_speed);
+    _pos_PID_right.set_output_limits(-1.0*_pos_PID_max_speed,_pos_PID_max_speed);
     _pos_PID_left.set_sample_time(_encoder_left->get_speed_update_time()*2);
     _pos_PID_right.set_sample_time(_encoder_right->get_speed_update_time()*2);
 }
@@ -110,14 +107,14 @@ void MoveManager::go(){
 // GET,SET and RESET functions: full implementation
 //---------------------------------------------------------------------------
 void MoveManager::set_power_by_diff(int8_t inDiff){
-    _cur_forward_power= _defForwardPower+inDiff;
-    _cur_back_power = _defBackPower+inDiff;
-    _cur_turn_power = _defTurnPower+inDiff;
+    _cur_forward_power= _def_forward_power+inDiff;
+    _cur_back_power = _def_back_power+inDiff;
+    _cur_turn_power = _def_turn_power+inDiff;
   }
 
 void MoveManager::set_speed_by_col_code(bool obstacleClose){
-    if(obstacleClose){_speedColFact = _speedColTrue;}
-    else{_speedColFact = _speedColFalse;}
+    if(obstacleClose){_speed_col_fact = _speed_col_true;}
+    else{_speed_col_fact = _speed_col_false;}
     _update_speed();
 }
 
@@ -133,22 +130,22 @@ void MoveManager::set_move_control(int8_t inMoveControl){
 }
 
 void MoveManager::change_circ_dir(){
-    if(_spiralDirection == MOVE_B_LEFT){
-        _spiralDirection = MOVE_B_RIGHT;
+    if(_spiral_direction == MOVE_B_LEFT){
+        _spiral_direction = MOVE_B_RIGHT;
     }
     else{
-        _spiralDirection = MOVE_B_LEFT;
+        _spiral_direction = MOVE_B_LEFT;
     }
-    if(_circleDirection == MOVE_B_LEFT){
-        _circleDirection = MOVE_B_RIGHT;
+    if(_circle_direction == MOVE_B_LEFT){
+        _circle_direction = MOVE_B_RIGHT;
     }
     else{
-        _circleDirection = MOVE_B_LEFT;
+        _circle_direction = MOVE_B_LEFT;
     }
 }
 
 void MoveManager::set_speed_by_mood_fact(float inFact){
-_speedMoodFact = inFact;
+_speed_mood_fact = inFact;
 _update_speed();
 }
 
@@ -158,17 +155,17 @@ _update_speed();
 uint16_t MoveManager::calc_timeout(float inSpeed, float inDist){
     float absSpeed = abs(inSpeed);
     float absDist = abs(inDist);
-    float timeToVel = absSpeed/_speedTimeoutAccel; // seconds
-    float timeToDist = sqrt((2*absDist)/_speedTimeoutAccel); //seconds
+    float timeToVel = absSpeed/_speed_timeout_accel; // seconds
+    float timeToDist = sqrt((2*absDist)/_speed_timeout_accel); //seconds
     float timeout = 0.0;
     if(timeToDist < timeToVel){ // Finish moving before we finish acceleratin
         timeout = timeToDist;
     }
     else{ // Finish moving after we finish accelerating
-        float timeAtConstVel = (absDist-0.5*_speedTimeoutAccel*timeToVel*timeToVel)/absSpeed;
+        float timeAtConstVel = (absDist-0.5*_speed_timeout_accel*timeToVel*timeToVel)/absSpeed;
         timeout = timeAtConstVel+timeToVel;
     }
-    return uint16_t(_speedTimeoutSF*timeout*1000.0); // milliseconds
+    return uint16_t(_speed_timeout_SF*timeout*1000.0); // milliseconds
 }
 
 //---------------------------------------------------------------------------
@@ -267,7 +264,7 @@ if(_move_control == MOVE_CONTROL_SPEED){
     forward_left(_cur_forward_speed, _curTurnSpeedDiff);
 }
 else{
-    forward_left(_cur_forward_power, _curTurnPowerDiff);
+    forward_left(_cur_forward_power, _cur_turn_power_diff);
 }
 }
 
@@ -303,7 +300,7 @@ if(_move_control == MOVE_CONTROL_SPEED){
     forward_right(_cur_forward_speed, _curTurnSpeedDiff);
 }
 else{
-    forward_right(_cur_forward_power, _curTurnPowerDiff);
+    forward_right(_cur_forward_power, _cur_turn_power_diff);
 }
 }
 
@@ -336,18 +333,18 @@ forward_right_power(inPower,inPowerDiff);
 // Move Circle
 void MoveManager::circle(){
 if(_move_control == MOVE_CONTROL_SPEED){
-    circle_speed(_cur_turn_speed,_circleDiffSpeed,_circleDirection);
+    circle_speed(_cur_turn_speed,_circle_diff_speed,_circle_direction);
 }
 else{
-    circle_power(_cur_turn_power,_circleDiffPower,_circleDirection);
+    circle_power(_cur_turn_power,_circle_diff_power,_circle_direction);
 }
 }
 void MoveManager::circle(int8_t turnDir){
 if(_move_control == MOVE_CONTROL_SPEED){
-    circle_speed(_cur_turn_speed,_circleDiffSpeed,turnDir);
+    circle_speed(_cur_turn_speed,_circle_diff_speed,turnDir);
 }
 else{
-    circle_power(_cur_turn_power,_circleDiffPower,turnDir);
+    circle_power(_cur_turn_power,_circle_diff_power,turnDir);
 }
 }
 
@@ -467,7 +464,7 @@ void MoveManager::to_dist_ctrl_pos(float setDistL, float setDistR){
 
 void MoveManager::turn_to_angle_ctrl_pos(float setAngle){
     _update_basic_move(MOVE_B_TOANG_CPOS);
-    float arcLeng = setAngle*_wheelCircAng;
+    float arcLeng = setAngle*_wheel_circ_ang;
     _to_pos(-1.0*arcLeng,arcLeng);
 }
 
@@ -477,12 +474,12 @@ int8_t MoveManager::to_dist_ctrl_speed(float speedL, float speedR,
     _update_basic_move(MOVE_B_TODIST_CSpeed);
 
     // If the set distance changes outside tolerance force update
-    if(!((setDistL >= (_toDistSetPtL-_toDistTol)) && (setDistL <= (_toDistSetPtL+_toDistTol)))){
-        _toDistSetPtL = setDistL;
+    if(!((setDistL >= (_to_dist_set_pt_left-_to_dist_tol)) && (setDistL <= (_to_dist_set_pt_left+_to_dist_tol)))){
+        _to_dist_set_pt_left = setDistL;
         _update_basic_move(MOVE_B_FORCEUPD);
     }
-    if(!((setDistR >= (_toDistSetPtR-_toDistTol)) && (setDistR <= (_toDistSetPtR+_toDistTol)))){
-        _toDistSetPtR = setDistR;
+    if(!((setDistR >= (_to_dist_set_pt_right-_to_dist_tol)) && (setDistR <= (_to_dist_set_pt_right+_to_dist_tol)))){
+        _to_dist_set_pt_right = setDistR;
         _update_basic_move(MOVE_B_FORCEUPD);
     }
 
@@ -576,7 +573,7 @@ int8_t MoveManager::to_dist_ctrl_speed(float setDist){
 }
 
 int8_t MoveManager::turn_to_angle_ctrl_speed(float setAngle){
-    float setDist = setAngle*_wheelCircAng;
+    float setDist = setAngle*_wheel_circ_ang;
     int8_t isComplete = 0;
     if(setAngle > 0.0){ // Turn left
         isComplete = to_dist_ctrl_speed(-1.0*_cur_turn_speed,_cur_turn_speed,-1.0*setDist,setDist);
@@ -599,27 +596,27 @@ int8_t MoveManager::turn_to_angle_ctrl_speed(float setAngle){
 //----------------------------------------------------------------------------
 // MOVE WIGGLE LEFT/RIGHT
 void MoveManager::wiggle(){
-    wiggle(_wiggleDefLeftDur,_wiggleDefRightDur);
+    wiggle(_wiggle_def_left_dur,_wiggle_def_right_dur);
 }
 
 void MoveManager::wiggle(uint16_t leftDur, uint16_t rightDur){
     // Update the wiggle direction if needed
     if(_submove_timer.finished()){
         stop(); // Stop the motors because we are going to switch direction
-        if(_wiggleLeftFlag){
+        if(_wiggle_left_flag){
         // If we are turning left, switch to right
-        _wiggleLeftFlag = false;
-        _wiggleCurrDur = rightDur;
+        _wiggle_left_flag = false;
+        _wiggle_curr_dur = rightDur;
         }
         else{
         // If we are turning right, switch to left
-        _wiggleLeftFlag = true;
-        _wiggleCurrDur = leftDur;
+        _wiggle_left_flag = true;
+        _wiggle_curr_dur = leftDur;
         }
-        _submove_timer.start(_wiggleCurrDur);
+        _submove_timer.start(_wiggle_curr_dur);
     }
 
-    if(_wiggleLeftFlag){
+    if(_wiggle_left_flag){
         left();
     }
     else{
@@ -630,27 +627,27 @@ void MoveManager::wiggle(uint16_t leftDur, uint16_t rightDur){
 //----------------------------------------------------------------------------
 // MOVE FORWARD/BACK
 void MoveManager::forward_back(){
-    forward_back(_FBDefForwardDur,_FBDefBackDur);
+    forward_back(_FB_def_forward_dur,_FB_def_back_dur);
 }
 
 void MoveManager::forward_back(uint16_t forwardDur, uint16_t backDur){
     // Update the forward/back direction if needed
     if(_submove_timer.finished()){
         stop(); // Stop the motors because we are going to switch direction
-        if(_FBForwardFlag){
+        if(_FB_forward_flag){
         // If we are going forward, switch to back
-        _FBForwardFlag = false;
-        _FBCurrDur = backDur;
+        _FB_forward_flag = false;
+        _FB_curr_dur = backDur;
         }
         else{
         // If we are going back, switch to forward
-        _FBForwardFlag = true;
-        _FBCurrDur = forwardDur;
+        _FB_forward_flag = true;
+        _FB_curr_dur = forwardDur;
         }
-        _submove_timer.start(_FBCurrDur);
+        _submove_timer.start(_FB_curr_dur);
     }
 
-    if(_FBForwardFlag){
+    if(_FB_forward_flag){
         forward();
     }
     else{
@@ -661,7 +658,7 @@ void MoveManager::forward_back(uint16_t forwardDur, uint16_t backDur){
 //----------------------------------------------------------------------------
 // MOVE SPIRAL
 void MoveManager::spiral(){
-    spiral(_spiralDirection);
+    spiral(_spiral_direction);
 }
 void MoveManager::spiral(int8_t turnDir){
     if(_move_control == MOVE_CONTROL_SPEED){
@@ -673,111 +670,111 @@ void MoveManager::spiral(int8_t turnDir){
 }
 
 void MoveManager::spiral_speed(int8_t turnDir){
-    if(_spiralStart || (_move_compound != MOVE_C_SPIRAL)){
+    if(_spiral_start || (_move_compound != MOVE_C_SPIRAL)){
         // Reset the flag so we don't re-init,
-        _spiralStart = false;
+        _spiral_start = false;
         _move_compound = MOVE_C_SPIRAL;
         // Calculate the speed/time slope for the linear increase of speed
         // for the slow wheel
-        _initSpiralSpeedDiff = _cur_forward_speed-_spiralMinSpeed;
-        _curSpiralSpeedDiff = _initSpiralSpeedDiff;
-        _spiralSlope = _initSpiralSpeedDiff/float(_spiralDuration);
+        _init_spiral_speed_diff = _cur_forward_speed-_spiral_min_speed;
+        _cur_spiral_speed_diff = _init_spiral_speed_diff;
+        _spiral_slope = _init_spiral_speed_diff/float(_spiral_duration);
         // Start the spiral timer
-        _submove_timer.start(_spiralDuration);
+        _submove_timer.start(_spiral_duration);
     }
 
     // Calculate the current speed for the slope wheel based on the timer
-    _spiralCurrTime = _submove_timer.getTime();
-    _curSpiralSpeedDiff = _initSpiralSpeedDiff - _spiralSlope*float(_spiralCurrTime);
+    _spiral_curr_time = _submove_timer.get_time();
+    _cur_spiral_speed_diff = _init_spiral_speed_diff - _spiral_slope*float(_spiral_curr_time);
 
     // Check if we are increasing the speed of the slow wheel above the fast one
-    if(_curSpiralSpeedDiff>_cur_forward_speed){
-        _curSpiralSpeedDiff = _cur_forward_speed-_min_speed;
+    if(_cur_spiral_speed_diff>_cur_forward_speed){
+        _cur_spiral_speed_diff = _cur_forward_speed-_min_speed;
     }
 
     // If the spiral time is finished then set the flag to restart the spiral
     if(_submove_timer.finished()){
-        _spiralStart = true;
+        _spiral_start = true;
     }
     else{
-        circle_speed(_cur_forward_speed,_curSpiralSpeedDiff,turnDir);
+        circle_speed(_cur_forward_speed,_cur_spiral_speed_diff,turnDir);
     }
 }
 
 void MoveManager::spiral_power(int8_t turnDir){
-    if(_spiralStart || (_move_compound != MOVE_C_SPIRAL)){
+    if(_spiral_start || (_move_compound != MOVE_C_SPIRAL)){
         // Reset the flag so we don't re-init,
-        _spiralStart = false;
+        _spiral_start = false;
         _move_compound = MOVE_C_SPIRAL;
         // Calculate the speed/time slope for the linear increase of speed
         // for the slow wheel
-        _initSpiralSpeedDiffPower = _cur_forward_power-_spiralMinPower;
-        _curSpiralSpeedDiffPower = _initSpiralSpeedDiffPower;
-        _spiralSlopePower = float(_initSpiralSpeedDiffPower)/float(_spiralDuration);
+        _init_spiral_speed_diff_power = _cur_forward_power-_spiral_min_power;
+        _cur_spiral_speed_diff_power = _init_spiral_speed_diff_power;
+        _spiral_slope_power = float(_init_spiral_speed_diff_power)/float(_spiral_duration);
         // Start the spiral timer
-        _submove_timer.start(_spiralDuration);
+        _submove_timer.start(_spiral_duration);
     }
 
-    _spiralCurrTime = _submove_timer.getTime();
-    _curSpiralSpeedDiffPower = round(float(_initSpiralSpeedDiff) - _spiralSlopePower*float(_spiralCurrTime));
+    _spiral_curr_time = _submove_timer.get_time();
+    _cur_spiral_speed_diff_power = round(float(_init_spiral_speed_diff) - _spiral_slope_power*float(_spiral_curr_time));
 
-    if(_curSpiralSpeedDiffPower>_cur_forward_power){
-        _curSpiralSpeedDiffPower = _cur_forward_power-_spiralMinPower;
+    if(_cur_spiral_speed_diff_power>_cur_forward_power){
+        _cur_spiral_speed_diff_power = _cur_forward_power-_spiral_min_power;
     }
 
     if(_submove_timer.finished()){
-        _spiralStart = true;
+        _spiral_start = true;
     }
     else{
-        circle_power(_cur_forward_power,_curSpiralSpeedDiffPower,turnDir);
+        circle_power(_cur_forward_power,_cur_spiral_speed_diff_power,turnDir);
     }
 }
 
 //----------------------------------------------------------------------------
 // MOVE ZIG/ZAG
 void MoveManager::zig_zag(){
-    if(_zzTurnFlag){
+    if(_zz_turn_flag){
         if(!_submove_timer.finished()){
-        if(_zzTurnDir == MOVE_B_LEFT){
+        if(_zz_turn_dir == MOVE_B_LEFT){
             if(_move_control == MOVE_CONTROL_SPEED){
-                forward_left(_cur_turn_speed,_zzTurnDiffSpeed);
+                forward_left(_cur_turn_speed,_zz_turn_diff_speed);
             }
             else{
-                forward_left(_cur_turn_power,_zzTurnDiffPower);
+                forward_left(_cur_turn_power,_zz_turn_diff_power);
             }
         }
         else{
             if(_move_control == MOVE_CONTROL_SPEED){
-                forward_right(_cur_turn_speed,_zzTurnDiffSpeed);
+                forward_right(_cur_turn_speed,_zz_turn_diff_speed);
             }
             else{
-                forward_right(_cur_turn_power,_zzTurnDiffPower);
+                forward_right(_cur_turn_power,_zz_turn_diff_power);
             }
         }
         }
         else{
-        if(_zzTurnDir == MOVE_B_LEFT){
-            _zzTurnDir = MOVE_B_RIGHT;
-            _zzTurnDuration = _zzRightTurnDur;
+        if(_zz_turn_dir == MOVE_B_LEFT){
+            _zz_turn_dir = MOVE_B_RIGHT;
+            _zz_turn_duration = _zz_right_turn_dur;
         }
         else{
-            _zzTurnDir = MOVE_B_LEFT;
-            _zzTurnDuration = _zzLeftTurnDur;
+            _zz_turn_dir = MOVE_B_LEFT;
+            _zz_turn_duration = _zz_left_turn_dur;
         }
-        _zzTurnFlag = false;
-        _zzStraightFlag = true;
-        _submove_timer.start(_zzStraightDuration);
+        _zz_turn_flag = false;
+        _zz_straight_flag = true;
+        _submove_timer.start(_zz_straight_duration);
         }
     }
 
-    if(_zzStraightFlag){
+    if(_zz_straight_flag){
         if(!_submove_timer.finished()){
             forward();
         }
         else{
-            _zzTurnFlag = true;
-            _zzStraightFlag = false;
-            _submove_timer.start(_zzTurnDuration);
+            _zz_turn_flag = true;
+            _zz_straight_flag = false;
+            _submove_timer.start(_zz_turn_duration);
         }
     }
 }
@@ -785,22 +782,22 @@ void MoveManager::zig_zag(){
 //----------------------------------------------------------------------------
 // MOVE LOOK AROUND
 void MoveManager::look_around(){
-    if(_lookStartFlag){
+    if(_look_start_flag){
         //Serial.println("LOOK START.");
         _move_compound = MOVE_C_LOOK;
-        _lookStartFlag = false;
-        _lookTimer.start(_look_move_time);
+        _look_start_flag = false;
+        _look_timer.start(_look_move_time);
         _look_cur_ang = 0;
         _look_move_switch = true;
         reset_PIDs();
     }
     else{
-        if(_lookTimer.finished()){
+        if(_look_timer.finished()){
         _look_move_switch = !_look_move_switch;
         //Serial.print("LOOK TIMER FINISHED: ");
         if(_look_move_switch){
             //Serial.println("START. Ang++");
-            _lookTimer.start(_look_move_time);
+            _look_timer.start(_look_move_time);
             _look_cur_ang++;
 
             /*if(_look_cur_ang >= _look_num_angs){
@@ -809,7 +806,7 @@ void MoveManager::look_around(){
         }
         else{
             //Serial.println("PAUSE.");
-            _lookTimer.start(_look_pause_time);
+            _look_timer.start(_look_pause_time);
         }
         }
     }
@@ -833,13 +830,13 @@ void MoveManager::force_look_move(){
     //Serial.println("FUNC: force look move. Ang++");
     _look_move_switch = true;
     _look_cur_ang++;
-    _lookTimer.start(_look_move_time);
+    _look_timer.start(_look_move_time);
     reset_PIDs();
 }
 
 void MoveManager::reset_look(){
     //Serial.println("FUNC: reset look.");
-    _lookStartFlag = true;
+    _look_start_flag = true;
     _look_cur_ang = 0;
     reset_PIDs();
 }
@@ -849,16 +846,16 @@ void MoveManager::reset_look(){
 //----------------------------------------------------------------------------
 void MoveManager::reset_PIDs(){
     // Reset Position Control PIDs and Variables
-    _setPointRelCounts_L = 0;
-    _setPointRelCounts_R = 0;
+    _set_point_rel_counts_left = 0;
+    _set_point_rel_counts_right = 0;
     _pos_PID_left.set_set_point(0.0);
     _pos_PID_right.set_set_point(0.0);
     _pos_PID_left.set_output(0.0);
     _pos_PID_right.set_output(0.0);
     _pos_PID_left.set_controller_on(PID_OFF);
     _pos_PID_right.set_controller_on(PID_OFF);
-    _posAtL = false;
-    _posAtR = false;
+    _pos_at_left = false;
+    _pos_at_right = false;
     _pos_at_both = false;
     // Reset Speed PIDs
     _speed_PID_left.set_set_point(0.0);
@@ -871,9 +868,9 @@ void MoveManager::reset_PIDs(){
 
 //----------------------------------------------------------------------------
 // PRIVATE HELPER FUNCTIONS
-void MoveManager::_updateBasicMove(int8_t inMove){
-    if(_move_basic != inMove){
-        _move_basic = inMove;
+void MoveManager::_update_basic_move(EMoveBasic move){
+    if(_move_basic != move){
+        _move_basic = move;
         _encoder_count_start = true;
         _start_encoder_count_left = _encoder_left->get_count();
         _start_encoder_count_right = _encoder_right->get_count();
@@ -886,15 +883,15 @@ void MoveManager::_update_compound_move(){
     _move_update_time = random(_move_update_min_time,_move_update_max_time);
 
     if(_move_compound == MOVE_C_SPIRAL){
-        _spiralStart = true;
-        _spiralDirection = random(0,2);
-        _move_update_time = _spiralDuration;
+        _spiral_start = true;
+        _spiral_direction = random(0,2);
+        _move_update_time = _spiral_duration;
     }
     else if(_move_compound == MOVE_C_CIRCLE){
-        _circleDirection = random(0,2);
+        _circle_direction = random(0,2);
     }
     else if(_move_compound == MOVE_C_LOOK){
-        _lookStartFlag = true;
+        _look_start_flag = true;
         _move_update_time = _look_tot_time;
     }
 
@@ -908,7 +905,7 @@ void MoveManager::_at_speed(float inSpeedL,float inSpeedR){
     // Check if the left/right PIDs are on if not turn them on
     if(!_speed_PID_left.get_controller_on()){
         _speed_PID_left.set_controller_on(PID_ON);
-        _speed_PID_left.set_Pgain_only(_speedPRev);
+        _speed_PID_left.set_Pgain_only(_speed_P_rev);
         if(inSpeedL < 0.0){
         _speed_PID_left.set_controller_dir(PID_REVERSE);
 
@@ -917,13 +914,13 @@ void MoveManager::_at_speed(float inSpeedL,float inSpeedR){
         _speed_PID_left.set_controller_dir(PID_DIRECT);
         }
         if((inSpeedL < 0.0) && (inSpeedR < 0.0)){
-        _speed_PID_right.set_Pgain_only(_speedPRev);
-        _speed_PID_left.set_Pgain_only(_speedPRev);
+        _speed_PID_right.set_Pgain_only(_speed_P_rev);
+        _speed_PID_left.set_Pgain_only(_speed_P_rev);
         }
     }
     if(!_speed_PID_right.get_controller_on()){
         _speed_PID_right.set_controller_on(PID_ON);
-        _speed_PID_right.set_Pgain_only(_speedPRev);
+        _speed_PID_right.set_Pgain_only(_speed_P_rev);
         if(inSpeedR < 0.0){
         _speed_PID_right.set_controller_dir(PID_REVERSE);
         }
@@ -931,8 +928,8 @@ void MoveManager::_at_speed(float inSpeedL,float inSpeedR){
         _speed_PID_right.set_controller_dir(PID_DIRECT);
         }
         if((inSpeedL < 0.0) && (inSpeedR < 0.0)){
-        _speed_PID_right.set_Pgain_only(_speedPRev);
-        _speed_PID_left.set_Pgain_only(_speedPRev);
+        _speed_PID_right.set_Pgain_only(_speed_P_rev);
+        _speed_PID_left.set_Pgain_only(_speed_P_rev);
         }
     }
 
@@ -967,37 +964,37 @@ void MoveManager::_to_pos(float setPosL, float setPosR){
     if(!_pos_PID_left.get_controller_on()){
         _pos_PID_left.set_controller_on(PID_ON);
         _speed_PID_left.set_controller_on(PID_ON);
-        //_speed_PID_left.set_PID_gains(_speedP,_speedI,_speedD);
+        //_speed_PID_left.set_PID_gains(_speed_P,_speed_I,_speed_D);
     }
     // RIGHT
     if(!_pos_PID_right.get_controller_on()){
         _pos_PID_right.set_controller_on(PID_ON);
         _speed_PID_right.set_controller_on(PID_ON);
-        //_speed_PID_right.set_PID_gains(_speedP,_speedI,_speedD);
+        //_speed_PID_right.set_PID_gains(_speed_P,_speed_I,_speed_D);
     }
 
     // Check if the set point passed to the function has changed
     // LEFT
     int32_t checkSetPointL =  round(setPosL/_encoder_left->get_mm_per_count());
-    if(checkSetPointL != _setPointRelCounts_L){
-        _setPointRelCounts_L = checkSetPointL;
-        _startEncCount_L = _encoder_left->get_count();
-        _pos_PID_left.set_set_point(float(_setPointRelCounts_L));
+    if(checkSetPointL != _set_point_rel_counts_left){
+        _set_point_rel_counts_left = checkSetPointL;
+        _start_encoder_count_left = _encoder_left->get_count();
+        _pos_PID_left.set_set_point(float(_set_point_rel_counts_left));
     }
     // RIGHT
     int32_t checkSetPointR =  round(setPosR/_encoder_right->get_mm_per_count());
-    if(checkSetPointR != _setPointRelCounts_R){
-        _setPointRelCounts_R = checkSetPointR;
-        _startEncCount_R = _encoder_right->get_count();
-        _pos_PID_right.set_set_point(float(_setPointRelCounts_R));
+    if(checkSetPointR != _set_point_rel_counts_right){
+        _set_point_rel_counts_right = checkSetPointR;
+        _start_encoder_count_right = _encoder_right->get_count();
+        _pos_PID_right.set_set_point(float(_set_point_rel_counts_right));
     }
 
     // Update the relative count and send it to the PIDs
     // LEFT
-    _curr_relative_count_left = _encoder_left->get_count()-_startEncCount_L;
+    _curr_relative_count_left = _encoder_left->get_count()-_start_encoder_count_left;
     _pos_PID_left.update(_curr_relative_count_left);
     // RIGHT
-    _curr_relative_count_right = _encoder_right->get_count()-_startEncCount_R;
+    _curr_relative_count_right = _encoder_right->get_count()-_start_encoder_count_right;
     _pos_PID_right.update(_curr_relative_count_right);
 
     // Update the speed PIDs
@@ -1008,33 +1005,33 @@ void MoveManager::_to_pos(float setPosL, float setPosR){
 
     // Check that the PID is sending a signal above the min speed
     // LEFT
-    if(round(abs(_pos_PID_left.get_output())) < _posPIDMinSpeed){
+    if(round(abs(_pos_PID_left.get_output())) < _pos_PID_min_speed){
         if(_pos_PID_left.get_output() < 0.0){
-        _pos_PID_left.set_output(-1.0*_posPIDMinSpeed);
+        _pos_PID_left.set_output(-1.0*_pos_PID_min_speed);
         }
         else{
-        _pos_PID_left.set_output(_posPIDMinSpeed);
+        _pos_PID_left.set_output(_pos_PID_min_speed);
         }
     }
     // RIGHT
-    if(round(abs(_pos_PID_right.get_output())) < _posPIDMinSpeed){
+    if(round(abs(_pos_PID_right.get_output())) < _pos_PID_min_speed){
         if(_pos_PID_right.get_output() < 0.0){
-        _pos_PID_right.set_output(-1.0*_posPIDMinSpeed);
+        _pos_PID_right.set_output(-1.0*_pos_PID_min_speed);
         }
         else{
-        _pos_PID_right.set_output(_posPIDMinSpeed);
+        _pos_PID_right.set_output(_pos_PID_min_speed);
         }
     }
 
     // Move forward or back based on the PID value
     // LEFT
-    if(_curr_relative_count_left < (_setPointRelCounts_L-_posTol)){
+    if(_curr_relative_count_left < (_set_point_rel_counts_left-_pos_tol)){
         _speed_PID_left.set_set_point(_pos_PID_left.get_output());
         _speed_PID_left.set_controller_dir(PID_DIRECT);
         _motor_left->run(FORWARD);
         _motor_left->setSpeed(int(_speed_PID_left.get_output()));
     }
-    else if(_curr_relative_count_left > (_setPointRelCounts_L+_posTol)){
+    else if(_curr_relative_count_left > (_set_point_rel_counts_left+_pos_tol)){
         _speed_PID_left.set_set_point(_pos_PID_left.get_output());
         _speed_PID_left.set_controller_dir(PID_REVERSE);
         _motor_left->run(BACKWARD);
@@ -1046,16 +1043,16 @@ void MoveManager::_to_pos(float setPosL, float setPosR){
         _speed_PID_left.set_set_point(0.0);
         _motor_left->run(RELEASE);
         _motor_left->setSpeed(0);
-        _posAtL = true;
+        _pos_at_left = true;
     }
     // RIGHT
-    if(_curr_relative_count_right < (_setPointRelCounts_R-_posTol)){
+    if(_curr_relative_count_right < (_set_point_rel_counts_right-_pos_tol)){
         _speed_PID_right.set_set_point(_pos_PID_right.get_output());
         _speed_PID_right.set_controller_dir(PID_DIRECT);
         _motor_right->run(FORWARD);
         _motor_right->setSpeed(int(_speed_PID_right.get_output()));
     }
-    else if(_curr_relative_count_right > (_setPointRelCounts_R+_posTol)){
+    else if(_curr_relative_count_right > (_set_point_rel_counts_right+_pos_tol)){
         _speed_PID_right.set_set_point(_pos_PID_right.get_output());
         _speed_PID_right.set_controller_dir(PID_REVERSE);
         _motor_right->run(BACKWARD);
@@ -1067,17 +1064,17 @@ void MoveManager::_to_pos(float setPosL, float setPosR){
         _speed_PID_right.set_set_point(0.0);
         _motor_right->run(RELEASE);
         _motor_right->setSpeed(0);
-        _posAtR = true;
+        _pos_at_right = true;
     }
 
-    if(_posAtL && _posAtR){
+    if(_pos_at_left && _pos_at_right){
         _pos_at_both = true;
     }
 }
 
 //----------------------------------------------------------------------------
 void MoveManager::_update_speed(){
-    _cur_forward_speed = constrain(_defForwardSpeed*_speedMoodFact*_speedColFact,_min_speed,_max_speed);
-    _cur_back_speed = -1.0*constrain(fabs(_defBackSpeed*_speedMoodFact*_speedColFact),_min_speed,_max_speed);
-    _cur_turn_speed = constrain(_defTurnSpeed*_speedMoodFact*_speedColFact,_min_speed,_max_speed);
+    _cur_forward_speed = constrain(_def_forward_speed*_speed_mood_fact*_speed_col_fact,_min_speed,_max_speed);
+    _cur_back_speed = -1.0*constrain(fabs(_def_back_speed*_speed_mood_fact*_speed_col_fact),_min_speed,_max_speed);
+    _cur_turn_speed = constrain(_def_turn_speed*_speed_mood_fact*_speed_col_fact,_min_speed,_max_speed);
 }

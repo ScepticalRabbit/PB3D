@@ -13,19 +13,15 @@
 #include <Arduino.h>
 #include "Timer.h"
 
-#define PID_OFF 0
-#define PID_ON 1
 
-#define PID_DIRECT 0
-#define PID_REVERSE 1
 
 class PID{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTORS
-  PID(bool inCmdOn);
-  PID(bool inCmdOn, double kp, double ki, double kd);
-  PID(bool inCmdOn, double kp, double ki, double kd, uint16_t sampTime);
+  PID(bool cmd_on);
+  PID(bool cmd_on, double kp, double ki, double kd);
+  PID(bool cmd_on, double kp, double ki, double kd, uint16_t sample_time);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -38,24 +34,25 @@ public:
   void update(double input);
 
   // This version of update adds the PID output to the command value, for velocity control
-  void update(double inCommand, double input);
+  void update(double command, double input);
 
   //---------------------------------------------------------------------------
   // Get, set and reset
   void set_output(double output);
   void set_PID_gains(double kp, double ki, double kd);
   void set_Pgain_only(double kp);
-  void set_sample_time(int newSampleTime);
-  void set_output_limits(double outMin, double outMax);
-  void set_command_limits(double cmdMin, double cmdMax);
-  void set_controller_on(uint8_t inFlag);
-  void set_controller_dir(uint8_t inDir);
+  void set_sample_time(int sample_time);
+  void set_output_limits(double out_min, double out_max);
+  void set_command_limits(double cmd_min, double cmd_max);
+  void set_controller_on(uint8_t on_flag);
+  void set_controller_dir(uint8_t direction);
 
   double get_output(){return _output;}
   double get_error(){return _error;}
-  void set_set_point(double setPoint){_set_point = setPoint;}
+  void set_set_point(double set_point){_set_point = set_point;}
   double get_set_point(){return _set_point;}
   bool get_controller_on(){return _auto_on;}
+
   double get_prop_term(){return _prop_term;}
   double get_int_term(){return _int_term;}
   double get_deriv_term(){return _deriv_term;}
@@ -65,7 +62,7 @@ private:
   void _intialise();
   // main part of the update method used for overloading
   double _compute_PID(double input);
-  double _constrain_by_command_mode(double inVal);
+  double _constrain_by_command_mode(double val);
 
   // PRIVATE VARIABLES
   Timer _pid_timer = Timer();

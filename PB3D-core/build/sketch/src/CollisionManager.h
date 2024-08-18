@@ -17,22 +17,15 @@
 #include "Timer.h"
 
 // Helper classes
-#include "CollisionDangerCodes.h"
+#include "PB3DConstants.h"
 #include "CollisionEscaper.h"
 #include "LaserManager.h"
 #include "BumperSensor.h"
 #include "UltrasonicSensor.h"
-#include "LaserIndex.h"
 
-//------------------------------------------------------------------------------
-// DEFINITIONS
-// Address for digital out
-#ifndef ADDR_FOLLBOARD
-  #define ADDR_FOLLBOARD 0x11
-#endif
 
 // DEBUG Flags
-#define COLL_DEBUG_DECISIONTREE
+//#define COLL_DEBUG_DECISIONTREE
 
 //------------------------------------------------------------------------------
 // LAST COLLISION: data structure

@@ -58,7 +58,7 @@ void Encoder::update_equal(){
 void Encoder::update_speed(){
     if(_speed_timer.finished()){
         // Get the current time and restart the timer
-        double timeIntS = double(_speed_timer.getTime())/1000.0;
+        double timeIntS = double(_speed_timer.get_time())/1000.0;
         _speed_timer.start(_speed_update_time);
 
         // Calculate distance travelled using the encoder count difference

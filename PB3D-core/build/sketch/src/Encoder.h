@@ -12,15 +12,11 @@
 #define ENCODER_H
 
 #include <Arduino.h>
+
+#include "PB3DConstants.h"
 #include "Timer.h"
 #include "FilterMovAvg.h"
 #include "FilterLowPass.h"
-
-
-enum EEncoderDirection{
-    ENCODER_FORWARD = 0,
-    ENCODER_BACK
-};
 
 
 class Encoder{
@@ -72,8 +68,8 @@ private:
   double _wheel_diam = 60.0;
   double _wheel_circ = _wheel_diam*PI;
   double _gear_ratio = 50.0;
-  double _counts_per_rev = 12.0;
-  double _counts_per_rev = _gear_ratio*_counts_per_rev;
+  double _counts_on_encoder = 12.0;
+  double _counts_per_rev = _gear_ratio*_counts_on_encoder;
   double _mm_per_count = _wheel_circ/_counts_per_rev;
 
   uint16_t _speed_update_time = 10;      // Default update time of 100Hz

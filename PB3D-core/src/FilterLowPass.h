@@ -16,20 +16,20 @@
 class FilterLowPass{
 public:
   FilterLowPass();
-  FilterLowPass(double inAlpha);
-  FilterLowPass(double inAlpha, uint16_t inUpdateTime);
+  FilterLowPass(double alpha);
+  FilterLowPass(double alpha, uint16_t update_time);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
   void begin();
 
-  double filter(double inData);
+  double filter(double data);
 
-  void set_alpha(double inAlpha){_alpha = inAlpha;}
+  void set_alpha(double alpha){_alpha = alpha;}
   double get_alpha(){return _alpha;}
   double get_current_value(){return _curr_filtered;}
   void reset(){_prev_filtered = 0.0;}
-  void reset(double inVal){_prev_filtered = inVal;}
+  void reset(double val){_prev_filtered = val;}
 
 private:
   Timer _filter_timer;

@@ -204,7 +204,7 @@ public:
   // SUB-SOUND - SLIDE
   //--------------------------------------------------------------------------------------------
   void slide(uint16_t startFreq, uint16_t endFreq, uint16_t onDur){
-    uint16_t currFreq = _calcSlideFreq(startFreq,endFreq,onDur,_noteTimer.getTime());
+    uint16_t currFreq = _calcSlideFreq(startFreq,endFreq,onDur,_noteTimer.get_time());
     tone(SPEAKER_POUT,currFreq);
   }
 
@@ -236,7 +236,7 @@ public:
   // SUB-SOUND - SNORE
   //----------------------------------------------------------------------------
   void snore(){
-    _snoreCurrFreq = round(float(_snoreStartFreq) + _snoreSlope*float(_noteTimer.getTime()));
+    _snoreCurrFreq = round(float(_snoreStartFreq) + _snoreSlope*float(_noteTimer.get_time()));
     tone(SPEAKER_POUT,_snoreCurrFreq);
   }
 

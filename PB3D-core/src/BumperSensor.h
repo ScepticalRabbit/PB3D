@@ -12,9 +12,9 @@
 #include <Arduino.h>
 #include <Wire.h> // I2C
 
-#include "Timer.h"
+#include "PB3DConstants.h"
 #include "PB3DI2CAddresses.h"
-#include "CollisionDangerCodes.h"
+#include "Timer.h"
 
 
 class BumperSensor{

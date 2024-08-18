@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
+// PET BOT 3D - PB3D!
 // CLASS - MICRO TIMER
 //-----------------------------------------------------------------------------
 /*
@@ -18,20 +18,20 @@ public:
   }
 
   void start(uint32_t timerDuration){
-    _timerStart = micros();
-    _timerDuration = timerDuration;
+    _timer_start = micros();
+    _timer_duration = timerDuration;
   }
 
-  uint32_t getTime(){
-    return (micros()-_timerStart);
+  uint32_t get_time(){
+    return (micros()-_timer_start);
   }
 
   bool finished(){
-    return ((micros()-_timerStart)>_timerDuration);
+    return ((micros()-_timer_start)>_timer_duration);
   }
-  
+
 private:
-  uint32_t _timerStart = 0;
-  uint32_t _timerDuration = 0;  
+  uint32_t _timer_start = 0;
+  uint32_t _timer_duration = 0;
 };
 #endif // MICROTIMER_H

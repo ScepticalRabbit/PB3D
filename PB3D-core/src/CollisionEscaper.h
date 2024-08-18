@@ -11,11 +11,10 @@
 #define COLLISIONESCAPER_H
 
 #include <Arduino.h>
-#include "MoveManager.h"
-#include "CollisionDangerCodes.h"
 
-#define ESCAPE_NOREV 1
-#define ESCAPE_REV 0
+#include "PB3DConstants.h"
+#include "MoveManager.h"
+
 
 class CollisionEscaper{
     public:

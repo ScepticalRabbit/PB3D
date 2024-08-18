@@ -74,7 +74,7 @@ public:
 
         #if defined(NAV_DEBUG_TIMER)
           Serial.print(F("NAV: update took "));
-          Serial.print(_navTimer.getTime());
+          Serial.print(_navTimer.get_time());
           Serial.println(F("ms"));
         #endif
 

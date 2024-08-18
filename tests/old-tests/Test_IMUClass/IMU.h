@@ -92,7 +92,7 @@ public:
 
         #if defined(IMU_DEBUG_TIMER)
           Serial.print("IMU: update took ");
-          Serial.print(_IMUTimer.getTime());
+          Serial.print(_IMUTimer.get_time());
           Serial.println("ms");
         #endif
 

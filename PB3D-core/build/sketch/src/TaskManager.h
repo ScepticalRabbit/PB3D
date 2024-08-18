@@ -140,13 +140,13 @@ private:
   uint8_t _calcFallingLEDVal(uint16_t timeInt){
     float startVal = 255.0, endVal = 0.0;
     float slope = (float(startVal)-float(endVal))/(float(0.0)-float(timeInt));
-    return round(float(startVal) + slope*float(_LEDTimer.getTime()));
+    return round(float(startVal) + slope*float(_LEDTimer.get_time()));
   }
 
   uint8_t _calcRisingLEDVal(uint16_t timeInt){
     float startVal = 0.0,  endVal = 255.0;
     float slope = (float(startVal)-float(endVal))/(float(0.0)-float(timeInt));
-    return round(float(startVal) + slope*float(_LEDTimer.getTime()));
+    return round(float(startVal) + slope*float(_LEDTimer.get_time()));
   }
 
   //------------------------------------------------------------------------

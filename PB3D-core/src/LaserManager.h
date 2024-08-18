@@ -96,6 +96,9 @@ private:
                                                   &_laser_AA};
 
     // Collision handling strategies for the lasers
+    CollisionAvoidBasic _avoid_basic = CollisionAvoidBasic(_col_dist_close,
+                                                           _col_dist_far);
+
     CollisionAvoidSlow _avoid_flat_slow = CollisionAvoidSlow(_col_dist_close,
                                                              _col_dist_far,
                                                              _col_dist_slow);
@@ -108,17 +111,17 @@ private:
     CliffAvoid _avoid_pickup = CliffAvoid(_alt_dist_close,
                                           _alt_dist_far);
 
-    ICollisionStrategy* _laser_strategy_array[_num_lasers] = {&_avoid_flat_slow, // CC
-                                                              &_avoid_overhead,  // UC
-                                                              &_avoid_cliff,     // DL
-                                                              &_avoid_cliff,     // DR
-                                                              &_avoid_flat_slow, // HL
-                                                              &_avoid_flat_slow, // HR
-                                                              &_avoid_flat_slow, // LL
-                                                              &_avoid_flat_slow, // RR
-                                                              &_avoid_flat_slow, // BB
-                                                              &_avoid_pickup,    // AA
-                                                              };
+    ECollisionStrategy _laser_strategy_array[_num_lasers] = {AVOID_FLAT_SLOW, // CC
+                                                             AVOID_OVERHEAD,  // UC
+                                                             AVOID_CLIFF,     // DL
+                                                             AVOID_CLIFF,     // DR
+                                                             AVOID_FLAT_SLOW, // HL
+                                                             AVOID_FLAT_SLOW, // HR
+                                                             AVOID_BASIC, // LL
+                                                             AVOID_BASIC, // RR
+                                                             AVOID_FLAT_SLOW, // BB
+                                                             AVOID_PICKUP,    // AA
+                                                            };
 
     // GPIO Expander
     Adafruit_PCF8574 _gpio_expander;

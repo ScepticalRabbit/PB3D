@@ -15,13 +15,13 @@
 FilterLowPass::FilterLowPass(){
 }
 
-FilterLowPass::FilterLowPass(double inAlpha){
-    _alpha = inAlpha;
+FilterLowPass::FilterLowPass(double alpha){
+    _alpha = alpha;
 }
 
-FilterLowPass::FilterLowPass(double inAlpha, uint16_t inUpdateTime){
-    _alpha = inAlpha;
-    _update_time = inUpdateTime;
+FilterLowPass::FilterLowPass(double alpha, uint16_t update_time){
+    _alpha = alpha;
+    _update_time = update_time;
 }
 
 //---------------------------------------------------------------------------
@@ -32,9 +32,9 @@ void FilterLowPass::begin(){
 
 //---------------------------------------------------------------------------
 // FILTER
-double FilterLowPass::filter(double inData){
+double FilterLowPass::filter(double data){
     if(_filter_timer.finished()){
-        _curr_filtered = _alpha*inData + (1-_alpha)*_prev_filtered;
+        _curr_filtered = _alpha*data + (1-_alpha)*_prev_filtered;
         _prev_filtered = _curr_filtered;
         _filter_timer.start(_update_time);
     }
