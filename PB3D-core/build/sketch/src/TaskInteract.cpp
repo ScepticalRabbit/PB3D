@@ -36,8 +36,8 @@ void TaskInteract::update(){
 
     // SENSOR: Check for start of pat
     if(_patSensObj->getButtonTwoFlag()){
-        _task_manager->setTask(TASK_INTERACT);
-        _task_manager->setTaskDuration(_patTimeOut);
+        _task_manager->set_task(TASK_INTERACT);
+        _task_manager->set_task_duration(_patTimeOut);
     }
 }
 
@@ -45,7 +45,7 @@ void TaskInteract::update(){
 // INTERACT - called during the main during decision tree
 void TaskInteract::interact(){
     // Set the LEDs on every loop
-    _task_manager->taskLEDInteract();
+    _task_manager->task_LED_interact();
 
     // If this is the first time we enter the function set key variables
     if(_interactStartFlag){
@@ -122,10 +122,10 @@ void TaskInteract::interact(){
         _mood_manager->inc_mood_score();
 
         // Update task to dance
-        _task_manager->setTask(TASK_DANCE);
+        _task_manager->set_task(TASK_DANCE);
         // Overide default task duration to be a specific number of bars
-        _task_manager->setTaskDuration(round(4*_taskDanceObj->getDanceBarMs()));
-        _task_manager->setDanceUpdateFlag(false);
+        _task_manager->set_task_duration(round(4*_taskDanceObj->getDanceBarMs()));
+        _task_manager->set_dance_update_flag(false);
         _taskDanceObj->setStartFlag(true);
         _taskDanceObj->setSpeakerFlag(true);
     }
@@ -150,7 +150,7 @@ void TaskInteract::interact(){
         _mood_manager->dec_mood_score();
 
         // Update task to explore
-        _task_manager->setTask(TASK_EXPLORE);
+        _task_manager->set_task(TASK_EXPLORE);
     }
 }
 

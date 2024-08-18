@@ -30,15 +30,15 @@ void TaskDance::begin(){
 // UPDATE: called during every loop
 void TaskDance::update(){
     // Get new task flag reset after first main loop update
-    if(_task_manager->getNewTaskFlag()){
+    if(_task_manager->get_new_task_flag()){
         // Reset the dance start flag in case this is the current task.
         _danceStartFlag = true;
 
-        if(_task_manager->getTask() == TASK_DANCE){
+        if(_task_manager->get_task() == TASK_DANCE){
         _generateTempo();
         _generateDance();
-        _task_manager->setDanceDuration(_danceDuration);
-        _task_manager->setTaskDuration(_danceDuration);
+        _task_manager->set_dance_duration(_dance_duration);
+        _task_manager->set_task_duration(_dance_duration);
         }
     }
 }
@@ -52,7 +52,7 @@ void TaskDance::dance(){
     }
 
     // Set the task LEDs on every loop
-    _task_manager->taskLEDDance();
+    _task_manager->task_LED_dance();
 
     // If needed set the speaker flags on every loop
     if(_speakerFlag){
@@ -133,7 +133,7 @@ void TaskDance::_generateTempo(){
     _danceBPM = float(random(_danceBPMMin,_danceBPMMax)); // NOTE: random num between (min,max-1)
     _dance4NoteMs = (60.0/_danceBPM)*1000.0;
     _danceBarMs = _dance4NoteMs*4.0;
-    _danceDuration = uint32_t(_danceBarMs*float(_danceNumBars));
+    _dance_duration = uint32_t(_danceBarMs*float(_danceNumBars));
 }
 
 void TaskDance::_generateDance(){

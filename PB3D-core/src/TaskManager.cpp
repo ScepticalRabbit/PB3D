@@ -37,79 +37,79 @@ void TaskManager::force_update(){
 //------------------------------------------------------------------------------
 // Get, set and reset
 // Default setTask function uses default task durations
-void TaskManager::setTask(int8_t taskIn){
-    if(taskIn != _taskCode){
-        _taskCode = taskIn;
-        _taskNewFlag = true;
+void TaskManager::set_task(int8_t taskIn){
+    if(taskIn != _task_code){
+        _task_code = taskIn;
+        _task_new_flag = true;
         uint32_t tempDuration = random(_taskDurationMin,_taskDurationMax);
 
         // Set default duraiton for each task and set the LEDs
-        if(_taskCode == TASK_TEST){
+        if(_task_code == TASK_TEST){
             _taskDuration = 30000;
-            taskLEDTest();
+            task_LED_test();
         }
-        else if(_taskCode == TASK_EXPLORE){
+        else if(_task_code == TASK_EXPLORE){
             _taskDuration = tempDuration;
-            taskLEDExplore();
+            task_LED_explore();
         }
-        else if(_taskCode == TASK_REST){
+        else if(_task_code == TASK_REST){
             _taskDuration = tempDuration;
         }
-        else if(_taskCode == TASK_DANCE){
-            _taskDuration = _danceDuration;
-            taskLEDDance();
+        else if(_task_code == TASK_DANCE){
+            _taskDuration = _dance_duration;
+            task_LED_dance();
         }
-        else if(_taskCode == TASK_TANTRUM){
-            _taskDuration = _tantrumDuration;
-            taskLEDCollision();
+        else if(_task_code == TASK_TANTRUM){
+            _taskDuration = _tantrum_duration;
+            task_LED_collision();
         }
-        else if(_taskCode == TASK_FINDHUMAN){
+        else if(_task_code == TASK_FINDHUMAN){
             _taskDuration = 20000;
-            taskLEDFindHuman();
+            task_LED_find_human();
         }
-        else if(_taskCode == TASK_FINDLIGHT){
+        else if(_task_code == TASK_FINDLIGHT){
             _taskDuration = 20000;
-            taskLEDFindLight();
+            task_LED_find_light();
         }
-        else if(_taskCode == TASK_FINDDARK){
+        else if(_task_code == TASK_FINDDARK){
             _taskDuration = 20000;
-            taskLEDFindDark();
+            task_LED_find_dark();
         }
-        else if(_taskCode == TASK_FINDSOUND){
+        else if(_task_code == TASK_FINDSOUND){
             _taskDuration = 20000;
-            taskLEDFindSound();
+            task_LED_find_sound();
         }
-        else if(_taskCode == TASK_INTERACT){
+        else if(_task_code == TASK_INTERACT){
             _taskDuration = 20000;
-            taskLEDInteract();
+            task_LED_interact();
         }
-        else if(_taskCode == TASK_PICKEDUP){
+        else if(_task_code == TASK_PICKEDUP){
             _taskDuration = 60000;
             // LEDs set based on state in the TaskPickedUp class
         }
-        else if(_taskCode == TASK_PAUSE){
+        else if(_task_code == TASK_PAUSE){
             _taskDuration = 60000;
             // LEDs set based on state in the TaskPause class
         }
-        else if(_taskCode == TASK_POUNCE){
+        else if(_task_code == TASK_POUNCE){
             _taskDuration = 20000;
         }
         else{
-            _taskCode = TASK_EXPLORE;
+            _task_code = TASK_EXPLORE;
             _taskDuration = tempDuration;
-            taskLEDExplore();
+            task_LED_explore();
         }
         // Start the task timer
         _taskTimer.start(_taskDuration);
     }
 }
 
-void TaskManager::setTaskDuration(uint32_t taskDur){
+void TaskManager::set_task_duration(uint32_t taskDur){
     _taskDuration = taskDur;
     _taskTimer.start(_taskDuration);
 }
 
-void TaskManager::assignProb(int8_t moodIn){
+void TaskManager::assign_probability(int8_t moodIn){
     // Moods: [neutral,happy,sad,angry,scared]
     // test is used for forcing task probability
     if(moodIn == MOOD_NEUTRAL){
@@ -137,19 +137,19 @@ void TaskManager::assignProb(int8_t moodIn){
 
 //------------------------------------------------------------------------------
 // TASK LED FUNCTIONS
-void TaskManager::taskLEDCollision(){
+void TaskManager::task_LED_collision(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDExplore(){
+void TaskManager::task_LED_explore(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 255, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 255, 0));
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDRest(uint8_t intensity){
+void TaskManager::task_LED_rest(uint8_t intensity){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 0, intensity));
     _taskLEDs->setPixelColor(1, _taskLEDs->Color(0, 0, intensity));
     _taskLEDs->setPixelColor(2, _taskLEDs->Color(0, 0, intensity));
@@ -157,37 +157,37 @@ void TaskManager::taskLEDRest(uint8_t intensity){
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDDance(){
+void TaskManager::task_LED_dance(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 255, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 255, 0));
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDTantrum(){
+void TaskManager::task_LED_tantrum(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 0));
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDFindHuman(){
+void TaskManager::task_LED_find_human(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(255, 0, 255));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(255, 0, 255));
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDInteract(){
+void TaskManager::task_LED_interact(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 255, 255));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 255, 255));
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDPickedUpOk(){
+void TaskManager::task_LED_pickedup_Ok(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 255, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 255, 0));
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDPickedUpPanic(){
+void TaskManager::task_LED_pickedup_panic(){
     if(_LEDTimer.finished()){
         _LEDTimer.start(_LEDOnOffTime);
         _LEDSwitch = !_LEDSwitch;
@@ -199,11 +199,11 @@ void TaskManager::taskLEDPickedUpPanic(){
         _taskLEDs->show();
     }
     else{
-        taskLEDOff();
+        task_LED_off();
     }
 }
 
-void TaskManager::taskLEDPause(uint16_t pauseTime){
+void TaskManager::task_LED_pause(uint16_t pauseTime){
     if(_LEDTimer.finished()){
         _LEDTimer.start(pauseTime);
     }
@@ -214,27 +214,27 @@ void TaskManager::taskLEDPause(uint16_t pauseTime){
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDFindLight(){
+void TaskManager::task_LED_find_light(){
     uint8_t intens = 255;
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(intens, intens, intens));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(intens, intens, intens));
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDFindDark(){
+void TaskManager::task_LED_find_dark(){
     uint8_t intens = 85;
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(intens, intens, intens));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(intens, intens, intens));
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDFindSound(){
+void TaskManager::task_LED_find_sound(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 0, 255));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 0, 255));
     _taskLEDs->show();
 }
 
-void TaskManager::taskLEDTest(){
+void TaskManager::task_LED_test(){
     if(_LEDTimer.finished()){
         _LEDTimer.start(_LEDOnOffTime);
         _LEDSwitch = !_LEDSwitch;
@@ -252,7 +252,7 @@ void TaskManager::taskLEDTest(){
     }
 }
 
-void TaskManager::taskLEDOff(){
+void TaskManager::task_LED_off(){
     _taskLEDs->setPixelColor(0, _taskLEDs->Color(0, 0, 0));
     _taskLEDs->setPixelColor(3, _taskLEDs->Color(0, 0, 0));
     _taskLEDs->show();

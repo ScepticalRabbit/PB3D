@@ -29,7 +29,7 @@ void TaskRest::begin(){
 // UPDATE: called during every LOOP
 void TaskRest::update(){
     // If the task has changed then modify other classes as needed
-    if(_task_manager->getNewTaskFlag()){
+    if(_task_manager->get_new_task_flag()){
         reset();
         _speaker->reset();
     }
@@ -70,7 +70,7 @@ void TaskRest::rest(){
         // Restart the timerr
         _timerObj.start(_restUpdateTime);
         // Set the current LED value
-        _task_manager->taskLEDRest(_restLEDVal);
+        _task_manager->task_LED_rest(_restLEDVal);
     }
 }
 

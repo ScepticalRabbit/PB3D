@@ -68,13 +68,13 @@ void TaskFindSound::update(){
         #endif
     }
 
-    if(_task_manager->getTask() != TASK_FINDSOUND){
+    if(_task_manager->get_task() != TASK_FINDSOUND){
         // ENABLE: If X claps in this interval then start finding sound
         if(_clapEnableTimer.finished()){
         _clapEnableTimer.start(_clapEnableUpdateTime);
 
         if(_clapCount >= _clapThres){
-            _task_manager->setTask(TASK_FINDSOUND);
+            _task_manager->set_task(TASK_FINDSOUND);
         }
         _clapCount = 0;
         }
@@ -90,7 +90,7 @@ void TaskFindSound::update(){
     }
 
     // NEW TASK: if task is new set the start flag
-    if(_task_manager->getNewTaskFlag()){
+    if(_task_manager->get_new_task_flag()){
         _start_flag = true;
     }
 }
@@ -99,7 +99,7 @@ void TaskFindSound::update(){
 // FINDSOUND - called during task decision tree
 void TaskFindSound::findSound(){
     // Set the LEDs on every loop regardless
-    _task_manager->taskLEDFindSound();
+    _task_manager->task_LED_find_sound();
 
     // If the sensor wasn't found then sxit the function
     if(!_enabled){return;}

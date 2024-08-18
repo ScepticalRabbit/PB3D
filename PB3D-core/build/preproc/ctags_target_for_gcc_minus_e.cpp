@@ -225,8 +225,8 @@ void setup() {
   task_find_sound.begin();
 
   // Pass durations to the master task object
-  task_manager.setDanceDuration(task_dance.getDuration());
-  task_manager.setTantrumDuration(task_tantrum.getDuration());
+  task_manager.set_dance_duration(task_dance.getDuration());
+  task_manager.set_tantrum_duration(task_tantrum.getDuration());
 
   // Start timers in the main program
   _test_timer.start(0);
@@ -249,12 +249,12 @@ void setup() {
     mood_manager.set_mood(_debug_moodCode);
   }
   if(_debug_forceTask){
-    task_manager.setTask(_debug_taskCode);
+    task_manager.set_task(_debug_taskCode);
   }
   if(_debug_forceMove){
     move_manager.update_move(_debug_moveType);
   }
-  task_manager.assignProb(mood_manager.get_mood());
+  task_manager.assign_probability(mood_manager.get_mood());
 
   tail.setState(0);
   Serial.println();
@@ -269,8 +269,8 @@ void setup() {
 // MAIN LOOP
 void loop(){
   //if(!_test_firstLoop){while(true){};}
-  //uint32_t startLoop = millis();
-  uint32_t startLoop = micros();
+  //uint32_t start_loop = millis();
+  uint32_t start_loop = micros();
 
   //----------------------------------------------------------------------------
   // UPDATE MOOD - Based on internal timer, see Mood class
@@ -279,7 +279,7 @@ void loop(){
   // If mood has updated then modify the other classes
   if(mood_manager.get_new_mood_flag()){
     mood_manager.set_new_mood_flag(false); // Reset the flag
-    task_manager.assignProb(mood_manager.get_mood());
+    task_manager.assign_probability(mood_manager.get_mood());
     move_manager.set_power_by_diff(mood_manager.get_power_diff());
     move_manager.set_speed_by_mood_fact(mood_manager.get_speed_fact());
   }
@@ -290,12 +290,12 @@ void loop(){
   task_manager.update();
 
   // If task has changed update mood LEDs
-  if(task_manager.getNewTaskFlag()){mood_manager.reset_mood();}
+  if(task_manager.get_new_task_flag()){mood_manager.reset_mood();}
 
   // DEBUG MODE: force task to a particular value
   if(_debug_forceTask){
-    if(task_manager.getTask() != _debug_taskCode){
-      task_manager.setTask(_debug_taskCode);
+    if(task_manager.get_task() != _debug_taskCode){
+      task_manager.set_task(_debug_taskCode);
     }
   }
   if(_debug_collisionOff){collision_manager.set_enabled_flag(false);}
@@ -325,7 +325,7 @@ void loop(){
   task_rest.update();
 
   // After updating all objects reset the new task flag
-  task_manager.setNewTaskFlag(false);
+  task_manager.set_new_task_flag(false);
 
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   // TEST CODE - SENSOR REPORTS
@@ -351,19 +351,19 @@ void loop(){
   // NOTE: Rest and Interact are placed before collision avoidance to disable
   // handling of collisions while these modes are active - should be able to
   // make this smarter so certain things can re-enable collision avoidance
-  if(task_manager.getTask() == TASK_TEST){
+  if(task_manager.get_task() == TASK_TEST){
     //DEBUG_SpeedTest(_test_value,MOVE_B_FORWARD);
   }
-  else if(task_manager.getTask() == TASK_REST){
+  else if(task_manager.get_task() == TASK_REST){
     task_rest.rest();
   }
-  else if(task_manager.getTask() == TASK_PAUSE){
+  else if(task_manager.get_task() == TASK_PAUSE){
     task_pause.pause();
   }
-  else if(task_manager.getTask() == TASK_PICKEDUP){
+  else if(task_manager.get_task() == TASK_PICKEDUP){
     task_picked_up.pickedUp();
   }
-  else if(task_manager.getTask() == TASK_INTERACT){
+  else if(task_manager.get_task() == TASK_INTERACT){
     task_interact.interact();
   }
   else if(collision_manager.get_escape_flag() && !_debug_collisionOff){
@@ -374,29 +374,29 @@ void loop(){
     //DEBUG_PrintColFlags();
     detectedCollision(); // SEE FUNCTION DEF BELOW MAIN
   }
-  else if(task_manager.getTask() == TASK_DANCE){
-    if(task_manager.getDanceUpdateFlag()){
-      task_manager.setDanceUpdateFlag(false);
+  else if(task_manager.get_task() == TASK_DANCE){
+    if(task_manager.get_dance_update_flag()){
+      task_manager.set_dance_update_flag(false);
       task_dance.setSpeakerFlag(false);
     }
     task_dance.dance();
   }
-  else if(task_manager.getTask() == TASK_FINDHUMAN){
+  else if(task_manager.get_task() == TASK_FINDHUMAN){
     task_find_human.findHuman();
   }
-  else if(task_manager.getTask() == TASK_FINDLIGHT){
+  else if(task_manager.get_task() == TASK_FINDLIGHT){
     task_find_light.findLight();
   }
-  else if(task_manager.getTask() == TASK_FINDDARK){
+  else if(task_manager.get_task() == TASK_FINDDARK){
     task_find_light.findDark();
   }
-  else if(task_manager.getTask() == TASK_FINDSOUND){
+  else if(task_manager.get_task() == TASK_FINDSOUND){
     task_find_sound.findSound();
   }
-  else if(task_manager.getTask() == TASK_POUNCE){
+  else if(task_manager.get_task() == TASK_POUNCE){
     task_pounce.seek_and_pounce();
   }
-  else if(task_manager.getTask() == TASK_TANTRUM){
+  else if(task_manager.get_task() == TASK_TANTRUM){
     if(task_tantrum.getCompleteFlag()){
       task_manager.force_update();
     }
@@ -405,7 +405,7 @@ void loop(){
     }
   }
   else{
-    task_manager.taskLEDExplore();
+    task_manager.task_LED_explore();
 
     // MOVEMENT: Type Update
     if(_debug_forceMove){
@@ -428,7 +428,7 @@ void loop(){
   }
 
   // If sleeping don't wag tail
-  if(task_manager.getTask() == TASK_REST){
+  if(task_manager.get_task() == TASK_REST){
     tail.setState(0);
   }
 
@@ -437,7 +437,7 @@ void loop(){
 
   //uint32_t endLoop = millis();
   //Serial.print(F("MAIN LOOP TOOK: "));
-  //Serial.print(endLoop-startLoop); Serial.print(",");
+  //Serial.print(endLoop-start_loop); Serial.print(",");
   //Serial.print(endUpdate-startUpdate); Serial.print(",");
   //Serial.println();
   //_test_firstLoop = false;
@@ -462,7 +462,7 @@ void updateEncRB(){
 //------------------------------------------------------------------------------
 // COLLISION HANDLING TASK TREE FUNCTIONS
 void escapeCollision(){
-  task_manager.taskLEDCollision();
+  task_manager.task_LED_collision();
   collision_manager.reset_flags();
 
   if(collision_manager.get_beepbeep_flag()){
@@ -475,7 +475,7 @@ void escapeCollision(){
 
 void detectedCollision(){
   // Turn on collision LEDs and set escape flags
-  task_manager.taskLEDCollision();
+  task_manager.task_LED_collision();
   collision_manager.set_escape_start();
 
   // If we are moving in a circle or a spiral then switch direction
@@ -499,10 +499,10 @@ void detectedCollision(){
   }
 
   // Call specific tasks that need to handle collision events
-  if((task_manager.getTask() == TASK_FINDLIGHT)||(task_manager.getTask() == TASK_FINDDARK)){
+  if((task_manager.get_task() == TASK_FINDLIGHT)||(task_manager.get_task() == TASK_FINDDARK)){
     task_find_light.resetGrad();
   }
-  if((task_manager.getTask() == TASK_POUNCE) && (task_pounce.get_state() == POUNCE_RUN)){
+  if((task_manager.get_task() == TASK_POUNCE) && (task_pounce.get_state() == POUNCE_RUN)){
     task_pounce.collision_reset_to_realign();
 
     int16_t angCent = task_pounce.get_ang_cent_for_collision();
@@ -520,7 +520,7 @@ void detectedCollision(){
   if(collision_manager.get_count() >= task_tantrum.getThreshold()){
     collision_manager.reset_Count();
     task_tantrum.setStartTantrumFlag();
-    task_manager.setTask(TASK_TANTRUM);
+    task_manager.set_task(TASK_TANTRUM);
   }
 }
 

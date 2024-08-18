@@ -59,7 +59,7 @@ void TaskPickedUp::update(){
         _collision_manager->set_enabled_flag(false);
 
         // Based on the current task set the panic flag
-        if((_task_manager->getTask() == TASK_INTERACT)||(_task_manager->getTask() == TASK_DANCE)){
+        if((_task_manager->get_task() == TASK_INTERACT)||(_task_manager->get_task() == TASK_DANCE)){
         _panicFlag = false;
         }
         else{
@@ -67,7 +67,7 @@ void TaskPickedUp::update(){
         }
 
         // Set the task to "picked up"
-        _task_manager->setTask(TASK_PICKEDUP);
+        _task_manager->set_task(TASK_PICKEDUP);
     }
 }
 
@@ -101,7 +101,7 @@ void TaskPickedUp::pickedUp(){
         else{_mood_manager->set_mood(MOOD_ANGRY);}
 
         // TaskManager LEDS - Panic
-        _task_manager->taskLEDPickedUpPanic();
+        _task_manager->task_LED_pickedup_panic();
 
         // Wiggle to get free
         _move_manager->wiggle(_panicWiggleLeftDur,_panicWiggleRightDur);
@@ -119,7 +119,7 @@ void TaskPickedUp::pickedUp(){
         // MoodManager - Neutral
         _mood_manager->set_mood(MOOD_NEUTRAL);
         // TaskManager LEDS - Ok
-        _task_manager->taskLEDPickedUpOk();
+        _task_manager->task_LED_pickedup_Ok();
 
         // Stop motor
         _move_manager->stop();
@@ -238,7 +238,7 @@ void TaskPickedUp::pickedUp(){
         // Re-enable collision detection
         _collision_manager->set_enabled_flag(true);
         // Set task to pause
-        _task_manager->setTask(TASK_PAUSE);
+        _task_manager->set_task(TASK_PAUSE);
 
         // Based on the state on exit set different conditions
         int8_t prob = random(0,100);

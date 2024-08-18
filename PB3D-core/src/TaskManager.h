@@ -32,35 +32,35 @@ public:
   //----------------------------------------------------------------------------
   // Get, set and reset
   // Default setTask function uses default task durations
-  void setTask(int8_t taskIn);
-  void setTaskDuration(uint32_t taskDur);
-  void assignProb(int8_t moodIn);
+  void set_task(int8_t task);
+  void set_task_duration(uint32_t task_dur);
+  void assign_probability(int8_t mood);
 
-  int8_t getTask(){return _taskCode;}
-  bool getNewTaskFlag(){return _taskNewFlag;}
-  void setNewTaskFlag(bool inFlag){_taskNewFlag = inFlag;}
-  void setDanceDuration(uint32_t inDuration){_danceDuration = inDuration;}
-  void setTantrumDuration(uint16_t inDuration){_tantrumDuration = inDuration;}
-  void setDanceUpdateFlag(bool inFlag){_danceUpdateFlag = inFlag;}
-  bool getDanceUpdateFlag(){return _danceUpdateFlag;}
+  ETaskCode get_task(){return _task_code;}
+  bool get_new_task_flag(){return _task_new_flag;}
+  void set_new_task_flag(bool flag){_task_new_flag = flag;}
+  void set_dance_duration(uint32_t duration){_dance_duration = duration;}
+  void set_tantrum_duration(uint16_t duration){_tantrum_duration = duration;}
+  void set_dance_update_flag(bool flag){_dance_update_flag = flag;}
+  bool get_dance_update_flag(){return _dance_update_flag;}
 
   //----------------------------------------------------------------------------
   // TASK LED FUNCTIONS
-  void taskLEDCollision();
-  void taskLEDExplore();
-  void taskLEDRest(uint8_t intensity);
-  void taskLEDDance();
-  void taskLEDTantrum();
-  void taskLEDFindHuman();
-  void taskLEDInteract();
-  void taskLEDPickedUpOk();
-  void taskLEDPickedUpPanic();
-  void taskLEDPause(uint16_t pauseTime);
-  void taskLEDFindLight();
-  void taskLEDFindDark();
-  void taskLEDFindSound();
-  void taskLEDTest();
-  void taskLEDOff();
+  void task_LED_collision();
+  void task_LED_explore();
+  void task_LED_rest(uint8_t intensity);
+  void task_LED_dance();
+  void task_LED_tantrum();
+  void task_LED_find_human();
+  void task_LED_interact();
+  void task_LED_pickedup_Ok();
+  void task_LED_pickedup_panic();
+  void task_LED_pause(uint16_t pauseTime);
+  void task_LED_find_light();
+  void task_LED_find_dark();
+  void task_LED_find_sound();
+  void task_LED_test();
+  void task_LED_off();
 
   //------------------------------------------------------------------------
   // HSV LEDS
@@ -76,34 +76,40 @@ private:
   // TASK Private Functions
   void _update(){
     _taskPc = random(0,100); // NOTE: random num between (min,max-1)
-    _danceUpdateFlag = false;
+    _dance_update_flag = false;
 
     if((_taskPc >= 0) && (_taskPc < _taskProbBounds[0])){ // EXPLORE
-      setTask(TASK_EXPLORE);
+      set_task(TASK_EXPLORE);
     }
-    else if((_taskPc >= _taskProbBounds[0]) && (_taskPc < _taskProbBounds[1])){ // REST
-      setTask(TASK_REST);
+    else if((_taskPc >= _taskProbBounds[0]) &&
+            (_taskPc < _taskProbBounds[1])){ // REST
+      set_task(TASK_REST);
     }
-    else if((_taskPc >= _taskProbBounds[1]) && (_taskPc < _taskProbBounds[2])){ // DANCE
-      _danceUpdateFlag = true;
-      setTask(TASK_DANCE);
+    else if((_taskPc >= _taskProbBounds[1]) &&
+            (_taskPc < _taskProbBounds[2])){ // DANCE
+      _dance_update_flag = true;
+      set_task(TASK_DANCE);
     }
-    else if((_taskPc >= _taskProbBounds[2]) && (_taskPc < _taskProbBounds[3])){ // FINDHUMAN
-      setTask(TASK_FINDHUMAN);
+    else if((_taskPc >= _taskProbBounds[2]) &&
+            (_taskPc < _taskProbBounds[3])){ // FINDHUMAN
+      set_task(TASK_FINDHUMAN);
     }
-    else if((_taskPc >= _taskProbBounds[3]) && (_taskPc < _taskProbBounds[4])){ // FINDSOUND
-      setTask(TASK_FINDSOUND);
+    else if((_taskPc >= _taskProbBounds[3]) &&
+            (_taskPc < _taskProbBounds[4])){ // FINDSOUND
+      set_task(TASK_FINDSOUND);
     }
-    else if((_taskPc >= _taskProbBounds[4]) && (_taskPc < _taskProbBounds[5])){ // FINDLIGHT
-      setTask(TASK_FINDLIGHT);
+    else if((_taskPc >= _taskProbBounds[4]) &&
+            (_taskPc < _taskProbBounds[5])){ // FINDLIGHT
+      set_task(TASK_FINDLIGHT);
     }
-    else if((_taskPc >= _taskProbBounds[5]) && (_taskPc < _taskProbBounds[6])){ // FINDDARK
-      setTask(TASK_FINDDARK);
+    else if((_taskPc >= _taskProbBounds[5]) &&
+            (_taskPc < _taskProbBounds[6])){ // FINDDARK
+      set_task(TASK_FINDDARK);
     }
     else{ // EXPLORE
-      setTask(TASK_EXPLORE);
+      set_task(TASK_EXPLORE);
     }
-    // Start the timer.
+
     _taskTimer.start(_taskDuration);
   }
 
@@ -130,7 +136,7 @@ private:
   //------------------------------------------------------------------------
   // TASK Variables
   // [1.explore,2.rest,3.dance,4.findhuman,5.findsound,6.findlight,7.finddark]
-  int8_t _taskCode = 0;
+  ETaskCode _task_code = TASK_EXPLORE;
   int8_t _taskPc = 0;
 
   const static int8_t _taskCount = 7;
@@ -146,12 +152,12 @@ private:
   uint32_t _taskDuration = 7000;
   uint32_t _taskDurationMin = 5000;
   uint32_t _taskDurationMax = 15000;
-  bool _taskNewFlag = true;
+  bool _task_new_flag = true;
 
   // Sub task variables
-  bool _danceUpdateFlag = false;
-  uint32_t _danceDuration = 0;
-  uint16_t _tantrumDuration = 0;
+  bool _dance_update_flag = false;
+  uint32_t _dance_duration = 0;
+  uint16_t _tantrum_duration = 0;
 
   // Colours for Tasks
   uint16_t _huePounce = (65536 * 1)/12;

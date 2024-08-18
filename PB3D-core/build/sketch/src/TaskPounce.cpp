@@ -31,7 +31,7 @@ void TaskPounce::begin(){
 void TaskPounce::update(){
     if(!_enabled){return;}
 
-    if(_task_manager->getNewTaskFlag()){
+    if(_task_manager->get_new_task_flag()){
         _start_all = true;
     }
 }
@@ -148,7 +148,7 @@ else if(_move_manager->get_look_curr_ang_ind() == 3){
     _task_manager->taskLEDCSV(_seek_colour,_seek_colour,_low_saturation,_low_saturation,255,255);
 }
 else{
-    _task_manager->taskLEDOff();
+    _task_manager->task_LED_off();
 }
 
 // Move to different angles and take measurements.

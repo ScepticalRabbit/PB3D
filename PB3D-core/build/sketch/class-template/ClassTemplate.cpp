@@ -32,7 +32,7 @@ void ClassTemp::begin(){
 void ClassTemp::update(){
     if(!_enabled){return;}
 
-    if(_task_manager->getNewTaskFlag()){
+    if(_task_manager->get_new_task_flag()){
         _start_flag = true;
     }
 

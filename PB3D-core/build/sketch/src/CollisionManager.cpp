@@ -49,7 +49,7 @@ void CollisionManager::update(){
     //uint32_t startTime = micros();
 
     // If a new task is generated turn back on collision detecttion
-    if(_task_manager->getNewTaskFlag()){
+    if(_task_manager->get_new_task_flag()){
         set_enabled_flag(true);
     }
 

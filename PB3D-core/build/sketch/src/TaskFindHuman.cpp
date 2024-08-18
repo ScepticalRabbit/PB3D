@@ -43,7 +43,7 @@ void TaskFindHuman::update(){
         return;
     }
 
-    if(_task_manager->getNewTaskFlag()){
+    if(_task_manager->get_new_task_flag()){
         _start_flag = true;
     }
 
@@ -59,7 +59,7 @@ void TaskFindHuman::update(){
 // FIND HUMAN - called during task decision tree
 void TaskFindHuman::findHuman(){
     // Set the LEDs on every loop regardless
-    _task_manager->taskLEDFindHuman();
+    _task_manager->task_LED_find_human();
 
     // If the human presence sensor wasn't found then bypass the rest of the function
     if(!_enabled){
@@ -92,10 +92,10 @@ void TaskFindHuman::findHuman(){
     // Sensor 1: LEFT, Sensor 2: FRONT, Sensor 3: RIGHT, Sensor 4: BACK
     if(_IRPFlags1 && _IRPFlags2 && _IRPFlags3 && _IRPFlags4){
         // If all flags are tripped a human has been found!
-        _task_manager->setTask(TASK_INTERACT);
+        _task_manager->set_task(TASK_INTERACT);
         // Overide the default task duration
-        _task_manager->setTaskDuration(_taskInteractObj->getTimeOut());
-        _task_manager->taskLEDInteract();
+        _task_manager->set_task_duration(_taskInteractObj->getTimeOut());
+        _task_manager->task_LED_interact();
         _taskInteractObj->setStartInteractFlag(true);
         // Update mood score
         _mood_manager->inc_mood_score();

@@ -37,7 +37,7 @@ public:
   void setStartTantrumFlag();
 
   uint8_t getThreshold(){return _tantrumThreshold;}
-  uint16_t getDuration(){return _tantrumDuration;}
+  uint16_t getDuration(){return _tantrum_duration;}
   bool getCompleteFlag(){return _tantrumComplete;}
 
 private:
@@ -56,7 +56,7 @@ private:
   uint16_t _tantrumThreshold = 31;
   uint16_t _tantrumFBDuration = 400;
   uint8_t _tantrumFBNum = 5;
-  uint16_t _tantrumDuration = 2*_tantrumFBNum*_tantrumFBDuration;
+  uint16_t _tantrum_duration = 2*_tantrumFBNum*_tantrumFBDuration;
 
   bool _growlFlag = true;
   uint16_t _tantrumGrowlDuration = 2*_tantrumFBDuration;

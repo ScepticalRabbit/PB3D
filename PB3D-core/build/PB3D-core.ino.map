@@ -4899,9 +4899,9 @@ LOAD /home/lloydf/.arduino15/packages/adafruit/tools/arm-none-eabi-gcc/9-2019q4/
  .text._ZN11TaskManager6updateEv
                 0x00000000000098a0       0x14 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.cpp.o
                 0x00000000000098a0                TaskManager::update()
- .text._ZN11TaskManager11forceUpdateEv
+ .text._ZN11TaskManager12force_updateEv
                 0x00000000000098b4        0x8 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.cpp.o
-                0x00000000000098b4                TaskManager::forceUpdate()
+                0x00000000000098b4                TaskManager::force_update()
  .text._ZN11TaskManager10taskLEDOffEv
                 0x00000000000098bc       0x22 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.cpp.o
                 0x00000000000098bc                TaskManager::taskLEDOff()
@@ -8693,7 +8693,7 @@ OUTPUT(/home/lloydf/Arduino/PB3D/PB3D-core/build/PB3D-core.ino.elf elf32-littlea
  .comment       0x0000000000000079       0x7a /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(PluggableUSB.cpp.o)
  .comment       0x0000000000000079       0x7a /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SAMD21_USBDevice.cpp.o)
 
-.debug_info     0x0000000000000000   0x36ecfa
+.debug_info     0x0000000000000000   0x36ecf9
  .debug_info    0x0000000000000000    0x22a68 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/PB3D-core.ino.cpp.o
  .debug_info    0x0000000000022a68     0x70b4 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/BumperSensor.cpp.o
  .debug_info    0x0000000000029b1c     0x9ac3 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionEscaper.cpp.o
@@ -8712,81 +8712,81 @@ OUTPUT(/home/lloydf/Arduino/PB3D/PB3D-core/build/PB3D-core.ino.elf elf32-littlea
  .debug_info    0x00000000000a6c05     0xebf0 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindLight.cpp.o
  .debug_info    0x00000000000b57f5     0xc4f4 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindSound.cpp.o
  .debug_info    0x00000000000c1ce9     0xcd51 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskInteract.cpp.o
- .debug_info    0x00000000000cea3a     0x9c73 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.cpp.o
- .debug_info    0x00000000000d86ad     0xdc33 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPause.cpp.o
- .debug_info    0x00000000000e62e0     0xeb41 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPickedUp.cpp.o
- .debug_info    0x00000000000f4e21     0xebcd /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPounce.cpp.o
- .debug_info    0x00000000001039ee     0xbeba /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskRest.cpp.o
- .debug_info    0x000000000010f8a8     0xc0b3 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskTantrum.cpp.o
- .debug_info    0x000000000011b95b     0x6e06 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.cpp.o
- .debug_info    0x0000000000122761     0x9739 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Wire/Wire.cpp.o
- .debug_info    0x000000000012be9a     0x806b /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/Adafruit_MotorShield.cpp.o
- .debug_info    0x0000000000133f05     0x7446 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/utility/Adafruit_MS_PWMServoDriver.cpp.o
- .debug_info    0x000000000013b34b     0xa0ac /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.cpp.o
- .debug_info    0x00000000001453f7     0x7543 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_I2CDevice.cpp.o
- .debug_info    0x000000000014c93a     0x8868 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_SPIDevice.cpp.o
- .debug_info    0x00000000001551a2     0xb644 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_DMA_neopixel_library/Adafruit_NeoPixel_ZeroDMA.cpp.o
- .debug_info    0x00000000001607e6     0x8864 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_NeoPixel/Adafruit_NeoPixel.cpp.o
- .debug_info    0x000000000016904a     0xa401 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_ZeroDMA/Adafruit_ZeroDMA.cpp.o
- .debug_info    0x000000000017344b     0x91c2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SPI/SPI.cpp.o
- .debug_info    0x000000000017c60d     0x7f36 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_PCF8574/Adafruit_PCF8574.cpp.o
- .debug_info    0x0000000000184543     0x9103 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/Adafruit_VL53L0X.cpp.o
- .debug_info    0x000000000018d646     0xbfb7 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api.cpp.o
- .debug_info    0x00000000001995fd     0x916f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_calibration.cpp.o
- .debug_info    0x00000000001a276c     0xa102 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_core.cpp.o
- .debug_info    0x00000000001ac86e     0x780c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_strings.cpp.o
- .debug_info    0x00000000001b407a     0x7315 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_i2c_comms.cpp.o
- .debug_info    0x00000000001bb38f     0x7a54 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_platform.cpp.o
- .debug_info    0x00000000001c2de3     0x7481 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_-_Capacitive_Touch_Slide_Sensor_CY8C40XX/Seeed_CY8C401XX.cpp.o
- .debug_info    0x00000000001ca264     0x9141 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Servo/samd/Servo.cpp.o
- .debug_info    0x00000000001d33a5    0x11847 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration.cpp.o
- .debug_info    0x00000000001e4bec    0x2373a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration_SDFat.cpp.o
- .debug_info    0x0000000000208326     0xd215 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/ExFatLib/ExFatFormatter.cpp.o
- .debug_info    0x000000000021553b    0x10027 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFile.cpp.o
- .debug_info    0x0000000000225562     0xd5e2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFileLFN.cpp.o
- .debug_info    0x0000000000232b44     0xd02a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatName.cpp.o
- .debug_info    0x000000000023fb6e     0xd4b4 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatPartition.cpp.o
- .debug_info    0x000000000024d022     0xc2e0 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatVolume.cpp.o
- .debug_info    0x0000000000259302     0xc854 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/SdCard/SdSpiCard.cpp.o
- .debug_info    0x0000000000265b56     0x83b6 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsCache.cpp.o
- .debug_info    0x000000000026df0c     0x758f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsDateTime.cpp.o
- .debug_info    0x000000000027549b     0x6e87 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsName.cpp.o
- .debug_info    0x000000000027c322      0x417 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsUtf.cpp.o
- .debug_info    0x000000000027c739      0x381 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/upcase.cpp.o
- .debug_info    0x000000000027caba    0x1021a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_FlashCache.cpp.o
- .debug_info    0x000000000028ccd4    0x10e70 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlash.cpp.o
- .debug_info    0x000000000029db44     0x8dc2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlashBase.cpp.o
- .debug_info    0x00000000002a6906     0x9cd7 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/qspi/Adafruit_FlashTransport_QSPI_SAMD.cpp.o
- .debug_info    0x00000000002b05dd     0x879d /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPFusion.cpp.o
- .debug_info    0x00000000002b8d7a      0xf82 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPmatrix.c.o
- .debug_info    0x00000000002b9cfc     0xa886 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXAS21002C/Adafruit_FXAS21002C.cpp.o
- .debug_info    0x00000000002c4582     0xba8e /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXOS8700/Adafruit_FXOS8700.cpp.o
- .debug_info    0x00000000002d0010     0x9106 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_Human_Presence_Sensor-master/Grove_Human_Presence_Sensor.cpp.o
- .debug_info    0x00000000002d9116     0xac20 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VEML7700_Library/Adafruit_VEML7700.cpp.o
- .debug_info    0x00000000002e3d36     0x74a7 /home/lloydf/Arduino/PB3D/PB3D-core/build/core/variant.cpp.o
- .debug_info    0x00000000002eb1dd     0x9c15 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Print.cpp.o)
- .debug_info    0x00000000002f4df2     0x8a2c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SERCOM.cpp.o)
- .debug_info    0x00000000002fd81e     0x8d7c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Stream.cpp.o)
- .debug_info    0x000000000030659a     0x926a /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Tone.cpp.o)
- .debug_info    0x000000000030f804     0x9485 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(CDC.cpp.o)
- .debug_info    0x0000000000318c89     0xf629 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(USBCore.cpp.o)
- .debug_info    0x00000000003282b2     0xa603 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Uart.cpp.o)
- .debug_info    0x00000000003328b5     0x29a0 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WInterrupts.c.o)
- .debug_info    0x0000000000335255     0x1216 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WMath.cpp.o)
- .debug_info    0x000000000033646b     0x1033 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(abi.cpp.o)
- .debug_info    0x000000000033749e     0x1af6 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(cortex_handlers.c.o)
- .debug_info    0x0000000000338f94     0x180c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(delay.c.o)
- .debug_info    0x000000000033a7a0       0x67 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(hooks.c.o)
- .debug_info    0x000000000033a807     0x6d80 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(main.cpp.o)
- .debug_info    0x0000000000341587     0x1111 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(new.cpp.o)
- .debug_info    0x0000000000342698     0x7cad /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(startup.c.o)
- .debug_info    0x000000000034a345     0x3eee /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring.c.o)
- .debug_info    0x000000000034e233     0x68e6 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_analog.c.o)
- .debug_info    0x0000000000354b19     0x1b22 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_digital.c.o)
- .debug_info    0x000000000035663b     0x1aa7 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_private.c.o)
- .debug_info    0x00000000003580e2     0x6f77 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Reset.cpp.o)
- .debug_info    0x000000000035f059     0x7232 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(PluggableUSB.cpp.o)
- .debug_info    0x000000000036628b     0x8a6f /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SAMD21_USBDevice.cpp.o)
+ .debug_info    0x00000000000cea3a     0x9c72 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.cpp.o
+ .debug_info    0x00000000000d86ac     0xdc33 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPause.cpp.o
+ .debug_info    0x00000000000e62df     0xeb41 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPickedUp.cpp.o
+ .debug_info    0x00000000000f4e20     0xebcd /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPounce.cpp.o
+ .debug_info    0x00000000001039ed     0xbeba /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskRest.cpp.o
+ .debug_info    0x000000000010f8a7     0xc0b3 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskTantrum.cpp.o
+ .debug_info    0x000000000011b95a     0x6e06 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.cpp.o
+ .debug_info    0x0000000000122760     0x9739 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Wire/Wire.cpp.o
+ .debug_info    0x000000000012be99     0x806b /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/Adafruit_MotorShield.cpp.o
+ .debug_info    0x0000000000133f04     0x7446 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/utility/Adafruit_MS_PWMServoDriver.cpp.o
+ .debug_info    0x000000000013b34a     0xa0ac /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.cpp.o
+ .debug_info    0x00000000001453f6     0x7543 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_I2CDevice.cpp.o
+ .debug_info    0x000000000014c939     0x8868 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_SPIDevice.cpp.o
+ .debug_info    0x00000000001551a1     0xb644 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_DMA_neopixel_library/Adafruit_NeoPixel_ZeroDMA.cpp.o
+ .debug_info    0x00000000001607e5     0x8864 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_NeoPixel/Adafruit_NeoPixel.cpp.o
+ .debug_info    0x0000000000169049     0xa401 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_ZeroDMA/Adafruit_ZeroDMA.cpp.o
+ .debug_info    0x000000000017344a     0x91c2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SPI/SPI.cpp.o
+ .debug_info    0x000000000017c60c     0x7f36 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_PCF8574/Adafruit_PCF8574.cpp.o
+ .debug_info    0x0000000000184542     0x9103 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/Adafruit_VL53L0X.cpp.o
+ .debug_info    0x000000000018d645     0xbfb7 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api.cpp.o
+ .debug_info    0x00000000001995fc     0x916f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_calibration.cpp.o
+ .debug_info    0x00000000001a276b     0xa102 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_core.cpp.o
+ .debug_info    0x00000000001ac86d     0x780c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_strings.cpp.o
+ .debug_info    0x00000000001b4079     0x7315 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_i2c_comms.cpp.o
+ .debug_info    0x00000000001bb38e     0x7a54 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_platform.cpp.o
+ .debug_info    0x00000000001c2de2     0x7481 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_-_Capacitive_Touch_Slide_Sensor_CY8C40XX/Seeed_CY8C401XX.cpp.o
+ .debug_info    0x00000000001ca263     0x9141 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Servo/samd/Servo.cpp.o
+ .debug_info    0x00000000001d33a4    0x11847 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration.cpp.o
+ .debug_info    0x00000000001e4beb    0x2373a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration_SDFat.cpp.o
+ .debug_info    0x0000000000208325     0xd215 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/ExFatLib/ExFatFormatter.cpp.o
+ .debug_info    0x000000000021553a    0x10027 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFile.cpp.o
+ .debug_info    0x0000000000225561     0xd5e2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFileLFN.cpp.o
+ .debug_info    0x0000000000232b43     0xd02a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatName.cpp.o
+ .debug_info    0x000000000023fb6d     0xd4b4 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatPartition.cpp.o
+ .debug_info    0x000000000024d021     0xc2e0 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatVolume.cpp.o
+ .debug_info    0x0000000000259301     0xc854 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/SdCard/SdSpiCard.cpp.o
+ .debug_info    0x0000000000265b55     0x83b6 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsCache.cpp.o
+ .debug_info    0x000000000026df0b     0x758f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsDateTime.cpp.o
+ .debug_info    0x000000000027549a     0x6e87 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsName.cpp.o
+ .debug_info    0x000000000027c321      0x417 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsUtf.cpp.o
+ .debug_info    0x000000000027c738      0x381 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/upcase.cpp.o
+ .debug_info    0x000000000027cab9    0x1021a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_FlashCache.cpp.o
+ .debug_info    0x000000000028ccd3    0x10e70 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlash.cpp.o
+ .debug_info    0x000000000029db43     0x8dc2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlashBase.cpp.o
+ .debug_info    0x00000000002a6905     0x9cd7 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/qspi/Adafruit_FlashTransport_QSPI_SAMD.cpp.o
+ .debug_info    0x00000000002b05dc     0x879d /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPFusion.cpp.o
+ .debug_info    0x00000000002b8d79      0xf82 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPmatrix.c.o
+ .debug_info    0x00000000002b9cfb     0xa886 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXAS21002C/Adafruit_FXAS21002C.cpp.o
+ .debug_info    0x00000000002c4581     0xba8e /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXOS8700/Adafruit_FXOS8700.cpp.o
+ .debug_info    0x00000000002d000f     0x9106 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_Human_Presence_Sensor-master/Grove_Human_Presence_Sensor.cpp.o
+ .debug_info    0x00000000002d9115     0xac20 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VEML7700_Library/Adafruit_VEML7700.cpp.o
+ .debug_info    0x00000000002e3d35     0x74a7 /home/lloydf/Arduino/PB3D/PB3D-core/build/core/variant.cpp.o
+ .debug_info    0x00000000002eb1dc     0x9c15 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Print.cpp.o)
+ .debug_info    0x00000000002f4df1     0x8a2c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SERCOM.cpp.o)
+ .debug_info    0x00000000002fd81d     0x8d7c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Stream.cpp.o)
+ .debug_info    0x0000000000306599     0x926a /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Tone.cpp.o)
+ .debug_info    0x000000000030f803     0x9485 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(CDC.cpp.o)
+ .debug_info    0x0000000000318c88     0xf629 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(USBCore.cpp.o)
+ .debug_info    0x00000000003282b1     0xa603 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Uart.cpp.o)
+ .debug_info    0x00000000003328b4     0x29a0 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WInterrupts.c.o)
+ .debug_info    0x0000000000335254     0x1216 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WMath.cpp.o)
+ .debug_info    0x000000000033646a     0x1033 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(abi.cpp.o)
+ .debug_info    0x000000000033749d     0x1af6 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(cortex_handlers.c.o)
+ .debug_info    0x0000000000338f93     0x180c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(delay.c.o)
+ .debug_info    0x000000000033a79f       0x67 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(hooks.c.o)
+ .debug_info    0x000000000033a806     0x6d80 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(main.cpp.o)
+ .debug_info    0x0000000000341586     0x1111 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(new.cpp.o)
+ .debug_info    0x0000000000342697     0x7cad /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(startup.c.o)
+ .debug_info    0x000000000034a344     0x3eee /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring.c.o)
+ .debug_info    0x000000000034e232     0x68e6 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_analog.c.o)
+ .debug_info    0x0000000000354b18     0x1b22 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_digital.c.o)
+ .debug_info    0x000000000035663a     0x1aa7 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_private.c.o)
+ .debug_info    0x00000000003580e1     0x6f77 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Reset.cpp.o)
+ .debug_info    0x000000000035f058     0x7232 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(PluggableUSB.cpp.o)
+ .debug_info    0x000000000036628a     0x8a6f /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SAMD21_USBDevice.cpp.o)
 
 .debug_abbrev   0x0000000000000000    0x316a1
  .debug_abbrev  0x0000000000000000     0x109c /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/PB3D-core.ino.cpp.o
@@ -9258,287 +9258,287 @@ OUTPUT(/home/lloydf/Arduino/PB3D/PB3D-core/build/PB3D-core.ino.elf elf32-littlea
  .debug_ranges  0x0000000000009008       0x90 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(PluggableUSB.cpp.o)
  .debug_ranges  0x0000000000009098       0x18 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SAMD21_USBDevice.cpp.o)
 
-.debug_line     0x0000000000000000    0x5ce8a
- .debug_line    0x0000000000000000     0x3635 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/PB3D-core.ino.cpp.o
- .debug_line    0x0000000000003635      0x8c5 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/BumperSensor.cpp.o
- .debug_line    0x0000000000003efa      0xb6a /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionEscaper.cpp.o
- .debug_line    0x0000000000004a64     0x136e /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionManager.cpp.o
- .debug_line    0x0000000000005dd2      0x7df /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionStrategy.cpp.o
- .debug_line    0x00000000000065b1      0x9ae /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Encoder.cpp.o
- .debug_line    0x0000000000006f5f      0x848 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterLowPass.cpp.o
- .debug_line    0x00000000000077a7      0xcc8 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserManager.cpp.o
- .debug_line    0x000000000000846f      0x96f /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserSensor.cpp.o
- .debug_line    0x0000000000008dde      0xf4f /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoodManager.cpp.o
- .debug_line    0x0000000000009d2d     0x2a8b /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoveManager.cpp.o
- .debug_line    0x000000000000c7b8      0xcf5 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PID.cpp.o
- .debug_line    0x000000000000d4ad      0x9c0 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.cpp.o
- .debug_line    0x000000000000de6d     0x1102 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskDance.cpp.o
+.debug_line     0x0000000000000000    0x5ce86
+ .debug_line    0x0000000000000000     0x3637 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/PB3D-core.ino.cpp.o
+ .debug_line    0x0000000000003637      0x8c5 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/BumperSensor.cpp.o
+ .debug_line    0x0000000000003efc      0xb6a /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionEscaper.cpp.o
+ .debug_line    0x0000000000004a66     0x1372 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionManager.cpp.o
+ .debug_line    0x0000000000005dd8      0x7df /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionStrategy.cpp.o
+ .debug_line    0x00000000000065b7      0x9ae /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Encoder.cpp.o
+ .debug_line    0x0000000000006f65      0x848 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterLowPass.cpp.o
+ .debug_line    0x00000000000077ad      0xcc8 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserManager.cpp.o
+ .debug_line    0x0000000000008475      0x96f /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserSensor.cpp.o
+ .debug_line    0x0000000000008de4      0xf4f /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoodManager.cpp.o
+ .debug_line    0x0000000000009d33     0x2a8b /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoveManager.cpp.o
+ .debug_line    0x000000000000c7be      0xcf5 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PID.cpp.o
+ .debug_line    0x000000000000d4b3      0x9c0 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.cpp.o
+ .debug_line    0x000000000000de73     0x10fc /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskDance.cpp.o
  .debug_line    0x000000000000ef6f      0xff1 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindHuman.cpp.o
  .debug_line    0x000000000000ff60     0x10a2 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindLight.cpp.o
  .debug_line    0x0000000000011002      0xec6 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindSound.cpp.o
  .debug_line    0x0000000000011ec8     0x1078 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskInteract.cpp.o
  .debug_line    0x0000000000012f40     0x1409 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.cpp.o
- .debug_line    0x0000000000014349      0xd82 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPause.cpp.o
- .debug_line    0x00000000000150cb     0x13c0 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPickedUp.cpp.o
- .debug_line    0x000000000001648b     0x176d /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPounce.cpp.o
- .debug_line    0x0000000000017bf8      0xd1e /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskRest.cpp.o
- .debug_line    0x0000000000018916      0xd66 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskTantrum.cpp.o
- .debug_line    0x000000000001967c      0x778 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.cpp.o
- .debug_line    0x0000000000019df4      0xee7 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Wire/Wire.cpp.o
- .debug_line    0x000000000001acdb      0xf42 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/Adafruit_MotorShield.cpp.o
- .debug_line    0x000000000001bc1d      0x9b1 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/utility/Adafruit_MS_PWMServoDriver.cpp.o
- .debug_line    0x000000000001c5ce      0xe83 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.cpp.o
- .debug_line    0x000000000001d451      0xa0c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_I2CDevice.cpp.o
- .debug_line    0x000000000001de5d      0xf93 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_SPIDevice.cpp.o
- .debug_line    0x000000000001edf0      0xec5 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_DMA_neopixel_library/Adafruit_NeoPixel_ZeroDMA.cpp.o
- .debug_line    0x000000000001fcb5     0x11d7 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_NeoPixel/Adafruit_NeoPixel.cpp.o
- .debug_line    0x0000000000020e8c     0x136f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_ZeroDMA/Adafruit_ZeroDMA.cpp.o
- .debug_line    0x00000000000221fb     0x117e /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SPI/SPI.cpp.o
- .debug_line    0x0000000000023379      0xa75 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_PCF8574/Adafruit_PCF8574.cpp.o
- .debug_line    0x0000000000023dee     0x127c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/Adafruit_VL53L0X.cpp.o
- .debug_line    0x000000000002506a     0x2a6a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api.cpp.o
- .debug_line    0x0000000000027ad4     0x1777 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_calibration.cpp.o
- .debug_line    0x000000000002924b     0x211f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_core.cpp.o
- .debug_line    0x000000000002b36a      0xbd5 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_strings.cpp.o
- .debug_line    0x000000000002bf3f      0x9e2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_i2c_comms.cpp.o
- .debug_line    0x000000000002c921      0xa7f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_platform.cpp.o
- .debug_line    0x000000000002d3a0      0x9de /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_-_Capacitive_Touch_Slide_Sensor_CY8C40XX/Seeed_CY8C401XX.cpp.o
- .debug_line    0x000000000002dd7e      0xd7c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Servo/samd/Servo.cpp.o
- .debug_line    0x000000000002eafa     0x1160 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration.cpp.o
- .debug_line    0x000000000002fc5a     0x4c79 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration_SDFat.cpp.o
- .debug_line    0x00000000000348d3     0x14eb /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/ExFatLib/ExFatFormatter.cpp.o
- .debug_line    0x0000000000035dbe     0x31a4 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFile.cpp.o
- .debug_line    0x0000000000038f62     0x17b5 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFileLFN.cpp.o
- .debug_line    0x000000000003a717     0x128f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatName.cpp.o
- .debug_line    0x000000000003b9a6     0x14ea /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatPartition.cpp.o
- .debug_line    0x000000000003ce90      0xb26 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatVolume.cpp.o
- .debug_line    0x000000000003d9b6     0x2163 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/SdCard/SdSpiCard.cpp.o
- .debug_line    0x000000000003fb19      0xa7c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsCache.cpp.o
- .debug_line    0x0000000000040595      0xb31 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsDateTime.cpp.o
- .debug_line    0x00000000000410c6      0x7c7 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsName.cpp.o
- .debug_line    0x000000000004188d      0x41c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsUtf.cpp.o
- .debug_line    0x0000000000041ca9      0x2fc /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/upcase.cpp.o
- .debug_line    0x0000000000041fa5      0xe29 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_FlashCache.cpp.o
- .debug_line    0x0000000000042dce     0x10d4 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlash.cpp.o
- .debug_line    0x0000000000043ea2     0x11a6 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlashBase.cpp.o
- .debug_line    0x0000000000045048      0xd6a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/qspi/Adafruit_FlashTransport_QSPI_SAMD.cpp.o
- .debug_line    0x0000000000045db2     0x2404 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPFusion.cpp.o
- .debug_line    0x00000000000481b6      0xf00 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPmatrix.c.o
- .debug_line    0x00000000000490b6      0xf03 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXAS21002C/Adafruit_FXAS21002C.cpp.o
- .debug_line    0x0000000000049fb9     0x142c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXOS8700/Adafruit_FXOS8700.cpp.o
- .debug_line    0x000000000004b3e5     0x14f2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_Human_Presence_Sensor-master/Grove_Human_Presence_Sensor.cpp.o
- .debug_line    0x000000000004c8d7     0x1071 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VEML7700_Library/Adafruit_VEML7700.cpp.o
- .debug_line    0x000000000004d948      0x680 /home/lloydf/Arduino/PB3D/PB3D-core/build/core/variant.cpp.o
- .debug_line    0x000000000004dfc8     0x10ed /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Print.cpp.o)
- .debug_line    0x000000000004f0b5     0x159c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SERCOM.cpp.o)
- .debug_line    0x0000000000050651      0xce8 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Stream.cpp.o)
- .debug_line    0x0000000000051339      0xa66 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Tone.cpp.o)
- .debug_line    0x0000000000051d9f      0xbd0 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(CDC.cpp.o)
- .debug_line    0x000000000005296f     0x2729 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(USBCore.cpp.o)
- .debug_line    0x0000000000055098      0xe8f /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Uart.cpp.o)
- .debug_line    0x0000000000055f27      0xac0 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WInterrupts.c.o)
- .debug_line    0x00000000000569e7      0x4ea /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WMath.cpp.o)
- .debug_line    0x0000000000056ed1      0x3cb /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(abi.cpp.o)
- .debug_line    0x000000000005729c      0x4f6 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(cortex_handlers.c.o)
- .debug_line    0x0000000000057792      0x65d /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(delay.c.o)
- .debug_line    0x0000000000057def       0xc7 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(hooks.c.o)
- .debug_line    0x0000000000057eb6      0x79b /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(main.cpp.o)
- .debug_line    0x0000000000058651      0x3bf /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(new.cpp.o)
- .debug_line    0x0000000000058a10      0x85e /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(startup.c.o)
- .debug_line    0x000000000005926e      0x73d /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring.c.o)
- .debug_line    0x00000000000599ab     0x103a /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_analog.c.o)
- .debug_line    0x000000000005a9e5      0x613 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_digital.c.o)
- .debug_line    0x000000000005aff8      0x592 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_private.c.o)
- .debug_line    0x000000000005b58a      0x7d4 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Reset.cpp.o)
- .debug_line    0x000000000005bd5e      0x983 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(PluggableUSB.cpp.o)
- .debug_line    0x000000000005c6e1      0x7a9 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SAMD21_USBDevice.cpp.o)
+ .debug_line    0x0000000000014349      0xd80 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPause.cpp.o
+ .debug_line    0x00000000000150c9     0x13c0 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPickedUp.cpp.o
+ .debug_line    0x0000000000016489     0x176b /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPounce.cpp.o
+ .debug_line    0x0000000000017bf4      0xd1e /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskRest.cpp.o
+ .debug_line    0x0000000000018912      0xd66 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskTantrum.cpp.o
+ .debug_line    0x0000000000019678      0x778 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.cpp.o
+ .debug_line    0x0000000000019df0      0xee7 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Wire/Wire.cpp.o
+ .debug_line    0x000000000001acd7      0xf42 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/Adafruit_MotorShield.cpp.o
+ .debug_line    0x000000000001bc19      0x9b1 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/utility/Adafruit_MS_PWMServoDriver.cpp.o
+ .debug_line    0x000000000001c5ca      0xe83 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.cpp.o
+ .debug_line    0x000000000001d44d      0xa0c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_I2CDevice.cpp.o
+ .debug_line    0x000000000001de59      0xf93 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_SPIDevice.cpp.o
+ .debug_line    0x000000000001edec      0xec5 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_DMA_neopixel_library/Adafruit_NeoPixel_ZeroDMA.cpp.o
+ .debug_line    0x000000000001fcb1     0x11d7 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_NeoPixel/Adafruit_NeoPixel.cpp.o
+ .debug_line    0x0000000000020e88     0x136f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_ZeroDMA/Adafruit_ZeroDMA.cpp.o
+ .debug_line    0x00000000000221f7     0x117e /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SPI/SPI.cpp.o
+ .debug_line    0x0000000000023375      0xa75 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_PCF8574/Adafruit_PCF8574.cpp.o
+ .debug_line    0x0000000000023dea     0x127c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/Adafruit_VL53L0X.cpp.o
+ .debug_line    0x0000000000025066     0x2a6a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api.cpp.o
+ .debug_line    0x0000000000027ad0     0x1777 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_calibration.cpp.o
+ .debug_line    0x0000000000029247     0x211f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_core.cpp.o
+ .debug_line    0x000000000002b366      0xbd5 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_strings.cpp.o
+ .debug_line    0x000000000002bf3b      0x9e2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_i2c_comms.cpp.o
+ .debug_line    0x000000000002c91d      0xa7f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_platform.cpp.o
+ .debug_line    0x000000000002d39c      0x9de /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_-_Capacitive_Touch_Slide_Sensor_CY8C40XX/Seeed_CY8C401XX.cpp.o
+ .debug_line    0x000000000002dd7a      0xd7c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Servo/samd/Servo.cpp.o
+ .debug_line    0x000000000002eaf6     0x1160 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration.cpp.o
+ .debug_line    0x000000000002fc56     0x4c79 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration_SDFat.cpp.o
+ .debug_line    0x00000000000348cf     0x14eb /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/ExFatLib/ExFatFormatter.cpp.o
+ .debug_line    0x0000000000035dba     0x31a4 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFile.cpp.o
+ .debug_line    0x0000000000038f5e     0x17b5 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFileLFN.cpp.o
+ .debug_line    0x000000000003a713     0x128f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatName.cpp.o
+ .debug_line    0x000000000003b9a2     0x14ea /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatPartition.cpp.o
+ .debug_line    0x000000000003ce8c      0xb26 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatVolume.cpp.o
+ .debug_line    0x000000000003d9b2     0x2163 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/SdCard/SdSpiCard.cpp.o
+ .debug_line    0x000000000003fb15      0xa7c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsCache.cpp.o
+ .debug_line    0x0000000000040591      0xb31 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsDateTime.cpp.o
+ .debug_line    0x00000000000410c2      0x7c7 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsName.cpp.o
+ .debug_line    0x0000000000041889      0x41c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsUtf.cpp.o
+ .debug_line    0x0000000000041ca5      0x2fc /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/upcase.cpp.o
+ .debug_line    0x0000000000041fa1      0xe29 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_FlashCache.cpp.o
+ .debug_line    0x0000000000042dca     0x10d4 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlash.cpp.o
+ .debug_line    0x0000000000043e9e     0x11a6 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlashBase.cpp.o
+ .debug_line    0x0000000000045044      0xd6a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/qspi/Adafruit_FlashTransport_QSPI_SAMD.cpp.o
+ .debug_line    0x0000000000045dae     0x2404 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPFusion.cpp.o
+ .debug_line    0x00000000000481b2      0xf00 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPmatrix.c.o
+ .debug_line    0x00000000000490b2      0xf03 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXAS21002C/Adafruit_FXAS21002C.cpp.o
+ .debug_line    0x0000000000049fb5     0x142c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXOS8700/Adafruit_FXOS8700.cpp.o
+ .debug_line    0x000000000004b3e1     0x14f2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_Human_Presence_Sensor-master/Grove_Human_Presence_Sensor.cpp.o
+ .debug_line    0x000000000004c8d3     0x1071 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VEML7700_Library/Adafruit_VEML7700.cpp.o
+ .debug_line    0x000000000004d944      0x680 /home/lloydf/Arduino/PB3D/PB3D-core/build/core/variant.cpp.o
+ .debug_line    0x000000000004dfc4     0x10ed /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Print.cpp.o)
+ .debug_line    0x000000000004f0b1     0x159c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SERCOM.cpp.o)
+ .debug_line    0x000000000005064d      0xce8 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Stream.cpp.o)
+ .debug_line    0x0000000000051335      0xa66 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Tone.cpp.o)
+ .debug_line    0x0000000000051d9b      0xbd0 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(CDC.cpp.o)
+ .debug_line    0x000000000005296b     0x2729 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(USBCore.cpp.o)
+ .debug_line    0x0000000000055094      0xe8f /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Uart.cpp.o)
+ .debug_line    0x0000000000055f23      0xac0 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WInterrupts.c.o)
+ .debug_line    0x00000000000569e3      0x4ea /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WMath.cpp.o)
+ .debug_line    0x0000000000056ecd      0x3cb /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(abi.cpp.o)
+ .debug_line    0x0000000000057298      0x4f6 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(cortex_handlers.c.o)
+ .debug_line    0x000000000005778e      0x65d /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(delay.c.o)
+ .debug_line    0x0000000000057deb       0xc7 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(hooks.c.o)
+ .debug_line    0x0000000000057eb2      0x79b /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(main.cpp.o)
+ .debug_line    0x000000000005864d      0x3bf /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(new.cpp.o)
+ .debug_line    0x0000000000058a0c      0x85e /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(startup.c.o)
+ .debug_line    0x000000000005926a      0x73d /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring.c.o)
+ .debug_line    0x00000000000599a7     0x103a /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_analog.c.o)
+ .debug_line    0x000000000005a9e1      0x613 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_digital.c.o)
+ .debug_line    0x000000000005aff4      0x592 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_private.c.o)
+ .debug_line    0x000000000005b586      0x7d4 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Reset.cpp.o)
+ .debug_line    0x000000000005bd5a      0x983 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(PluggableUSB.cpp.o)
+ .debug_line    0x000000000005c6dd      0x7a9 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SAMD21_USBDevice.cpp.o)
 
-.debug_str      0x0000000000000000    0x3ccaa
- .debug_str     0x0000000000000000    0x1e801 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/PB3D-core.ino.cpp.o
-                                      0x203c6 (size before relaxing)
- .debug_str     0x000000000001e801       0xad /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/BumperSensor.cpp.o
+.debug_str      0x0000000000000000    0x3cca8
+ .debug_str     0x0000000000000000    0x1e7ff /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/PB3D-core.ino.cpp.o
+                                      0x203c9 (size before relaxing)
+ .debug_str     0x000000000001e7ff       0xad /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/BumperSensor.cpp.o
                                        0x4675 (size before relaxing)
- .debug_str     0x000000000001e8ae       0x91 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionEscaper.cpp.o
+ .debug_str     0x000000000001e8ac       0x91 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionEscaper.cpp.o
                                        0x7b22 (size before relaxing)
- .debug_str     0x000000000001e93f      0x1ed /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionManager.cpp.o
-                                       0xc5b4 (size before relaxing)
- .debug_str     0x000000000001eb2c       0x4b /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionStrategy.cpp.o
+ .debug_str     0x000000000001e93d      0x1ed /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionManager.cpp.o
+                                       0xc5b6 (size before relaxing)
+ .debug_str     0x000000000001eb2a       0x4b /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionStrategy.cpp.o
                                        0x44f2 (size before relaxing)
- .debug_str     0x000000000001eb77       0x6c /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Encoder.cpp.o
+ .debug_str     0x000000000001eb75       0x6c /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Encoder.cpp.o
                                        0x4973 (size before relaxing)
- .debug_str     0x000000000001ebe3       0x8d /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterLowPass.cpp.o
+ .debug_str     0x000000000001ebe1       0x8d /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterLowPass.cpp.o
                                        0x456a (size before relaxing)
- .debug_str     0x000000000001ec70       0x5e /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserManager.cpp.o
+ .debug_str     0x000000000001ec6e       0x5e /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserManager.cpp.o
                                        0x7055 (size before relaxing)
- .debug_str     0x000000000001ecce       0x5a /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserSensor.cpp.o
+ .debug_str     0x000000000001eccc       0x5a /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserSensor.cpp.o
                                        0x590c (size before relaxing)
- .debug_str     0x000000000001ed28       0x64 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoodManager.cpp.o
+ .debug_str     0x000000000001ed26       0x64 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoodManager.cpp.o
                                        0x5f70 (size before relaxing)
- .debug_str     0x000000000001ed8c      0x265 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoveManager.cpp.o
+ .debug_str     0x000000000001ed8a      0x265 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoveManager.cpp.o
                                        0x7a90 (size before relaxing)
- .debug_str     0x000000000001eff1       0xdb /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PID.cpp.o
+ .debug_str     0x000000000001efef       0xdb /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PID.cpp.o
                                        0x4891 (size before relaxing)
- .debug_str     0x000000000001f0cc       0x5b /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.cpp.o
+ .debug_str     0x000000000001f0ca       0x5b /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.cpp.o
                                        0x49cd (size before relaxing)
- .debug_str     0x000000000001f127       0xaf /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskDance.cpp.o
-                                       0xa508 (size before relaxing)
- .debug_str     0x000000000001f1d6       0xb7 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindHuman.cpp.o
-                                       0xb8af (size before relaxing)
- .debug_str     0x000000000001f28d       0xf3 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindLight.cpp.o
-                                       0xcacb (size before relaxing)
- .debug_str     0x000000000001f380       0x9c /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindSound.cpp.o
-                                       0xa5b9 (size before relaxing)
- .debug_str     0x000000000001f41c       0xac /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskInteract.cpp.o
-                                       0xac96 (size before relaxing)
- .debug_str     0x000000000001f4c8       0xf2 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.cpp.o
-                                       0x6307 (size before relaxing)
- .debug_str     0x000000000001f5ba       0x8c /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPause.cpp.o
-                                       0xc9e8 (size before relaxing)
- .debug_str     0x000000000001f646       0xb3 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPickedUp.cpp.o
-                                       0xd2d3 (size before relaxing)
- .debug_str     0x000000000001f6f9       0xe1 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPounce.cpp.o
-                                       0xd023 (size before relaxing)
- .debug_str     0x000000000001f7da       0x85 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskRest.cpp.o
-                                       0xa1c3 (size before relaxing)
- .debug_str     0x000000000001f85f       0x8c /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskTantrum.cpp.o
-                                       0xa2ff (size before relaxing)
- .debug_str     0x000000000001f8eb       0x4d /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.cpp.o
-                                       0x436c (size before relaxing)
- .debug_str     0x000000000001f938      0x5ac /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Wire/Wire.cpp.o
-                                       0x59c7 (size before relaxing)
- .debug_str     0x000000000001fee4      0x11a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/Adafruit_MotorShield.cpp.o
-                                       0x4acd (size before relaxing)
- .debug_str     0x000000000001fffe       0xcd /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/utility/Adafruit_MS_PWMServoDriver.cpp.o
-                                       0x471c (size before relaxing)
- .debug_str     0x00000000000200cb      0x1ad /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.cpp.o
-                                       0x6cc0 (size before relaxing)
- .debug_str     0x0000000000020278       0xd0 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_I2CDevice.cpp.o
-                                       0x4684 (size before relaxing)
- .debug_str     0x0000000000020348      0x13b /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_SPIDevice.cpp.o
-                                       0x5652 (size before relaxing)
- .debug_str     0x0000000000020483      0xb79 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_DMA_neopixel_library/Adafruit_NeoPixel_ZeroDMA.cpp.o
-                                       0x66a6 (size before relaxing)
- .debug_str     0x0000000000020ffc      0x165 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_NeoPixel/Adafruit_NeoPixel.cpp.o
-                                       0x4cbb (size before relaxing)
- .debug_str     0x0000000000021161     0x14a0 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_ZeroDMA/Adafruit_ZeroDMA.cpp.o
-                                       0x646f (size before relaxing)
- .debug_str     0x0000000000022601      0x425 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SPI/SPI.cpp.o
-                                       0x5815 (size before relaxing)
- .debug_str     0x0000000000022a26       0x72 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_PCF8574/Adafruit_PCF8574.cpp.o
-                                       0x54a0 (size before relaxing)
- .debug_str     0x0000000000022a98      0x554 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/Adafruit_VL53L0X.cpp.o
-                                       0x5bf6 (size before relaxing)
- .debug_str     0x0000000000022fec     0x142d /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api.cpp.o
-                                       0x65a4 (size before relaxing)
- .debug_str     0x0000000000024419      0x807 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_calibration.cpp.o
-                                       0x5758 (size before relaxing)
- .debug_str     0x0000000000024c20      0xc7b /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_core.cpp.o
-                                       0x5c4c (size before relaxing)
- .debug_str     0x000000000002589b       0xbe /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_strings.cpp.o
-                                       0x4db2 (size before relaxing)
- .debug_str     0x0000000000025959      0x256 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_i2c_comms.cpp.o
-                                       0x45b9 (size before relaxing)
- .debug_str     0x0000000000025baf       0xa8 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_platform.cpp.o
-                                       0x4db4 (size before relaxing)
- .debug_str     0x0000000000025c57       0x93 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_-_Capacitive_Touch_Slide_Sensor_CY8C40XX/Seeed_CY8C401XX.cpp.o
-                                       0x463f (size before relaxing)
- .debug_str     0x0000000000025cea      0x3e6 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Servo/samd/Servo.cpp.o
-                                       0x535b (size before relaxing)
- .debug_str     0x00000000000260d0      0x334 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration.cpp.o
-                                       0xd7e5 (size before relaxing)
- .debug_str     0x0000000000026404     0xb852 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration_SDFat.cpp.o
-                                      0x1f00e (size before relaxing)
- .debug_str     0x0000000000031c56      0x479 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/ExFatLib/ExFatFormatter.cpp.o
-                                       0x949a (size before relaxing)
- .debug_str     0x00000000000320cf      0x1df /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFile.cpp.o
-                                       0x9648 (size before relaxing)
- .debug_str     0x00000000000322ae      0x12b /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFileLFN.cpp.o
-                                       0x9586 (size before relaxing)
- .debug_str     0x00000000000323d9       0xf2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatName.cpp.o
-                                       0x94b5 (size before relaxing)
- .debug_str     0x00000000000324cb      0x1e0 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatPartition.cpp.o
-                                       0x9695 (size before relaxing)
- .debug_str     0x00000000000326ab       0x63 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatVolume.cpp.o
-                                       0x93e5 (size before relaxing)
- .debug_str     0x000000000003270e     0x1616 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/SdCard/SdSpiCard.cpp.o
-                                       0x6fbf (size before relaxing)
- .debug_str     0x0000000000033d24       0x4c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsCache.cpp.o
-                                       0x5b49 (size before relaxing)
- .debug_str     0x0000000000033d70      0x268 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsDateTime.cpp.o
-                                       0x457a (size before relaxing)
- .debug_str     0x0000000000033fd8       0xbc /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsName.cpp.o
-                                       0x43b7 (size before relaxing)
- .debug_str     0x0000000000034094       0x90 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsUtf.cpp.o
-                                        0x37b (size before relaxing)
- .debug_str     0x0000000000034124       0xb3 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/upcase.cpp.o
-                                        0x355 (size before relaxing)
- .debug_str     0x00000000000341d7      0x260 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_FlashCache.cpp.o
+ .debug_str     0x000000000001f125       0xaf /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskDance.cpp.o
+                                       0xa50a (size before relaxing)
+ .debug_str     0x000000000001f1d4       0xb7 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindHuman.cpp.o
+                                       0xb8b1 (size before relaxing)
+ .debug_str     0x000000000001f28b       0xf3 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindLight.cpp.o
+                                       0xcacd (size before relaxing)
+ .debug_str     0x000000000001f37e       0x9c /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindSound.cpp.o
+                                       0xa5bb (size before relaxing)
+ .debug_str     0x000000000001f41a       0xac /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskInteract.cpp.o
+                                       0xac98 (size before relaxing)
+ .debug_str     0x000000000001f4c6       0xf2 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.cpp.o
+                                       0x6309 (size before relaxing)
+ .debug_str     0x000000000001f5b8       0x8c /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPause.cpp.o
                                        0xc9ea (size before relaxing)
- .debug_str     0x0000000000034437      0x29f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlash.cpp.o
+ .debug_str     0x000000000001f644       0xb3 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPickedUp.cpp.o
+                                       0xd2d5 (size before relaxing)
+ .debug_str     0x000000000001f6f7       0xe1 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPounce.cpp.o
+                                       0xd025 (size before relaxing)
+ .debug_str     0x000000000001f7d8       0x85 /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskRest.cpp.o
+                                       0xa1c5 (size before relaxing)
+ .debug_str     0x000000000001f85d       0x8c /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskTantrum.cpp.o
+                                       0xa301 (size before relaxing)
+ .debug_str     0x000000000001f8e9       0x4d /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.cpp.o
+                                       0x436c (size before relaxing)
+ .debug_str     0x000000000001f936      0x5ac /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Wire/Wire.cpp.o
+                                       0x59c7 (size before relaxing)
+ .debug_str     0x000000000001fee2      0x11a /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/Adafruit_MotorShield.cpp.o
+                                       0x4acd (size before relaxing)
+ .debug_str     0x000000000001fffc       0xcd /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Motor_Shield_V2_Library/utility/Adafruit_MS_PWMServoDriver.cpp.o
+                                       0x471c (size before relaxing)
+ .debug_str     0x00000000000200c9      0x1ad /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.cpp.o
+                                       0x6cc0 (size before relaxing)
+ .debug_str     0x0000000000020276       0xd0 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_I2CDevice.cpp.o
+                                       0x4684 (size before relaxing)
+ .debug_str     0x0000000000020346      0x13b /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_BusIO/Adafruit_SPIDevice.cpp.o
+                                       0x5652 (size before relaxing)
+ .debug_str     0x0000000000020481      0xb79 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_DMA_neopixel_library/Adafruit_NeoPixel_ZeroDMA.cpp.o
+                                       0x66a6 (size before relaxing)
+ .debug_str     0x0000000000020ffa      0x165 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_NeoPixel/Adafruit_NeoPixel.cpp.o
+                                       0x4cbb (size before relaxing)
+ .debug_str     0x000000000002115f     0x14a0 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_ZeroDMA/Adafruit_ZeroDMA.cpp.o
+                                       0x646f (size before relaxing)
+ .debug_str     0x00000000000225ff      0x425 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SPI/SPI.cpp.o
+                                       0x5815 (size before relaxing)
+ .debug_str     0x0000000000022a24       0x72 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_PCF8574/Adafruit_PCF8574.cpp.o
+                                       0x54a0 (size before relaxing)
+ .debug_str     0x0000000000022a96      0x554 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/Adafruit_VL53L0X.cpp.o
+                                       0x5bf6 (size before relaxing)
+ .debug_str     0x0000000000022fea     0x142d /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api.cpp.o
+                                       0x65a4 (size before relaxing)
+ .debug_str     0x0000000000024417      0x807 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_calibration.cpp.o
+                                       0x5758 (size before relaxing)
+ .debug_str     0x0000000000024c1e      0xc7b /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_core.cpp.o
+                                       0x5c4c (size before relaxing)
+ .debug_str     0x0000000000025899       0xbe /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/core/src/vl53l0x_api_strings.cpp.o
+                                       0x4db2 (size before relaxing)
+ .debug_str     0x0000000000025957      0x256 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_i2c_comms.cpp.o
+                                       0x45b9 (size before relaxing)
+ .debug_str     0x0000000000025bad       0xa8 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VL53L0X/platform/src/vl53l0x_platform.cpp.o
+                                       0x4db4 (size before relaxing)
+ .debug_str     0x0000000000025c55       0x93 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_-_Capacitive_Touch_Slide_Sensor_CY8C40XX/Seeed_CY8C401XX.cpp.o
+                                       0x463f (size before relaxing)
+ .debug_str     0x0000000000025ce8      0x3e6 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Servo/samd/Servo.cpp.o
+                                       0x535b (size before relaxing)
+ .debug_str     0x00000000000260ce      0x334 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration.cpp.o
+                                       0xd7e5 (size before relaxing)
+ .debug_str     0x0000000000026402     0xb852 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_Sensor_Calibration/Adafruit_Sensor_Calibration_SDFat.cpp.o
+                                      0x1f00e (size before relaxing)
+ .debug_str     0x0000000000031c54      0x479 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/ExFatLib/ExFatFormatter.cpp.o
+                                       0x949a (size before relaxing)
+ .debug_str     0x00000000000320cd      0x1df /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFile.cpp.o
+                                       0x9648 (size before relaxing)
+ .debug_str     0x00000000000322ac      0x12b /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatFileLFN.cpp.o
+                                       0x9586 (size before relaxing)
+ .debug_str     0x00000000000323d7       0xf2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatName.cpp.o
+                                       0x94b5 (size before relaxing)
+ .debug_str     0x00000000000324c9      0x1e0 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatPartition.cpp.o
+                                       0x9695 (size before relaxing)
+ .debug_str     0x00000000000326a9       0x63 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/FatLib/FatVolume.cpp.o
+                                       0x93e5 (size before relaxing)
+ .debug_str     0x000000000003270c     0x1616 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/SdCard/SdSpiCard.cpp.o
+                                       0x6fbf (size before relaxing)
+ .debug_str     0x0000000000033d22       0x4c /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsCache.cpp.o
+                                       0x5b49 (size before relaxing)
+ .debug_str     0x0000000000033d6e      0x268 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsDateTime.cpp.o
+                                       0x457a (size before relaxing)
+ .debug_str     0x0000000000033fd6       0xbc /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsName.cpp.o
+                                       0x43b7 (size before relaxing)
+ .debug_str     0x0000000000034092       0x90 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/FsUtf.cpp.o
+                                        0x37b (size before relaxing)
+ .debug_str     0x0000000000034122       0xb3 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/SdFat_-_Adafruit_Fork/common/upcase.cpp.o
+                                        0x355 (size before relaxing)
+ .debug_str     0x00000000000341d5      0x260 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_FlashCache.cpp.o
+                                       0xc9ea (size before relaxing)
+ .debug_str     0x0000000000034435      0x29f /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlash.cpp.o
                                        0xcccd (size before relaxing)
- .debug_str     0x00000000000346d6      0x412 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlashBase.cpp.o
+ .debug_str     0x00000000000346d4      0x412 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/Adafruit_SPIFlashBase.cpp.o
                                        0x5d9c (size before relaxing)
- .debug_str     0x0000000000034ae8      0xa64 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/qspi/Adafruit_FlashTransport_QSPI_SAMD.cpp.o
+ .debug_str     0x0000000000034ae6      0xa64 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_SPIFlash/qspi/Adafruit_FlashTransport_QSPI_SAMD.cpp.o
                                        0x632e (size before relaxing)
- .debug_str     0x000000000003554c      0x68e /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPFusion.cpp.o
+ .debug_str     0x000000000003554a      0x68e /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPFusion.cpp.o
                                        0x4d02 (size before relaxing)
- .debug_str     0x0000000000035bda      0x252 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPmatrix.c.o
+ .debug_str     0x0000000000035bd8      0x252 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_AHRS/Adafruit_AHRS_NXPmatrix.c.o
                                         0x7ca (size before relaxing)
- .debug_str     0x0000000000035e2c      0x467 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXAS21002C/Adafruit_FXAS21002C.cpp.o
+ .debug_str     0x0000000000035e2a      0x467 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXAS21002C/Adafruit_FXAS21002C.cpp.o
                                        0x764c (size before relaxing)
- .debug_str     0x0000000000036293      0xcb2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXOS8700/Adafruit_FXOS8700.cpp.o
+ .debug_str     0x0000000000036291      0xcb2 /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_FXOS8700/Adafruit_FXOS8700.cpp.o
                                        0x82df (size before relaxing)
- .debug_str     0x0000000000036f45      0x1cf /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_Human_Presence_Sensor-master/Grove_Human_Presence_Sensor.cpp.o
+ .debug_str     0x0000000000036f43      0x1cf /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Grove_Human_Presence_Sensor-master/Grove_Human_Presence_Sensor.cpp.o
                                        0x4f1a (size before relaxing)
- .debug_str     0x0000000000037114       0xce /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VEML7700_Library/Adafruit_VEML7700.cpp.o
+ .debug_str     0x0000000000037112       0xce /home/lloydf/Arduino/PB3D/PB3D-core/build/libraries/Adafruit_VEML7700_Library/Adafruit_VEML7700.cpp.o
                                        0x7383 (size before relaxing)
- .debug_str     0x00000000000371e2       0xa0 /home/lloydf/Arduino/PB3D/PB3D-core/build/core/variant.cpp.o
+ .debug_str     0x00000000000371e0       0xa0 /home/lloydf/Arduino/PB3D/PB3D-core/build/core/variant.cpp.o
                                        0x3b92 (size before relaxing)
- .debug_str     0x0000000000037282      0x2e3 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Print.cpp.o)
+ .debug_str     0x0000000000037280      0x2e3 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Print.cpp.o)
                                        0x530e (size before relaxing)
- .debug_str     0x0000000000037565      0x1db /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SERCOM.cpp.o)
+ .debug_str     0x0000000000037563      0x1db /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SERCOM.cpp.o)
                                        0x4dae (size before relaxing)
- .debug_str     0x0000000000037740       0xc5 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Stream.cpp.o)
+ .debug_str     0x000000000003773e       0xc5 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Stream.cpp.o)
                                        0x52fc (size before relaxing)
- .debug_str     0x0000000000037805      0x151 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Tone.cpp.o)
+ .debug_str     0x0000000000037803      0x151 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Tone.cpp.o)
                                        0x54f4 (size before relaxing)
- .debug_str     0x0000000000037956      0x71d /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(CDC.cpp.o)
+ .debug_str     0x0000000000037954      0x71d /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(CDC.cpp.o)
                                        0x5b94 (size before relaxing)
- .debug_str     0x0000000000038073     0x234c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(USBCore.cpp.o)
+ .debug_str     0x0000000000038071     0x234c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(USBCore.cpp.o)
                                        0x7bc6 (size before relaxing)
- .debug_str     0x000000000003a3bf      0x4d6 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Uart.cpp.o)
+ .debug_str     0x000000000003a3bd      0x4d6 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Uart.cpp.o)
                                        0x6406 (size before relaxing)
- .debug_str     0x000000000003a895       0xae /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WInterrupts.c.o)
+ .debug_str     0x000000000003a893       0xae /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WInterrupts.c.o)
                                        0x1b01 (size before relaxing)
- .debug_str     0x000000000003a943       0xab /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WMath.cpp.o)
+ .debug_str     0x000000000003a941       0xab /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(WMath.cpp.o)
                                         0x89b (size before relaxing)
- .debug_str     0x000000000003a9ee       0x7e /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(abi.cpp.o)
+ .debug_str     0x000000000003a9ec       0x7e /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(abi.cpp.o)
                                         0x7e5 (size before relaxing)
- .debug_str     0x000000000003aa6c      0xb92 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(cortex_handlers.c.o)
+ .debug_str     0x000000000003aa6a      0xb92 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(cortex_handlers.c.o)
                                        0x188a (size before relaxing)
- .debug_str     0x000000000003b5fe      0x125 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(delay.c.o)
+ .debug_str     0x000000000003b5fc      0x125 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(delay.c.o)
                                        0x1034 (size before relaxing)
- .debug_str     0x000000000003b723       0x6c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(hooks.c.o)
+ .debug_str     0x000000000003b721       0x6c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(hooks.c.o)
                                         0x176 (size before relaxing)
- .debug_str     0x000000000003b78f       0xa8 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(main.cpp.o)
+ .debug_str     0x000000000003b78d       0xa8 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(main.cpp.o)
                                        0x4352 (size before relaxing)
- .debug_str     0x000000000003b837       0x6b /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(new.cpp.o)
+ .debug_str     0x000000000003b835       0x6b /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(new.cpp.o)
                                         0x827 (size before relaxing)
- .debug_str     0x000000000003b8a2      0xd6c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(startup.c.o)
+ .debug_str     0x000000000003b8a0      0xd6c /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(startup.c.o)
                                        0x27bc (size before relaxing)
- .debug_str     0x000000000003c60e      0x2ea /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring.c.o)
+ .debug_str     0x000000000003c60c      0x2ea /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring.c.o)
                                        0x201b (size before relaxing)
- .debug_str     0x000000000003c8f8      0x122 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_analog.c.o)
+ .debug_str     0x000000000003c8f6      0x122 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_analog.c.o)
                                        0x20ba (size before relaxing)
- .debug_str     0x000000000003ca1a       0x6b /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_digital.c.o)
+ .debug_str     0x000000000003ca18       0x6b /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_digital.c.o)
                                        0x10a8 (size before relaxing)
- .debug_str     0x000000000003ca85       0x6b /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_private.c.o)
+ .debug_str     0x000000000003ca83       0x6b /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(wiring_private.c.o)
                                        0x1095 (size before relaxing)
- .debug_str     0x000000000003caf0       0x87 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Reset.cpp.o)
+ .debug_str     0x000000000003caee       0x87 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(Reset.cpp.o)
                                        0x43bb (size before relaxing)
- .debug_str     0x000000000003cb77       0x89 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(PluggableUSB.cpp.o)
+ .debug_str     0x000000000003cb75       0x89 /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(PluggableUSB.cpp.o)
                                        0x45e2 (size before relaxing)
- .debug_str     0x000000000003cc00       0xaa /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SAMD21_USBDevice.cpp.o)
+ .debug_str     0x000000000003cbfe       0xaa /home/lloydf/Arduino/PB3D/PB3D-core/build/../../../../../../tmp/arduino/cores/fc1a6c264214ce93d19b872d9b337625/core.a(SAMD21_USBDevice.cpp.o)
                                        0x5e68 (size before relaxing)
 
 .debug_frame    0x0000000000000000     0xb2c4
@@ -11875,7 +11875,7 @@ TaskManager::assignProb(signed char)              /home/lloydf/Arduino/PB3D/PB3D
                                                   /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/PB3D-core.ino.cpp.o
 TaskManager::begin()                              /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.cpp.o
                                                   /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/PB3D-core.ino.cpp.o
-TaskManager::forceUpdate()                        /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.cpp.o
+TaskManager::force_update()                       /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.cpp.o
                                                   /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskPause.cpp.o
                                                   /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskFindHuman.cpp.o
                                                   /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/PB3D-core.ino.cpp.o

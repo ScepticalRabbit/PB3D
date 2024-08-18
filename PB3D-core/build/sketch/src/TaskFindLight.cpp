@@ -82,7 +82,7 @@ void TaskFindLight::update(){
     }
 
     if(_patSensObj->getButtonOneFlag()){
-        _task_manager->setTask(TASK_FINDLIGHT);
+        _task_manager->set_task(TASK_FINDLIGHT);
         // Increase mood score when asked to play light game
         _mood_manager->inc_mood_score();
     }
@@ -91,14 +91,14 @@ void TaskFindLight::update(){
 //---------------------------------------------------------------------------
 // FINDLIGHT - called during the main during decision tree
 void TaskFindLight::findLight(){
-    _task_manager->taskLEDFindLight();
+    _task_manager->task_LED_find_light();
     if(!_enabled){return;}
 
     _findLux(true);
 }
 
 void TaskFindLight::findDark(){
-    _task_manager->taskLEDFindDark();
+    _task_manager->task_LED_find_dark();
     if(!_enabled){return;}
 
     _findLux(false);

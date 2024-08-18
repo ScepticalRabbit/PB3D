@@ -34,7 +34,7 @@ if(_startTantrumFlag){
     _startTantrumFlag = false;
     // Tantrum timer and completion
     _tantrumComplete = false;
-    _timerObj1.start(_tantrumDuration);
+    _timerObj1.start(_tantrum_duration);
     // Growl timer and flag
     _growlFlag = true;
     _timerObj2.start(_tantrumGrowlDuration);
@@ -56,7 +56,7 @@ uint8_t inCodes[]   = {SPEAKER_GROWL,SPEAKER_GROWL,SPEAKER_OFF,SPEAKER_OFF};
 _speaker->setSoundCodes(inCodes,4);
 
 // Set the task LEDs on every loop regardless
-_task_manager->taskLEDTantrum();
+_task_manager->task_LED_tantrum();
 
 if(_timerObj2.finished()){
     _growlFlag = !_growlFlag;

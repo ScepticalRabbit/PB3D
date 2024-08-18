@@ -30,7 +30,7 @@ void TaskPause::begin(){
 void TaskPause::update(){
     if(!_enabled){return;}
 
-    if(_task_manager->getNewTaskFlag()){
+    if(_task_manager->get_new_task_flag()){
         _pauseDur = random(_pauseDurMin,_pauseDurMax);
         _pauseTimer.start(_pauseDur);
     }
@@ -45,7 +45,7 @@ void TaskPause::pause(){
         _task_manager->force_update();
     }
     else{
-        _task_manager->taskLEDPause(_pauseDur);
+        _task_manager->task_LED_pause(_pauseDur);
         _collision_manager->set_enabled_flag(false);
         _move_manager->stop();
     }

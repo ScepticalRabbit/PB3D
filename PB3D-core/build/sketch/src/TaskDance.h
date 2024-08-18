@@ -50,7 +50,7 @@ public:
   //---------------------------------------------------------------------------
   // Get, set and reset
   float getDanceBarMs(){return _danceBarMs;}
-  uint32_t getDuration(){return _danceDuration;}
+  uint32_t getDuration(){return _dance_duration;}
   void setStartFlag(bool inFlag){_danceStartFlag = inFlag;}
   bool getStartFlag(){return _danceStartFlag;}
   bool getSpeakerFlag(){return _speakerFlag;}
@@ -81,7 +81,7 @@ private:
   float _dance4NoteMs = (60.0/_danceBPM)*1000.0;
   float _danceBarMs = _dance4NoteMs*4.0;
   uint8_t _danceNumBars = 8;
-  uint32_t _danceDuration = uint32_t(_danceBarMs*float(_danceNumBars));
+  uint32_t _dance_duration = uint32_t(_danceBarMs*float(_danceNumBars));
 
   int16_t _danceBPMMin = 120, _danceBPMMax = 180;
   uint8_t _danceCurrMove = 0;

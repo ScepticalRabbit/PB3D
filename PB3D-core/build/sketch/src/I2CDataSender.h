@@ -140,7 +140,7 @@ private:
         in_state->state.mood = _mood_manager->getMood();
         in_state->state.moodScore = _mood_manager->get_mood_score();
         // TASK
-        in_state->state.task = _task_manager->getTask();
+        in_state->state.task = _task_manager->get_task();
         // MOVE
         in_state->state.moveBasic = _move_manager->get_basic_move();
         in_state->state.moveCompound = _move_manager->get_compound_move();
