@@ -19,7 +19,7 @@ void BumperSensor::begin(){
 //------------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void BumperSensor::update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     // Request a byte worth of digital pins from the follower Xiao
     Wire.requestFrom(ADDR_BUMPERS,1);

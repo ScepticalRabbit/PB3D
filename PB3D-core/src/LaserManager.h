@@ -42,8 +42,12 @@ public:
     // Get, set and reset
     int16_t get_range(ELaserIndex laser_loc){
         return _laser_ptr_array[laser_loc]->get_range();}
+    int16_t get_range(uint8_t laser_loc){
+        return _laser_ptr_array[laser_loc]->get_range();}
 
     int8_t get_status(ELaserIndex laser_loc){
+        return _laser_ptr_array[laser_loc]->get_range_status();}
+    int8_t get_status(uint8_t laser_loc){
         return _laser_ptr_array[laser_loc]->get_range_status();}
 
     EDangerCode get_collision_code(ELaserIndex _ind);

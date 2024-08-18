@@ -45,7 +45,7 @@ public:
   //---------------------------------------------------------------------------
   // UPDATE: called during every LOOP
   void update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     if(_navTimer.finished()){
       _navTimer.start(_navUpdateTime);
@@ -90,7 +90,7 @@ public:
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool get_enabled_flag(){return _is_enabled;}
+  bool get_enabled_flag(){return _enabled;}
 
   float getPosX(){return _posXNext;}
   float getPosY(){return _posYNext;}
@@ -101,12 +101,12 @@ public:
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _is_enabled = true;
+  bool _enabled = true;
 
   // Debug variables
   uint8_t _debugCount = 0;

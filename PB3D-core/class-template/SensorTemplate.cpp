@@ -24,7 +24,7 @@ void SensorTemp::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during LOOP
 void SensorTemp::update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
 
 }

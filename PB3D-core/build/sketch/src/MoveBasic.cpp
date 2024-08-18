@@ -25,7 +25,7 @@ void MoveBasic::begin(){
 // UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void MoveBasic::update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
 
 }
@@ -34,7 +34,7 @@ void MoveBasic::update(){
 // DOSOMETHING - called during the main during decision tree
 //---------------------------------------------------------------------------
 void MoveBasic::doSomething(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     if(_start_flag){
         _start_flag = false;

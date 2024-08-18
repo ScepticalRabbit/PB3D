@@ -61,7 +61,7 @@ public:
     // RF: initialise chip
     if (!_rf69_manager.init()) {
       Serial.println(F("RF TX: Failed to init RF TX"));
-      _is_enabled = false;
+      _enabled = false;
       //while(1);
     }
     else{
@@ -94,7 +94,7 @@ public:
       // Send the struct and see if there is a listener
       if(!_sendStateStruct()){
         Serial.println(F("RF TX: initial data send failed!"));
-        //_is_enabled = false;
+        //_enabled = false;
       }
     }
   }
@@ -102,7 +102,7 @@ public:
   //---------------------------------------------------------------------------
   // UPDATE - called during every iteration of the main loop
   void update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     // RADIO
     /*
@@ -119,11 +119,11 @@ public:
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool get_enabled_flag(){return _is_enabled;}
+  bool get_enabled_flag(){return _enabled;}
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
   void setNewPacket(bool inFlag){_newPacket = inFlag;}
 
   void setStateByte(byte inByte, int16_t index){
@@ -185,7 +185,7 @@ private:
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _is_enabled = true;
+  bool _enabled = true;
   bool _start_flag = true;
 
   // DATA PACKET - I2C and Radio

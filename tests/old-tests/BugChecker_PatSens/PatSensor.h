@@ -33,10 +33,10 @@ public:
     Wire.beginTransmission(ADDR_TOUCHSENS);
     if(Wire.endTransmission() != 0){
       Serial.println(F("PATSENSOR: Failed to init touch sensor."));
-      _is_enabled = false;
+      _enabled = false;
     }
     else{
-      _is_enabled = true;
+      _enabled = true;
     }
     // Start Timers
     _disableButtonsTimer.start(0);
@@ -45,7 +45,7 @@ public:
   //---------------------------------------------------------------------------
   // UPDATE - called during every iteration of the main loop
   void update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     // SENSOR: Check for button press
     // 0x01 = b1, 0x02 = b2, 0x03 = b1+b2
@@ -65,7 +65,7 @@ public:
   //---------------------------------------------------------------------------
   // ACCEPT PATS - called during the main during decision tree
   void acceptPats(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     // Slider value, left=100, right=0
     u8 valueSlider = 0;
@@ -84,7 +84,7 @@ public:
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool get_enabled_flag(){return _is_enabled;}
+  bool get_enabled_flag(){return _enabled;}
   bool getPatFlag(){return _patFlag;}
   bool getButtonFlag(){return _buttonFlag;}
   uint8_t getPatCount(){return _sensPatCount;}
@@ -95,7 +95,7 @@ public:
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
   void setPatCountThres(uint8_t inCount){_sensPatCountThres = inCount;}
 
   //---------------------------------------------------------------------------
@@ -114,7 +114,7 @@ private:
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _is_enabled = true;
+  bool _enabled = true;
 
   bool _patFlag = false;
   bool _buttonFlag = false;

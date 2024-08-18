@@ -54,8 +54,8 @@ public:
 
   //---------------------------------------------------------------------------
   // GET/SET FUNCTIONS
-  bool get_enabled_flag(){return _is_enabled;}
-  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
+  bool get_enabled_flag(){return _enabled;}
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
   byte getEarState(){return _earState;}
   void setEarState(byte inState){_earState = inState;}
   byte getSendByte(){return _sendByte;}
@@ -77,7 +77,7 @@ private:
   Speaker* _speakerObj = NULL;
 
   // Base Varibles
-  bool _is_enabled = true;
+  bool _enabled = true;
   bool _start_flag = false;
 
   // TASK - FIND SOUND VARS

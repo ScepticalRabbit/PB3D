@@ -29,7 +29,7 @@ void MoodManager::begin(){
 // UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void MoodManager::update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
     if(_moodTimer.finished()){
         // Randomly update mood score before generating new mood
         int8_t prob = random(0,100);

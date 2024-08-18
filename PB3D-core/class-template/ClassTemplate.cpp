@@ -29,7 +29,7 @@ void ClassTemp::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during LOOP
 void ClassTemp::update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     if(_task_manager->getNewTaskFlag()){
         _start_flag = true;
@@ -40,7 +40,7 @@ void ClassTemp::update(){
 //---------------------------------------------------------------------------
 // DOSOMETHING - called during the main during decision tree
 void ClassTemp::doSomething(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     if(_start_flag){
         _start_flag = false;

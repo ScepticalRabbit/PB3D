@@ -24,7 +24,7 @@ byte collisionFlags = B00000000;
 
 // Bumper Timer
 uint16_t _bumperInt = 100; // ms
-Timer _bumperTimer = Timer();
+Timer _bumper_timer = Timer();
 
 //----------------------------------------------------------------------------
 // RF TX VARS
@@ -50,7 +50,7 @@ void setup(){
   pinMode(COL_BUMPER_FR, INPUT_PULLUP);
   pinMode(COL_BUMPER_FL, INPUT_PULLUP);
 
-  _bumperTimer.start(0);
+  _bumper_timer.start(0);
   _printTimer.start(0);
 
   Wire.begin(NERVSYS_ADDR);
@@ -84,8 +84,8 @@ void receiveEvent(int bytesRec){
 void loop(){
   //---------------------------------------------------------------------------
   // BUMPERS - Send bumper flags when requested
-  if(_bumperTimer.finished()){
-    _bumperTimer.start(_bumperInt);
+  if(_bumper_timer.finished()){
+    _bumper_timer.start(_bumperInt);
     byte temp = B00000000;
 
     int8_t switchFL = digitalRead(COL_BUMPER_FL);

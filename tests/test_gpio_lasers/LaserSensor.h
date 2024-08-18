@@ -38,8 +38,8 @@ public:
 
     //---------------------------------------------------------------------------
     // Get, set and reset
-    bool get_enabled(){return _is_enabled;}
-    void set_enabled(bool in_flag){_is_enabled = in_flag;}
+    bool get_enabled(){return _enabled;}
+    void set_enabled(bool in_flag){_enabled = in_flag;}
     int16_t get_range(){return _range;}
     int8_t get_range_status(){return _range_status;}
     uint32_t get_range_time(){return _range_time;}
@@ -49,7 +49,7 @@ public:
 private:
     //---------------------------------------------------------------------------
     // CLASS VARIABLES
-    bool _is_enabled = true;
+    bool _enabled = true;
     bool _start_flag = true;
 
     Adafruit_VL53L0X _laser_obj = Adafruit_VL53L0X();

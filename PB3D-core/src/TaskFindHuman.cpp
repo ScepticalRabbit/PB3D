@@ -27,7 +27,7 @@ void TaskFindHuman::begin(){
     _presDetector = PresenceDetector(_movementSensor, _sensitivityPresence, _sensitivityMovement, _detectInterval);
     if (_movementSensor.initialize() == false){
         Serial.println(F("TASKFINDHUMAN: Failed to initialise presence sensor."));
-        _is_enabled = false;
+        _enabled = false;
     }
     Serial.println(F("TASKFINDHUMAN: IR presence sensor initialised."));
     _IRPFlags1 = false; _IRPFlags2 = false; _IRPFlags3 = false; _IRPFlags4 = false;
@@ -38,7 +38,7 @@ void TaskFindHuman::begin(){
 // UPDATE: called during every LOOP
 void TaskFindHuman::update(){
     // If the human presence sensor wasn't found then do nothing
-    if(!_is_enabled){
+    if(!_enabled){
         return;
     }
 
@@ -61,7 +61,7 @@ void TaskFindHuman::findHuman(){
     _task_manager->taskLEDFindHuman();
 
     // If the human presence sensor wasn't found then bypass the rest of the function
-    if(!_is_enabled){
+    if(!_enabled){
         _task_manager->forceUpdate();
         return;
     }

@@ -237,11 +237,11 @@ public:
 
   //----------------------------------------------------------------------------
   // Position PID get functions - left/right motors
-  int32_t get_pos_count_left(){return _curr_relative_count_left;}
+  int32_t get_pos_count_left(){return _PID_curr_relative_count_left;}
   float get_pos_PID_set_point_left(){return _pos_PID_left.get_set_point();}
   float get_pos_PID_output_left(){return _pos_PID_left.get_output();}
 
-  int32_t get_pos_count_right(){return _curr_relative_count_right;}
+  int32_t get_pos_count_right(){return _PID_curr_relative_count_right;}
   float get_pos_PID_set_point_right(){return _pos_PID_right.get_set_point();}
   float get_pos_PID_output_right(){return _pos_PID_right.get_output();}
 
@@ -286,7 +286,7 @@ private:
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Type and General Variables
-  bool _is_enabled = true;
+  bool _enabled = true;
 
   int8_t _move_control = MOVE_CONTROL_SPEED;
   int8_t _move_basic = MOVE_B_FORWARD;
@@ -357,7 +357,7 @@ private:
   // TODO: 1st Jan 2023 - need to update gains based on new encoder counts, halved gain as temporary fix (was 0.02)
   //double _speed_P = 2.5, _speed_I = 0.0, _speed_D = 0.0; // NOTE: 2.5 causes osc with 50ms period
   //double _speed_P = 0.45*2.5, _speed_I = 50.0e-3/1.2, _speed_D = 0.0; // Ziegler-Nichols tuning [0.45,/1.2,0.0]
-  double _speed_P = 0.6*0.8,;
+  double _speed_P = 0.6*0.8;
   double _speed_I = 0.5*50.0e-3;
   double _speed_D = 50.0e-3/8.0; // Ziegler-Nichols tuning [0.6,0.5,/8]
   double _speed_P_rev = _speed_P*0.9; // NOTE: turned off setting gains! Caused problems
@@ -371,14 +371,7 @@ private:
 
   float _pos_PID_min_speed = 100.0;
   float _pos_PID_max_speed = 200.0;
-
   int16_t _pos_tol = 3;
-  int32_t _start_encoder_count_left = 0;
-  int32_t _set_point_rel_counts_left = 0;
-  int32_t _curr_relative_count_left = 0;
-  int32_t _start_encoder_count_right = 0;
-  int32_t _set_point_rel_counts_right = 0;
-  int32_t _curr_relative_count_right = 0;
 
   float _wheel_base = 172.0; // UPDATED: 1st Jan 2023 - new stable geom chassis with large wheels
   float _wheel_circ = _wheel_base*PI;
@@ -387,6 +380,16 @@ private:
   bool _pos_at_right = false;
   bool _pos_at_both = false;
   // NOTE: D(inner) = 122mm, D(outer) = 160mm, D(avg) = 141mm
+
+  //TODO: Fix naming mishap here when refactoring out move code. There was a
+  //conflict with the encoder variables defined previously
+  int32_t _PID_start_encoder_count_left = 0;
+  int32_t _PID_set_point_rel_counts_left = 0;
+  int32_t _PID_curr_relative_count_left = 0;
+  int32_t _PID_start_encoder_count_right = 0;
+  int32_t _PID_set_point_rel_counts_right = 0;
+  int32_t _PID_curr_relative_count_right = 0;
+
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - To Dist/Angle

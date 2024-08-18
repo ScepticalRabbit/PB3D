@@ -17,12 +17,12 @@ void LaserSensor::begin(){
     if(!_laser_obj.begin(_address)){
         Serial.print(F("COLLISION: FAILED to init laser "));
         Serial.println(_laser_ind);
-        _is_enabled = false;
+        _enabled = false;
     }
     else{
         Serial.print(F("COLLISION: initialised laser "));
         Serial.println(_laser_ind);
-        _is_enabled = true;
+        _enabled = true;
     }
     delay(_reset_delay);
 }
@@ -31,7 +31,7 @@ void LaserSensor::begin(){
 // UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void LaserSensor::start_range(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     _laser_obj.startRange();
     _range_start_time = millis();
@@ -39,7 +39,7 @@ void LaserSensor::start_range(){
 }
 
 bool LaserSensor::update_range(){
-    if(!_is_enabled){return false;}
+    if(!_enabled){return false;}
 
     if(_laser_obj.isRangeComplete() && !_range_flag){
         _range_timeout = _laser_obj.timeoutOccurred();

@@ -56,8 +56,8 @@ public:
 
   //----------------------------------------------------------------------------
   // Get, set and reset
-  bool get_enabled_flag(){return _is_enabled;}
-  void set_enabled_flag(bool flag){_is_enabled = flag;}
+  bool get_enabled_flag(){return _enabled;}
+  void set_enabled_flag(bool flag){_enabled = flag;}
 
   bool get_detected(){return _collision_detected;}
 
@@ -78,7 +78,7 @@ public:
   }
   SLastCollision* get_last_collision(){return &_last_col;}
 
-  uint8_t get_col_check(uint8_t pos){return _checkVec[pos];}
+  uint8_t get_col_check(uint8_t pos){return _check_lasers[pos];}
 
   bool get_altitude_flag();
   void reset_flags();
@@ -104,11 +104,11 @@ private:
   MoveManager* _move_manager = NULL;
 
   // Collision management variables
-  bool _is_enabled = true;
+  bool _enabled = true;
   bool _collision_detected = false; // Key flag controlling collision escape
-  bool _collisionSlowDown = false;
+  bool _collision_slow_down = false;
 
-  uint16_t _halfBodyLengMM = 80;
+  uint16_t _half_body_leng_mm = 80;
   bool _collision_beepbeep_flag = false;
   uint16_t _collision_count = 0;
 
@@ -120,17 +120,17 @@ private:
 
   // Check flags for all collision sensors
   uint8_t _checkNum = 7;
-  uint8_t _checkVec[7] = {0,0,0,0,0,0,0}; //_checkVec[7] = {BL,BR,US,LL,LR,LU,LD}
-  uint16_t _checkAllInt = 50;
-  Timer _checkAllTimer = Timer();
+  uint8_t _check_lasers[7] = {0,0,0,0,0,0,0}; //_check_lasers[7] = {BL,BR,US,LL,LR,LU,LD}
+  uint16_t _check_interval = 50;
+  Timer _check_timer = Timer();
 
   // Time to slow down if sensor tripped
-  uint16_t _slowDownInt = 500;
-  Timer _slowDownTimer = Timer();
+  uint16_t _slow_down_int = 500;
+  Timer _slow_down_timer = Timer();
 
   // Collision Sensor Timers
-  int16_t _bumperUpdateTime = 101;
-  Timer _bumperTimer = Timer();
+  int16_t _bumper_update_time = 101;
+  Timer _bumper_timer = Timer();
   int16_t _ultrasonicUpdateTime = 101;  // ms, set to prime number (100+timeout)
   Timer _ultrasonicTimer = Timer();
 

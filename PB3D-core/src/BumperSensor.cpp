@@ -18,10 +18,11 @@ void BumperSensor::begin(){
 //------------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void BumperSensor::update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     // Request a byte worth of digital pins from the follower Xiao
-    Wire.requestFrom(ADDR_BUMPERS,1);
+    Wire.requestFrom(ADDR_FOLLOW_XIAO_1,1);
+
     // Read a byte from the follower
     byte bumperByte = B00000000;
     while(Wire.available()){
@@ -52,7 +53,7 @@ void BumperSensor::update(){
 }
 
 
-uint8_t BumperSensor::get_collision_code(uint8_t bumpCode){
+EDangerCode BumperSensor::get_collision_code(EBumpCode bumpCode){
     if(bumpCode >= _num_bumpers){
         return DANGER_NONE;
     }

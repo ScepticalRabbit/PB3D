@@ -40,8 +40,8 @@ public:
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-   bool get_enabled_flag(){return _is_enabled;}
-  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
+   bool get_enabled_flag(){return _enabled;}
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
@@ -59,7 +59,7 @@ private:
   Timer _callTimer = Timer();
 
   // TASK - FIND HUMAN
-  bool _is_enabled = true;
+  bool _enabled = true;
   bool _start_flag = false;
 
   // TASK - FIND HUMAN - Grove Human Sensor

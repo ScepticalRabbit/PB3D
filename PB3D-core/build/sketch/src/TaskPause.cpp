@@ -28,7 +28,7 @@ void TaskPause::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskPause::update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     if(_task_manager->getNewTaskFlag()){
         _pauseDur = random(_pauseDurMin,_pauseDurMax);
@@ -39,7 +39,7 @@ void TaskPause::update(){
 //---------------------------------------------------------------------------
 // PAUSE
 void TaskPause::pause(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     if(_pauseTimer.finished()){
         _task_manager->forceUpdate();

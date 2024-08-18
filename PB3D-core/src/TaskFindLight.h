@@ -47,10 +47,10 @@ public:
   //---------------------------------------------------------------------------
   // Get, set and reset
   void resetGrad();
-  bool get_enabled_flag(){return _is_enabled;}
+  bool get_enabled_flag(){return _enabled;}
   float getLuxLeft(){return _luxLeft;}
   float getLuxRight(){return _luxRight;}
-  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
@@ -68,7 +68,7 @@ private:
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _is_enabled = true;
+  bool _enabled = true;
 
   Adafruit_VEML7700 _lightSensL = Adafruit_VEML7700();
   Adafruit_VEML7700 _lightSensR = Adafruit_VEML7700();

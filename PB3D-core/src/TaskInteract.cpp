@@ -31,7 +31,7 @@ void TaskInteract::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskInteract::update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     // SENSOR: Check for start of pat
     if(_patSensObj->getButtonTwoFlag()){

@@ -48,10 +48,10 @@ public:
   void collisionResetToRealign();
   void setRealignCent(int16_t inAng);
 
-  bool get_enabled_flag(){return _is_enabled;}
+  bool get_enabled_flag(){return _enabled;}
   int8_t getState(){return _state;}
   int16_t getAngCentForCollision(){return _realignAngCentCollision;}
-  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
@@ -87,7 +87,7 @@ private:
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _is_enabled = true;
+  bool _enabled = true;
   bool _startAllFlag = true;
 
   // Overall state

@@ -115,7 +115,7 @@ public:
   //---------------------------------------------------------------------------
   // UPDATE - called during every iteration of the main loop
   void update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     if(_radioTimer.finished()){
       _radioTimer.start(_radioSendInt);
@@ -156,7 +156,7 @@ public:
   //---------------------------------------------------------------------------
   // DOSOMETHING - called during the main during decision tree
   void doSomething(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     if(_start_flag){
       _start_flag = false;
@@ -166,11 +166,11 @@ public:
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool get_enabled_flag(){return _is_enabled;}
+  bool get_enabled_flag(){return _enabled;}
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void set_enabled_flag(bool inFlag){_is_enabled = inFlag;}
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
   //---------------------------------------------------------------------------
   // DIAGNOSTIC FUNCTIONS
@@ -203,7 +203,7 @@ public:
 private:
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _is_enabled = true;
+  bool _enabled = true;
   bool _start_flag = true;
 
   // Declare instance of the packet to send

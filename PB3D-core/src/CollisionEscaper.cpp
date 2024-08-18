@@ -17,7 +17,7 @@ void CollisionEscaper::set_move_obj(MoveManager* inMove){
 
 
 void CollisionEscaper::update_escape_decision(uint8_t check_vec[]){
-    // _checkVec[7] = {BL,BR,US,LL,LR,LU,LD}
+    // _check_lasers[7] = {BL,BR,US,LL,LR,LU,LD}
     // NOTE: first thing in the tree is dealt with first
 
     // 1) BMPL: reverse a full body length and turn +90 deg away

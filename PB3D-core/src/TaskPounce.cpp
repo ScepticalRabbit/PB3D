@@ -28,7 +28,7 @@ void TaskPounce::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskPounce::update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     if(_task_manager->getNewTaskFlag()){
         _startAllFlag = true;
@@ -38,7 +38,7 @@ void TaskPounce::update(){
 //---------------------------------------------------------------------------
 // Pounce! - called during the main during decision tree
 void TaskPounce::seekAndPounce(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     if(_startAllFlag){
         Serial.println("START ALL.");

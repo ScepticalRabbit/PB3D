@@ -49,7 +49,7 @@ void TaskPickedUp::begin(){
 // UPDATE: called during every LOOP
 void TaskPickedUp::update(){
     // If the sensor wasn't found then do nothing
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     // Check the altirude to see if PB has been picked up
     if(_collisionObj->get_altitude_flag() && !_isPickedUp){
@@ -76,7 +76,7 @@ void TaskPickedUp::update(){
 // PICKED UP - called during the main during decision tree
 void TaskPickedUp::pickedUp(){
     // If the sensor wasn't found then do nothing
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     //--------------------------------------------
     // START ONLY

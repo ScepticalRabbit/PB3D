@@ -39,7 +39,7 @@ void TaskFindSound::begin(){
 // UPDATE: called during each loop to update variables
 void TaskFindSound::update(){
     // If the sensor wasn't found then do nothing
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     // SENSOR: Ask follower Xiao for sound data
     if(_sensUpdateTimer.finished()){
@@ -102,7 +102,7 @@ void TaskFindSound::findSound(){
     _task_manager->taskLEDFindSound();
 
     // If the sensor wasn't found then sxit the function
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     //--------------------------------------------------------------------
     // START

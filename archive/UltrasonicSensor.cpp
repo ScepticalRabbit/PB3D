@@ -12,7 +12,7 @@
 //------------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void UltrasonicSensor::update(){
-    if(!_is_enabled){return;}
+    if(!_enabled){return;}
 
     _range = _ultrasonic_ranger.MeasureInCentimeters();
     if(_range <= _colDistLim){_range = 400;}

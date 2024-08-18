@@ -10,8 +10,8 @@
 #ifndef PB3DI2CADDR_H
 #define PB3DI2CADDR_H
 
-#define ADDR_FOLLOW_XIAO_1 0x09
-#define ADDR_FOLLOW_XIAO_2 0x11
+#define ADDR_FOLLOW_XIAO_1 0x09 // Bumpers / Radio?
+#define ADDR_FOLLOW_XIAO_2 0x11 // Sound / DigIO
 
 #define ADDR_GPIO 0x21
 
