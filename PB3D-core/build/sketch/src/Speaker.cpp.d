@@ -139,5 +139,5 @@
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/USB/SAMD21_USBDevice.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/USB/USB_host.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/USB/samd21_host.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MusicNotes.h
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DConstants.h \
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.h

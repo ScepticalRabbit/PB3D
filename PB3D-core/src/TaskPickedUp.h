@@ -62,7 +62,7 @@ private:
   bool _enabled = true;
   bool _isPickedUp = false;
   bool _startPickedUpFlag = false;
-  bool _patFlag = false, _patComplete = false;
+  bool _pat_flag = false, _pat_complete = false;
 
   bool _exitFlag = false, _exitTimerOn = false;
   uint16_t _exitTime = 2000;

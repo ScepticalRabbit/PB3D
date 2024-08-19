@@ -340,7 +340,7 @@ void loop(){
   //----------------------------------------------------------------------------
   // RESET FLAGS
   // Reset the sound code and let the decision tree update it for the next loop
-  uint8_t inCodes[] = {0,0,0,0};
+  uint8_t inCodes[] = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
   speaker.setSoundCodes(inCodes,4);
   // Reset the tail to the central position - allow tasks and mood control
   tail.setState(0);
@@ -466,7 +466,7 @@ void escapeCollision(){
   collision_manager.reset_flags();
 
   if(collision_manager.get_beepbeep_flag()){
-    uint8_t inCodes[] = {2,2,0,0};
+    uint8_t inCodes[] = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
     speaker.setSoundCodes(inCodes,4);
   }
 
@@ -490,9 +490,9 @@ void detectedCollision(){
     collision_manager.set_beepbeep_flag(true);
 
     speaker.reset();
-    uint8_t inCodes[] = {2,2,0,0};
+    uint8_t inCodes[] = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
     speaker.setSoundCodes(inCodes,4);
-    uint16_t inFreqs[] = {392,370,392,370,0,0,0,0};
+    uint16_t inFreqs[] = {NOTE_G4,NOTE_FS4,NOTE_G4,NOTE_FS4,0,0,0,0};
     speaker.setSoundFreqs(inFreqs,8);
     uint16_t inDurs[] = {200,100,200,100,0,0,0,0};
     speaker.setSoundDurs(inDurs,8);

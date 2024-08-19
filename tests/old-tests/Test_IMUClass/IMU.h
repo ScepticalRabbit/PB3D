@@ -38,14 +38,14 @@ public:
       Serial.println(F("IMU: No calibration loaded/found"));
     }
 
-    if (!_initIMU()) {
+    if (!_init_IMU()) {
       Serial.println(F("IMU: Failed to find NXP sensors"));
       _enabled = false;
       //while(true){delay(10);}
     }
 
-    _filter.begin(_IMUFilterFreq);
-    _IMUTimer.start(0);
+    _filter.begin(_IMU_filter_freq);
+    _IMU_timer.start(0);
   }
 
   //---------------------------------------------------------------------------
@@ -53,33 +53,33 @@ public:
   void update(){
     if(!_enabled){return;}
 
-    if(_IMUTimer.finished()){
-      _IMUTimer.start(_IMUUpdateTime);
+    if(_IMU_timer.finished()){
+      _IMU_timer.start(_IMU_update_time);
 
       // Read all the motion sensors
       // Driven by I2C read time which is driven by I2C clock
       // Test on M4 = 4ms with default clock and 1ms with 400kHz clock
       // sensors_event_t aEvent, gEvent, mEvent;
-      _accel->getEvent(&_aEvent);
-      _gyro->getEvent(&_gEvent);
-      _mag->getEvent(&_mEvent);
+      _accel->getEvent(&_accel_event);
+      _gyro->getEvent(&_gyro_event);
+      _mag->getEvent(&_mag_event);
 
       // Apply the calibration to the sensor values
-      _cal.calibrate(_mEvent);
-      _cal.calibrate(_aEvent);
-      _cal.calibrate(_gEvent);
+      _cal.calibrate(_mag_event);
+      _cal.calibrate(_accel_event);
+      _cal.calibrate(_gyro_event);
 
       // Gyroscope needs to be converted from Rad/s to Degree/s
       // the rest are not unit-important
-      float gx = _gEvent.gyro.x * SENSORS_RADS_TO_DPS;
-      float gy = _gEvent.gyro.y * SENSORS_RADS_TO_DPS;
-      float gz = _gEvent.gyro.z * SENSORS_RADS_TO_DPS;
+      float gx = _gyro_event.gyro.x * SENSORS_RADS_TO_DPS;
+      float gy = _gyro_event.gyro.y * SENSORS_RADS_TO_DPS;
+      float gz = _gyro_event.gyro.z * SENSORS_RADS_TO_DPS;
 
       // Update the SensorFusion filter
       // Supposedly computationally intensive - test on M4 = 1ms or less
       _filter.update(gx, gy, gz,
-                    _aEvent.acceleration.x, _aEvent.acceleration.y, _aEvent.acceleration.z,
-                    _mEvent.magnetic.x, _mEvent.magnetic.y, _mEvent.magnetic.z);
+                    _accel_event.acceleration.x, _accel_event.acceleration.y, _accel_event.acceleration.z,
+                    _mag_event.magnetic.x, _mag_event.magnetic.y, _mag_event.magnetic.z);
 
       // Get the Euler angles from the filter
       _roll = _filter.getRoll();
@@ -87,12 +87,12 @@ public:
       _heading = _filter.getYaw();
 
       // Debug prints update every X interations based on debugFreq
-      if(_debugCount++ >= _debugFreq){
-        _debugCount = 0; // Reset the debug count
+      if(_debug_count++ >= _debug_freq){
+        _debug_count = 0; // Reset the debug count
 
         #if defined(IMU_DEBUG_TIMER)
           Serial.print("IMU: update took ");
-          Serial.print(_IMUTimer.get_time());
+          Serial.print(_IMU_timer.get_time());
           Serial.println("ms");
         #endif
 
@@ -130,9 +130,9 @@ public:
   // GET FUNCTIONS
   bool get_enabled_flag(){return _enabled;}
 
-  float getRollAng(){return _roll;}
-  float getPitchAng(){return _pitch;}
-  float getHeadAng(){return _heading;}
+  float get_roll_angle(){return _roll;}
+  float get_pitch_angle(){return _pitch;}
+  float get_head_angle(){return _heading;}
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
@@ -141,13 +141,13 @@ public:
 private:
   //---------------------------------------------------------------------------
   // PRIVATE FUNCTIONS
-  bool _initIMU(void) {
-    if (!_fxos.begin() || !_fxas.begin()) {
+  bool _init_IMU(void) {
+    if (!_fxos_accel_mag.begin() || !_fxas_gyro.begin()) {
       return false;
     }
-    _accel = _fxos.getAccelerometerSensor();
-    _gyro = &_fxas;
-    _mag = _fxos.getMagnetometerSensor();
+    _accel = _fxos_accel_mag.getAccelerometerSensor();
+    _gyro = &_fxas_gyro;
+    _mag = _fxos_accel_mag.getMagnetometerSensor();
 
     return true;
   }
@@ -157,20 +157,20 @@ private:
   bool _enabled = true;
 
   // Debug variables
-  uint8_t _debugCount = 0;
-  uint8_t _debugFreq = 10;
+  uint8_t _debug_count = 0;
+  uint8_t _debug_freq = 10;
 
   // Timers
-  float _IMUFilterFreq = 100.0; // Hz
-  int16_t _IMUUpdateTime = int16_t(1000.0/_IMUFilterFreq); // ms
-  Timer _IMUTimer = Timer();
+  float _IMU_filter_freq = 100.0; // Hz
+  int16_t _IMU_update_time = int16_t(1000.0/_IMU_filter_freq); // ms
+  Timer _IMU_timer = Timer();
 
   // Euler angle variables
   float _heading = 0.0, _roll = 0.0, _pitch = 0.0;
 
   // Objects for NXP IMU
-  Adafruit_FXOS8700 _fxos = Adafruit_FXOS8700(0x8700A, 0x8700B);
-  Adafruit_FXAS21002C _fxas = Adafruit_FXAS21002C(0x0021002C);
+  Adafruit_FXOS8700 _fxos_accel_mag = Adafruit_FXOS8700(0x8700A, 0x8700B);
+  Adafruit_FXAS21002C _fxas_gyro = Adafruit_FXAS21002C(0x0021002C);
 
   // Pointers to the sensor objects
   Adafruit_Sensor *_accel, *_gyro, *_mag;
@@ -184,6 +184,6 @@ private:
   Adafruit_Sensor_Calibration_SDFat _cal;
 
   // Event classes for holding sensor readings
-  sensors_event_t _aEvent, _gEvent, _mEvent;
+  sensors_event_t _accel_event, _gyro_event, _mag_event;
 };
 #endif //

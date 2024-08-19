@@ -176,5 +176,4 @@
  /home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/vl53l0x_platform_log.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionStrategy.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/BumperSensor.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Speaker.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MusicNotes.h
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Speaker.h

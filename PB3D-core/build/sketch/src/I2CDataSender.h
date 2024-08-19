@@ -123,16 +123,16 @@ private:
         in_state->state.wheelSpeedL = _move_manager->get_encoder_speed_left();
         in_state->state.wheelSpeedR = _move_manager->get_encoder_speed_right();
         // IMU
-        in_state->state.IMUHead = _IMU->getHeadAng();
-        in_state->state.IMUPitch = _IMU->getPitchAng();
-        in_state->state.IMURoll = _IMU->getRollAng();
+        in_state->state.IMUHead = _IMU->get_head_angle();
+        in_state->state.IMUPitch = _IMU->get_pitch_angle();
+        in_state->state.IMURoll = _IMU->get_roll_angle();
         // Navigation
-        in_state->state.navPosX = _navigator->getPosX();
-        in_state->state.navPosY = _navigator->getPosY();
-        in_state->state.navVelX = _navigator->getVelX();
-        in_state->state.navVelY = _navigator->getVelY();
-        in_state->state.navVelC = _navigator->getVelC();
-        in_state->state.navHead = _navigator->getHeading();
+        in_state->state.navPosX = _navigator->get_pos_x();
+        in_state->state.navPosY = _navigator->get_pos_y();
+        in_state->state.navVelX = _navigator->get_vel_x();
+        in_state->state.navVelY = _navigator->get_vel_y();
+        in_state->state.navVelC = _navigator->get_vel_c();
+        in_state->state.navHead = _navigator->get_heading();
     #else
         // TIME
         in_state->state.onTime = millis();

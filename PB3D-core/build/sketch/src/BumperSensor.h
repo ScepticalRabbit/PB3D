@@ -55,9 +55,9 @@ private:
     byte _bumper_read_byte = B00000000;
     bool _bumper_any_flag = false;
     bool _bumper_flags[_num_bumpers] = {false,false};
-    byte _bumper_bytes[_num_bumpers] = {B00000001,B00000010};
+    const byte _bumper_bytes[_num_bumpers] = {B00000001,B00000010};
 
     int8_t _bump_count = 0;
-    int8_t _bump_thres = 13;
+    const int8_t _bump_thres = 13;
 };
 #endif

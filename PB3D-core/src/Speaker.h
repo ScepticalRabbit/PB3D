@@ -11,27 +11,14 @@
 #define SPEAKER_H
 
 #include <Arduino.h>
+#include "PB3DConstants.h"
 #include "Timer.h"
-#include "MusicNotes.h"
 
 #define SPEAKER_POUT A0
 
-#define SPEAKER_OFF 0
-#define SPEAKER_BEEP 1
-#define SPEAKER_SLIDE 2
-#define SPEAKER_SNORE 3
-#define SPEAKER_GROWL 4
-#define SPEAKER_SCREECH 5
-#define SPEAKER_BABBLE 6
-
-#define SOUND_PLAY 0
-#define SOUND_PAUSE 1
-#define SOUND_END 2
 
 class Speaker{
 public:
-  //----------------------------------------------------------------------------
-  // CONSTRUCTOR
   Speaker(){}
 
   //----------------------------------------------------------------------------
@@ -127,25 +114,11 @@ public:
 
   //----------------------------------------------------------------------------
   // MAIN SOUND - ON
-  //----------------------------------------------------------------------------
   void makeSound(uint8_t inCode, uint16_t freq1, uint16_t freq2, uint16_t onDur, uint16_t offDur){
     if(_soundStart){
       _soundStart = false;
       _soundCount = SOUND_PLAY;
       _noteTimer.start(onDur);
-      /*
-      Serial.print(F("SPEAKER: start, SC:"));
-      Serial.print(inCode);
-      Serial.print(F(", F1:"));
-      Serial.print(freq1);
-      Serial.print(F(", F2:"));
-      Serial.print(freq2);
-      Serial.print(F(", OnD:"));
-      Serial.print(onDur);
-      Serial.print(F(", OffD:"));
-      Serial.print(offDur);
-      Serial.println();
-      */
     }
 
     if(_noteTimer.finished()){
@@ -185,8 +158,7 @@ public:
 
   //--------------------------------------------------------------------------------------------
   // MAIN SOUND - RESET
-  //--------------------------------------------------------------------------------------------
-  void reset(){
+   void reset(){
     //Serial.println(F("SPEAKER: ext reset."));
     _soundStart = true;
     _soundCount = SOUND_PLAY;
@@ -195,23 +167,20 @@ public:
 
   //--------------------------------------------------------------------------------------------
   // SUB-SOUND - BEEP
-  //--------------------------------------------------------------------------------------------
   void beep(uint16_t beepFreq){
       tone(SPEAKER_POUT,beepFreq);
   }
 
   //--------------------------------------------------------------------------------------------
   // SUB-SOUND - SLIDE
-  //--------------------------------------------------------------------------------------------
-  void slide(uint16_t startFreq, uint16_t endFreq, uint16_t onDur){
+   void slide(uint16_t startFreq, uint16_t endFreq, uint16_t onDur){
     uint16_t currFreq = _calcSlideFreq(startFreq,endFreq,onDur,_noteTimer.get_time());
     tone(SPEAKER_POUT,currFreq);
   }
 
   //--------------------------------------------------------------------------------------------
   // SUB-SOUND - GROWL
-  //--------------------------------------------------------------------------------------------
-  void growl(){
+   void growl(){
     _growlOscillator = !_growlOscillator;
     if(_growlOscillator){
       tone(SPEAKER_POUT,_growlFreq1);
@@ -223,7 +192,6 @@ public:
 
   //----------------------------------------------------------------------------
   // SUB-SOUND - RANDOM SCREECH
-  //----------------------------------------------------------------------------
   void screech(uint16_t freq1, uint16_t freq2){
     if(_randTimer.finished()){
       _randTimer.start(_screechRandInt);
@@ -234,15 +202,12 @@ public:
 
   //----------------------------------------------------------------------------
   // SUB-SOUND - SNORE
-  //----------------------------------------------------------------------------
-  void snore(){
+   void snore(){
     _snoreCurrFreq = round(float(_snoreStartFreq) + _snoreSlope*float(_noteTimer.get_time()));
     tone(SPEAKER_POUT,_snoreCurrFreq);
   }
 
 private:
-  //----------------------------------------------------------------------------
-  // Functions
   uint16_t _calcSlideFreq(uint16_t startNote, uint16_t endNote, uint16_t dur, uint16_t currTime){
     float slideSlope = (float(startNote)-float(endNote))/float(0.0-dur);
     uint16_t currFreq = round(float(startNote) + slideSlope*float(currTime));
@@ -260,8 +225,7 @@ private:
     return randFreq;
   }
 
-  //----------------------------------------------------------------------------
-  // Variables
+
   uint8_t _currSoundCode = SPEAKER_OFF;
   bool _soundStart = false;
   uint16_t _soundUpdateTime = 20;
@@ -278,9 +242,9 @@ private:
   uint16_t _soundDurs[_numDurs] = {100,100,100,100,100,100,100,100};
 
   // TIMERS
-  Timer _soundTimer;
-  Timer _songTimer;
-  Timer _noteTimer;
+  Timer _soundTimer = Timer();
+  Timer _songTimer = Timer();
+  Timer _noteTimer = Timer();
 
   // BEEP BEEP Variables
   /*

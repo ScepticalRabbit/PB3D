@@ -134,18 +134,18 @@ _collision_manager->set_enabled_flag(false); // Disable collision detection
 // TASK LEDS
 uint8_t seekCol = 1;
 if(_move_manager->get_look_curr_ang_ind() == 0){
-    //_task_manager->taskLEDCSV(_seek_colour,_seek_colour,255,_low_saturation,255,255);
-    _task_manager->taskLEDCSV(_seek_colour,_seek_colour,255,_low_saturation,0,255);
+    //_task_manager->task_LED_CSV(_seek_colour,_seek_colour,255,_low_saturation,255,255);
+    _task_manager->task_LED_CSV(_seek_colour,_seek_colour,255,_low_saturation,0,255);
 }
 else if(_move_manager->get_look_curr_ang_ind() == 1){
-    _task_manager->taskLEDCSV(_seek_colour,_seek_colour,_low_saturation,_low_saturation,255,255);
+    _task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,_low_saturation,255,255);
 }
 else if(_move_manager->get_look_curr_ang_ind() == 2){
-    //_task_manager->taskLEDCSV(_seek_colour,_seek_colour,_low_saturation,255,255,255);
-    _task_manager->taskLEDCSV(_seek_colour,_seek_colour,_low_saturation,255,255,0);
+    //_task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,255,255,255);
+    _task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,255,255,0);
 }
 else if(_move_manager->get_look_curr_ang_ind() == 3){
-    _task_manager->taskLEDCSV(_seek_colour,_seek_colour,_low_saturation,_low_saturation,255,255);
+    _task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,_low_saturation,255,255);
 }
 else{
     _task_manager->task_LED_off();
@@ -252,7 +252,7 @@ void TaskPounce::_lock_on(){
     }
     else{
         // Spool up - flash lights and wag tail - TODO
-        _task_manager->taskLEDCSV(_lock_colour,_lock_colour,_low_saturation,_low_saturation,255,255);
+        _task_manager->task_LED_CSV(_lock_colour,_lock_colour,_low_saturation,_low_saturation,255,255);
 
         // Turn to target
         _move_manager->turn_to_angle_ctrl_pos(_lock_on_ang);
@@ -294,7 +294,7 @@ void TaskPounce::_run_to_target(){
     }
 
     // TASK LEDS
-    _task_manager->taskLEDCSV(_run_colour,_run_colour,_low_saturation,_low_saturation,255,255);
+    _task_manager->task_LED_CSV(_run_colour,_run_colour,_low_saturation,_low_saturation,255,255);
 
     // EXIT CONDITION: Found target
     if(_collision_manager->get_laser_range(LASER_CENTRE) <= _run_range_limit){
@@ -338,7 +338,7 @@ void TaskPounce::_realign(){
     _collision_manager->set_enabled_flag(false); // Disable collision detection
 
     // TASK LEDS
-    _task_manager->taskLEDCSV(_realign_colour,_realign_colour,_low_saturation,_low_saturation,255,255);
+    _task_manager->task_LED_CSV(_realign_colour,_realign_colour,_low_saturation,_low_saturation,255,255);
 
     // Move to the randomly generate angle to reorient
     if(_realign_state == 0){ // Pre-pause

@@ -9,8 +9,6 @@
 
 #include "FilterMovAvg.h"
 
-//------------------------------------------------------------------------------
-// CONSTRUCTOR/DESTRUCTOR
 FilterMovAvg::FilterMovAvg(){
     _dataArray = new double[_window];
     for(uint8_t ii=0 ; ii<_window ; ii++){

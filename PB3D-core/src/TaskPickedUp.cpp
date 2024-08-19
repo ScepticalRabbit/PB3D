@@ -81,11 +81,11 @@ void TaskPickedUp::pickedUp(){
     // START ONLY
     if(_startPickedUpFlag){
         _startPickedUpFlag = false;
-        _patFlag = false;
-        _patComplete = false;
+        _pat_flag = false;
+        _pat_complete = false;
         _exitFlag = false;
         _patSensObj->reset();
-        _patSensObj->setButtonsEnabled(false);
+        _patSensObj->set_buttons_enabled(false);
 
         if(_panicFlag){
         _mood_manager->dec_mood_score();
@@ -137,16 +137,16 @@ void TaskPickedUp::pickedUp(){
     //--------------------------------------------
     // PAT SENSOR
     // Update the pat sensor
-    _patSensObj->acceptPats();
+    _patSensObj->accept_pats();
 
     // If patted once set the class flag
-    if(_patSensObj->getPatCount() >= 1){
-        _patFlag = true;
+    if(_patSensObj->get_pat_count() >= 1){
+        _pat_flag = true;
     }
 
-    if(_patSensObj->getPatFinished()){
+    if(_patSensObj->get_pat_finished()){
         // Set internal switch for exit condition
-        _patComplete = true;
+        _pat_complete = true;
         // Reset the pat sensor
         _patSensObj->reset();
 
@@ -161,7 +161,7 @@ void TaskPickedUp::pickedUp(){
 
     //--------------------------------------------
     // VIBRATION MOTOR: PURRING
-    if(_patFlag){
+    if(_pat_flag){
         // If patted stop panicking
         _panicFlag = false;
 
@@ -234,7 +234,7 @@ void TaskPickedUp::pickedUp(){
     if(_exitFlag && _isPickedUp){
         _isPickedUp = false;
         // Re-enable pat sensor buttons
-        _patSensObj->setButtonsEnabled(true);
+        _patSensObj->set_buttons_enabled(true);
         // Re-enable collision detection
         _collision_manager->set_enabled_flag(true);
         // Set task to pause
@@ -246,7 +246,7 @@ void TaskPickedUp::pickedUp(){
         if(prob<50){_mood_manager->set_mood(MOOD_SCARED);}
         else{_mood_manager->set_mood(MOOD_ANGRY);}
         }
-        else if(_patComplete){
+        else if(_pat_complete){
         if(prob<80){_mood_manager->set_mood(MOOD_HAPPY);}
         else{_mood_manager->set_mood(MOOD_NEUTRAL);}
         }

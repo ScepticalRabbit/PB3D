@@ -18,9 +18,6 @@
 
 #include "PB3DConstants.h"
 
-//---------------------------------------------------------------------------
-// LASER RANGER:
-//---------------------------------------------------------------------------
 class LaserSensor{
 public:
      LaserSensor(uint8_t in_addr, ELaserIndex laser_loc){

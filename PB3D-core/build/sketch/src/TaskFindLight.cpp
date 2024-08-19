@@ -81,7 +81,7 @@ void TaskFindLight::update(){
         _luxGradThres = _luxGradPcThres*_luxTAvg;
     }
 
-    if(_patSensObj->getButtonOneFlag()){
+    if(_patSensObj->get_button_one_flag()){
         _task_manager->set_task(TASK_FINDLIGHT);
         // Increase mood score when asked to play light game
         _mood_manager->inc_mood_score();

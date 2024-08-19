@@ -26,8 +26,6 @@
 
 class LaserManager{
 public:
-    //--------------------------------------------------------------------------
-    // CONSTRUCTOR: pass in pointers to main objects and other sensors
     LaserManager(){};
 
     //--------------------------------------------------------------------------

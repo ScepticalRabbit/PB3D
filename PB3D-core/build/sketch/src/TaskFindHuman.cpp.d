@@ -159,8 +159,8 @@
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterLowPass.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PID.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Speaker.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MusicNotes.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskInteract.h \
  /home/lloydf/Arduino/libraries/Grove_-_Capacitive_Touch_Slide_Sensor_CY8C40XX/Seeed_CY8C401XX.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskDance.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.h
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.h \
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DI2CAddresses.h

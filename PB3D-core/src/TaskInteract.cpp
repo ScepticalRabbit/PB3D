@@ -34,7 +34,7 @@ void TaskInteract::update(){
     if(!_enabled){return;}
 
     // SENSOR: Check for start of pat
-    if(_patSensObj->getButtonTwoFlag()){
+    if(_patSensObj->get_button_two_flag()){
         _task_manager->set_task(TASK_INTERACT);
         _task_manager->set_task_duration(_patTimeOut);
     }
@@ -54,7 +54,7 @@ void TaskInteract::interact(){
         _move_manager->reset_submove_timer();
 
         _patSensObj->reset();
-        _patSensObj->setButtonsEnabled(false);
+        _patSensObj->set_buttons_enabled(false);
         _patTimeOutTimer.start(_patTimeOut);
 
         _askFlag = true;
@@ -100,15 +100,15 @@ void TaskInteract::interact(){
 
     //-----------------------------------------------------------------------
     // ACCEPT PATS
-    _patSensObj->acceptPats();
+    _patSensObj->accept_pats();
 
-    if(_patSensObj->getPatFinished()){
+    if(_patSensObj->get_pat_finished()){
         // INTERACT EXIT CONDITION - reset start flag
         _interactStartFlag = true;
 
         // Reset the pat sensor
         _patSensObj->reset();
-        _patSensObj->setButtonsEnabled(true);
+        _patSensObj->set_buttons_enabled(true);
 
         // Update mood to happy
         int8_t prob = random(0,100);
@@ -136,7 +136,7 @@ void TaskInteract::interact(){
 
         // Reset the pat sensor
         _patSensObj->reset();
-        _patSensObj->setButtonsEnabled(true);
+        _patSensObj->set_buttons_enabled(true);
 
         // Update mood to sad
         int8_t prob = random(0,100);
@@ -157,5 +157,5 @@ void TaskInteract::interact(){
 // Get, set and reset
 void TaskInteract::setStartInteractFlag(bool inFlag){
     _interactStartFlag = inFlag;
-    _patSensObj->setPatFlag(inFlag);
+    _patSensObj->set_pat_flag(inFlag);
 }

@@ -160,5 +160,5 @@
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PID.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskDance.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Speaker.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MusicNotes.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.h
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.h \
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DI2CAddresses.h

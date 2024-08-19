@@ -155,6 +155,11 @@
     "Includepath": null
   },
   {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/IMUSensor.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
     "Sourcefile": "/home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserManager.cpp",
     "Include": "",
     "Includepath": null
@@ -176,6 +181,11 @@
   },
   {
     "Sourcefile": "/home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoveManager.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Navigation.cpp",
     "Include": "",
     "Includepath": null
   },

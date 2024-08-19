@@ -157,5 +157,4 @@
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterMovAvg.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterLowPass.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PID.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Speaker.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MusicNotes.h
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Speaker.h
