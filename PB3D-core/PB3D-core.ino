@@ -255,7 +255,7 @@ void setup() {
   }
   task_manager.assign_probability(mood_manager.get_mood());
 
-  tail.setState(TAIL_CENT);
+  tail.set_state(TAIL_CENT);
   Serial.println();
 
   // Final setup - increase I2C clock speed
@@ -342,7 +342,7 @@ void loop(){
   uint8_t inCodes[] = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
   speaker.set_sound_codes(inCodes,4);
   // Reset the tail to the central position - allow tasks and mood control
-  tail.setState(TAIL_CENT);
+  tail.set_state(TAIL_CENT);
 
   //----------------------------------------------------------------------------
   // MAIN DECISION TREE
@@ -366,7 +366,6 @@ void loop(){
     task_interact.interact();
   }
   else if(collision_manager.get_escape_flag() && !_debug_collisionOff){
-    //Serial.println("======================ESCAPE======================");
     escapeCollision(); // SEE FUNCTION DEF BELOW MAIN
   }
   else if(collision_manager.get_detected() && !_debug_collisionOff){
@@ -490,14 +489,14 @@ void loop(){
   // POST DECISION TREE OVERRIDES
   // Wag tail if happy - regardless of task use of tail
   if(mood_manager.get_mood() == MOOD_HAPPY){
-    tail.setState(TAIL_WAG_INT);
+    tail.set_state(TAIL_WAG_INT);
     // wagmovetime,wagoffset,_test_pauseTime,wagcount
-    tail.setWagParams(200,30,4000,6);
+    tail.set_wag_params(200,30,4000,6);
   }
 
   // If sleeping don't wag tail
   if(task_manager.get_task() == TASK_REST){
-    tail.setState(TAIL_CENT);
+    tail.set_state(TAIL_CENT);
   }
 
   //-------------------------------------------------------------------------

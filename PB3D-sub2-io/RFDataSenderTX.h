@@ -127,7 +127,7 @@ public:
   void setNewPacket(bool inFlag){_newPacket = inFlag;}
 
   void setStateByte(byte inByte, int16_t index){
-    _curr_state.dataPacket[index] = inByte;
+    _curr_state.data_packet[index] = inByte;
   }
 
   //---------------------------------------------------------------------------
@@ -149,7 +149,7 @@ private:
     _radioStart = millis();
 
     // Send data structure to the destination as a byte array
-    if (_rf69_manager.sendtoWait(_curr_state.dataPacket,PACKET_SIZE,DEST_RF_ADDR)) {
+    if (_rf69_manager.sendtoWait(_curr_state.data_packet,PACKET_SIZE,DEST_RF_ADDR)) {
       /*
       uint8_t len = sizeof(_buf);
       uint8_t from;

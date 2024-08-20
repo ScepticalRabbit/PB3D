@@ -20,7 +20,7 @@
 #if defined(STATEDATA_LASTCOL)
     struct stateData_t{
         // TIME
-        uint32_t onTime;
+        uint32_t on_time;
         // LAST COLLISION
         uint8_t check_vec[7];
         uint16_t ultrasonic_range;
@@ -31,14 +31,14 @@
 
     union dataPacket_t{
       stateData_t state;
-      byte dataPacket[sizeof(stateData_t)];
+      byte data_packet[sizeof(stateData_t)];
     };
 
     #define PACKET_SIZE sizeof(stateData_t)
 
     void _init_state_data(dataPacket_t* inState){
         // TIME
-        inState->state.onTime = 0;
+        inState->state.on_time = 0;
         // LAST COLLISION
         for(uint8_t ii=0;ii<7;ii++){
             inState->state.check_vec[ii] = 0;
@@ -57,7 +57,7 @@
         Serial.println();
         Serial.println(F("----------------------------------------"));
 
-        Serial.print(F("Time: ")); Serial.print(inState->state.onTime); Serial.print(F("; "));
+        Serial.print(F("Time: ")); Serial.print(inState->state.on_time); Serial.print(F("; "));
         Serial.println();
 
         Serial.println(F("CheckVec=[BL,BR,US,LL,LR,LU,LD,]"));
@@ -84,7 +84,7 @@
     }
 
     void _serial_log_data(dataPacket_t* inState){
-        Serial.print(inState->state.onTime); Serial.print(",");
+        Serial.print(inState->state.on_time); Serial.print(",");
         for(uint8_t ii=0;ii<7;ii++){
             Serial.print(inState->state.check_vec[ii]);Serial.print(",");
         }
@@ -103,72 +103,72 @@
 #elif defined(STATEDATA_NAV)
     struct stateData_t{
         // TIME
-        uint32_t onTime;
+        uint32_t on_time;
         // MOVE
-        float wheelSpeedL;
-        float wheelSpeedR;
+        float wheel_speed_left;
+        float wheel_speed_right;
         // IMU
-        float IMUHead;
-        float IMUPitch;
-        float IMURoll;
+        float IMU_heading;
+        float IMU_pitch;
+        float IMU_roll;
         // Navigation
-        float navPosX;
-        float navPosY;
-        float navVelX;
-        float navVelY;
-        float navVelC;
-        float navHead;
+        float nav_pos_x;
+        float nav_pos_y;
+        float nav_vel_x;
+        float nav_vel_y;
+        float nav_vel_c;
+        float nav_head;
     };
 
     union dataPacket_t{
       stateData_t state;
-      byte dataPacket[sizeof(stateData_t)];
+      byte data_packet[sizeof(stateData_t)];
     };
 
     #define PACKET_SIZE sizeof(stateData_t)
 
     void _initStateData(dataPacket_t* inState){
         // TIME
-        inState->state.onTime = 0;
+        inState->state.on_time = 0;
         // MOVE
-        inState->state.wheelSpeedL = 0.0;
-        inState->state.wheelSpeedR = 0.0;
+        inState->state.wheel_speed_left = 0.0;
+        inState->state.wheel_speed_right = 0.0;
         // IMU
-        inState->state.IMUHead = 0.0;
-        inState->state.IMUPitch = 0.0;
-        inState->state.IMURoll = 0.0;
+        inState->state.IMU_heading = 0.0;
+        inState->state.IMU_pitch = 0.0;
+        inState->state.IMU_roll = 0.0;
         // Navigation
-        inState->state.navPosX = 0.0;
-        inState->state.navPosY = 0.0;
-        inState->state.navVelX = 0.0;
-        inState->state.navVelY = 0.0;
-        inState->state.navVelC = 0.0;
-        inState->state.navHead = 0.0;
+        inState->state.nav_pos_x = 0.0;
+        inState->state.nav_pos_y = 0.0;
+        inState->state.nav_vel_x = 0.0;
+        inState->state.nav_vel_y = 0.0;
+        inState->state.nav_vel_c = 0.0;
+        inState->state.nav_head = 0.0;
     }
 
     void _print_state_data(dataPacket_t* inState){
         Serial.println();
         Serial.println(F("----------------------------------------"));
 
-        Serial.print(F("Time: ")); Serial.print(inState->state.onTime); Serial.print(F("; "));
+        Serial.print(F("Time: ")); Serial.print(inState->state.on_time); Serial.print(F("; "));
         Serial.println();
 
-        Serial.print(F("W_SpeedL: ")); Serial.print(inState->state.wheelSpeedL); Serial.print(F("; "));
-        Serial.print(F("W_SpeedR: ")); Serial.print(inState->state.wheelSpeedR); Serial.print(F("; "));
+        Serial.print(F("W_SpeedL: ")); Serial.print(inState->state.wheel_speed_left); Serial.print(F("; "));
+        Serial.print(F("W_SpeedR: ")); Serial.print(inState->state.wheel_speed_right); Serial.print(F("; "));
         Serial.println();
 
-        Serial.print(F("IMU,H: ")); Serial.print(inState->state.IMUHead); Serial.print(F("; "));
-        Serial.print(F(" P: ")); Serial.print(inState->state.IMUPitch); Serial.print(F("; "));
-        Serial.print(F(" R: ")); Serial.print(inState->state.IMURoll); Serial.print(F("; "));
+        Serial.print(F("IMU,H: ")); Serial.print(inState->state.IMU_heading); Serial.print(F("; "));
+        Serial.print(F(" P: ")); Serial.print(inState->state.IMU_pitch); Serial.print(F("; "));
+        Serial.print(F(" R: ")); Serial.print(inState->state.IMU_roll); Serial.print(F("; "));
         Serial.println();
 
-        Serial.print(F("NAV,PX: ")); Serial.print(inState->state.navPosX); Serial.print(F("; "));
-        Serial.print(F(" PY: ")); Serial.print(inState->state.navPosX); Serial.print(F("; "));
+        Serial.print(F("NAV,PX: ")); Serial.print(inState->state.nav_pos_x); Serial.print(F("; "));
+        Serial.print(F(" PY: ")); Serial.print(inState->state.nav_pos_x); Serial.print(F("; "));
         Serial.println();
 
-        Serial.print(F("NAV,VC: ")); Serial.print(inState->state.navVelC); Serial.print(F("; "));
-        Serial.print(F(" VX: ")); Serial.print(inState->state.navVelX); Serial.print(F("; "));
-        Serial.print(F(" VY: ")); Serial.print(inState->state.navVelX); Serial.print(F("; "));
+        Serial.print(F("NAV,VC: ")); Serial.print(inState->state.nav_vel_c); Serial.print(F("; "));
+        Serial.print(F(" VX: ")); Serial.print(inState->state.nav_vel_x); Serial.print(F("; "));
+        Serial.print(F(" VY: ")); Serial.print(inState->state.nav_vel_x); Serial.print(F("; "));
 
         Serial.println();
 
@@ -179,21 +179,21 @@
 #else // Default state data packet
     struct stateData_t{
         // TIME
-        uint32_t onTime;
+        uint32_t on_time;
         // MOOD
         int8_t mood;
-        int8_t moodScore;
+        int8_t mood_score;
         // TASK
         int8_t task;
         // MOVE
-        int8_t moveBasic;
-        int8_t moveCompound;
+        int8_t move_basic;
+        int8_t move_compound;
         bool escapeFlag;
         float set_forward_speed;
-        float wheelSpeedL;
-        float wheelSpeedR;
-        int32_t wheelECountL;
-        int32_t wheelECountR;
+        float wheel_speed_left;
+        float wheel_speed_right;
+        int32_t wheel_encoder_count_left;
+        int32_t wheel_encoder_count_right;
         // COLLISON
         bool colFlag;
         bool colBMPRs;
@@ -213,28 +213,28 @@
 
     union dataPacket_t{
       stateData_t state;
-      byte dataPacket[sizeof(stateData_t)];
+      byte data_packet[sizeof(stateData_t)];
     };
 
     #define PACKET_SIZE sizeof(stateData_t)
 
     void _initStateData(dataPacket_t* inState){
         // TIME
-        inState->state.onTime = 0;
+        inState->state.on_time = 0;
         // MOOD
         inState->state.mood = 0;
-        inState->state.moodScore = 0;
+        inState->state.mood_score = 0;
         // TASK
         inState->state.task = 0;
         // MOVE
-        inState->state.moveBasic = 0;
-        inState->state.moveCompound = 0;
+        inState->state.move_basic = 0;
+        inState->state.move_compound = 0;
         inState->state.escapeFlag = false;
         inState->state.set_forward_speed = 0.0;
-        inState->state.wheelSpeedL = 0.0;
-        inState->state.wheelSpeedR = 0.0;
-        inState->state.wheelECountL = 0;
-        inState->state.wheelECountR = 0;
+        inState->state.wheel_speed_left = 0.0;
+        inState->state.wheel_speed_right = 0.0;
+        inState->state.wheel_encoder_count_left = 0;
+        inState->state.wheel_encoder_count_right = 0;
         // COLLISON - Latches
         inState->state.colFlag = false;
         inState->state.colBMPRs = false;
@@ -257,24 +257,24 @@
         Serial.println();
         Serial.println(F("----------------------------------------"));
 
-        Serial.print(F("Time: ")); Serial.print(inState->state.onTime); Serial.print(F("; "));
+        Serial.print(F("Time: ")); Serial.print(inState->state.on_time); Serial.print(F("; "));
         Serial.print(F("Mood: ")); Serial.print(inState->state.mood); Serial.print(F("; "));
-        Serial.print(F("MoodSc: ")); Serial.print(inState->state.moodScore); Serial.print(F("; "));
+        Serial.print(F("MoodSc: ")); Serial.print(inState->state.mood_score); Serial.print(F("; "));
         Serial.print(F("TaskManager: ")); Serial.print(inState->state.task); Serial.print(F("; "));
         Serial.println();
 
-        Serial.print(F("MoveB: ")); Serial.print(inState->state.moveBasic); Serial.print(F("; "));
-        Serial.print(F("MoveC: ")); Serial.print(inState->state.moveCompound); Serial.print(F("; "));
+        Serial.print(F("MoveB: ")); Serial.print(inState->state.move_basic); Serial.print(F("; "));
+        Serial.print(F("MoveC: ")); Serial.print(inState->state.move_compound); Serial.print(F("; "));
         Serial.print(F("MoveEsc: ")); Serial.print(inState->state.escapeFlag); Serial.print(F("; "));
         Serial.println();
 
         Serial.print(F("FwdSpeed: ")); Serial.print(inState->state.set_forward_speed); Serial.print(F("; "));
-        Serial.print(F("W_SpeedL: ")); Serial.print(inState->state.wheelSpeedL); Serial.print(F("; "));
-        Serial.print(F("W_SpeedR: ")); Serial.print(inState->state.wheelSpeedR); Serial.print(F("; "));
+        Serial.print(F("W_SpeedL: ")); Serial.print(inState->state.wheel_speed_left); Serial.print(F("; "));
+        Serial.print(F("W_SpeedR: ")); Serial.print(inState->state.wheel_speed_right); Serial.print(F("; "));
         Serial.println();
 
-        Serial.print(F("W_EncCL: ")); Serial.print(inState->state.wheelECountL); Serial.print(F("; "));
-        Serial.print(F("W_EncCR: ")); Serial.print(inState->state.wheelECountR); Serial.print(F("; "));
+        Serial.print(F("W_EncCL: ")); Serial.print(inState->state.wheel_encoder_count_left); Serial.print(F("; "));
+        Serial.print(F("W_EncCR: ")); Serial.print(inState->state.wheel_encoder_count_right); Serial.print(F("; "));
         Serial.println();
 
         Serial.print(F("ColALL: ")); Serial.print(inState->state.colFlag); Serial.print(F("; "));
@@ -314,7 +314,7 @@
 
     typedef union dataPacket_t{
       stateData_t state;
-      byte dataPacket[sizeof(stateData_t)];
+      byte data_packet[sizeof(stateData_t)];
     };
 
     #define PACKET_SIZE sizeof(stateData_t)

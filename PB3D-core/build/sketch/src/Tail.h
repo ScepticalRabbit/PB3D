@@ -39,9 +39,9 @@ public:
   // BEGIN: called once during SETUP
   void begin(){
     // Servo - for wagging tail
-    _tailServo.attach(TAIL_SERVO_POUT);
+    _tail_servo.attach(TAIL_SERVO_POUT);
     // Timer start
-    _wagTimer.start(0);
+    _wag_timer.start(0);
   }
 
   //---------------------------------------------------------------------------
@@ -50,60 +50,60 @@ public:
     if(!_enabled){return;}
 
     // Update the tail servo based on the main timer
-    if(_updateTimer.finished()){
-      _updateTimer.start(_updateInt);
+    if(_update_timer.finished()){
+      _update_timer.start(_update_interval);
 
       // Decision tree based on tail state - set by tasks+mood
       if(_curr_state == TAIL_SET_POS){
-        _tailServo.write(_tailPosCurr);
+        _tail_servo.write(_tail_pos_curr);
       }
       else if(_curr_state == TAIL_WAG_CON){
-        wagContinuous();
+        wag_continuous();
       }
       else if(_curr_state == TAIL_WAG_INT){
-        wagInterval();
+        wag_interval();
       }
       else{
-        _tailServo.write(_tailPosCent);
+        _tail_servo.write(_tail_pos_cent);
       }
     }
   }
 
   //---------------------------------------------------------------------------
   // TAIL FUNCTIONS
-  void wagContinuous(){
-    if(_wagTimer.finished()){
-      _wagTimer.start(_wagMoveTime);
-      if(_wagSwitch){
-        _wagSwitch = !_wagSwitch;
-        _tailServo.write(_tailPosCent-_wagPosOffset);
+  void wag_continuous(){
+    if(_wag_timer.finished()){
+      _wag_timer.start(_wag_move_time);
+      if(_wag_switch){
+        _wag_switch = !_wag_switch;
+        _tail_servo.write(_tail_pos_cent-_wag_pos_offset);
       }
       else{
-        _wagSwitch = !_wagSwitch;
-        _tailServo.write(_tailPosCent+_wagPosOffset);
+        _wag_switch = !_wag_switch;
+        _tail_servo.write(_tail_pos_cent+_wag_pos_offset);
       }
     }
   }
 
-  void wagInterval(){
-    if(_wagTimer.finished()){
-      if(_wagCount<_wagCountLim){
-        _wagTimer.start(_wagMoveTime);
+  void wag_interval(){
+    if(_wag_timer.finished()){
+      if(_wag_count<_wag_count_limit){
+        _wag_timer.start(_wag_move_time);
 
-        if(_wagSwitch){
-          _wagSwitch = !_wagSwitch;
-          _tailServo.write(_tailPosCent-_wagPosOffset);
+        if(_wag_switch){
+          _wag_switch = !_wag_switch;
+          _tail_servo.write(_tail_pos_cent-_wag_pos_offset);
         }
         else{
-          _wagSwitch = !_wagSwitch;
-          _tailServo.write(_tailPosCent+_wagPosOffset);
-          _wagCount++;
+          _wag_switch = !_wag_switch;
+          _tail_servo.write(_tail_pos_cent+_wag_pos_offset);
+          _wag_count++;
         }
       }
       else{
-        _wagTimer.start(_wagPauseTime);
-        _tailServo.write(_tailPosCent);
-        _wagCount = 0;
+        _wag_timer.start(_wag_pause_time);
+        _tail_servo.write(_tail_pos_cent);
+        _wag_count = 0;
       }
     }
   }
@@ -116,36 +116,36 @@ public:
   // SET FUNCTIONS
   void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
-  void setState(uint8_t inState){_curr_state = inState;}
-  void setPos(int16_t inPos){_tailPosCurr = inPos;}
+  void set_state(uint8_t inState){_curr_state = inState;}
+  void set_pos(int16_t inPos){_tail_pos_curr = inPos;}
 
-  void setWagMoveTime(uint16_t inMoveTime){_wagMoveTime = inMoveTime;}
-  void setWagPosOffset(int16_t inOffset){_wagPosOffset = inOffset;}
-  void setWagPauseTime(uint16_t inPauseTime){_wagPauseTime = inPauseTime;}
-  void setWagCountLim(uint8_t inCountLim){_wagCountLim = inCountLim;}
+  void set_wag_move_time(uint16_t inMoveTime){_wag_move_time = inMoveTime;}
+  void set_wag_pos_offset(int16_t inOffset){_wag_pos_offset = inOffset;}
+  void set_wag_pause_time(uint16_t inPauseTime){_wag_pause_time = inPauseTime;}
+  void set_wag_count_lim(uint8_t inCountLim){_wag_count_limit = inCountLim;}
 
-  void setWagParams(uint16_t inMoveTime, int16_t inOffset, uint16_t inPauseTime, uint8_t inCountLim){
-    _wagMoveTime = inMoveTime;
-    _wagPosOffset = inOffset;
-    _wagPauseTime = inPauseTime;
-    _wagCountLim = inCountLim;
+  void set_wag_params(uint16_t inMoveTime, int16_t inOffset, uint16_t inPauseTime, uint8_t inCountLim){
+    _wag_move_time = inMoveTime;
+    _wag_pos_offset = inOffset;
+    _wag_pause_time = inPauseTime;
+    _wag_count_limit = inCountLim;
   }
 
-  void setWagConParams(uint16_t inMoveTime, int16_t inOffset){
-    _wagMoveTime = inMoveTime;
-    _wagPosOffset = inOffset;
+  void set_wag_con_params(uint16_t inMoveTime, int16_t inOffset){
+    _wag_move_time = inMoveTime;
+    _wag_pos_offset = inOffset;
   }
 
-  void setWagIntParams(uint16_t inMoveTime, int16_t inOffset, uint16_t inPauseTime, uint8_t inCountLim){
-    _wagMoveTime = inMoveTime;
-    _wagPosOffset = inOffset;
-    _wagPauseTime = inPauseTime;
-    _wagCountLim = inCountLim;
+  void set_wag_int_params(uint16_t inMoveTime, int16_t inOffset, uint16_t inPauseTime, uint8_t inCountLim){
+    _wag_move_time = inMoveTime;
+    _wag_pos_offset = inOffset;
+    _wag_pause_time = inPauseTime;
+    _wag_count_limit = inCountLim;
   }
 
   void reset(){
     _curr_state = TAIL_CENT;
-    _wagCount = 0;
+    _wag_count = 0;
   }
 
 private:
@@ -153,25 +153,25 @@ private:
   // CLASS VARIABLES
   bool _enabled = true;
 
-  Servo _tailServo;
+  Servo _tail_servo;
 
   uint8_t _curr_state = TAIL_CENT;
-  uint16_t _updateInt = 50;
-  Timer _updateTimer = Timer();
+  uint16_t _update_interval = 50;
+  Timer _update_timer = Timer();
 
   // MODE: SET POS
-  int16_t _tailPosCurr = 90;
-  int16_t _tailPosCent = 90;
+  int16_t _tail_pos_curr = 90;
+  int16_t _tail_pos_cent = 90;
 
   // MODE: WAG CONTINUOUS
-  bool _wagSwitch = true;
-  int16_t _wagPosOffset = 30;
-  uint16_t _wagMoveTime = 400;
-  Timer _wagTimer = Timer();
+  bool _wag_switch = true;
+  int16_t _wag_pos_offset = 30;
+  uint16_t _wag_move_time = 400;
+  Timer _wag_timer = Timer();
 
   // MODE: WAG INTERVAL
-  uint8_t _wagCountLim = 4;
-  uint8_t _wagCount = 0;
-  uint16_t _wagPauseTime = 4000;
+  uint8_t _wag_count_limit = 4;
+  uint8_t _wag_count = 0;
+  uint16_t _wag_pause_time = 4000;
 };
 #endif // END CLASS TAIL

@@ -90,7 +90,7 @@ public:
       uint8_t len = sizeof(_buf);
       uint8_t from;
 
-      if (_rf69Manager.recvfromAck(_curr_state.dataPacket, &len, &from)) {
+      if (_rf69Manager.recvfromAck(_curr_state.data_packet, &len, &from)) {
         _buf[len] = 0; // zero out remaining string
 
         #if defined(RFRX_DEBUG_PRINT)
@@ -155,10 +155,10 @@ private:
   // PRIVATE FUNCTIONS
   #if defined(RFRX_DEBUG_SPEED)
   void _DEBUG_PlotSpeed(){
-    Serial.print(_curr_state.state.onTime-_lastTime); Serial.print(",");
-    _lastTime = _curr_state.state.onTime;
-    Serial.print(_curr_state.state.wheelSpeedL); Serial.print(",");
-    Serial.print(_curr_state.state.wheelSpeedR); Serial.print(",");
+    Serial.print(_curr_state.state.on_time-_lastTime); Serial.print(",");
+    _lastTime = _curr_state.state.on_time;
+    Serial.print(_curr_state.state.wheel_speed_left); Serial.print(",");
+    Serial.print(_curr_state.state.wheel_speed_right); Serial.print(",");
     Serial.println();
   }
   #endif

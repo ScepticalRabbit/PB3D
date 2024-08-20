@@ -170,6 +170,14 @@ enum ESoundStatus{
 };
 
 //------------------------------------------------------------------------------
+// TAIL
+enum ETailCode{
+    TAIL_CENT = 0,
+    TAIL_SET_POS,
+    TAIL_WAG_CON,
+    TAIL_WAG_INT,
+};
+//------------------------------------------------------------------------------
 // TASK: Pounce
 enum ETaskPounce{
     POUNCE_SEEK = 0,

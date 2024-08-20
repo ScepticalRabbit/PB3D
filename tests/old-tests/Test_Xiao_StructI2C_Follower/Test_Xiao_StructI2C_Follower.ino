@@ -16,7 +16,7 @@ typedef struct stateData_t{
 
 typedef union dataPacket_t{
   stateData_t state;
-  byte dataPacket[sizeof(stateData_t)];
+  byte data_packet[sizeof(stateData_t)];
 };
 
 #define PACKET_SIZE sizeof(stateData_t)
@@ -38,7 +38,7 @@ void receiveEvent(int bytesRec){
   int16_t ii = 0;
   while(0<Wire.available()){
     if(ii < PACKET_SIZE){
-      _curr_state.dataPacket[ii] = Wire.read();
+      _curr_state.data_packet[ii] = Wire.read();
     }
     else{
       Wire.read();

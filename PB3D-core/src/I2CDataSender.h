@@ -66,7 +66,7 @@ public:
         _update_state_data(&_curr_state);
 
         Wire.beginTransmission(ADDR_FOLLOW_XIAO_1);
-        Wire.write(_curr_state.dataPacket,PACKET_SIZE);
+        Wire.write(_curr_state.data_packet,PACKET_SIZE);
         Wire.endTransmission();
 
         #if defined(I2CDATASENDER_DEBUG_PRINT)
@@ -93,10 +93,10 @@ private:
   // PRIVATE FUNCTIONS
 
   // UPDATE: only used by this class so not in the header
-  void _update_state_data(dataPacket_t* in_state){
+  void _update_state_data(UDataPacket* in_state){
 
     #if defined(STATEDATA_LASTCOL)
-        in_state->state.onTime = millis();
+        in_state->state.on_time = millis();
 
         for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
             in_state->state.check_bumpers[ii] = _last_col->check_bumpers[ii];
@@ -117,54 +117,38 @@ private:
 
     #elif defined(STATEDATA_NAV)
         // TIME
-        in_state->state.onTime = millis();
+        in_state->state.on_time = millis();
         // MOVE
-        in_state->state.wheelSpeedL = _move_manager->get_encoder_speed_left();
-        in_state->state.wheelSpeedR = _move_manager->get_encoder_speed_right();
+        in_state->state.wheel_speed_left = _move_manager->get_encoder_speed_left();
+        in_state->state.wheel_speed_right = _move_manager->get_encoder_speed_right();
         // IMU
-        in_state->state.IMUHead = _IMU->get_head_angle();
-        in_state->state.IMUPitch = _IMU->get_pitch_angle();
-        in_state->state.IMURoll = _IMU->get_roll_angle();
+        in_state->state.IMU_heading = _IMU->get_head_angle();
+        in_state->state.IMU_pitch = _IMU->get_pitch_angle();
+        in_state->state.IMU_roll = _IMU->get_roll_angle();
         // Navigation
-        in_state->state.navPosX = _navigator->get_pos_x();
-        in_state->state.navPosY = _navigator->get_pos_y();
-        in_state->state.navVelX = _navigator->get_vel_x();
-        in_state->state.navVelY = _navigator->get_vel_y();
-        in_state->state.navVelC = _navigator->get_vel_c();
-        in_state->state.navHead = _navigator->get_heading();
+        in_state->state.nav_pos_x = _navigator->get_pos_x();
+        in_state->state.nav_pos_y = _navigator->get_pos_y();
+        in_state->state.nav_vel_x = _navigator->get_vel_x();
+        in_state->state.nav_vel_y = _navigator->get_vel_y();
+        in_state->state.nav_vel_c = _navigator->get_vel_c();
+        in_state->state.nav_head = _navigator->get_heading();
     #else
         // TIME
-        in_state->state.onTime = millis();
+        in_state->state.on_time = millis();
         // MOOD
-        in_state->state.mood = _mood_manager->getMood();
-        in_state->state.moodScore = _mood_manager->get_mood_score();
+        in_state->state.mood = _mood_manager->get_mood();
+        in_state->state.mood_score = _mood_manager->get_mood_score();
         // TASK
         in_state->state.task = _task_manager->get_task();
         // MOVE
-        in_state->state.moveBasic = _move_manager->get_basic_move();
-        in_state->state.moveCompound = _move_manager->get_compound_move();
-        in_state->state.escapeFlag = _move_manager->get_escape_flag();
+        in_state->state.move_basic = _move_manager->get_basic_move();
+        in_state->state.move_compound = _move_manager->get_compound_move();
         in_state->state.set_forward_speed = _move_manager->get_forward_speed();
-        in_state->state.wheelSpeedL = _move_manager->get_encoder_speed_left();
-        in_state->state.wheelSpeedR = _move_manager->get_encoder_speed_left();
-        in_state->state.wheelECountL = _move_manager->get_encoder_count_left();
-        in_state->state.wheelECountR = _move_manager->get_encoder_count_right();
-        // COLLISON - Latches
-        in_state->state.colFlag = _collisionObj->get_detected();
-        in_state->state.colBMPRs = _collisionObj->get_bumper_flag();
-        in_state->state.colUSR = _collisionObj->getColUSFlag();
-        in_state->state.colLSRL = _collisionObj->getColLSRFlagL();
-        in_state->state.colLSRR = _collisionObj->getColLSRFlagR();
-        in_state->state.colLSRB = _collisionObj->getColLSRFlagB();
-        in_state->state.colLSRU = _collisionObj->getColLSRFlagU();
-        in_state->state.colLSRD = _collisionObj->getColLSRFlagD();
-        // COLLISION - Ranges
-        in_state->state.colUSRRng = _collisionObj->get_ultrasonic_range_mm();
-        in_state->state.colLSRLRng = _collisionObj->getLSRRangeL();
-        in_state->state.colLSRRRng = _collisionObj->getLSRRangeR();
-        in_state->state.colLSRBRng = _collisionObj->getLSRRangeB();
-        in_state->state.colLSRURng = _collisionObj->getLSRRangeU();
-        in_state->state.colLSRDRng = _collisionObj->getLSRRangeD();
+        in_state->state.wheel_speed_left = _move_manager->get_encoder_speed_left();
+        in_state->state.wheel_speed_right = _move_manager->get_encoder_speed_left();
+        in_state->state.wheel_encoder_count_left = _move_manager->get_encoder_count_left();
+        in_state->state.wheel_encoder_count_right = _move_manager->get_encoder_count_right();
+
     #endif
   }
 
@@ -184,7 +168,7 @@ private:
   bool _start_flag = true;
 
   // DATA PACKET
-  dataPacket_t _curr_state;
+  UDataPacket _curr_state;
   bool _data_switch = false;
 
   // I2C VARIABLES

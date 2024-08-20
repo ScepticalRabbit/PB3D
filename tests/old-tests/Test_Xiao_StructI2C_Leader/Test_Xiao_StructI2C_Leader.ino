@@ -16,7 +16,7 @@ typedef struct stateData_t{
 
 typedef union dataPacket_t{
   stateData_t state;
-  byte dataPacket[sizeof(stateData_t)];
+  byte data_packet[sizeof(stateData_t)];
 };
 
 #define PACKET_SIZE sizeof(stateData_t)
@@ -59,7 +59,7 @@ void loop(){
     _send_timer.start(0);
 
     Wire.beginTransmission(NERVSYS_ADDR);
-    Wire.write(_curr_state.dataPacket,PACKET_SIZE);
+    Wire.write(_curr_state.data_packet,PACKET_SIZE);
     Wire.endTransmission();
 
     Serial.print(F("I2C Send Time: "));

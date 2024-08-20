@@ -48,7 +48,7 @@ typedef struct stateData_t{
 
 typedef union dataPacket_t{
   stateData_t state;
-  byte dataPacket[sizeof(stateData_t)];
+  byte data_packet[sizeof(stateData_t)];
 };
 
 #define PACKET_SIZE sizeof(stateData_t)
@@ -126,7 +126,7 @@ public:
       printRFDataStruct();
 
       // Send data structure to the destination as a byte array
-      if (_rf69_manager.sendtoWait(_curr_state.dataPacket,PACKET_SIZE,DEST_RF_ADDR)) {
+      if (_rf69_manager.sendtoWait(_curr_state.data_packet,PACKET_SIZE,DEST_RF_ADDR)) {
         uint8_t len = sizeof(_buf);
         uint8_t from;
 
