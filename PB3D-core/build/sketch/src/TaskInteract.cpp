@@ -67,12 +67,12 @@ void TaskInteract::interact(){
 
     // Set the speaker codes on every loop
     uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-    _speaker->setSoundCodes(inCodes,4);
+    _speaker->set_sound_codes(inCodes,4);
     //uint16_t inFreqs[]  = {NOTE_C5,NOTE_C7,NOTE_C4,NOTE_G7,0,0,0,0};
     uint16_t inFreqs[]  = {NOTE_B4,NOTE_B6,NOTE_B3,NOTE_F7,0,0,0,0};
     uint16_t inDurs[]   = {200,200,300,200,0,0,0,0};
-    _speaker->setSoundFreqs(inFreqs,8);
-    _speaker->setSoundDurs(inDurs,8);
+    _speaker->set_sound_freqs(inFreqs,8);
+    _speaker->set_sound_durations(inDurs,8);
 
     // Check if we need to ask for a pat again
     if(_askSqueakTimer.finished()){

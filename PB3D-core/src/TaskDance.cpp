@@ -57,7 +57,7 @@ void TaskDance::dance(){
     // If needed set the speaker flags on every loop
     if(_speakerFlag){
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-        _speaker->setSoundCodes(inCodes,4);
+        _speaker->set_sound_codes(inCodes,4);
     }
 
     // Update the dance move at given time interval, should be 1/4 note
@@ -121,11 +121,11 @@ void TaskDance::_startDance(){
     if(_speakerFlag){
         _speaker->reset();
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-        _speaker->setSoundCodes(inCodes,4);
+        _speaker->set_sound_codes(inCodes,4);
         uint16_t inFreqs[]  = {NOTE_G4,NOTE_G7,NOTE_G5,NOTE_G7,0,0,0,0};
         uint16_t inDurs[]   = {200,150,300,150,0,0,0,0};
-        _speaker->setSoundFreqs(inFreqs,8);
-        _speaker->setSoundDurs(inDurs,8);
+        _speaker->set_sound_freqs(inFreqs,8);
+        _speaker->set_sound_durations(inDurs,8);
     }
 }
 

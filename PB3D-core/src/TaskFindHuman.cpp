@@ -77,11 +77,11 @@ void TaskFindHuman::findHuman(){
 
     // Set the speaker codes on every loop
     uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-    _speaker->setSoundCodes(inCodes,4);
+    _speaker->set_sound_codes(inCodes,4);
     uint16_t inFreqs[]  = {NOTE_A4,NOTE_A4,NOTE_A4,NOTE_CS7,0,0,0,0};
     uint16_t inDurs[]   = {300,0,200,0,0,0,0,0};
-    _speaker->setSoundFreqs(inFreqs,8);
-    _speaker->setSoundDurs(inDurs,8);
+    _speaker->set_sound_freqs(inFreqs,8);
+    _speaker->set_sound_durations(inDurs,8);
 
     //--------------------------------------------------------------------
     // Found you!

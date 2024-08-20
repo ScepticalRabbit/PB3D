@@ -108,12 +108,12 @@ void TaskPickedUp::pickedUp(){
 
         // Speaker updates
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_BEEP,SPEAKER_SLIDE,SPEAKER_BEEP};
-        _speaker->setSoundCodes(inCodes,4);
-        _speaker->setSoundFreqs(_panicFreqs,8);
+        _speaker->set_sound_codes(inCodes,4);
+        _speaker->set_sound_freqs(_panicFreqs,8);
         _panicDurs[_pauseInd] = _randPausePanic;
-        _speaker->setSoundDurs(_panicDurs,8);
+        _speaker->set_sound_durations(_panicDurs,8);
 
-        _callUpdateTime = _speaker->getTotalSoundDur();
+        _callUpdateTime = _speaker->get_total_sound_duration();
     }
     else{
         // MoodManager - Neutral
@@ -126,12 +126,12 @@ void TaskPickedUp::pickedUp(){
 
         // Speaker updates
         uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_SLIDE};
-        _speaker->setSoundCodes(inCodes,4);
-        _speaker->setSoundFreqs(_callFreqs,8);
+        _speaker->set_sound_codes(inCodes,4);
+        _speaker->set_sound_freqs(_callFreqs,8);
         _callDurs[_pauseInd] = _randPauseCall;
-        _speaker->setSoundDurs(_callDurs,8);
+        _speaker->set_sound_durations(_callDurs,8);
 
-        _callUpdateTime = _speaker->getTotalSoundDur();
+        _callUpdateTime = _speaker->get_total_sound_duration();
     }
 
     //--------------------------------------------
@@ -198,15 +198,15 @@ void TaskPickedUp::pickedUp(){
 
         if(_panicFlag){
         _panicDurs[_pauseInd] = _randPausePanic;
-        _speaker->setSoundDurs(_panicDurs,8);
+        _speaker->set_sound_durations(_panicDurs,8);
         }
         else{
         _callDurs[_pauseInd] = _randPauseCall;
-        _speaker->setSoundDurs(_callDurs,8);
+        _speaker->set_sound_durations(_callDurs,8);
         }
 
         // Restart call timer with new times
-        _callUpdateTime = _speaker->getTotalSoundDur();
+        _callUpdateTime = _speaker->get_total_sound_duration();
         _callTimer.start(_callUpdateTime);
 
         // Reset the speaker

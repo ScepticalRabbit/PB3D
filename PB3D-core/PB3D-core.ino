@@ -301,9 +301,9 @@ void loop(){
 
   //----------------------------------------------------------------------------
   // UPDATE OBJECTS - Each object has own internal timer
-  uint32_t startUpdate = micros();
+  uint32_t start_update = micros();
   collision_manager.update();
-  uint32_t endUpdate = micros();
+  uint32_t end_update = micros();
 
   speaker.update();
   pat_sensor.update();
@@ -340,7 +340,7 @@ void loop(){
   // RESET FLAGS
   // Reset the sound code and let the decision tree update it for the next loop
   uint8_t inCodes[] = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
-  speaker.setSoundCodes(inCodes,4);
+  speaker.set_sound_codes(inCodes,4);
   // Reset the tail to the central position - allow tasks and mood control
   tail.setState(TAIL_CENT);
 
@@ -350,6 +350,75 @@ void loop(){
   // NOTE: Rest and Interact are placed before collision avoidance to disable
   // handling of collisions while these modes are active - should be able to
   // make this smarter so certain things can re-enable collision avoidance
+  if(task_manager.get_task() == TASK_TEST){
+    //DEBUG_SpeedTest(_test_value,MOVE_B_FORWARD);
+  }
+  else if(task_manager.get_task() == TASK_REST){
+    task_rest.rest();
+  }
+  else if(task_manager.get_task() == TASK_PAUSE){
+    task_pause.pause();
+  }
+  else if(task_manager.get_task() == TASK_PICKEDUP){
+    task_picked_up.pickedUp();
+  }
+  else if(task_manager.get_task() == TASK_INTERACT){
+    task_interact.interact();
+  }
+  else if(collision_manager.get_escape_flag() && !_debug_collisionOff){
+    //Serial.println("======================ESCAPE======================");
+    escapeCollision(); // SEE FUNCTION DEF BELOW MAIN
+  }
+  else if(collision_manager.get_detected() && !_debug_collisionOff){
+    //DEBUG_PrintColFlags();
+    detectedCollision(); // SEE FUNCTION DEF BELOW MAIN
+  }
+  else if(task_manager.get_task() == TASK_DANCE){
+    if(task_manager.get_dance_update_flag()){
+      task_manager.set_dance_update_flag(false);
+      task_dance.setSpeakerFlag(false);
+    }
+    task_dance.dance();
+  }
+  else if(task_manager.get_task() == TASK_FINDHUMAN){
+    task_find_human.findHuman();
+  }
+  else if(task_manager.get_task() == TASK_FINDLIGHT){
+    task_find_light.findLight();
+  }
+  else if(task_manager.get_task() == TASK_FINDDARK){
+    task_find_light.findDark();
+  }
+  else if(task_manager.get_task() == TASK_FINDSOUND){
+    task_find_sound.findSound();
+  }
+  else if(task_manager.get_task() == TASK_POUNCE){
+    task_pounce.seek_and_pounce();
+  }
+  else if(task_manager.get_task() == TASK_TANTRUM){
+    if(task_tantrum.getCompleteFlag()){
+      task_manager.force_update();
+    }
+    else{
+      task_tantrum.haveTantrum();
+    }
+  }
+  else{
+    task_manager.task_LED_explore();
+
+    // MOVEMENT: Type Update
+    if(_debug_forceMove){
+      move_manager.update_move(_debug_moveType);
+    }
+    else{
+      move_manager.update_move();
+    }
+    // MOVEMENT: Call current movement function
+    move_manager.go();
+  }
+
+
+  //SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
   if(task_manager.get_task() == TASK_TEST){
     //DEBUG_SpeedTest(_test_value,MOVE_B_FORWARD);
   }
@@ -437,7 +506,7 @@ void loop(){
   //uint32_t endLoop = millis();
   //Serial.print(F("MAIN LOOP TOOK: "));
   //Serial.print(endLoop-start_loop); Serial.print(",");
-  //Serial.print(endUpdate-startUpdate); Serial.print(",");
+  //Serial.print(end_update-start_update); Serial.print(",");
   //Serial.println();
   //_test_firstLoop = false;
 
@@ -466,7 +535,7 @@ void escapeCollision(){
 
   if(collision_manager.get_beepbeep_flag()){
     uint8_t inCodes[] = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-    speaker.setSoundCodes(inCodes,4);
+    speaker.set_sound_codes(inCodes,4);
   }
 
   collision_manager.escape();
@@ -490,11 +559,11 @@ void detectedCollision(){
 
     speaker.reset();
     uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-    speaker.setSoundCodes(inCodes,4);
+    speaker.set_sound_codes(inCodes,4);
     uint16_t inFreqs[]  = {NOTE_G4,NOTE_FS4,NOTE_G4,NOTE_FS4,0,0,0,0};
-    speaker.setSoundFreqs(inFreqs,8);
+    speaker.set_sound_freqs(inFreqs,8);
     uint16_t inDurs[]   = {200,100,200,100,0,0,0,0};
-    speaker.setSoundDurs(inDurs,8);
+    speaker.set_sound_durations(inDurs,8);
   }
 
   // Call specific tasks that need to handle collision events

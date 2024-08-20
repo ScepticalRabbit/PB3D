@@ -45,14 +45,14 @@ if(_startTantrumFlag){
 
     _speaker->reset();
     uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-    _speaker->setSoundCodes(inCodes,4);
+    _speaker->set_sound_codes(inCodes,4);
     uint16_t inDurs[]   = {600,300,600,300,0,0,0,0};
-    _speaker->setSoundDurs(inDurs,8);
+    _speaker->set_sound_durations(inDurs,8);
 }
 
 // Set the speaker codes on every loop
 uint8_t inCodes[]   = {SPEAKER_GROWL,SPEAKER_GROWL,SPEAKER_OFF,SPEAKER_OFF};
-_speaker->setSoundCodes(inCodes,4);
+_speaker->set_sound_codes(inCodes,4);
 
 // Set the task LEDs on every loop regardless
 _task_manager->task_LED_tantrum();

@@ -39,7 +39,7 @@ void TaskRest::update(){
 void TaskRest::rest(){
     // Reset the speaker flags
     uint8_t inCodes[] = {SPEAKER_SNORE,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
-    _speaker->setSoundCodes(inCodes,4);
+    _speaker->set_sound_codes(inCodes,4);
 
     // Stop moving while sleeping
     _move_manager->stop();
