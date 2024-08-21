@@ -22,7 +22,7 @@ TaskRest::TaskRest(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void TaskRest::begin(){
-    _timerObj.start(0);
+    _timer.start(0);
 }
 
 //---------------------------------------------------------------------------
@@ -45,7 +45,7 @@ void TaskRest::rest(){
     // Stop moving while sleeping
     _move_manager->stop();
 
-    if(_timerObj.finished()){
+    if(_timer.finished()){
         if(_restLEDIncrease){
         // If we are increasing increment the LED intensity
         _restLEDVal = _restLEDVal+1;
@@ -68,7 +68,7 @@ void TaskRest::rest(){
         }
         }
         // Restart the timerr
-        _timerObj.start(_restUpdateTime);
+        _timer.start(_restUpdateTime);
         // Set the current LED value
         _task_manager->task_LED_rest(_restLEDVal);
     }
@@ -77,7 +77,7 @@ void TaskRest::rest(){
 //---------------------------------------------------------------------------
 // Get, set and reset
 void TaskRest::reset(){
-    _timerObj.start(0);
+    _timer.start(0);
     _restLEDVal = _restLEDMax;
     _restLEDIncrease = false;
     _speaker->reset();

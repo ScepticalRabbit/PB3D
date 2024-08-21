@@ -36,7 +36,7 @@ public:
   void setStartTantrumFlag();
 
   uint8_t getThreshold(){return _tantrumThreshold;}
-  uint16_t getDuration(){return _tantrum_duration;}
+  uint16_t get_duration(){return _tantrum_duration;}
   bool getCompleteFlag(){return _tantrumComplete;}
 
 private:

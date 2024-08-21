@@ -40,7 +40,7 @@ void TaskPickedUp::begin(){
     _purrOffTime = random(_purrOffTimeMin,_purrOffTimeMax);
 
     // Start all timers to trip on first use
-    _callTimer.start(0);
+    _call_timer.start(0);
     _purrTimer.start(0);
 }
 
@@ -191,7 +191,7 @@ void TaskPickedUp::pickedUp(){
 
     //--------------------------------------------
     // SPEAKER UPDATE
-    if(_callTimer.finished()){
+    if(_call_timer.finished()){
         // Generate random time parameters for speaker
         _randPauseCall = random(_randPauseCallMin,_randPauseCallMax);
         _randPausePanic = random(_randPausePanicMin,_randPausePanicMax);
@@ -207,7 +207,7 @@ void TaskPickedUp::pickedUp(){
 
         // Restart call timer with new times
         _callUpdateTime = _speaker->get_total_sound_duration();
-        _callTimer.start(_callUpdateTime);
+        _call_timer.start(_callUpdateTime);
 
         // Reset the speaker
         _speaker->reset();

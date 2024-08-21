@@ -48,7 +48,7 @@ private:
   Speaker* _speaker = NULL;
 
   // Timers
-  Timer _timerObj = Timer();
+  Timer _timer = Timer();
 
   // SUBTASK - REST Variables
   // Use to pulse LEDs during rest task

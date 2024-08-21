@@ -86,7 +86,7 @@ private:
   float _speedDiffFracLR = 0.75;
 
   // Timer for controlling how often the sensor is sampled
-  Timer _sensUpdateTimer = Timer();
+  Timer _sens_update_timer = Timer();
   uint16_t _sensUpdateTime = 500;
 
   Timer _clapEnableTimer = Timer();
@@ -97,7 +97,7 @@ private:
   uint16_t _envSampUpdateTime = 20000;
 
   // Variables for controlling calling: where are you?
-  Timer _callTimer = Timer();
-  uint16_t _callInterval = 4000;
+  Timer _call_timer = Timer();
+  uint16_t _call_interval = 4000;
 };
 #endif // FINDSOUND

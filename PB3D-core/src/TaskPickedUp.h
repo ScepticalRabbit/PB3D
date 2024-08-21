@@ -70,7 +70,7 @@ private:
 
   // Call timer and update time
   uint16_t _callUpdateTime = 2000;
-  Timer _callTimer = Timer();
+  Timer _call_timer = Timer();
 
   // Variables for purring
   byte _sendByte = B00001110;

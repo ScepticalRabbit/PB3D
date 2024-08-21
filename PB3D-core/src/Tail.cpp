@@ -12,7 +12,7 @@
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void Tail::begin(){
-    _tail_servo.attach(TAIL_SERVO_POUT);
+    _tail_servo.attach(TAIL_SERVO);
     _wag_timer.start(0);
 }
 

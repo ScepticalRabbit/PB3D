@@ -37,7 +37,7 @@ public:
 
   //---------------------------------------------------------------------------
   // FIND HUMAN - called during task decision tree
-  void findHuman();
+  void find_human();
 
   //---------------------------------------------------------------------------
   // Get, set and reset
@@ -46,7 +46,7 @@ public:
 
 private:
   //---------------------------------------------------------------------------
-  void _sensUpdateHumanIRSensor();
+  void _update_human_IR_sensor();
 
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
@@ -54,38 +54,38 @@ private:
   TaskManager* _task_manager = NULL;
   MoveManager* _move_manager = NULL;
   Speaker* _speaker = NULL;
-  TaskInteract* _taskInteractObj = NULL;
+  TaskInteract* _task_interact = NULL;
 
   // Timers
-  Timer _callTimer = Timer();
+  Timer _call_timer = Timer();
 
   // TASK - FIND HUMAN
   bool _enabled = true;
   bool _start_flag = false;
 
   // TASK - FIND HUMAN - Grove Human Sensor
-  AK9753 _movementSensor;
-  float _sensitivityPresence = 12.0;
-  float _sensitivityMovement = 11.5;
-  float _sensitivityTrack = 2.9;
-  uint16_t _detectInterval = 30; //milliseconds
-  PresenceDetector _presDetector = PresenceDetector(_movementSensor, _sensitivityPresence, _sensitivityMovement, _detectInterval);
+  AK9753 _movement_sens;
+  float _sensitivity_presence = 12.0;
+  float _sensitivity_movement = 11.5;
+  float _sensitivity_track = 2.9;
+  uint16_t _detect_interval = 30; //milliseconds
+  PresenceDetector _pres_detector = PresenceDetector(_movement_sens, _sensitivity_presence, _sensitivity_movement, _detect_interval);
 
-  Timer _sensUpdateTimer = Timer();
-  uint8_t _humIRSensUpdateTime = 50;
+  Timer _sens_update_timer = Timer();
+  uint8_t _IR_sens_update_time = 50;
   //NOTE: Sensors are organised clock wise with 1 closest to the grove connector
-  bool _IRPFlags1 = false;
-  bool _IRPFlags2 = false;
-  bool _IRPFlags3 = false;
-  bool _IRPFlags4 = false;
-  float _IRtDer1 =0.0;
-  float _IRtDer2 =0.0;
-  float _IRtDer3 =0.0;
-  float _IRtDer4 =0.0;
-  float _diffIR13=0.0;
-  float _diffIR24=0.0;
+  bool _IR_detect1 = false;
+  bool _IR_detect2 = false;
+  bool _IR_detect3 = false;
+  bool _IR_detect4 = false;
+  float _IR_deriv1 =0.0;
+  float _IR_deriv2 =0.0;
+  float _IR_deriv3 =0.0;
+  float _IR_deriv4 =0.0;
+  float _diff_IR_1to3=0.0;
+  float _diff_IR_2to4=0.0;
 
   // Variables for controlling calling: where you?
-  uint16_t _callInterval = 5000;
+  uint16_t _call_interval = 5000;
 };
 #endif // FINDHUMAN

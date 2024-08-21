@@ -9,15 +9,15 @@
 
 #include "TaskFindLight.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskFindLight::TaskFindLight(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
-            Speaker* inSpeaker, PatSensor* inPatSens){
-    _mood_manager = inMood;
-    _task_manager = inTask;
+
+TaskFindLight::TaskFindLight(MoodManager* mood, TaskManager* task,
+                             MoveManager* inMove, Speaker* speaker,
+                             PatSensor* pat_sens){
+    _mood_manager = mood;
+    _task_manager = task;
     _move_manager = inMove;
-    _speaker = inSpeaker;
-    _patSensObj = inPatSens;
+    _speaker = speaker;
+    _patSensObj = pat_sens;
 }
 
 //---------------------------------------------------------------------------
@@ -89,14 +89,14 @@ void TaskFindLight::update(){
 
 //---------------------------------------------------------------------------
 // FINDLIGHT - called during the main during decision tree
-void TaskFindLight::findLight(){
+void TaskFindLight::find_light(){
     _task_manager->task_LED_find_light();
     if(!_enabled){return;}
 
     _findLux(true);
 }
 
-void TaskFindLight::findDark(){
+void TaskFindLight::find_dark(){
     _task_manager->task_LED_find_dark();
     if(!_enabled){return;}
 
@@ -105,7 +105,7 @@ void TaskFindLight::findDark(){
 
 //---------------------------------------------------------------------------
 // Get, set and reset
-void TaskFindLight::resetGrad(){
+void TaskFindLight::reset_gradient(){
     _gradTimer.start(_gradUpdateTime);
     _gradMoveFlag = false;
     _luxLRAvgT0 = _luxAvg; // Set both T0 and T1 to current LR avg
@@ -134,12 +134,12 @@ void TaskFindLight::_findLux(bool seekLightFlag){
     // Check the temporal gradient
     if(abs(_luxGrad) >= _luxGradThres){
         if((_luxGrad > 0) && seekLightFlag){
-            resetGrad(); // Resets params but sets move flag false
+            reset_gradient(); // Resets params but sets move flag false
             _gradMoveTimeout.start(_gradMoveTimeoutTime);
             _gradMoveFlag = true; // Force the move flag back to false
         }
         else if((_luxGrad < 0) && !seekLightFlag){
-            resetGrad(); // Resets params but sets move flag false
+            reset_gradient(); // Resets params but sets move flag false
             _gradMoveTimeout.start(_gradMoveTimeoutTime);
             _gradMoveFlag = true; // Force the move flag back to false
         }
@@ -179,7 +179,7 @@ void TaskFindLight::_findLux(bool seekLightFlag){
 void TaskFindLight::_tcaSelect(uint8_t index) {
     if (index > 7) return;
 
-    Wire.beginTransmission(TCAADDR);
+    Wire.beginTransmission(ADDR_TCA_I2CMULTIPLEX);
     Wire.write(1 << index);
     Wire.endTransmission();
 }

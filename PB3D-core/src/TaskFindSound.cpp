@@ -28,10 +28,10 @@ void TaskFindSound::begin(){
     Wire.endTransmission();
 
     // Start all timers
-    _sensUpdateTimer.start(0);
+    _sens_update_timer.start(0);
     _clapEnableTimer.start(0);
     _envSampTimer.start(0);
-    _callTimer.start(0);
+    _call_timer.start(0);
 }
 
 //---------------------------------------------------------------------------
@@ -41,8 +41,8 @@ void TaskFindSound::update(){
     if(!_enabled){return;}
 
     // SENSOR: Ask follower Xiao for sound data
-    if(_sensUpdateTimer.finished()){
-        _sensUpdateTimer.start(_sensUpdateTime);
+    if(_sens_update_timer.finished()){
+        _sens_update_timer.start(_sensUpdateTime);
 
         // Request ear state data from follower board
         _I2CReadEarState();
@@ -113,7 +113,7 @@ void TaskFindSound::findSound(){
         _I2CSendSampEnvFlag();
 
         _speaker->reset();
-        _callTimer.start(_callInterval);
+        _call_timer.start(_call_interval);
     }
 
     //--------------------------------------------------------------------
@@ -128,9 +128,9 @@ void TaskFindSound::findSound(){
     _speaker->set_sound_durations(inDurs,8);
 
 
-    if(_callTimer.finished()){
+    if(_call_timer.finished()){
         _speaker->reset();
-        _callTimer.start(_callInterval);
+        _call_timer.start(_call_interval);
     }
 
     //--------------------------------------------------------------------

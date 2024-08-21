@@ -127,6 +127,12 @@ enum ECollisionStrategy{
 };
 
 //------------------------------------------------------------------------------
+// LEDs
+enum ELEDs{
+    NUM_PIX = 4
+};
+
+//------------------------------------------------------------------------------
 // Sensors: Bumpers
 enum EBumpCode{
     BUMP_LEFT = 0,
@@ -151,7 +157,6 @@ enum ELaserIndex{
     LASER_COUNT
 };
 
-
 //------------------------------------------------------------------------------
 // SPEAKER
 enum ESpeakerCode{
@@ -168,6 +173,27 @@ enum ESoundStatus{
     SOUND_PLAY = 0,
     SOUND_PAUSE = 1,
     SOUND_END = 2,
+};
+
+//------------------------------------------------------------------------------
+// TAIL
+enum ETailCode{
+    TAIL_CENT = 0,
+    TAIL_SET_POS,
+    TAIL_WAG_CON,
+    TAIL_WAG_INT,
+};
+
+//------------------------------------------------------------------------------
+// TASK: DANCE
+enum EDanceCode{
+    DANCE_STOP = 0,
+    DANCE_WIGGLE,
+    DANCE_FORBACK,
+    DANCE_CIRCLE,
+    DANCE_SPIN,
+    DANCE_TURN,
+    DANCE_NUM_MOVES
 };
 
 //------------------------------------------------------------------------------

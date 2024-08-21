@@ -10,13 +10,13 @@
 #define COLLISIONMANAGER_H
 
 #include <Arduino.h>
+
+#include "PB3DConstants.h"
+
 #include "MoodManager.h"
 #include "MoveManager.h"
 #include "TaskManager.h"
 #include "Timer.h"
-
-// Helper classes
-#include "PB3DConstants.h"
 #include "CollisionEscaper.h"
 #include "LaserManager.h"
 #include "BumperSensor.h"

@@ -10,7 +10,9 @@
 #ifndef TASKFINDLIGHT_H
 #define TASKFINDLIGHT_H
 
-#include <Wire.h> // I2C
+#include <Wire.h>
+#include <Adafruit_VEML7700.h>
+
 #include "MoodManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
@@ -18,18 +20,11 @@
 #include "Speaker.h"
 #include "PatSensor.h"
 
-// TASKFINDLIGHT: specific defines/includes
-#define TCAADDR 0x70
-#define LIGHTSENS_L 1
-#define LIGHTSENS_R 0
-#include "Adafruit_VEML7700.h"
 
 class TaskFindLight{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskFindLight(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
-                Speaker* inSpeaker, PatSensor* inPatSens);
+  TaskFindLight(MoodManager* mood, TaskManager* task, MoveManager* move,
+                Speaker* speaker, PatSensor* pat_sens);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -41,12 +36,12 @@ public:
 
   //---------------------------------------------------------------------------
   // FINDLIGHT - called during the main during decision tree
-  void findLight();
-  void findDark();
+  void find_light();
+  void find_dark();
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-  void resetGrad();
+  void reset_gradient();
   bool get_enabled_flag(){return _enabled;}
   float getLuxLeft(){return _luxLeft;}
   float getLuxRight(){return _luxRight;}

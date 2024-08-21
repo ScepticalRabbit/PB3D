@@ -17,7 +17,7 @@
 # 17 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 18 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 19 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
-# 20 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+
 # 21 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 22 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 23 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
@@ -39,6 +39,10 @@
 # 39 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 40 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 # 41 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 42 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 43 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 44 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
+# 45 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 
 //------------------------------------------------------------------------------
 // VARIABLES
@@ -82,7 +86,7 @@ uint32_t _test_timeStamp = 0;
 
 // MOOD LEDs
 Adafruit_NeoPixel_ZeroDMA leds = Adafruit_NeoPixel_ZeroDMA(
-  4, 6, ((1 << 6) | (1 << 4) | (0 << 2) | (2)) /*|< Transmit as G,R,B*/ + 0x0000 /*|< 800 KHz data transmission*/);
+  NUM_PIX, MOOD_LED_PIN, ((1 << 6) | (1 << 4) | (0 << 2) | (2)) /*|< Transmit as G,R,B*/ + 0x0000 /*|< 800 KHz data transmission*/);
 
 // MOTORS - Create the motor shield object with the default I2C address
 Adafruit_MotorShield motor_shield = Adafruit_MotorShield();
@@ -90,14 +94,9 @@ Adafruit_MotorShield motor_shield = Adafruit_MotorShield();
 //------------------------------------------------------------------------------
 // INTERNAL CLASSES
 
-// SENSORS AND CONTROLLERS
-static const int encoder_pinA_left = 2;
-static const int encoder_pinB_left = 3;
-static const int encoder_pinA_right = 4;
-static const int encoder_pinB_right = 5;
 // NOTE: encoders must be in main to attach interrupts
-Encoder encoder_left = Encoder(encoder_pinA_left,encoder_pinB_left);
-Encoder encoder_right = Encoder(encoder_pinA_right,encoder_pinB_right);
+Encoder encoder_left = Encoder(ENCODER_PINA_LEFT,ENCODER_PINB_LEFT);
+Encoder encoder_right = Encoder(ENCODER_PINA_RIGHT,ENCODER_PINB_RIGHT);
 
 // BASIC CLASSES
 MoveManager move_manager = MoveManager(&motor_shield,
@@ -225,8 +224,8 @@ void setup() {
   task_find_sound.begin();
 
   // Pass durations to the master task object
-  task_manager.set_dance_duration(task_dance.getDuration());
-  task_manager.set_tantrum_duration(task_tantrum.getDuration());
+  task_manager.set_dance_duration(task_dance.get_duration());
+  task_manager.set_tantrum_duration(task_tantrum.get_duration());
 
   // Start timers in the main program
   _test_timer.start(0);
@@ -234,13 +233,13 @@ void setup() {
   _test_pauseTimer.start(_test_pauseTime);
 
   // Encoders - Attach Interrupt Pins - CHANGE,RISING,FALLING
-  attachInterrupt(( encoder_pinA_left ),
+  attachInterrupt(( ENCODER_PINA_LEFT ),
                   updateEncLA,2);
-  attachInterrupt(( encoder_pinA_right ),
+  attachInterrupt(( ENCODER_PINA_RIGHT ),
                   updateEncRA,2);
-  attachInterrupt(( encoder_pinB_left ),
+  attachInterrupt(( ENCODER_PINB_LEFT ),
                   updateEncLB,2);
-  attachInterrupt(( encoder_pinB_right ),
+  attachInterrupt(( ENCODER_PINB_RIGHT ),
                   updateEncRB,2);
 
   //-------------------------------------------------------------------------
@@ -256,7 +255,7 @@ void setup() {
   }
   task_manager.assign_probability(mood_manager.get_mood());
 
-  tail.setState(0);
+  tail.set_state(TAIL_CENT);
   Serial.println();
 
   // Final setup - increase I2C clock speed
@@ -343,7 +342,7 @@ void loop(){
   uint8_t inCodes[] = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
   speaker.set_sound_codes(inCodes,4);
   // Reset the tail to the central position - allow tasks and mood control
-  tail.setState(0);
+  tail.set_state(TAIL_CENT);
 
   //----------------------------------------------------------------------------
   // MAIN DECISION TREE
@@ -376,18 +375,18 @@ void loop(){
   else if(task_manager.get_task() == TASK_DANCE){
     if(task_manager.get_dance_update_flag()){
       task_manager.set_dance_update_flag(false);
-      task_dance.setSpeakerFlag(false);
+      task_dance.set_speaker_flag(false);
     }
     task_dance.dance();
   }
   else if(task_manager.get_task() == TASK_FINDHUMAN){
-    task_find_human.findHuman();
+    task_find_human.find_human();
   }
   else if(task_manager.get_task() == TASK_FINDLIGHT){
-    task_find_light.findLight();
+    task_find_light.find_light();
   }
   else if(task_manager.get_task() == TASK_FINDDARK){
-    task_find_light.findDark();
+    task_find_light.find_dark();
   }
   else if(task_manager.get_task() == TASK_FINDSOUND){
     task_find_sound.findSound();
@@ -445,18 +444,18 @@ void loop(){
   else if(task_manager.get_task() == TASK_DANCE){
     if(task_manager.get_dance_update_flag()){
       task_manager.set_dance_update_flag(false);
-      task_dance.setSpeakerFlag(false);
+      task_dance.set_speaker_flag(false);
     }
     task_dance.dance();
   }
   else if(task_manager.get_task() == TASK_FINDHUMAN){
-    task_find_human.findHuman();
+    task_find_human.find_human();
   }
   else if(task_manager.get_task() == TASK_FINDLIGHT){
-    task_find_light.findLight();
+    task_find_light.find_light();
   }
   else if(task_manager.get_task() == TASK_FINDDARK){
-    task_find_light.findDark();
+    task_find_light.find_dark();
   }
   else if(task_manager.get_task() == TASK_FINDSOUND){
     task_find_sound.findSound();
@@ -490,14 +489,14 @@ void loop(){
   // POST DECISION TREE OVERRIDES
   // Wag tail if happy - regardless of task use of tail
   if(mood_manager.get_mood() == MOOD_HAPPY){
-    tail.setState(3);
+    tail.set_state(TAIL_WAG_INT);
     // wagmovetime,wagoffset,_test_pauseTime,wagcount
-    tail.setWagParams(200,30,4000,6);
+    tail.set_wag_params(200,30,4000,6);
   }
 
   // If sleeping don't wag tail
   if(task_manager.get_task() == TASK_REST){
-    tail.setState(0);
+    tail.set_state(TAIL_CENT);
   }
 
   //-------------------------------------------------------------------------
@@ -568,7 +567,7 @@ void detectedCollision(){
 
   // Call specific tasks that need to handle collision events
   if((task_manager.get_task() == TASK_FINDLIGHT)||(task_manager.get_task() == TASK_FINDDARK)){
-    task_find_light.resetGrad();
+    task_find_light.reset_gradient();
   }
   if((task_manager.get_task() == TASK_POUNCE) && (task_pounce.get_state() == POUNCE_RUN)){
     task_pounce.collision_reset_to_realign();

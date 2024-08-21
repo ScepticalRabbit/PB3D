@@ -11,10 +11,10 @@
 #define SPEAKER_H
 
 #include <Arduino.h>
+
+#include "PB3DPins.h"
 #include "PB3DConstants.h"
 #include "Timer.h"
-
-#define SPEAKER_POUT A0
 
 
 class Speaker{

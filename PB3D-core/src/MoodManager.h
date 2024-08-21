@@ -13,12 +13,10 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel_ZeroDMA.h>
 
+#include "PB3DPins.h"
 #include "PB3DConstants.h"
 #include "Timer.h"
 
-// Mood LEDs
-#define MOOD_PIN 6
-#define MOOD_NUMPIX 4
 
 class MoodManager{
 public:

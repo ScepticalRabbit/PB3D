@@ -123,10 +123,10 @@ void TaskInteract::interact(){
         // Update task to dance
         _task_manager->set_task(TASK_DANCE);
         // Overide default task duration to be a specific number of bars
-        _task_manager->set_task_duration(round(4*_taskDanceObj->getDanceBarMs()));
+        _task_manager->set_task_duration(round(4*_taskDanceObj->get_dance_bar_ms()));
         _task_manager->set_dance_update_flag(false);
-        _taskDanceObj->setStartFlag(true);
-        _taskDanceObj->setSpeakerFlag(true);
+        _taskDanceObj->set_start_flag(true);
+        _taskDanceObj->set_speaker_flag(true);
     }
 
     // Check for timeout, if so set mood to sad and explore

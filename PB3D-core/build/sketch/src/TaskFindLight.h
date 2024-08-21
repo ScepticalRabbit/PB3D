@@ -42,12 +42,12 @@ public:
 
   //---------------------------------------------------------------------------
   // FINDLIGHT - called during the main during decision tree
-  void findLight();
-  void findDark();
+  void find_light();
+  void find_dark();
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-  void resetGrad();
+  void reset_gradient();
   bool get_enabled_flag(){return _enabled;}
   float getLuxLeft(){return _luxLeft;}
   float getLuxRight(){return _luxRight;}

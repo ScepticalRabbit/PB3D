@@ -11,28 +11,20 @@
 #define TASKDANCE_H
 
 #include <Arduino.h>
+
+#include "PB3DConstants.h"
+
 #include "MoodManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
 #include "Speaker.h"
 #include "Timer.h"
 
-#define DANCE_STOP 0
-#define DANCE_WIGGLE 1
-#define DANCE_FORBACK 2
-#define DANCE_CIRCLE 3
-#define DANCE_SPIN 4
-#define DANCE_TURN 5
-// NOTE: increment this for random generator
-#define DANCE_NUM_MOVES 6
 
-//---------------------------------------------------------------------------
 class TaskDance{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskDance(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
-            Speaker* inSpeaker);
+  TaskDance(MoodManager* mood, TaskManager* task, MoveManager* move,
+            Speaker* speaker);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -48,51 +40,44 @@ public:
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-  float getDanceBarMs(){return _danceBarMs;}
-  uint32_t getDuration(){return _dance_duration;}
-  void setStartFlag(bool inFlag){_danceStartFlag = inFlag;}
-  bool getStartFlag(){return _danceStartFlag;}
-  bool getSpeakerFlag(){return _speakerFlag;}
-  void setSpeakerFlag(bool inFlag){_speakerFlag = inFlag;}
+  float get_dance_bar_ms(){return _dance_bar_ms;}
+  uint32_t get_duration(){return _dance_duration;}
+  void set_start_flag(bool flag){_dance_start = flag;}
+  bool get_start_flag(){return _dance_start;}
+  bool get_speaker_flag(){return _speaker_flag;}
+  void set_speaker_flag(bool flag){_speaker_flag = flag;}
 
 private:
-  //---------------------------------------------------------------------------
-  // PRIVATE FUNCTIONS
-  void _startDance();
-  void _generateTempo();
-  void _generateDance();
-  void _updateDance();
+  void _start_dance();
+  void _generate_tempo();
+  void _generate_dance();
+  void _update_dance();
 
-  //---------------------------------------------------------------------------
-  // MAIN OBJECT POINTERS
   MoodManager* _mood_manager = NULL;
   TaskManager* _task_manager = NULL;
   MoveManager* _move_manager = NULL;
   Speaker* _speaker = NULL;
 
-  //---------------------------------------------------------------------------
-  // TASK - DANCE Variables
-  // Timers
-  Timer _timerObj = Timer();
-  // Need to work out how to create complex move sets with pauses
-  // Wiggle left, Stop, Wiggle Right, Stop etc
-  float _danceBPM = 140.0;
-  float _dance4NoteMs = (60.0/_danceBPM)*1000.0;
-  float _danceBarMs = _dance4NoteMs*4.0;
-  uint8_t _danceNumBars = 8;
-  uint32_t _dance_duration = uint32_t(_danceBarMs*float(_danceNumBars));
 
-  int16_t _danceBPMMin = 120, _danceBPMMax = 180;
-  uint8_t _danceCurrMove = 0;
-  uint8_t _danceCurrBar = 0;
-  uint8_t _danceMoveInd = 0;
-  uint8_t _danceNumMoves = 8;
-  uint8_t _danceMoveVec[8] = {1,3,1,3,1,3,1,3};
-  bool _danceStartFlag = true;
+  Timer _timer = Timer();
+  float _dance_bpm = 140.0;
+  float _dance_4note_ms = (60.0/_dance_bpm)*1000.0;
+  float _dance_bar_ms = _dance_4note_ms*4.0;
+  uint8_t _dance_num_bars = 8;
+  uint32_t _dance_duration = uint32_t(_dance_bar_ms*float(_dance_num_bars));
 
-  int8_t _danceTurnDir = MOVE_B_LEFT;
-  int8_t _danceSpinDir = MOVE_B_LEFT;
+  int16_t _dance_bpm_min = 120;
+  int16_t _dance_bpm_max = 180;
+  uint8_t _dance_curr_move = 0;
+  uint8_t _dance_curr_bar = 0;
+  uint8_t _dance_move_ind = 0;
+  uint8_t _dance_num_moves = 8;
+  uint8_t _dance_move_vec[8] = {1,3,1,3,1,3,1,3};
+  bool _dance_start = true;
 
-  bool _speakerFlag = false;
+  int8_t _dance_turn_dir = MOVE_B_LEFT;
+  int8_t _dance_spin_dir = MOVE_B_LEFT;
+
+  bool _speaker_flag = false;
 };
 #endif // TASKDANCE

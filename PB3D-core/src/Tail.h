@@ -13,6 +13,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 
+#include "PB3DPins.h"
 #include "PB3DConstants.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
@@ -20,8 +21,6 @@
 #include "Speaker.h"
 
 #include <Servo.h>
-
-#define TAIL_SERVO_POUT 8
 
 
 class Tail{
