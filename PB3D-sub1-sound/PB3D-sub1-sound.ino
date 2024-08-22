@@ -382,10 +382,10 @@ void locSound(){
     Serial.print(", TDiff: ");
     Serial.print(soundLRTimeDiff);
     Serial.print(", M: ");
-    if(_earState==EAR_COM_FORWARD){Serial.print("F");}
-    else if(_earState==EAR_COM_LEFT){Serial.print("L");}
-    else if(_earState==EAR_COM_RIGHT){Serial.print("R");}
-    else if(_earState==EAR_COM_SENV){Serial.print("E");}
+    if(_ear_state==EAR_COM_FORWARD){Serial.print("F");}
+    else if(_ear_state==EAR_COM_LEFT){Serial.print("L");}
+    else if(_ear_state==EAR_COM_RIGHT){Serial.print("R");}
+    else if(_ear_state==EAR_COM_SENV){Serial.print("E");}
     else{Serial.print("N");}
     Serial.println();
     */

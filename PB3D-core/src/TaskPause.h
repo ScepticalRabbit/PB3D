@@ -19,10 +19,8 @@
 
 class TaskPause{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPause(CollisionManager* inCollision, TaskManager* inTask,
-            MoveManager* inMove, Speaker* inSpeaker);
+  TaskPause(CollisionManager* collision, TaskManager* task,
+            MoveManager* move, Speaker* speaker);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -51,8 +49,9 @@ private:
 
   // TASK - PAUSE
   bool _enabled = true;
-  Timer _pauseTimer = Timer();
-  uint16_t _pauseDur = 2000;
-  uint16_t _pauseDurMin = 2000, _pauseDurMax = 4000;
+  Timer _pause_timer = Timer();
+  uint16_t _pause_dur = 2000;
+  const uint16_t _pause_dur_min = 2000;
+  const uint16_t _pause_dur_max = 4000;
 };
 #endif // PAUSE

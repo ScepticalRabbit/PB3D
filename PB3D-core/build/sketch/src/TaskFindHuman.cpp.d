@@ -141,6 +141,7 @@
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/USB/SAMD21_USBDevice.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/USB/USB_host.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/USB/samd21_host.h \
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DI2CAddresses.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoodManager.h \
  /home/lloydf/Arduino/libraries/Adafruit_DMA_neopixel_library/Adafruit_NeoPixel_ZeroDMA.h \
  /home/lloydf/Arduino/libraries/Adafruit_NeoPixel/Adafruit_NeoPixel.h \
@@ -163,5 +164,4 @@
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskInteract.h \
  /home/lloydf/Arduino/libraries/Grove_-_Capacitive_Touch_Slide_Sensor_CY8C40XX/Seeed_CY8C401XX.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskDance.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DI2CAddresses.h
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.h

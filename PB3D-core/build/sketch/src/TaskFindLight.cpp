@@ -10,45 +10,42 @@
 
 #include "TaskFindLight.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskFindLight::TaskFindLight(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
-            Speaker* inSpeaker, PatSensor* inPatSens){
-    _mood_manager = inMood;
-    _task_manager = inTask;
+
+TaskFindLight::TaskFindLight(MoodManager* mood, TaskManager* task,
+                             MoveManager* inMove, Speaker* speaker,
+                             PatSensor* pat_sens){
+    _mood_manager = mood;
+    _task_manager = task;
     _move_manager = inMove;
-    _speaker = inSpeaker;
-    _patSensObj = inPatSens;
+    _speaker = speaker;
+    _pat_sensor = pat_sens;
 }
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void TaskFindLight::begin(){
     // LEFT light sensor
-    _tcaSelect(LIGHTSENS_L);
-    if(!_lightSensL.begin(&Wire)) {
+    _multiplex_select(LIGHTSENS_L);
+    if(!_light_sens_left.begin(&Wire)) {
         Serial.println(F("TASKFINDLIGHT: Left light sensor NOT found."));
         _enabled = false;
-        //while(true){};
     }
     Serial.println(F("TASKFINDLIGHT: Left light sensor found."));
-    _lightSensL.setGain(VEML7700_GAIN_1);
-    _lightSensL.setIntegrationTime(VEML7700_IT_200MS);
+    _light_sens_left.setGain(VEML7700_GAIN_1);
+    _light_sens_left.setIntegrationTime(VEML7700_IT_200MS);
 
     // RIGHT light sensor
-    _tcaSelect(LIGHTSENS_R);
-    if(!_lightSensR.begin(&Wire)) {
+    _multiplex_select(LIGHTSENS_R);
+    if(!_light_sens_right.begin(&Wire)) {
         Serial.println(F("TASKFINDLIGHT: Right light sensor NOT found."));
         _enabled = false;
-        //while(true){};
     }
     Serial.println(F("TASKFINDLIGHT: Right light sensor found."));
-    _lightSensR.setGain(VEML7700_GAIN_1);
-    _lightSensR.setIntegrationTime(VEML7700_IT_200MS);
+    _light_sens_right.setGain(VEML7700_GAIN_1);
+    _light_sens_right.setIntegrationTime(VEML7700_IT_200MS);
 
-    // Start timers
-    _senseTimer.start(_senseUpdateTime);
-    _gradTimer.start(_gradUpdateTime);
+    _sense_timer.start(_sens_update_time);
+    _gradient_timer.start(_gradient_update_time);
 }
 
 //---------------------------------------------------------------------------
@@ -56,34 +53,33 @@ void TaskFindLight::begin(){
 void TaskFindLight::update(){
     if(!_enabled){return;}
 
-    if(_senseTimer.finished()){
-        _senseTimer.start(_senseUpdateTime);
+    if(_sense_timer.finished()){
+        _sense_timer.start(_sens_update_time);
 
-        _tcaSelect(LIGHTSENS_L);
-        _luxLeft = _lightSensL.readLux(VEML_LUX_NORMAL_NOWAIT);
-        _tcaSelect(LIGHTSENS_R);
-        _luxRight = _lightSensR.readLux(VEML_LUX_NORMAL_NOWAIT);
+        _multiplex_select(LIGHTSENS_L);
+        _lux_left = _light_sens_left.readLux(VEML_LUX_NORMAL_NOWAIT);
+        _multiplex_select(LIGHTSENS_R);
+        _lux_right = _light_sens_right.readLux(VEML_LUX_NORMAL_NOWAIT);
 
-        _luxDiff = _luxLeft-_luxRight;
-        _luxAvg = (_luxLeft+_luxRight)/2;
-        _luxThresMid = _luxAvg*_luxPcThresMid;
-        _luxThresStr = _luxAvg*_luxPcThresStr;
+        _lux_diff = _lux_left-_lux_right;
+        _lux_avg = (_lux_left+_lux_right)/2;
+        _lux_threshold_mid = _lux_avg*_lux_percent_threshold_mid;
+        _lux_thres_str = _lux_avg*_lux_percent_thres_str;
     }
 
-    if(_gradTimer.finished()){
-        _gradTimer.start(_gradUpdateTime);
+    if(_gradient_timer.finished()){
+        _gradient_timer.start(_gradient_update_time);
 
-        _luxLRAvgT0 = _luxLRAvgT1;
-        _luxLRAvgT1 = _luxAvg;
+        _lux_avg_time0 = _lux_avg_time1;
+        _lux_avg_time1 = _lux_avg;
 
-        _luxGrad = _luxLRAvgT1 - _luxLRAvgT0;
-        _luxTAvg = (_luxLRAvgT1 + _luxLRAvgT0)/2;
-        _luxGradThres = _luxGradPcThres*_luxTAvg;
+        _lux_grad = _lux_avg_time1 - _lux_avg_time0;
+        _lux_time_avg = (_lux_avg_time1 + _lux_avg_time0)/2;
+        _lux_grad_thres = _lux_grad_percent_thres*_lux_time_avg;
     }
 
-    if(_patSensObj->get_button_one_flag()){
+    if(_pat_sensor->get_button_one_flag()){
         _task_manager->set_task(TASK_FINDLIGHT);
-        // Increase mood score when asked to play light game
         _mood_manager->inc_mood_score();
     }
 }
@@ -94,68 +90,68 @@ void TaskFindLight::find_light(){
     _task_manager->task_LED_find_light();
     if(!_enabled){return;}
 
-    _findLux(true);
+    _find_lux(SEEK_LIGHT);
 }
 
 void TaskFindLight::find_dark(){
     _task_manager->task_LED_find_dark();
     if(!_enabled){return;}
 
-    _findLux(false);
+    _find_lux(SEEK_DARK);
 }
 
 //---------------------------------------------------------------------------
 // Get, set and reset
 void TaskFindLight::reset_gradient(){
-    _gradTimer.start(_gradUpdateTime);
-    _gradMoveFlag = false;
-    _luxLRAvgT0 = _luxAvg; // Set both T0 and T1 to current LR avg
-    _luxLRAvgT1 = _luxAvg;
-    _luxGrad = _luxLRAvgT1 - _luxLRAvgT0;
-    _luxTAvg = (_luxLRAvgT1 + _luxLRAvgT0)/2;
-    _luxGradThres = _luxGradPcThres*_luxTAvg;
+    _gradient_timer.start(_gradient_update_time);
+    _grad_move_flag = false;
+    _lux_avg_time0 = _lux_avg; // Set both T0 and T1 to current LR avg
+    _lux_avg_time1 = _lux_avg;
+    _lux_grad = _lux_avg_time1 - _lux_avg_time0;
+    _lux_time_avg = (_lux_avg_time1 + _lux_avg_time0)/2;
+    _lux_grad_thres = _lux_grad_percent_thres*_lux_time_avg;
 }
 
 //---------------------------------------------------------------------------
 // PRIVATE FUNCTIONS
 
-void TaskFindLight::_findLux(bool seekLightFlag){
+void TaskFindLight::_find_lux(EFindLight seekLightFlag){
     // Check if diff thresholds tripped and set turn rad based on threshold
     bool thresTrip = false;
     float speedDiffFrac = 0.6;
-    if(abs(_luxDiff) >= _luxThresMid){
+    if(abs(_lux_diff) >= _lux_threshold_mid){
         thresTrip = true;
         speedDiffFrac = 0.6;
     }
-    else if(abs(_luxDiff) >= _luxThresStr){
+    else if(abs(_lux_diff) >= _lux_thres_str){
         thresTrip = true;
         speedDiffFrac = 0.9;
     }
 
     // Check the temporal gradient
-    if(abs(_luxGrad) >= _luxGradThres){
-        if((_luxGrad > 0) && seekLightFlag){
+    if(abs(_lux_grad) >= _lux_grad_thres){
+        if((_lux_grad > 0) && seekLightFlag){
             reset_gradient(); // Resets params but sets move flag false
-            _gradMoveTimeout.start(_gradMoveTimeoutTime);
-            _gradMoveFlag = true; // Force the move flag back to false
+            _grad_move_timeout.start(_grad_move_timeout_time);
+            _grad_move_flag = true; // Force the move flag back to false
         }
-        else if((_luxGrad < 0) && !seekLightFlag){
+        else if((_lux_grad < 0) && !seekLightFlag){
             reset_gradient(); // Resets params but sets move flag false
-            _gradMoveTimeout.start(_gradMoveTimeoutTime);
-            _gradMoveFlag = true; // Force the move flag back to false
+            _grad_move_timeout.start(_grad_move_timeout_time);
+            _grad_move_flag = true; // Force the move flag back to false
         }
     }
 
     // If either threshold was tripped then turn
-    if(_gradMoveFlag){
+    if(_grad_move_flag){
         _move_manager->turn_to_angle_ctrl_pos(180.0);
 
-        if(_move_manager->get_pos_PID_attained_set_point() || _gradMoveTimeout.finished()){
-            _gradMoveFlag = false;
+        if(_move_manager->get_pos_PID_attained_set_point() || _grad_move_timeout.finished()){
+            _grad_move_flag = false;
         }
     }
     else if(thresTrip){
-        if(_luxDiff > 0){
+        if(_lux_diff > 0){
             if(seekLightFlag){ // Turn towards light
                 _move_manager->forward_left_diff_frac(speedDiffFrac);
             }
@@ -177,10 +173,10 @@ void TaskFindLight::_findLux(bool seekLightFlag){
     }
 }
 
-void TaskFindLight::_tcaSelect(uint8_t index) {
+void TaskFindLight::_multiplex_select(uint8_t index) {
     if (index > 7) return;
 
-    Wire.beginTransmission(TCAADDR);
+    Wire.beginTransmission(ADDR_TCA_I2CMULTIPLEX);
     Wire.write(1 << index);
     Wire.endTransmission();
 }

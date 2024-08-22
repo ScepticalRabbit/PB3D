@@ -220,7 +220,7 @@ void setup() {
   task_pause.begin();
 
   // Make sure all the laser sensors are left on
-  task_find_sound.setSendByte(62);
+  task_find_sound.set_send_byte(62);
   task_find_sound.begin();
 
   // Pass durations to the master task object
@@ -389,7 +389,7 @@ void loop(){
     task_find_light.find_dark();
   }
   else if(task_manager.get_task() == TASK_FINDSOUND){
-    task_find_sound.findSound();
+    task_find_sound.find_sound();
   }
   else if(task_manager.get_task() == TASK_POUNCE){
     task_pounce.seek_and_pounce();
@@ -458,7 +458,7 @@ void loop(){
     task_find_light.find_dark();
   }
   else if(task_manager.get_task() == TASK_FINDSOUND){
-    task_find_sound.findSound();
+    task_find_sound.find_sound();
   }
   else if(task_manager.get_task() == TASK_POUNCE){
     task_pounce.seek_and_pounce();
@@ -1081,11 +1081,11 @@ void DEBUG_PrintLightSens(){
 
   Serial.print("Light Sens L-");
 
-  Serial.print("Lux: "); Serial.print(task_find_light.getLuxLeft());
+  Serial.print("Lux: "); Serial.print(task_find_light.get_lux_left());
 
   Serial.print(", R-");
 
-  Serial.print("Lux: "); Serial.println(task_find_light.getLuxRight());
+  Serial.print("Lux: "); Serial.println(task_find_light.get_lux_right());
 
 }
 

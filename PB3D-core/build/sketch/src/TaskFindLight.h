@@ -11,7 +11,9 @@
 #ifndef TASKFINDLIGHT_H
 #define TASKFINDLIGHT_H
 
-#include <Wire.h> // I2C
+#include <Wire.h>
+#include <Adafruit_VEML7700.h>
+
 #include "MoodManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
@@ -19,18 +21,11 @@
 #include "Speaker.h"
 #include "PatSensor.h"
 
-// TASKFINDLIGHT: specific defines/includes
-#define TCAADDR 0x70
-#define LIGHTSENS_L 1
-#define LIGHTSENS_R 0
-#include "Adafruit_VEML7700.h"
 
 class TaskFindLight{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskFindLight(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
-                Speaker* inSpeaker, PatSensor* inPatSens);
+  TaskFindLight(MoodManager* mood, TaskManager* task, MoveManager* move,
+                Speaker* speaker, PatSensor* pat_sens);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -49,47 +44,50 @@ public:
   // Get, set and reset
   void reset_gradient();
   bool get_enabled_flag(){return _enabled;}
-  float getLuxLeft(){return _luxLeft;}
-  float getLuxRight(){return _luxRight;}
-  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
+  float get_lux_left(){return _lux_left;}
+  float get_lux_right(){return _lux_right;}
+  void set_enabled_flag(bool enabled){_enabled = enabled;}
 
 private:
-  //---------------------------------------------------------------------------
-  // PRIVATE FUNCTIONS
-  void _findLux(bool seekLightFlag);
-  void _tcaSelect(uint8_t index);
+  void _find_lux(EFindLight seek_light);
+  void _multiplex_select(uint8_t channel);
 
-  //---------------------------------------------------------------------------
-  // MAIN OBJECT POINTERS
   MoodManager* _mood_manager = NULL;
   TaskManager* _task_manager = NULL;
   MoveManager* _move_manager = NULL;
   Speaker* _speaker = NULL;
-  PatSensor* _patSensObj = NULL;
+  PatSensor* _pat_sensor = NULL;
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
   bool _enabled = true;
 
-  Adafruit_VEML7700 _lightSensL = Adafruit_VEML7700();
-  Adafruit_VEML7700 _lightSensR = Adafruit_VEML7700();
+  Adafruit_VEML7700 _light_sens_left = Adafruit_VEML7700();
+  Adafruit_VEML7700 _light_sens_right = Adafruit_VEML7700();
 
-  uint16_t _senseUpdateTime = 400;
-  Timer _senseTimer = Timer();
-  float _luxLeft = 0.0, _luxRight = 0.0;
-  float _luxAvg = 0.0, _luxDiff = 0.0;
-  float _luxPcThresMid = 0.2, _luxThresMid = 0.0;
-  float _luxPcThresStr = 0.5, _luxThresStr = 0.0;
-  float _luxThresStop = 20.0;
+  const uint16_t _sens_update_time = 400;
+  Timer _sense_timer = Timer();
+  float _lux_left = 0.0;
+  float _lux_right = 0.0;
+  float _lux_avg = 0.0;
+  float _lux_diff = 0.0;
+  float _lux_percent_threshold_mid = 0.2;
+  float _lux_threshold_mid = 0.0;
+  float _lux_percent_thres_str = 0.5;
+  float _lux_thres_str = 0.0;
+  float _lux_thres_stop = 20.0;
 
-  uint16_t _gradUpdateTime = 5000;
-  Timer _gradTimer = Timer();
-  float _luxLRAvgT0 = 0.0, _luxLRAvgT1 = 0.0;
-  float _luxTAvg = 0.0;
-  float _luxGrad = 0.0;
-  float _luxGradPcThres = 0.2, _luxGradThres = 0.0;
-  bool _gradMoveFlag = false;
-  Timer _gradMoveTimeout = Timer();
-  uint16_t _gradMoveTimeoutTime = 2000;
+  const uint16_t _gradient_update_time = 5000;
+  Timer _gradient_timer = Timer();
+  float _lux_avg_time0 = 0.0;
+  float _lux_avg_time1 = 0.0;
+  float _lux_time_avg = 0.0;
+  float _lux_grad = 0.0;
+  float _lux_grad_percent_thres = 0.2;
+  float _lux_grad_thres = 0.0;
+  bool _grad_move_flag = false;
+  Timer _grad_move_timeout = Timer();
+  const uint16_t _grad_move_timeout_time = 2000;
 };
-#endif // End TASKFINDLIGHT
+
+#endif

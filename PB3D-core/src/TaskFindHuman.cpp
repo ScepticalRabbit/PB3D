@@ -90,9 +90,9 @@ void TaskFindHuman::find_human(){
         // If all flags are tripped a human has been found!
         _task_manager->set_task(TASK_INTERACT);
         // Overide the default task duration
-        _task_manager->set_task_duration(_task_interact->getTimeOut());
+        _task_manager->set_task_duration(_task_interact->get_timeout());
         _task_manager->task_LED_interact();
-        _task_interact->setStartInteractFlag(true);
+        _task_interact->set_start_interact_flag(true);
         // Update mood score
         _mood_manager->inc_mood_score();
     }

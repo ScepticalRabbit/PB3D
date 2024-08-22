@@ -191,7 +191,7 @@ enum ETailCode{
 };
 
 //------------------------------------------------------------------------------
-// TASK: DANCE
+// TASK: Dance
 enum EDanceCode{
     DANCE_STOP = 0,
     DANCE_WIGGLE,
@@ -204,11 +204,28 @@ enum EDanceCode{
 
 //------------------------------------------------------------------------------
 // TASK: Pounce
-enum ETaskPounce{
+enum EPounce{
     POUNCE_SEEK = 0,
     POUNCE_LOCKON,
     POUNCE_RUN,
     POUNCE_REALIGN,
+};
+
+//------------------------------------------------------------------------------
+// TASK: Find light
+enum EFindLight{
+    SEEK_LIGHT = 0,
+    SEEK_DARK,
+};
+
+//------------------------------------------------------------------------------
+// TASK: Find sound
+enum EEarCode{
+    EAR_COM_NOSOUND = 0,
+    EAR_COM_FORWARD,
+    EAR_COM_LEFT,
+    EAR_COM_RIGHT,
+    EAR_COM_SENV,
 };
 
 //------------------------------------------------------------------------------

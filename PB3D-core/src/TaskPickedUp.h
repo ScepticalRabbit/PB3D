@@ -12,6 +12,7 @@
 
 #include <Wire.h> // I2C
 #include <Seeed_CY8C401XX.h> // Capcitive Touch Sensor
+
 #include "MoodManager.h"
 #include "CollisionManager.h"
 #include "TaskManager.h"
@@ -20,17 +21,12 @@
 #include "Speaker.h"
 #include "PatSensor.h"
 
-// Define follower Xiao I2C Address
-#ifndef ADDR_FOLLBOARD
-  #define ADDR_FOLLBOARD 0x11
-#endif
 
 class TaskPickedUp{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPickedUp(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
-               Speaker* inSpeaker, PatSensor* inPatSens);
+  TaskPickedUp(CollisionManager* collision, MoodManager* mood,
+               TaskManager* task, MoveManager* move, Speaker* speaker,
+               PatSensor* pat_sens);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -56,40 +52,69 @@ private:
   TaskManager* _task_manager = NULL;
   MoveManager* _move_manager = NULL;
   Speaker* _speaker = NULL;
-  PatSensor* _patSensObj = NULL;
+  PatSensor* _pat_sensor = NULL;
 
   // TASK - PICKED UP
   bool _enabled = true;
-  bool _isPickedUp = false;
-  bool _startPickedUpFlag = false;
-  bool _pat_flag = false, _pat_complete = false;
+  bool _picked_up = false;
+  bool _start_picked_up = false;
+  bool _pat_flag = false;
+  bool _pat_complete = false;
 
-  bool _exitFlag = false, _exitTimerOn = false;
-  uint16_t _exitTime = 2000;
-  Timer _exitTimer = Timer();
+  bool _exit_flag = false;
+  bool _exit_timer_on = false;
+  const uint16_t _exit_time = 2000;
+  Timer _exit_timer = Timer();
 
   // Call timer and update time
-  uint16_t _callUpdateTime = 2000;
+  uint16_t _call_update_time = 2000;
   Timer _call_timer = Timer();
 
   // Variables for purring
-  byte _sendByte = B00001110;
-  bool _purrOnFlag = false;
-  uint16_t _purrOnTime = 4000,_purrOnTimeMin = 3000,_purrOnTimeMax = 4000;
-  uint16_t _purrOffTime = 2000,_purrOffTimeMin = 1000,_purrOffTimeMax = 2500;
-  Timer _purrTimer = Timer();
+  byte _send_byte = B00001110;
+
+  bool _purr_on = false;
+  uint16_t _purr_on_time = 4000;
+  const uint16_t _purr_on_time_min = 3000;
+  const uint16_t _purr_on_time_max = 4000;
+  uint16_t _purr_off_time = 2000;
+  const uint16_t _purr_off_time_min = 1000;
+  const uint16_t _purr_off_time_max = 2500;
+  Timer _purr_timer = Timer();
 
   // PANIC!
-  bool _panicFlag = false;
-  uint16_t _panicWiggleLeftDur = 250, _panicWiggleRightDur = 250;
+  bool _panic_flag = false;
+  const uint16_t _panic_wiggle_left_dur = 250;
+  const uint16_t _panic_wiggle_right_dur = 250;
 
   // Speaker Variables
-  uint16_t _randPauseCall = 0, _randPauseCallMin = 1500, _randPauseCallMax = 2500;
-  uint16_t _randPausePanic = 0, _randPausePanicMin = 100, _randPausePanicMax = 300;
-  uint16_t _pauseInd = 7;
-  uint16_t _callFreqs[8]  = {NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C7,NOTE_E5,NOTE_C5,NOTE_C5,NOTE_C7};
-  uint16_t _callDurs[8] = {250,0,200,500,250,0,200,2000};
-  uint16_t _panicFreqs[8]  = {NOTE_C7,NOTE_C8,NOTE_C8,NOTE_C8,NOTE_C7,NOTE_C8,NOTE_C8,NOTE_C8};
-  uint16_t _panicDurs[8] = {300,0,600,100,300,0,600,200};
+  uint16_t _rand_pause_call = 0;
+  const uint16_t _rand_pause_call_min = 1500;
+  const uint16_t _rand_pause_call_max = 2500;
+
+  uint16_t _rand_pause_panic = 0;
+  const uint16_t _rand_pause_panic_min = 100;
+  const uint16_t _rand_pause_panic_max = 300;
+  uint16_t _pause_ind = 7;
+
+  uint16_t _call_freqs[8]  = {NOTE_C5,
+                             NOTE_C5,
+                             NOTE_C5,
+                             NOTE_C7,
+                             NOTE_E5,
+                             NOTE_C5,
+                             NOTE_C5,
+                             NOTE_C7};
+  uint16_t _call_durs[8] = {250,0,200,500,250,0,200,2000};
+
+  uint16_t _panic_freqs[8]  = {NOTE_C7,
+                              NOTE_C8,
+                              NOTE_C8,
+                              NOTE_C8,
+                              NOTE_C7,
+                              NOTE_C8,
+                              NOTE_C8,
+                              NOTE_C8};
+  uint16_t _panic_durs[8] = {300,0,600,100,300,0,600,200};
 };
-#endif // PICKEDUP
+#endif

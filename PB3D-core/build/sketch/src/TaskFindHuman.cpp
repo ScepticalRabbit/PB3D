@@ -10,10 +10,10 @@
 
 #include "TaskFindHuman.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskFindHuman::TaskFindHuman(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
-            Speaker* inSpeaker, TaskInteract* inTInt){
+
+TaskFindHuman::TaskFindHuman(MoodManager* inMood, TaskManager* inTask,
+                             MoveManager* inMove, Speaker* inSpeaker,
+                             TaskInteract* inTInt){
     _mood_manager = inMood;
     _task_manager = inTask;
     _move_manager = inMove;
@@ -21,7 +21,7 @@ TaskFindHuman::TaskFindHuman(MoodManager* inMood, TaskManager* inTask, MoveManag
     _task_interact = inTInt;
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void TaskFindHuman::begin(){
     delay(500);
@@ -38,10 +38,7 @@ void TaskFindHuman::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskFindHuman::update(){
-    // If the human presence sensor wasn't found then do nothing
-    if(!_enabled){
-        return;
-    }
+    if(!_enabled){return;}
 
     if(_task_manager->get_new_task_flag()){
         _start_flag = true;
@@ -94,9 +91,9 @@ void TaskFindHuman::find_human(){
         // If all flags are tripped a human has been found!
         _task_manager->set_task(TASK_INTERACT);
         // Overide the default task duration
-        _task_manager->set_task_duration(_task_interact->getTimeOut());
+        _task_manager->set_task_duration(_task_interact->get_timeout());
         _task_manager->task_LED_interact();
-        _task_interact->setStartInteractFlag(true);
+        _task_interact->set_start_interact_flag(true);
         // Update mood score
         _mood_manager->inc_mood_score();
     }

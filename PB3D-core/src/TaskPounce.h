@@ -51,7 +51,7 @@ public:
   void set_realign_cent(int16_t angle);
 
   bool get_enabled_flag(){return _enabled;}
-  ETaskPounce get_state(){return _state;}
+  EPounce get_state(){return _state;}
   int16_t get_ang_cent_for_collision(){return _realign_ang_cent_collision;}
   void set_enabled_flag(bool enabled){_enabled = enabled;}
 
@@ -90,8 +90,8 @@ private:
   bool _enabled = true;
   bool _start_all = true;
 
-  ETaskPounce _state = POUNCE_SEEK;
-  ETaskPounce _prev_state = POUNCE_REALIGN;
+  EPounce _state = POUNCE_SEEK;
+  EPounce _prev_state = POUNCE_REALIGN;
 
   // LED Colours
   uint8_t _seek_colour = 0;

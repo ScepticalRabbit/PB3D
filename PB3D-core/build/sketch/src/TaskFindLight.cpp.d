@@ -116,7 +116,7 @@
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/SERCOM.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/RingBuffer.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/RingBuffer.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoodManager.h \
+ /home/lloydf/Arduino/libraries/Adafruit_VEML7700_Library/Adafruit_VEML7700.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/Arduino.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/avr/pgmspace.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/avr/interrupt.h \
@@ -141,11 +141,16 @@
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/USB/SAMD21_USBDevice.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/USB/USB_host.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/USB/samd21_host.h \
- /home/lloydf/Arduino/libraries/Adafruit_DMA_neopixel_library/Adafruit_NeoPixel_ZeroDMA.h \
- /home/lloydf/Arduino/libraries/Adafruit_NeoPixel/Adafruit_NeoPixel.h \
+ /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_I2CDevice.h \
+ /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_I2CRegister.h \
+ /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.h \
+ /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_SPIDevice.h \
+ /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/SPI/SPI.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Adafruit_ZeroDMA/Adafruit_ZeroDMA.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Adafruit_ZeroDMA/utility/dma.h \
- /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/SPI/SPI.h \
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoodManager.h \
+ /home/lloydf/Arduino/libraries/Adafruit_DMA_neopixel_library/Adafruit_NeoPixel_ZeroDMA.h \
+ /home/lloydf/Arduino/libraries/Adafruit_NeoPixel/Adafruit_NeoPixel.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DPins.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DConstants.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.h \
@@ -153,7 +158,6 @@
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoveManager.h \
  /home/lloydf/Arduino/libraries/Adafruit_Motor_Shield_V2_Library/Adafruit_MotorShield.h \
  /home/lloydf/Arduino/libraries/Adafruit_Motor_Shield_V2_Library/utility/Adafruit_MS_PWMServoDriver.h \
- /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_I2CDevice.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Encoder.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterMovAvg.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterLowPass.h \
@@ -161,8 +165,4 @@
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Speaker.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.h \
  /home/lloydf/Arduino/libraries/Grove_-_Capacitive_Touch_Slide_Sensor_CY8C40XX/Seeed_CY8C401XX.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DI2CAddresses.h \
- /home/lloydf/Arduino/libraries/Adafruit_VEML7700_Library/Adafruit_VEML7700.h \
- /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_I2CRegister.h \
- /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.h \
- /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_SPIDevice.h
+ /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DI2CAddresses.h

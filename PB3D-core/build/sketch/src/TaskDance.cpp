@@ -55,8 +55,8 @@ void TaskDance::dance(){
 
     // If needed set the speaker flags on every loop
     if(_speaker_flag){
-        uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-        _speaker->set_sound_codes(inCodes,4);
+        uint8_t in_codes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
+        _speaker->set_sound_codes(in_codes,4);
     }
 
     // Update the dance move at given time interval, should be 1/4 note
@@ -119,12 +119,12 @@ void TaskDance::_start_dance(){
     // Set speaker
     if(_speaker_flag){
         _speaker->reset();
-        uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-        _speaker->set_sound_codes(inCodes,4);
-        uint16_t inFreqs[]  = {NOTE_G4,NOTE_G7,NOTE_G5,NOTE_G7,0,0,0,0};
-        uint16_t inDurs[]   = {200,150,300,150,0,0,0,0};
-        _speaker->set_sound_freqs(inFreqs,8);
-        _speaker->set_sound_durations(inDurs,8);
+        uint8_t in_codes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
+        _speaker->set_sound_codes(in_codes,4);
+        uint16_t in_freqs[]  = {NOTE_G4,NOTE_G7,NOTE_G5,NOTE_G7,0,0,0,0};
+        uint16_t in_durs[]   = {200,150,300,150,0,0,0,0};
+        _speaker->set_sound_freqs(in_freqs,8);
+        _speaker->set_sound_durations(in_durs,8);
     }
 }
 
@@ -137,24 +137,24 @@ void TaskDance::_generate_tempo(){
 
 void TaskDance::_generate_dance(){
     // Random move that recurs throughout the dance
-    uint8_t recurMove = random(1,3);  // NOTE: random num between (min,max-1)
+    uint8_t recur_move = random(1,3);  // NOTE: random num between (min,max-1)
     // Bars on which the recurrent move occurs, 0=B1 and B3, 1=B2 and B4
-    uint8_t recurBeat = random(0,2); // NOTE: random num between (min,max-1)
+    uint8_t recur_beat = random(0,2); // NOTE: random num between (min,max-1)
     // 1 = Full 8 bar dance, 2 = Repeat 4 bar dance
-    uint8_t recurBars = random(1,3); // NOTE: random num between (min,max-1)
+    uint8_t recur_bars = random(1,3); // NOTE: random num between (min,max-1)
 
-    recurMove = 1;
-    recurBeat = 0;
-    //recurBars = 2;
+    recur_move = 1;
+    recur_beat = 0;
+    //recur_bars = 2;
 
     for(uint8_t ii=0 ; ii < _dance_num_moves ; ii++){
-        if((recurBars == 2)&&(ii >= (_dance_num_moves/recurBars))){
-        _dance_move_vec[ii] = _dance_move_vec[ii-(_dance_num_moves/recurBars)];
+        if((recur_bars == 2)&&(ii >= (_dance_num_moves/recur_bars))){
+        _dance_move_vec[ii] = _dance_move_vec[ii-(_dance_num_moves/recur_bars)];
         }
         else{
         // If this is the recurring move set it, else generate
-        if((ii%2)==recurBeat){
-            _dance_move_vec[ii] = recurMove;
+        if((ii%2)==recur_beat){
+            _dance_move_vec[ii] = recur_move;
         }
         else{
             _dance_move_vec[ii] = random(1,DANCE_NUM_MOVES);

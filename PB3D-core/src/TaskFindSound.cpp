@@ -9,28 +9,27 @@
 
 #include "TaskFindSound.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskFindSound::TaskFindSound(MoodManager* inMood, TaskManager* inTask,
-                            MoveManager* inMove, Speaker* inSpeaker){
-    _mood_manager = inMood;
-    _task_manager = inTask;
-    _move_manager = inMove;
-    _speaker = inSpeaker;
+
+TaskFindSound::TaskFindSound(MoodManager* mood, TaskManager* task,
+                            MoveManager* move, Speaker* speaker){
+    _mood_manager = mood;
+    _task_manager = task;
+    _move_manager = move;
+    _speaker = speaker;
 }
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void TaskFindSound::begin(){
     // Send the byte flag back
-    Wire.beginTransmission(ADDR_FOLLBOARD);
-    Wire.write(_sendByte);
+    Wire.beginTransmission(ADDR_FOLLOW_XIAO_2);
+    Wire.write(_send_byte);
     Wire.endTransmission();
 
     // Start all timers
     _sens_update_timer.start(0);
-    _clapEnableTimer.start(0);
-    _envSampTimer.start(0);
+    _clap_enable_timer.start(0);
+    _env_samp_timer.start(0);
     _call_timer.start(0);
 }
 
@@ -42,26 +41,26 @@ void TaskFindSound::update(){
 
     // SENSOR: Ask follower Xiao for sound data
     if(_sens_update_timer.finished()){
-        _sens_update_timer.start(_sensUpdateTime);
+        _sens_update_timer.start(_sens_update_time);
 
         // Request ear state data from follower board
-        _I2CReadEarState();
+        _I2C_read_ear_state();
 
         // Send the byte flag back
-        _I2CSendByte();
+        _I2C_send_byte();
 
-        if((_earState==EAR_COM_FORWARD)||(_earState==EAR_COM_LEFT)||(_earState==EAR_COM_RIGHT)){
-        _clapCount++;
+        if((_ear_state==EAR_COM_FORWARD)||(_ear_state==EAR_COM_LEFT)||(_ear_state==EAR_COM_RIGHT)){
+            _clap_count++;
         }
 
         // DEBUG: Print to Serial
         #ifdef DEBUG_TASKFINDSOUND
         Serial.print("E-STATE: ");
-        Serial.print(_earState), Serial.print(", M: ");
-        if(_earState==EAR_COM_FORWARD){Serial.print("F");}
-        else if(_earState==EAR_COM_LEFT){Serial.print("L");}
-        else if(_earState==EAR_COM_RIGHT){Serial.print("R");}
-        else if(_earState==EAR_COM_SENV){Serial.print("E");}
+        Serial.print(_ear_state), Serial.print(", M: ");
+        if(_ear_state==EAR_COM_FORWARD){Serial.print("F");}
+        else if(_ear_state==EAR_COM_LEFT){Serial.print("L");}
+        else if(_ear_state==EAR_COM_RIGHT){Serial.print("R");}
+        else if(_ear_state==EAR_COM_SENV){Serial.print("E");}
         else{Serial.print("N");}
         Serial.println();
         #endif
@@ -69,23 +68,23 @@ void TaskFindSound::update(){
 
     if(_task_manager->get_task() != TASK_FINDSOUND){
         // ENABLE: If X claps in this interval then start finding sound
-        if(_clapEnableTimer.finished()){
-        _clapEnableTimer.start(_clapEnableUpdateTime);
+        if(_clap_enable_timer.finished()){
+        _clap_enable_timer.start(_clap_enable_update_time);
 
-        if(_clapCount >= _clapThres){
+        if(_clap_count >= _clap_thres){
             _task_manager->set_task(TASK_FINDSOUND);
         }
-        _clapCount = 0;
+        _clap_count = 0;
         }
 
         // SAMPLE ENV: Resample environment to prevent false trips of the sensor
-        if(_envSampTimer.finished()){
-            _envSampTimer.start(_envSampUpdateTime);
-            _I2CSendSampEnvFlag();
+        if(_env_samp_timer.finished()){
+            _env_samp_timer.start(_env_samp_update_time);
+            _I2C_send_samp_env_flag();
         }
     }
     else{
-        _clapCount = 0;
+        _clap_count = 0;
     }
 
     // NEW TASK: if task is new set the start flag
@@ -96,7 +95,7 @@ void TaskFindSound::update(){
 
 //---------------------------------------------------------------------------
 // FINDSOUND - called during task decision tree
-void TaskFindSound::findSound(){
+void TaskFindSound::find_sound(){
     // Set the LEDs on every loop regardless
     _task_manager->task_LED_find_sound();
 
@@ -110,7 +109,7 @@ void TaskFindSound::findSound(){
         _start_flag = false;
 
         // Send the flag to sample environment
-        _I2CSendSampEnvFlag();
+        _I2C_send_samp_env_flag();
 
         _speaker->reset();
         _call_timer.start(_call_interval);
@@ -119,13 +118,13 @@ void TaskFindSound::findSound(){
     //--------------------------------------------------------------------
     // SPEAKER: call = where are you?
     // Set the speaker codes on every loop
-    // uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-    uint8_t inCodes[]   = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
-    _speaker->set_sound_codes(inCodes,4);
-    uint16_t inFreqs[]  = {NOTE_A4,NOTE_G4,NOTE_G4,NOTE_A6,0,0,0,0};
-    uint16_t inDurs[]   = {300,0,200,0,0,0,0,0};
-    _speaker->set_sound_freqs(inFreqs,8);
-    _speaker->set_sound_durations(inDurs,8);
+    // uint8_t in_codes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
+    uint8_t in_codes[]   = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
+    _speaker->set_sound_codes(in_codes,4);
+    uint16_t in_freqs[]  = {NOTE_A4,NOTE_G4,NOTE_G4,NOTE_A6,0,0,0,0};
+    uint16_t in_durs[]   = {300,0,200,0,0,0,0,0};
+    _speaker->set_sound_freqs(in_freqs,8);
+    _speaker->set_sound_durations(in_durs,8);
 
 
     if(_call_timer.finished()){
@@ -136,20 +135,20 @@ void TaskFindSound::findSound(){
     //--------------------------------------------------------------------
     // FIND SOUND: Track based on ear state from Xiao
     // EAR STATE = 0: uncertain, 1: forward, 2: left, 3: right
-    if(_earState == EAR_COM_LEFT){
+    if(_ear_state == EAR_COM_LEFT){
         //_move_manager->left();
-        //_move_manager->forward_left(_speedDiffLR);
-        _move_manager->forward_left_diff_frac(_speedDiffFracLR);
+        //_move_manager->forward_left(_speed_diff_leftright);
+        _move_manager->forward_left_diff_frac(_speed_diff_frac_leftright);
     }
-    else if(_earState == EAR_COM_RIGHT){
+    else if(_ear_state == EAR_COM_RIGHT){
         //_move_manager->right();
-        //_move_manager->forward_right(_speedDiffLR);
-        _move_manager->forward_right_diff_frac(_speedDiffFracLR);
+        //_move_manager->forward_right(_speed_diff_leftright);
+        _move_manager->forward_right_diff_frac(_speed_diff_frac_leftright);
     }
-    else if(_earState == EAR_COM_FORWARD){
+    else if(_ear_state == EAR_COM_FORWARD){
         _move_manager->forward();
     }
-    else if(_earState == EAR_COM_SENV){
+    else if(_ear_state == EAR_COM_SENV){
         _move_manager->forward();
     }
     else{
@@ -161,22 +160,22 @@ void TaskFindSound::findSound(){
 
 //---------------------------------------------------------------------------
 // PRIVATE FUNCTIONS
-void TaskFindSound::_I2CSendByte(){
-    Wire.beginTransmission(ADDR_FOLLBOARD);
-    Wire.write(_sendByte);
+void TaskFindSound::_I2C_send_byte(){
+    Wire.beginTransmission(ADDR_FOLLOW_XIAO_2);
+    Wire.write(_send_byte);
     Wire.endTransmission();
 }
 
-void TaskFindSound::_I2CSendSampEnvFlag(){
-    byte sampEnvByte = _sendByte | B01000000;
-    Wire.beginTransmission(ADDR_FOLLBOARD);
+void TaskFindSound::_I2C_send_samp_env_flag(){
+    byte sampEnvByte = _send_byte | B01000000;
+    Wire.beginTransmission(ADDR_FOLLOW_XIAO_2);
     Wire.write(sampEnvByte);
     Wire.endTransmission();
 }
 
-void TaskFindSound::_I2CReadEarState(){
-    Wire.requestFrom(ADDR_FOLLBOARD, 1);
+void TaskFindSound::_I2C_read_ear_state(){
+    Wire.requestFrom(ADDR_FOLLOW_XIAO_2, 1);
     while (Wire.available()){
-        _earState = Wire.read();
+        _ear_state = Wire.read();
     }
 }
