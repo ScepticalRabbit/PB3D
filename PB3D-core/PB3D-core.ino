@@ -16,6 +16,7 @@
 #include <PB3DConstants.h>
 #include <PB3DPins.h>
 #include <PB3DI2CAddresses.h>
+#include <Timer.h>
 
 #include "src/CollisionManager.h"
 #include "src/Encoder.h"
@@ -28,7 +29,6 @@
 #include "src/Speaker.h"
 #include "src/Tail.h"
 #include "src/TaskManager.h"
-#include "src/Timer.h"
 #include "src/I2CDataSender.h"
 #include "src/IMUSensor.h"
 #include "src/Navigation.h"

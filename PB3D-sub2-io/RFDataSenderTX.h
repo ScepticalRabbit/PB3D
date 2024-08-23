@@ -137,8 +137,6 @@ public:
   }
 
 private:
-  //---------------------------------------------------------------------------
-  // PRIVATE FUNCTIONS
   bool _sendStateStruct(){
     bool sendStatus = false;
 
@@ -190,7 +188,7 @@ private:
 
   // DATA PACKET - I2C and Radio
   bool _newPacket = false;
-  dataPacket_t _curr_state;
+  UDataPacket _curr_state;
 
   // RADIO VARIABLES
   // Radio class and radio data manager class

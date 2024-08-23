@@ -8,8 +8,8 @@
 //------------------------------------------------------------------------------
 
 #include <Wire.h>
+#include <Timer.h>
 #include "RFDataSenderTX.h"
-#include "Timer.h"
 
 // Address for this board
 #define NERVSYS_ADDR 9
