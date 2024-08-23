@@ -116,7 +116,7 @@
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/SERCOM.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/RingBuffer.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/RingBuffer.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DConstants.h \
+ /home/lloydf/Arduino/libraries/PB3D-constants/PB3DConstants.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoodManager.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/Arduino.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/avr/pgmspace.h \
@@ -147,7 +147,7 @@
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Adafruit_ZeroDMA/Adafruit_ZeroDMA.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Adafruit_ZeroDMA/utility/dma.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/SPI/SPI.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DPins.h \
+ /home/lloydf/Arduino/libraries/PB3D-constants/PB3DPins.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionManager.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoveManager.h \
@@ -164,7 +164,7 @@
  /home/lloydf/Arduino/libraries/Adafruit_PCF8574/Adafruit_PCF8574.h \
  /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.h \
  /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_SPIDevice.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DI2CAddresses.h \
+ /home/lloydf/Arduino/libraries/PB3D-constants/PB3DI2CAddresses.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/LaserSensor.h \
  /home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/Adafruit_VL53L0X.h \
  /home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/vl53l0x_api.h \

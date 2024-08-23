@@ -13,9 +13,9 @@
 #include <Adafruit_MotorShield.h>
 #include <Adafruit_NeoPixel_ZeroDMA.h>
 
-#include "src/PB3DConstants.h"
-#include "src/PB3DPins.h"
-#include "src/PB3DI2CAddresses.h"
+#include <PB3DConstants.h>
+#include <PB3DPins.h>
+#include <PB3DI2CAddresses.h>
 
 #include "src/CollisionManager.h"
 #include "src/Encoder.h"
@@ -44,10 +44,7 @@
 #include "src/TaskPause.h"
 
 //------------------------------------------------------------------------------
-// VARIABLES
-
-
-// Debugging - Codes
+// DEBUG VARIABLES
 bool _debug_collisionOff = false;
 bool _debug_forceMood = true;
 EMoodCode _debug_moodCode = MOOD_NEUTRAL;

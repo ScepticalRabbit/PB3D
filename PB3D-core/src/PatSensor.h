@@ -14,7 +14,7 @@
 #include <Wire.h>
 #include <Seeed_CY8C401XX.h> // Capacitive Touch Sensor
 
-#include "PB3DI2CAddresses.h"
+#include <PB3DI2CAddresses.h>
 #include "Timer.h"
 
 

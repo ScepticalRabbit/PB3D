@@ -13,13 +13,14 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#include "PB3DI2CAddresses.h"
+#include <PB3DI2CAddresses.h>
+#include <PB3DStateData.h>
 
 #include "CollisionManager.h"
 #include "Timer.h"
 #include "IMUSensor.h"
 #include "Navigation.h"
-#include "StateData.h"
+
 
 // Debug flags
 //#define I2CDATASENDER_DEBUG_PRINT

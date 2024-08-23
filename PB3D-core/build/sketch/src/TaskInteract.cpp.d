@@ -147,8 +147,8 @@
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Adafruit_ZeroDMA/Adafruit_ZeroDMA.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Adafruit_ZeroDMA/utility/dma.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/SPI/SPI.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DPins.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DConstants.h \
+ /home/lloydf/Arduino/libraries/PB3D-constants/PB3DPins.h \
+ /home/lloydf/Arduino/libraries/PB3D-constants/PB3DConstants.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoveManager.h \
@@ -162,4 +162,4 @@
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskDance.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Speaker.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DI2CAddresses.h
+ /home/lloydf/Arduino/libraries/PB3D-constants/PB3DI2CAddresses.h

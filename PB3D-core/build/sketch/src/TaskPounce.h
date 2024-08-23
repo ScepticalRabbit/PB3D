@@ -13,7 +13,7 @@
 
 #include <Wire.h> // I2C
 
-#include "PB3DConstants.h"
+#include <PB3DConstants.h>
 #include "MoodManager.h"
 #include "CollisionManager.h"
 #include "TaskManager.h"

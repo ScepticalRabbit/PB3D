@@ -13,7 +13,7 @@
 #include <Wire.h> // I2C
 #include <Grove_Human_Presence_Sensor.h> // IR presence sensor
 
-#include "PB3DI2CAddresses.h"
+#include <PB3DI2CAddresses.h>
 #include "MoodManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"

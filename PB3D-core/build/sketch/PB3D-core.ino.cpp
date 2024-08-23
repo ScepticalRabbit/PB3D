@@ -14,9 +14,9 @@
 #include <Adafruit_MotorShield.h>
 #include <Adafruit_NeoPixel_ZeroDMA.h>
 
-#include "src/PB3DConstants.h"
-#include "src/PB3DPins.h"
-#include "src/PB3DI2CAddresses.h"
+#include <PB3DConstants.h>
+#include <PB3DPins.h>
+#include <PB3DI2CAddresses.h>
 
 #include "src/CollisionManager.h"
 #include "src/Encoder.h"
@@ -45,10 +45,7 @@
 #include "src/TaskPause.h"
 
 //------------------------------------------------------------------------------
-// VARIABLES
-
-
-// Debugging - Codes
+// DEBUG VARIABLES
 bool _debug_collisionOff = false;
 bool _debug_forceMood = true;
 EMoodCode _debug_moodCode = MOOD_NEUTRAL;
@@ -172,23 +169,23 @@ TaskPause task_pause = TaskPause(&collision_manager,
                                  &speaker);
 
 //==============================================================================
-#line 174 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 171 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void setup();
-#line 258 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 255 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void loop();
-#line 437 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 434 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncLA();
-#line 440 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 437 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncLB();
-#line 443 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 440 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncRA();
-#line 446 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 443 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncRB();
-#line 452 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 449 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void escapeCollision();
-#line 464 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 461 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void detectedCollision();
-#line 174 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 171 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void setup() {
   Serial.begin(115200);
   // Only use below to stop start up until USB cable connected

@@ -151,8 +151,8 @@
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoodManager.h \
  /home/lloydf/Arduino/libraries/Adafruit_DMA_neopixel_library/Adafruit_NeoPixel_ZeroDMA.h \
  /home/lloydf/Arduino/libraries/Adafruit_NeoPixel/Adafruit_NeoPixel.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DPins.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DConstants.h \
+ /home/lloydf/Arduino/libraries/PB3D-constants/PB3DPins.h \
+ /home/lloydf/Arduino/libraries/PB3D-constants/PB3DConstants.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/TaskManager.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoveManager.h \
@@ -165,4 +165,4 @@
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Speaker.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PatSensor.h \
  /home/lloydf/Arduino/libraries/Grove_-_Capacitive_Touch_Slide_Sensor_CY8C40XX/Seeed_CY8C401XX.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DI2CAddresses.h
+ /home/lloydf/Arduino/libraries/PB3D-constants/PB3DI2CAddresses.h

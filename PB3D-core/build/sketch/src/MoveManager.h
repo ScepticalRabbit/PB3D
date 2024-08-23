@@ -14,7 +14,7 @@
 #include <Arduino.h>
 #include <Adafruit_MotorShield.h>
 
-#include "PB3DConstants.h"
+#include <PB3DConstants.h>
 #include "Encoder.h"
 #include "Timer.h"
 #include "PID.h"

@@ -45,10 +45,7 @@
 # 45 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino" 2
 
 //------------------------------------------------------------------------------
-// VARIABLES
-
-
-// Debugging - Codes
+// DEBUG VARIABLES
 bool _debug_collisionOff = false;
 bool _debug_forceMood = true;
 EMoodCode _debug_moodCode = MOOD_NEUTRAL;

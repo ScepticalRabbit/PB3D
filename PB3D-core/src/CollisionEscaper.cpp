@@ -7,7 +7,7 @@
 // Copyright (C) 2024 ScepticalRabbit
 //------------------------------------------------------------------------------
 
-#include "PB3DConstants.h"
+#include <PB3DConstants.h>
 #include "CollisionEscaper.h"
 
 

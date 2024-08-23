@@ -11,7 +11,7 @@
 
 #include <Arduino.h>
 
-#include "PB3DConstants.h"
+#include <PB3DConstants.h>
 
 #include "MoodManager.h"
 #include "MoveManager.h"

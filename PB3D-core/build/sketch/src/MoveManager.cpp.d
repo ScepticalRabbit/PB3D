@@ -143,7 +143,7 @@
  /home/lloydf/Arduino/libraries/Adafruit_Motor_Shield_V2_Library/utility/Adafruit_MS_PWMServoDriver.h \
  /home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_I2CDevice.h \
  /home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Wire/Wire.h \
- /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/PB3DConstants.h \
+ /home/lloydf/Arduino/libraries/PB3D-constants/PB3DConstants.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Encoder.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/Timer.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/FilterMovAvg.h \
