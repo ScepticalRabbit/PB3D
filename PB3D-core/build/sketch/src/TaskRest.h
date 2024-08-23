@@ -12,15 +12,15 @@
 #define TASKREST_H
 
 #include <Arduino.h>
+
 #include "TaskManager.h"
 #include "MoveManager.h"
 #include "Speaker.h"
 #include "Timer.h"
 
+
 class TaskRest{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
   TaskRest(MoodManager* inMood, TaskManager* inTask,
             MoveManager* inMove, Speaker* inSpeaker);
 
@@ -41,21 +41,17 @@ public:
   void reset();
 
 private:
-  // MAIN OBJECT POINTERS
   MoodManager* _mood_manager = NULL;
   TaskManager* _task_manager = NULL;
   MoveManager* _move_manager = NULL;
   Speaker* _speaker = NULL;
 
-  // Timers
+  const uint8_t _rest_update_time = 7;
   Timer _timer = Timer();
 
-  // SUBTASK - REST Variables
-  // Use to pulse LEDs during rest task
-  uint8_t _restUpdateTime = 7;
-  bool _restLEDIncrease = true;
-  uint8_t _restLEDMax = 254;
-  uint8_t _restLEDMin = 0;
-  uint8_t _restLEDVal = 254;
+  bool _rest_LED_increase = true;
+  const uint8_t _rest_LED_max = 254;
+  const uint8_t _rest_LED_min = 0;
+  uint8_t _rest_LED_val = 254;
 };
 #endif // TASKREST

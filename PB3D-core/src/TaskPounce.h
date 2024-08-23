@@ -21,16 +21,13 @@
 #include "Speaker.h"
 
 
-
 class TaskPounce{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPounce(CollisionManager* inCollision,
-             MoodManager* inMood,
-             TaskManager* inTask,
-             MoveManager* inMove,
-             Speaker* inSpeaker);
+  TaskPounce(CollisionManager* collision,
+             MoodManager* mood,
+             TaskManager* task,
+             MoveManager* move,
+             Speaker* speaker);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -141,9 +138,9 @@ private:
   bool _realign_start = true;
   int8_t _realign_state = 0;
   Timer _realign_timer = Timer();
-  uint16_t _realign_pre_pause_time = 1000;
-  uint16_t _realign_post_pause_time = 1000;
-  uint16_t _realignTimeout = 2000;
+  const uint16_t _realign_pre_pause_time = 1000;
+  const uint16_t _realign_post_pause_time = 1000;
+  const uint16_t _realignTimeout = 2000;
 
   int16_t _realign_angle_cent = 180;
   int16_t _realign_angle_dev = 45;

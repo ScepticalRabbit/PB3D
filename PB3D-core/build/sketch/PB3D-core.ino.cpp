@@ -47,6 +47,7 @@
 //------------------------------------------------------------------------------
 // VARIABLES
 
+
 // Debugging - Codes
 bool _debug_collisionOff = false;
 bool _debug_forceMood = true;
@@ -170,27 +171,25 @@ TaskPause task_pause = TaskPause(&collision_manager,
                                  &move_manager,
                                  &speaker);
 
-//-----------------------------------------------------------------------------
-// SETUP
+//==============================================================================
 #line 174 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void setup();
-#line 268 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 258 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void loop();
-#line 515 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 437 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncLA();
-#line 518 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 440 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncLB();
-#line 521 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 443 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncRA();
-#line 524 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 446 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void updateEncRB();
-#line 530 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 452 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void escapeCollision();
-#line 542 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
+#line 464 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void detectedCollision();
 #line 174 "/home/lloydf/Arduino/PB3D/PB3D-core/PB3D-core.ino"
 void setup() {
-  // Start the serial
   Serial.begin(115200);
   // Only use below to stop start up until USB cable connected
   // while(!Serial){}
@@ -199,7 +198,6 @@ void setup() {
   Wire.begin();  // Join I2C bus as leader
   delay(2000);   // Needed to ensure sensors work, delay allows sub-processors to start up
 
-  // SERIAL: POST SETUP
   Serial.println();
   Serial.println(F("PB3D: SETUP"));
   Serial.println(F("------------------------------"));
@@ -210,12 +208,7 @@ void setup() {
   leds.begin();
   leds.show();
 
-  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  // TEST CODE
-
-  //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-  // NOTE: I2C multiplexer and light sensors must be initialised first!
+  // NOTE: I2C multiplexer and light sensors MUST be initialised first!
   task_find_light.begin();
 
   mood_manager.begin();
@@ -240,11 +233,9 @@ void setup() {
   task_find_sound.set_send_byte(B00111110);
   task_find_sound.begin();
 
-  // Pass durations to the master task object
   task_manager.set_dance_duration(task_dance.get_duration());
   task_manager.set_tantrum_duration(task_tantrum.get_duration());
 
-  // Start timers in the main program
   _test_timer.start(0);
   _test_reportTimer.start(0);
   _test_pauseTimer.start(_test_pauseTime);
@@ -278,11 +269,10 @@ void setup() {
   // Final setup - increase I2C clock speed
   Wire.setClock(400000); // 400KHz
 
-  //while(1){}
-}
+  // while(1){}
+} // END SETUP
 
-//------------------------------------------------------------------------------
-// MAIN LOOP
+//==============================================================================
 void loop(){
   //if(!_test_firstLoop){while(true){};}
   //uint32_t start_loop = millis();
@@ -412,80 +402,11 @@ void loop(){
     task_pounce.seek_and_pounce();
   }
   else if(task_manager.get_task() == TASK_TANTRUM){
-    if(task_tantrum.getCompleteFlag()){
+    if(task_tantrum.get_complete()){
       task_manager.force_update();
     }
     else{
-      task_tantrum.haveTantrum();
-    }
-  }
-  else{
-    task_manager.task_LED_explore();
-
-    // MOVEMENT: Type Update
-    if(_debug_forceMove){
-      move_manager.update_move(_debug_moveType);
-    }
-    else{
-      move_manager.update_move();
-    }
-    // MOVEMENT: Call current movement function
-    move_manager.go();
-  }
-
-
-  //SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-  if(task_manager.get_task() == TASK_TEST){
-    //DEBUG_SpeedTest(_test_value,MOVE_B_FORWARD);
-  }
-  else if(task_manager.get_task() == TASK_REST){
-    task_rest.rest();
-  }
-  else if(task_manager.get_task() == TASK_PAUSE){
-    task_pause.pause();
-  }
-  else if(task_manager.get_task() == TASK_PICKEDUP){
-    task_picked_up.pickedUp();
-  }
-  else if(task_manager.get_task() == TASK_INTERACT){
-    task_interact.interact();
-  }
-  else if(collision_manager.get_escape_flag() && !_debug_collisionOff){
-    //Serial.println("======================ESCAPE======================");
-    escapeCollision(); // SEE FUNCTION DEF BELOW MAIN
-  }
-  else if(collision_manager.get_detected() && !_debug_collisionOff){
-    //DEBUG_PrintColFlags();
-    detectedCollision(); // SEE FUNCTION DEF BELOW MAIN
-  }
-  else if(task_manager.get_task() == TASK_DANCE){
-    if(task_manager.get_dance_update_flag()){
-      task_manager.set_dance_update_flag(false);
-      task_dance.set_speaker_flag(false);
-    }
-    task_dance.dance();
-  }
-  else if(task_manager.get_task() == TASK_FINDHUMAN){
-    task_find_human.find_human();
-  }
-  else if(task_manager.get_task() == TASK_FINDLIGHT){
-    task_find_light.find_light();
-  }
-  else if(task_manager.get_task() == TASK_FINDDARK){
-    task_find_light.find_dark();
-  }
-  else if(task_manager.get_task() == TASK_FINDSOUND){
-    task_find_sound.find_sound();
-  }
-  else if(task_manager.get_task() == TASK_POUNCE){
-    task_pounce.seek_and_pounce();
-  }
-  else if(task_manager.get_task() == TASK_TANTRUM){
-    if(task_tantrum.getCompleteFlag()){
-      task_manager.force_update();
-    }
-    else{
-      task_tantrum.haveTantrum();
+      task_tantrum.chuck_tantrum();
     }
   }
   else{
@@ -518,7 +439,6 @@ void loop(){
 
   //-------------------------------------------------------------------------
   // END of LOOP
-
   //uint32_t endLoop = millis();
   //Serial.print(F("MAIN LOOP TOOK: "));
   //Serial.print(endLoop-start_loop); Serial.print(",");
@@ -526,7 +446,9 @@ void loop(){
   //Serial.println();
   //_test_firstLoop = false;
 
-}
+} // END LOOP
+//==============================================================================
+
 
 //------------------------------------------------------------------------------
 // INTERRUPT FUNCTIONS
@@ -601,16 +523,18 @@ void detectedCollision(){
   // Reset the collision flags
   collision_manager.reset_flags();
   collision_manager.inc_count();
-  if(collision_manager.get_count() >= task_tantrum.getThreshold()){
+  if(collision_manager.get_count() >= task_tantrum.get_threshold()){
     collision_manager.reset_Count();
-    task_tantrum.setStartTantrumFlag();
+    task_tantrum.set_start_tantrum();
     task_manager.set_task(TASK_TANTRUM);
   }
 }
 
-//------------------------------------------------------------------------------
-// DEBUG FUNCTIONS
-/*
+//==============================================================================
+// DEBUG
+// #define PB3D_DEBUG
+#ifdef PB3D_DEBUG
+
 void DEBUG_SpeedTest(uint8_t inPower, uint8_t moveCode){
   if(_test_pauseTimer.finished()){
     if(_test_pauseSwitch){
@@ -858,6 +782,6 @@ void DEBUG_PrintLightSens(){
   Serial.print(", R-");
   Serial.print("Lux: "); Serial.println(task_find_light.get_lux_right());
 }
+#endif
 
-*/
 

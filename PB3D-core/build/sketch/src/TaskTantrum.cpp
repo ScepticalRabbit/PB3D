@@ -10,34 +10,34 @@
 
 #include "TaskTantrum.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskTantrum::TaskTantrum(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker){
-    _mood_manager = inMood;
-    _move_manager = inMove;
-    _task_manager = inTask;
-    _move_manager = inMove;
-    _speaker = inSpeaker;
+
+TaskTantrum::TaskTantrum(MoodManager* mood, TaskManager* task,
+                         MoveManager* move, Speaker* speaker){
+    _mood_manager = mood;
+    _move_manager = move;
+    _task_manager = task;
+    _move_manager = move;
+    _speaker = speaker;
 }
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void TaskTantrum::begin(){
-    _timerObj1.start(0);
-    _timerObj2.start(0);
+    _tantrum_timer.start(0);
+    _growl_timer.start(0);
 }
 
 //---------------------------------------------------------------------------
 // TANTRUM
-void TaskTantrum::haveTantrum(){
-if(_startTantrumFlag){
-    _startTantrumFlag = false;
+void TaskTantrum::chuck_tantrum(){
+if(_start_tantrum){
+    _start_tantrum = false;
     // Tantrum timer and completion
-    _tantrumComplete = false;
-    _timerObj1.start(_tantrum_duration);
+    _tantrum_complete = false;
+    _tantrum_timer.start(_tantrum_duration);
     // Growl timer and flag
-    _growlFlag = true;
-    _timerObj2.start(_tantrumGrowlDuration);
+    _growl_on = true;
+    _growl_timer.start(_tantrum_growl_duration);
 
     // MOOD UPDATE: 30% chance of angry
     int8_t prob = random(0,100);
@@ -58,27 +58,27 @@ _speaker->set_sound_codes(inCodes,4);
 // Set the task LEDs on every loop regardless
 _task_manager->task_LED_tantrum();
 
-if(_timerObj2.finished()){
-    _growlFlag = !_growlFlag;
-    if(_growlFlag){
-    _timerObj2.start(_tantrumGrowlDuration);
+if(_growl_timer.finished()){
+    _growl_on = !_growl_on;
+    if(_growl_on){
+    _growl_timer.start(_tantrum_growl_duration);
     _speaker->reset();
     }
     else{
-    _timerObj2.start(_tantrumGrowlPause);
+    _growl_timer.start(_tantrum_growl_pause);
     }
 }
-if(_timerObj1.finished()){
-    _tantrumComplete = true;
+if(_tantrum_timer.finished()){
+    _tantrum_complete = true;
 }
 else{
-    _move_manager->forward_back(_tantrumFBDuration,_tantrumFBDuration);
+    _move_manager->forward_back(_tantrum_FB_duration,_tantrum_FB_duration);
 }
 }
 
 //---------------------------------------------------------------------------
 // Get, set and reset
-void TaskTantrum::setStartTantrumFlag(){
-    _startTantrumFlag = true;
-    _tantrumComplete = false;
+void TaskTantrum::set_start_tantrum(){
+    _start_tantrum = true;
+    _tantrum_complete = false;
 }

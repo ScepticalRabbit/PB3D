@@ -10,15 +10,16 @@
 
 #include "TaskPounce.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskPounce::TaskPounce(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
-            Speaker* inSpeaker){
-    _collision_manager = inCollision;
-    _mood_manager = inMood;
-    _task_manager = inTask;
-    _move_manager = inMove;
-    _speaker = inSpeaker;
+TaskPounce::TaskPounce(CollisionManager* collision,
+                       MoodManager* mood,
+                       TaskManager* task,
+                       MoveManager* move,
+                       Speaker* speaker){
+    _collision_manager = collision;
+    _mood_manager = mood;
+    _task_manager = task;
+    _move_manager = move;
+    _speaker = speaker;
 }
 
 //---------------------------------------------------------------------------
@@ -60,24 +61,22 @@ void TaskPounce::seek_and_pounce(){
 
     //-------------------------------------------------------------------------
     // POUNCE DECISION TREE
-    // 1) Look for target
-    // 2) Lock on to target
-    // 3) Run to target
-    // 4) Spin random number of degrees 90-270 and repeat
-    if(_state == POUNCE_SEEK){
-        _seek_target();
-    }
-    else if(_state == POUNCE_LOCKON){
-        _lock_on();
-    }
-    else if(_state == POUNCE_RUN){
-        _run_to_target();
-    }
-    else if(_state == POUNCE_REALIGN){
-        _realign();
-    }
-    else{
-        _move_manager->stop();
+    switch(_state){
+        case POUNCE_SEEK:
+            _seek_target();
+            break;
+        case POUNCE_LOCKON:
+            _lock_on();
+            break;
+        case POUNCE_RUN:
+            _run_to_target();
+            break;
+        case POUNCE_REALIGN:
+            _realign();
+            break;
+        default:
+            _move_manager->stop();
+            break;
     }
 }
 
@@ -95,14 +94,11 @@ void TaskPounce::collision_reset_to_realign(){
     }
 }
 
-void TaskPounce::set_realign_cent(int16_t inAng){
-    _realign_angle_cent = inAng;
+void TaskPounce::set_realign_cent(int16_t angle){
+    _realign_angle_cent = angle;
     _realign_ang_min = _realign_angle_cent-_realign_angle_dev;
     _realign_ang_max = _realign_angle_cent+_realign_angle_dev;
 }
-
-//---------------------------------------------------------------------------
-// PRIVATE FUNCTIONS
 
 //---------------------------------------------------------------------------
 // START
