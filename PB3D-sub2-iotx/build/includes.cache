@@ -1,0 +1,187 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/cores/arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/variants/XIAO_m0"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/PB3D-sub2-iotx/build/sketch/PB3D-sub2-iotx.ino.cpp",
+    "Include": "Wire.h",
+    "Includepath": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Wire"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/PB3D-sub2-iotx/build/sketch/PB3D-sub2-iotx.ino.cpp",
+    "Include": "PB3DI2CAddresses.h",
+    "Includepath": "/home/lloydf/Arduino/libraries/PB3D-constants"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/PB3D-sub2-iotx/build/sketch/PB3D-sub2-iotx.ino.cpp",
+    "Include": "SPI.h",
+    "Includepath": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/SPI"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/PB3D-sub2-iotx/build/sketch/PB3D-sub2-iotx.ino.cpp",
+    "Include": "Adafruit_ZeroDMA.h",
+    "Includepath": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Adafruit_ZeroDMA"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/PB3D-sub2-iotx/build/sketch/PB3D-sub2-iotx.ino.cpp",
+    "Include": "RH_RF69.h",
+    "Includepath": "/home/lloydf/Arduino/libraries/RadioHead-master"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/PB3D-sub2-iotx/build/sketch/PB3D-sub2-iotx.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Wire/Wire.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/PB3D-constants/PB3DTimer.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/SPI/SPI.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Adafruit_ZeroDMA/Adafruit_ZeroDMA.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHCRC.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHDatagram.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHEncryptedDriver.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHGenericDriver.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHGenericSPI.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHHardwareSPI.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHMesh.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHNRFSPIDriver.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHReliableDatagram.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHRouter.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHSPIDriver.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RHSoftwareSPI.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_ASK.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_CC110.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_E32.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_MRF89.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_NRF24.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_NRF51.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_NRF905.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_RF22.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_RF24.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_RF69.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_RF95.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_Serial.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/RadioHead-master/RH_TCP.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

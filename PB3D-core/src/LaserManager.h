@@ -17,7 +17,7 @@
 #include <PB3DI2CAddresses.h>
 #include <PB3DConstants.h>
 
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "LaserSensor.h"
 #include "CollisionStrategy.h"
 

@@ -13,7 +13,7 @@
 
 #include <Arduino.h>
 
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "Encoder.h"
 #include "IMUSensor.h"
 

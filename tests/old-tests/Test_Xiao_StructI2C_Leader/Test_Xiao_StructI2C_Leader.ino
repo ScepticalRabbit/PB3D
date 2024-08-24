@@ -1,5 +1,5 @@
 #include <Wire.h>
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 // Address for nervous system peripherial sensor array
 #define NERVSYS_ADDR 9

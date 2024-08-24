@@ -18,7 +18,7 @@
 #include <PB3DConstants.h>
 #include "TaskManager.h"
 #include "MoveManager.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "Speaker.h"
 
 #include <Servo.h>

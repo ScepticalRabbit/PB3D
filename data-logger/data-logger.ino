@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 
 #include "RFDataLoggerRX.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 RFDataLoggerRX rfLogger;
 

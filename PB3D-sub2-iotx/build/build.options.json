@@ -1,0 +1,11 @@
+{
+  "additionalFiles": "../../..,../../..,../../..,../..",
+  "builtInToolsFolders": "",
+  "compiler.optimization_flags": "",
+  "customBuildProperties": "",
+  "fqbn": "Seeeduino:samd:seeed_XIAO_m0:usbstack=arduino,debug=off,sercom4=include",
+  "hardwareFolders": "/home/lloydf/.arduino15/packages",
+  "otherLibrariesFolders": "/home/lloydf/Arduino/libraries",
+  "runtime.ide.version": "10607",
+  "sketchLocation": "/home/lloydf/Arduino/PB3D/PB3D-sub2-iotx"
+}

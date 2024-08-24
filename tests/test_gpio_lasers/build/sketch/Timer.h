@@ -1,4 +1,4 @@
-#line 1 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/Timer.h"
+#line 1 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/PB3DTimer.h"
 //==============================================================================
 // PB3D: A pet robot that is 3D printed
 //==============================================================================

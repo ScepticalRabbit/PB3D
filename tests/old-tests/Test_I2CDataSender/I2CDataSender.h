@@ -14,7 +14,7 @@ Date Edited:  11th Dec. 2022
 #define I2CDATASENDER_H
 
 #include <Wire.h>
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 // Address for nervous system peripherial Xiao
 #define NERVSYS_ADDR 9

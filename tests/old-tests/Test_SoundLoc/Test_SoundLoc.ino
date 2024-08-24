@@ -1,5 +1,5 @@
-#include "Timer.h"
-#include "MicroTimer.h"
+#include "PB3DTimer.h"
+#include "MicroPB3DTimer.h"
 
 #define EARS_ENVSAMP 0
 #define EARS_SNDLOC 1

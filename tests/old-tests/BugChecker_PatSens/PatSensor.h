@@ -15,7 +15,7 @@ Date Edited:  20th December 2021
 
 #include <Wire.h> // I2C
 #include <Seeed_CY8C401XX.h> // Capacitive Touch Sensor
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 #define ADDR_TOUCHSENS 0x08
 

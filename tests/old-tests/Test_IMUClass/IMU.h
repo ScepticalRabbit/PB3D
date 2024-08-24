@@ -16,7 +16,7 @@ Date Edited:  22nd December 2022
 #include <Adafruit_FXAS21002C.h>
 #include <Adafruit_FXOS8700.h>
 
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 //#define IMU_DEBUG_TIMER
 //#define IMU_DEBUG_RAW_OUTPUT

@@ -17,7 +17,7 @@
 #include "MoodManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "Speaker.h"
 #include "PatSensor.h"
 

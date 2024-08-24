@@ -14,7 +14,7 @@ Author: Lloyd Fletcher
 #define FILTERMOVAVG_H
 
 #include <Arduino.h>
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 class FilterMovAvg{
 public:

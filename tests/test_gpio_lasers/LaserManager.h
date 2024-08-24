@@ -15,7 +15,7 @@
 #include <Adafruit_PCF8574.h>
 
 #include <PB3DI2CAddresses.h>
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "LaserSensor.h"
 #include "LaserIndex.h"
 #include "CollisionDangerCodes.h"

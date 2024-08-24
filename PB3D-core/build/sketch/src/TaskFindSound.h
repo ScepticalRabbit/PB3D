@@ -19,7 +19,7 @@
 #include "TaskManager.h"
 #include "MoveManager.h"
 #include "Speaker.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 // Debug flag to print debug info to serial
 //#define DEBUG_TASKFINDSOUND

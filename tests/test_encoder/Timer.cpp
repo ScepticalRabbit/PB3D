@@ -8,7 +8,7 @@ timing of different functions of the robot.
 
 Author: Lloyd Fletcher
 */
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 Timer::Timer(){
 

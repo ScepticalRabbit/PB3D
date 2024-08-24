@@ -13,7 +13,7 @@ Date Edited:  2nd October 2021 - Started integration with PB3D
 #ifndef SPEAKER_H
 #define SPEAKER_H
 
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "Notes.h"
 
 #define SPEAKER_POUT A0

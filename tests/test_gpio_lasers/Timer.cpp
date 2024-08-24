@@ -7,7 +7,7 @@
 // Copyright (C) 2024 ScepticalRabbit
 //------------------------------------------------------------------------------
 
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 Timer::Timer(){
 

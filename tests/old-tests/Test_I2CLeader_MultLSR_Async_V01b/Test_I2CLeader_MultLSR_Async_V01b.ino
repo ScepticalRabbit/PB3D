@@ -1,8 +1,8 @@
 // Include Arduino Wire library for I2C
 #include <Wire.h>
 #include "Adafruit_VL53L0X.h"
-#include "Timer.h"
- 
+#include "PB3DTimer.h"
+
 // Define Follower I2C Address
 #define FOLL_ADDR 0x11
 
@@ -24,9 +24,9 @@ uint16_t range1 = 0, range2 = 0, range3 = 0;
 uint16_t rangeInt = 500;
 Timer rangeTimer = Timer();
 
-// I2C send byte 
+// I2C send byte
 byte toSend = B00000000;
- 
+
 void setup() {
   // Initialize I2C communications as Leader
   Wire.begin();
@@ -37,7 +37,7 @@ void setup() {
   delay(2000);
   setLSRAddrs();
 }
- 
+
 void loop() {
   uint32_t startTime = millis();
   readLSRs();
@@ -61,7 +61,7 @@ void setLSRAddrs(){
   toSend = B00000000;
   sendByteWithI2C(toSend);
   delay(resetDelay);
-  
+
   // Turn on all sensors - set all high
   toSend = B00001110;
   sendByteWithI2C(toSend);
@@ -94,7 +94,7 @@ void setLSRAddrs(){
     Serial.println(F("Second laser initialised"));
   }
   delay(resetDelay);
-    
+
   // Activate second laser sensor
   toSend = B00001110;
   sendByteWithI2C(toSend);
@@ -123,7 +123,7 @@ void readLSRs() {
     Serial.print(F("B: "));
     Serial.print(range3);
     Serial.println();
-    
+
     laser1.startRange();
     laser2.startRange();
     laser3.startRange();

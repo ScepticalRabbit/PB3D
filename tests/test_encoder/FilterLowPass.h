@@ -12,7 +12,7 @@ Author: Lloyd Fletcher
 #define FILTERLOWPASS_H
 
 #include <Arduino.h>
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 class FilterLowPass{
 public:

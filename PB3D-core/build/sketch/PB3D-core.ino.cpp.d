@@ -150,7 +150,7 @@
  /home/lloydf/Arduino/libraries/PB3D-constants/PB3DConstants.h \
  /home/lloydf/Arduino/libraries/PB3D-constants/PB3DPins.h \
  /home/lloydf/Arduino/libraries/PB3D-constants/PB3DI2CAddresses.h \
- /home/lloydf/Arduino/libraries/PB3D-constants/Timer.h \
+ /home/lloydf/Arduino/libraries/PB3D-constants/PB3DTimer.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/CollisionManager.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoodManager.h \
  /home/lloydf/Arduino/PB3D/PB3D-core/build/sketch/src/MoveManager.h \

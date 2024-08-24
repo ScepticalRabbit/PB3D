@@ -20,7 +20,7 @@ Date Edited:  10th Dec. 2022
 #include <RH_RF69.h>
 #include <RHReliableDatagram.h>
 
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 //----------------------------------------------------------------------------
 // DEFINITIONS

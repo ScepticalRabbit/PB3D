@@ -13,7 +13,7 @@
 #include <Arduino.h>
 
 #include <PB3DConstants.h>
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 
 class PID{

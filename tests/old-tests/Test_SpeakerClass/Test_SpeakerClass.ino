@@ -1,6 +1,6 @@
 #include <Wire.h>
 #include "Speaker.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 uint32_t testTime = 4000;
 Timer testTimer = Timer();

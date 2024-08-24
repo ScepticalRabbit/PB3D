@@ -16,7 +16,7 @@
 #include "MoodManager.h"
 #include "MoveManager.h"
 #include "TaskManager.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "CollisionEscaper.h"
 #include "LaserManager.h"
 #include "BumperSensor.h"

@@ -1,5 +1,0 @@
-{
-    "configuration": "usbstack=arduino,debug=off,sercom4=include",
-    "board": "Seeeduino:samd:seeed_XIAO_m0",
-    "sketch": "PB3D-sub2-io.ino"
-}

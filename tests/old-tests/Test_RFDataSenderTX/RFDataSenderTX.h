@@ -19,7 +19,7 @@ Date Edited:  11th Dec. 2022
 #include <SPI.h>
 #include <RH_RF69.h>
 #include <RHReliableDatagram.h>
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 //----------------------------------------------------------------------------
 // DEFINITIONS

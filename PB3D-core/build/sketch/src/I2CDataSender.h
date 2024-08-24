@@ -18,7 +18,7 @@
 #include <PB3DStateData.h>
 
 #include "CollisionManager.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "IMUSensor.h"
 #include "Navigation.h"
 

@@ -9,7 +9,7 @@ Author: Lloyd Fletcher
 */
 
 #include <Arduino.h>
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "Encoder.h"
 
 // Digital pins for left and right encoders

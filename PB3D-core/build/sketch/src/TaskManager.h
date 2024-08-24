@@ -14,7 +14,7 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel_ZeroDMA.h>
 #include "MoodManager.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 
 class TaskManager{

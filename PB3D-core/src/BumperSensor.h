@@ -14,7 +14,7 @@
 
 #include <PB3DConstants.h>
 #include <PB3DI2CAddresses.h>
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 
 class BumperSensor{

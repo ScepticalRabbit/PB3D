@@ -11,8 +11,8 @@
 #define PB3D_I2CADDR_H
 
 
-#define ADDR_FOLLOW_XIAO_1 0x09 // Sound / DigIO
-#define ADDR_FOLLOW_XIAO_2 0x11 // Bumpers / Radio? / Vibration motor
+#define ADDR_FOLLOW_XIAO_1 0x09 // Sound / DigIO for setup
+#define ADDR_FOLLOW_XIAO_2 0x11 // Radio TX / Active DigIO
 
 #define ADDR_TOUCHSENS 0x08
 

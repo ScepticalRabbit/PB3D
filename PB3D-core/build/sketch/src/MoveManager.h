@@ -16,7 +16,7 @@
 
 #include <PB3DConstants.h>
 #include "Encoder.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "PID.h"
 
 

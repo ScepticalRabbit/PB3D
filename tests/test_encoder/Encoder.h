@@ -12,7 +12,7 @@ Author: Lloyd Fletcher
 #define ENCODER_H
 
 #include <Arduino.h>
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "FilterMovAvg.h"
 #include "FilterLowPass.h"
 
