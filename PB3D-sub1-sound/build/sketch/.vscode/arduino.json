@@ -1,7 +1,0 @@
-#line 1 "/home/lloydf/Arduino/PB3D/PB3D-sub1-sound/.vscode/arduino.json"
-{
-    "configuration": "usbstack=arduino,debug=off,sercom4=include",
-    "board": "Seeeduino:samd:seeed_XIAO_m0",
-    "sketch": "PB3D-sub1-sound.ino",
-    "output": "./build"
-}

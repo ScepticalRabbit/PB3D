@@ -1,0 +1,7 @@
+#-------------------------------------------------------------------------------
+# PB3D Ignore
+
+PB3D-core/build/
+PB3D-sub1-sound/build/
+PB3D-sub2-iotx/build/
+
