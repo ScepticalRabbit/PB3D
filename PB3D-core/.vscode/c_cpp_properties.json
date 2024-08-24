@@ -2,6 +2,19 @@
     "version": 4,
     "configurations": [
         {
+            "name": "Linux",
+            "compilerPath": "/usr/bin/gcc",
+            "compilerArgs": [],
+            "intelliSenseMode": "linux-gcc-x64",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "forcedInclude": [],
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "defines": []
+        },
+        {
             "name": "Arduino",
             "compilerPath": "/home/lloydf/.arduino15/packages/adafruit/tools/arm-none-eabi-gcc/9-2019q4/bin/arm-none-eabi-g++",
             "compilerArgs": [
@@ -19,32 +32,48 @@
             ],
             "intelliSenseMode": "gcc-x64",
             "includePath": [
-                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.13/libraries/Adafruit_TinyUSB_Arduino/src/arduino",
-                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.13/libraries/Adafruit_TinyUSB_Arduino/src/arduino",
+                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Adafruit_TinyUSB_Arduino/src/arduino",
+                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Adafruit_TinyUSB_Arduino/src/arduino",
                 "/home/lloydf/.arduino15/packages/adafruit/tools/CMSIS/5.4.0/CMSIS/Core/Include/",
                 "/home/lloydf/.arduino15/packages/adafruit/tools/CMSIS/5.4.0/CMSIS/DSP/Include/",
                 "/home/lloydf/.arduino15/packages/adafruit/tools/CMSIS-Atmel/1.2.2/CMSIS/Device/ATMEL/",
-                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.13/cores/arduino",
-                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.13/variants/metro_m4",
-                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.13/libraries/Wire",
+                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino",
+                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/variants/metro_m4",
+                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Wire",
+                "/home/lloydf/Arduino/libraries/Adafruit_Motor_Shield_V2_Library",
+                "/home/lloydf/Arduino/libraries/Adafruit_BusIO",
+                "/home/lloydf/Arduino/libraries/Adafruit_DMA_neopixel_library",
+                "/home/lloydf/Arduino/libraries/Adafruit_NeoPixel",
+                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Adafruit_ZeroDMA",
+                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/SPI",
+                "/home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src",
+                "/home/lloydf/Arduino/libraries/Grove_Ultrasonic_Ranger",
+                "/home/lloydf/Arduino/libraries/Grove_-_Capacitive_Touch_Slide_Sensor_CY8C40XX",
+                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/libraries/Servo/src",
+                "/home/lloydf/Arduino/libraries/Adafruit_Sensor_Calibration",
+                "/home/lloydf/Arduino/libraries/Adafruit_Unified_Sensor",
+                "/home/lloydf/Arduino/libraries/SdFat_-_Adafruit_Fork/src",
+                "/home/lloydf/Arduino/libraries/ArduinoJson/src",
+                "/home/lloydf/Arduino/libraries/Adafruit_SPIFlash/src",
+                "/home/lloydf/Arduino/libraries/Adafruit_AHRS/src",
+                "/home/lloydf/Arduino/libraries/Adafruit_FXAS21002C",
+                "/home/lloydf/Arduino/libraries/Adafruit_FXOS8700",
+                "/home/lloydf/Arduino/libraries/Grove_Human_Presence_Sensor-master",
+                "/home/lloydf/Arduino/libraries/Adafruit_VEML7700_Library",
                 "/home/lloydf/.arduino15/packages/adafruit/tools/arm-none-eabi-gcc/9-2019q4/arm-none-eabi/include/c++/9.2.1",
                 "/home/lloydf/.arduino15/packages/adafruit/tools/arm-none-eabi-gcc/9-2019q4/arm-none-eabi/include/c++/9.2.1/arm-none-eabi",
                 "/home/lloydf/.arduino15/packages/adafruit/tools/arm-none-eabi-gcc/9-2019q4/arm-none-eabi/include/c++/9.2.1/backward",
                 "/home/lloydf/.arduino15/packages/adafruit/tools/arm-none-eabi-gcc/9-2019q4/lib/gcc/arm-none-eabi/9.2.1/include",
                 "/home/lloydf/.arduino15/packages/adafruit/tools/arm-none-eabi-gcc/9-2019q4/lib/gcc/arm-none-eabi/9.2.1/include-fixed",
-                "/home/lloydf/.arduino15/packages/adafruit/tools/arm-none-eabi-gcc/9-2019q4/arm-none-eabi/include",
-                "/home/lloydf/Arduino/libraries",
-                "/home/lloydf/Arduino/libraries/Adafruit_BusIO",
-                "/home/lloydf/Arduino/libraries/Adafruit_Motor_Shield_V2_Library"
-
+                "/home/lloydf/.arduino15/packages/adafruit/tools/arm-none-eabi-gcc/9-2019q4/arm-none-eabi/include"
             ],
             "forcedInclude": [
-                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.13/cores/arduino/Arduino.h"
+                "/home/lloydf/.arduino15/packages/adafruit/hardware/samd/1.7.16/cores/arduino/Arduino.h"
             ],
             "cStandard": "c11",
             "cppStandard": "c++11",
             "defines": [
-                "__SKETCH_NAME__=\"\"\"vscode-test.ino\"\"\"",
+                "__SKETCH_NAME__=\"\"\"PB3D-core.ino\"\"\"",
                 "F_CPU=120000000L",
                 "ARDUINO=10607",
                 "ARDUINO_METRO_M4",

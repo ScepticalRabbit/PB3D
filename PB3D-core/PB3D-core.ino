@@ -132,7 +132,7 @@ TaskPause taskPauseObj = TaskPause(&collisionObj,&taskObj,&moveObj,&speakerObj);
 void setup() {
   // Start the serial
   Serial.begin(115200);
-  // Only use below to stop start up until UDB cable connected
+  // Only use below to stop start up until USB cable connected
   // while(!Serial){}
 
   // Initialize I2C communications for sensors and sub boards
@@ -147,8 +147,7 @@ void setup() {
   // Seed the random generator - used by many classes 'begin' function
   randomSeed(analogRead(A1));
 
-  // Setup External Classes
-  leds.begin(); // This initializes the NeoPixel library.
+  leds.begin();
   leds.show();
 
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -156,11 +155,9 @@ void setup() {
 
   //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  // Setup Priority Classes
   // NOTE: I2C multiplexer and light sensors must be initialised first!
   taskFindLightObj.begin();
 
-  // Setup Internal Classes
   moodObj.begin();
   taskObj.begin();
   moveObj.begin();
