@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
+// PET BOT 3D - PB3D!
 // Test Code - RF TX/RX with data structures
 //-----------------------------------------------------------------------------
 // Based on Adafruit RF example
@@ -9,7 +9,7 @@
 #include <RH_RF69.h>
 #include <RHReliableDatagram.h>
 
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF69_FREQ 434.2
@@ -25,7 +25,7 @@
 #define SERV_RF_ADDR   2
 
 // Radio class and radio data manager class
-// RH_RF69_MAX_MESSAGE_LEN = 60 
+// RH_RF69_MAX_MESSAGE_LEN = 60
 RH_RF69 rf69(RFM69_CS, RFM69_INT);
 RHReliableDatagram rf69_manager(rf69, SERV_RF_ADDR);
 int16_t packetnum = 0;  // packet counter, we increment per xmission
@@ -43,7 +43,7 @@ typedef struct stateData_t{
   uint8_t mood;
   uint8_t task;
   bool collisionFlags[4];
-  float wheelSpeed;  
+  float wheelSpeed;
 };
 
 typedef union radioPacket_t{
@@ -61,7 +61,7 @@ radioPacket_t currState;
 void setup(){
   Serial.begin(115200);
 
-  // RF: reset pin 
+  // RF: reset pin
   pinMode(RFM69_RST, OUTPUT);
   digitalWrite(RFM69_RST, LOW);
 
@@ -86,7 +86,7 @@ void setup(){
     Serial.println("RF TX: setFrequency failed");
   }
   rf69.setTxPower(14, true); // range from 14-20 for power, 2nd arg must be true for 69HCW
-  
+
   // RF: Encryption
   uint8_t key[] = { 0x04, 0x05, 0x09, 0x08, 0x02, 0x01, 0x03, 0x08,
                     0x04, 0x05, 0x09, 0x08, 0x02, 0x01, 0x03, 0x08};
@@ -105,13 +105,13 @@ void setup(){
   currState.state.collisionFlags[2] = true;
   currState.state.collisionFlags[3] = false;
   currState.state.wheelSpeed = 202.2;
-  
+
   Serial.println(F("INITIAL DATA STRUCT"));
   printRFDataStruct();
 }
 
 // Dont put this on the stack:
-// RH_RF69_MAX_MESSAGE_LEN = 60 
+// RH_RF69_MAX_MESSAGE_LEN = 60
 uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
 
 //----------------------------------------------------------------------------
@@ -124,18 +124,18 @@ void loop() {
     // Print the data structure to be sent
     Serial.println(F("SENDING DATA STRUCTURE:"));
     printRFDataStruct();
-    
+
     // Send data structure to the destination as a byte array
     if (rf69_manager.sendtoWait(currState.rfPacket,PACKET_SIZE,DEST_RF_ADDR)) {
       uint8_t len = sizeof(buf);
-      uint8_t from; 
-        
+      uint8_t from;
+
       if (rf69_manager.recvfromAckTimeout(buf, &len, radioTimeOut, &from)) {
         buf[len] = 0; // zero out remaining string
-        
+
         Serial.print("Reply from #"); Serial.print(from);
         Serial.print(" [RSSI :"); Serial.print(rf69.lastRssi()); Serial.print("] : ");
-        Serial.println((char*)buf);     
+        Serial.println((char*)buf);
 
       } else {
         Serial.println(F("No reply..."));
@@ -158,7 +158,7 @@ void printRFDataStruct(){
   Serial.print(F("Mood: "));
   Serial.print(currState.state.mood);
   Serial.print(F("; "));
-  
+
   Serial.print(F("TaskManager: "));
   Serial.print(currState.state.task);
   Serial.print(F("; "));

@@ -1,84 +1,76 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskRest
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskRest.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
+
 TaskRest::TaskRest(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker){
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
-    _speakerObj = inSpeaker;
+    _mood_manager = inMood;
+    _task_manager = inTask;
+    _move_manager = inMove;
+    _speaker = inSpeaker;
 }
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void TaskRest::begin(){
-    _timerObj.start(0);
+    _timer.start(0);
 }
 
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskRest::update(){
-    // If the task has changed then modify other classes as needed
-    if(_taskObj->getNewTaskFlag()){
+    if(_task_manager->get_new_task_flag()){
         reset();
-        _speakerObj->reset();
+        _speaker->reset();
     }
 }
 
 //---------------------------------------------------------------------------
 // REST
 void TaskRest::rest(){
-    // Reset the speaker flags
-    uint8_t inCodes[] = {SPEAKER_SNORE,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
-    _speakerObj->setSoundCodes(inCodes,4);
+    uint8_t in_codes[] = {SPEAKER_SNORE,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
+    _speaker->set_sound_codes(in_codes,4);
 
-    // Stop moving while sleeping
-    _moveObj->stop();
+    _move_manager->stop();
 
-    if(_timerObj.finished()){
-        if(_restLEDIncrease){
-        // If we are increasing increment the LED intensity
-        _restLEDVal = _restLEDVal+1;
-        
-        // If we are above the max value reset and decrease
-        if(_restLEDVal>=_restLEDMax){
-            _restLEDVal = _restLEDMax;
-            _restLEDIncrease = false;
-            _speakerObj->reset();
+    if(_timer.finished()){
+        if(_rest_LED_increase){
+
+            _rest_LED_val = _rest_LED_val+1;
+
+            // If we are above the max value reset and decrease
+            if(_rest_LED_val>=_rest_LED_max){
+                _rest_LED_val = _rest_LED_max;
+                _rest_LED_increase = false;
+                _speaker->reset();
+            }
+            }
+            else{
+            _rest_LED_val = _rest_LED_val-1;
+
+            if(_rest_LED_val<=_rest_LED_min){
+                _rest_LED_val = _rest_LED_min;
+                _rest_LED_increase = true;
+            }
         }
-        }
-        else{
-        // If we are decreasing decrement the LED intensity
-        _restLEDVal = _restLEDVal-1;
-        
-        // If we are below the min intensity reset and increase
-        if(_restLEDVal<=_restLEDMin){
-            _restLEDVal = _restLEDMin;
-            _restLEDIncrease = true;
-        }  
-        }
-        // Restart the timerr
-        _timerObj.start(_restUpdateTime);
-        // Set the current LED value
-        _taskObj->taskLEDRest(_restLEDVal);
+
+        _timer.start(_rest_update_time);
+        _task_manager->task_LED_rest(_rest_LED_val);
     }
 }
 
 //---------------------------------------------------------------------------
 // Get, set and reset
 void TaskRest::reset(){
-    _timerObj.start(0);
-    _restLEDVal = _restLEDMax;
-    _restLEDIncrease = false;
-    _speakerObj->reset();
+    _timer.start(0);
+    _rest_LED_val = _rest_LED_max;
+    _rest_LED_increase = false;
+    _speaker->reset();
 }
-  

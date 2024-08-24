@@ -1,4 +1,4 @@
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 #define AINL A0
 #define AINR A1
@@ -23,7 +23,7 @@ void setup()
 }
 
 void loop()
-{  
+{
   SL = analogRead(AINL);
   SR = analogRead(AINL);
 
@@ -33,10 +33,10 @@ void loop()
   if(SR > SRMax){
     SRMax = SR;
   }
-  
+
   if(reportTimer.finished()){
     reportTimer.start(reportTime);
-    
+
     Serial.print("L Max ");
     Serial.print(SLMax);
     Serial.print(" , ");

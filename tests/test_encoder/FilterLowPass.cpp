@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------
-// PET BOT - PB3D! 
+// PET BOT - PB3D!
 // CLASS: FilterLowPass
 //---------------------------------------------------------------------------
 /*
@@ -20,22 +20,22 @@ FilterLowPass::FilterLowPass(double inAlpha){
 
 FilterLowPass::FilterLowPass(double inAlpha, uint16_t inUpdateTime){
     _alpha = inAlpha;
-    _updateTime = inUpdateTime;
+    _update_time = inUpdateTime;
 }
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void FilterLowPass::begin(){
-    _filtTimer.start(0);
+    _filter_timer.start(0);
 }
 
 //---------------------------------------------------------------------------
 // FILTER
 double FilterLowPass::filter(double inData){
-    if(_filtTimer.finished()){
-        _currFiltered = _alpha*inData + (1-_alpha)*_prevFiltered;
-        _prevFiltered = _currFiltered;
-        _filtTimer.start(_updateTime);
+    if(_filter_timer.finished()){
+        _curr_filtered = _alpha*inData + (1-_alpha)*_prev_filtered;
+        _prev_filtered = _curr_filtered;
+        _filter_timer.start(_update_time);
     }
-    return _currFiltered;
+    return _curr_filtered;
 }

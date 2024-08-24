@@ -1,19 +1,18 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: NAVIGATION
-//---------------------------------------------------------------------------
-/*
-The ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef NAVIGATION_H
 #define NAVIGATION_H
 
 #include <Arduino.h>
 
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "Encoder.h"
 #include "IMUSensor.h"
 
@@ -22,110 +21,54 @@ Author: Lloyd Fletcher
 
 class Navigation{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  Navigation(Encoder* encL, Encoder* encR, IMUSensor* inIMU){
-    _encoder_L = encL;
-    _encoder_R = encR;
-    _IMUObj = inIMU;
-  }
+  Navigation(Encoder* encoder_left, Encoder* encoder_right, IMUSensor* IMU);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
-  void begin(){
-    if(!_IMUObj->getEnabledFlag()){
-      Serial.println(F("NAV: IMU disabled, navigation disabled."));
-    }
-    else{
-      Serial.println(F("NAV: IMU found, navigation enabled."));
-    }
-
-    _navTimer.start(0);
-  }
+  void begin();
 
   //---------------------------------------------------------------------------
   // UPDATE: called during every LOOP
-  void update(){
-    if(!_isEnabled){return;}
-
-    if(_navTimer.finished()){
-      _navTimer.start(_navUpdateTime);
-
-      // Store the last calculated coords as previous
-      _posXPrev = _posXNext;
-      _posYPrev = _posYNext;
-
-      // Get the speed of the robots centroid and current heading
-      _velC = (_encoder_L->getSmoothSpeedMMPS()+
-                    _encoder_R->getSmoothSpeedMMPS()) / 2.0;
-      _heading = _IMUObj->getHeadAng();
-
-      // Calculate the velocity components (X points to front face of robot)
-      _velX = _velC*cos((_heading/180.0)*float(PI));
-      _velY = _velC*sin((_heading/180.0)*float(PI));
-
-      // Update the predicted position
-      _posXNext = _posXPrev + _velX*_dt;
-      _posYNext = _posYPrev + _velY*_dt;     
-
-      // Debug prints update every X interations based on debugFreq
-      if(_debugCount++ >= _debugFreq){
-        _debugCount = 0; // Reset the debug count
-
-        #if defined(NAV_DEBUG_TIMER)
-          Serial.print(F("NAV: update took ")); 
-          Serial.print(_navTimer.getTime());
-          Serial.println(F("ms"));
-        #endif
-
-        #if defined(NAV_DEBUG_POS)
-          Serial.print(F("NAV: Pos X= "));
-          Serial.print(_posXNext);
-          Serial.print(F("mm, Pos Y= "));
-          Serial.print(_posYNext);
-          Serial.println(F("mm"));
-        #endif
-      }
-    }
-  }
+  void update();
 
   //---------------------------------------------------------------------------
-  // GET FUNCTIONS
-  bool getEnabledFlag(){return _isEnabled;}
+  // GET, SET, RESET FUNCTIONS
+  bool get_enabled_flag(){return _enabled;}
 
-  float getPosX(){return _posXNext;}
-  float getPosY(){return _posYNext;}
-  float getVelX(){return _velX;}
-  float getVelY(){return _velY;}
-  float getVelC(){return _velC;}
-  float getHeading(){return _heading;}
-
-  //---------------------------------------------------------------------------
-  // SET FUNCTIONS
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  float get_pos_x(){return _pos_x_next;}
+  float get_pos_y(){return _pos_y_next;}
+  float get_vel_x(){return _vel_x;}
+  float get_vel_y(){return _vel_y;}
+  float get_vel_c(){return _vel_c;}
+  float get_heading(){return _heading;}
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
 private:
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _isEnabled = true;
+  bool _enabled = true;
 
   // Debug variables
-  uint8_t _debugCount = 0;
-  uint8_t _debugFreq = 10;
+  uint8_t _debug_count = 0;
+  uint8_t _debug_freq = 10;
 
   // Navigation Objects - Encoders and IMU
-  Encoder* _encoder_L;
-  Encoder* _encoder_R;
-  IMUSensor* _IMUObj;
+  Encoder* _encoder_left;
+  Encoder* _encoder_right;
+  IMUSensor* _IMU;
 
   // Navigation Variables
-  int16_t _navUpdateTime = 20; 
-  float _dt = float(_navUpdateTime)/1000.0;
-  Timer _navTimer = Timer();
+  const int16_t _nav_update_time = 20;
+  float _dt = float(_nav_update_time)/1000.0;
+  Timer _nav_timer = Timer();
 
-  float _velC = 0.0, _velX = 0.0, _velY = 0.0;
+  float _vel_c = 0.0;
+  float _vel_x = 0.0;
+  float _vel_y = 0.0;
   float _heading = 0.0;
-  float _posXNext = 0.0, _posYNext = 0.0;
-  float _posXPrev = 0.0, _posYPrev = 0.0;
+  float _pos_x_next = 0.0;
+  float _pos_y_next = 0.0;
+  float _pos_x_prev = 0.0;
+  float _pos_y_prev = 0.0;
 };
 #endif //

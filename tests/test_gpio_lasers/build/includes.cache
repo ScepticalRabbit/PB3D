@@ -1,0 +1,147 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/cores/arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/variants/XIAO_m0"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/test_gpio_lasers.ino.cpp",
+    "Include": "Wire.h",
+    "Includepath": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Wire"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/test_gpio_lasers.ino.cpp",
+    "Include": "Adafruit_PCF8574.h",
+    "Includepath": "/home/lloydf/Arduino/libraries/Adafruit_PCF8574"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/test_gpio_lasers.ino.cpp",
+    "Include": "Adafruit_BusIO_Register.h",
+    "Includepath": "/home/lloydf/Arduino/libraries/Adafruit_BusIO"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/test_gpio_lasers.ino.cpp",
+    "Include": "SPI.h",
+    "Includepath": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/SPI"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/test_gpio_lasers.ino.cpp",
+    "Include": "Adafruit_ZeroDMA.h",
+    "Includepath": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Adafruit_ZeroDMA"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/test_gpio_lasers.ino.cpp",
+    "Include": "Adafruit_VL53L0X.h",
+    "Includepath": "/home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src"
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/test_gpio_lasers.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/CollisionStrategy.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/LaserManager.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/LaserSensor.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/build/sketch/Timer.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Wire/Wire.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_PCF8574/Adafruit_PCF8574.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_PCF8574/Adafruit_PCF8575.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_BusIO_Register.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_I2CDevice.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_BusIO/Adafruit_SPIDevice.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/SPI/SPI.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Adafruit_ZeroDMA/Adafruit_ZeroDMA.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/Adafruit_VL53L0X.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/core/src/vl53l0x_api.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/core/src/vl53l0x_api_calibration.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/core/src/vl53l0x_api_core.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/core/src/vl53l0x_api_ranging.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/core/src/vl53l0x_api_strings.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/platform/src/vl53l0x_i2c_comms.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "/home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src/platform/src/vl53l0x_platform.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

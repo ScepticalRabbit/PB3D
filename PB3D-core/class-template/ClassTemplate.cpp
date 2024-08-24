@@ -1,23 +1,23 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TEMPLATE
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "ClassTemplate.h"
 
 //---------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
-ClassTemp::ClassTemp(Collision* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
+ClassTemp::ClassTemp(Collision* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
             Speaker* inSpeaker){
-_collisionObj = inCollision;
-_moodObj = inMood;
-_taskObj = inTask;
-_moveObj = inMove;
-_speakerObj = inSpeaker;
+_collision_manager = inCollision;
+_mood_manager = inMood;
+_task_manager = inTask;
+_move_manager = inMove;
+_speaker = inSpeaker;
 }
 
 //---------------------------------------------------------------------------
@@ -29,10 +29,10 @@ void ClassTemp::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during LOOP
 void ClassTemp::update(){
-    if(!_isEnabled){return;}
+    if(!_enabled){return;}
 
-    if(_taskObj->getNewTaskFlag()){
-        _startFlag = true;
+    if(_task_manager->get_new_task_flag()){
+        _start_flag = true;
     }
 
 }
@@ -40,10 +40,10 @@ void ClassTemp::update(){
 //---------------------------------------------------------------------------
 // DOSOMETHING - called during the main during decision tree
 void ClassTemp::doSomething(){
-    if(!_isEnabled){return;}
+    if(!_enabled){return;}
 
-    if(_startFlag){
-        _startFlag = false;
+    if(_start_flag){
+        _start_flag = false;
     }
 
 }

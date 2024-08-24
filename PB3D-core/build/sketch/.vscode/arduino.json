@@ -1,8 +1,0 @@
-#line 1 "/home/lloydf/Arduino/PB3D/PB3D-core/.vscode/arduino.json"
-{
-    "board": "adafruit:samd:adafruit_metro_m4",
-    "programmer": "adafruit_jlink",
-    "sketch": "PB3D-core.ino",
-    "output": "./build",
-    "configuration": "cache=on,speed=120,opt=small,maxqspi=50,usbstack=arduino,debug=off"
-}

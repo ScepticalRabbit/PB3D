@@ -1,182 +1,181 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskFindSound
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskFindSound.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskFindSound::TaskFindSound(MoodManager* inMood, TaskManager* inTask, 
-                            MoveManager* inMove, Speaker* inSpeaker){
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
-    _speakerObj = inSpeaker;
+
+TaskFindSound::TaskFindSound(MoodManager* mood, TaskManager* task,
+                            MoveManager* move, Speaker* speaker){
+    _mood_manager = mood;
+    _task_manager = task;
+    _move_manager = move;
+    _speaker = speaker;
 }
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void TaskFindSound::begin(){
     // Send the byte flag back
-    Wire.beginTransmission(ADDR_FOLLBOARD);
-    Wire.write(_sendByte);
+    Wire.beginTransmission(ADDR_FOLLOW_XIAO_2);
+    Wire.write(_send_byte);
     Wire.endTransmission();
 
     // Start all timers
-    _sensUpdateTimer.start(0);
-    _clapEnableTimer.start(0);
-    _envSampTimer.start(0);
-    _callTimer.start(0);
+    _sens_update_timer.start(0);
+    _clap_enable_timer.start(0);
+    _env_samp_timer.start(0);
+    _call_timer.start(0);
 }
 
 //---------------------------------------------------------------------------
 // UPDATE: called during each loop to update variables
 void TaskFindSound::update(){
     // If the sensor wasn't found then do nothing
-    if(!_isEnabled){return;}
+    if(!_enabled){return;}
 
     // SENSOR: Ask follower Xiao for sound data
-    if(_sensUpdateTimer.finished()){
-        _sensUpdateTimer.start(_sensUpdateTime);
-        
-        // Request ear state data from follower board
-        _I2CReadEarState();
-        
-        // Send the byte flag back
-        _I2CSendByte();
+    if(_sens_update_timer.finished()){
+        _sens_update_timer.start(_sens_update_time);
 
-        if((_earState==EAR_COM_FORWARD)||(_earState==EAR_COM_LEFT)||(_earState==EAR_COM_RIGHT)){
-        _clapCount++;
+        // Request ear state data from follower board
+        _I2C_read_ear_state();
+
+        // Send the byte flag back
+        _I2C_send_byte();
+
+        if((_ear_state==EAR_COM_FORWARD)||(_ear_state==EAR_COM_LEFT)||(_ear_state==EAR_COM_RIGHT)){
+            _clap_count++;
         }
 
         // DEBUG: Print to Serial
         #ifdef DEBUG_TASKFINDSOUND
         Serial.print("E-STATE: ");
-        Serial.print(_earState), Serial.print(", M: ");
-        if(_earState==EAR_COM_FORWARD){Serial.print("F");}
-        else if(_earState==EAR_COM_LEFT){Serial.print("L");}
-        else if(_earState==EAR_COM_RIGHT){Serial.print("R");}
-        else if(_earState==EAR_COM_SENV){Serial.print("E");}
+        Serial.print(_ear_state), Serial.print(", M: ");
+        if(_ear_state==EAR_COM_FORWARD){Serial.print("F");}
+        else if(_ear_state==EAR_COM_LEFT){Serial.print("L");}
+        else if(_ear_state==EAR_COM_RIGHT){Serial.print("R");}
+        else if(_ear_state==EAR_COM_SENV){Serial.print("E");}
         else{Serial.print("N");}
         Serial.println();
         #endif
     }
 
-    if(_taskObj->getTask() != TASK_FINDSOUND){
-        // ENABLE: If X claps in this interval then start finding sound 
-        if(_clapEnableTimer.finished()){
-        _clapEnableTimer.start(_clapEnableUpdateTime);
-        
-        if(_clapCount >= _clapThres){
-            _taskObj->setTask(TASK_FINDSOUND);
+    if(_task_manager->get_task() != TASK_FINDSOUND){
+        // ENABLE: If X claps in this interval then start finding sound
+        if(_clap_enable_timer.finished()){
+        _clap_enable_timer.start(_clap_enable_update_time);
+
+        if(_clap_count >= _clap_thres){
+            _task_manager->set_task(TASK_FINDSOUND);
         }
-        _clapCount = 0;
+        _clap_count = 0;
         }
 
         // SAMPLE ENV: Resample environment to prevent false trips of the sensor
-        if(_envSampTimer.finished()){
-            _envSampTimer.start(_envSampUpdateTime);
-            _I2CSendSampEnvFlag();
+        if(_env_samp_timer.finished()){
+            _env_samp_timer.start(_env_samp_update_time);
+            _I2C_send_samp_env_flag();
         }
     }
     else{
-        _clapCount = 0;
+        _clap_count = 0;
     }
 
     // NEW TASK: if task is new set the start flag
-    if(_taskObj->getNewTaskFlag()){
-        _startFlag = true;
+    if(_task_manager->get_new_task_flag()){
+        _start_flag = true;
     }
 }
 
 //---------------------------------------------------------------------------
 // FINDSOUND - called during task decision tree
-void TaskFindSound::findSound(){
+void TaskFindSound::find_sound(){
     // Set the LEDs on every loop regardless
-    _taskObj->taskLEDFindSound();
+    _task_manager->task_LED_find_sound();
 
     // If the sensor wasn't found then sxit the function
-    if(!_isEnabled){return;}
+    if(!_enabled){return;}
 
     //--------------------------------------------------------------------
     // START
     // First time this is called as a new task reset some variables
-    if(_startFlag){
-        _startFlag = false;
+    if(_start_flag){
+        _start_flag = false;
 
         // Send the flag to sample environment
-        _I2CSendSampEnvFlag();
+        _I2C_send_samp_env_flag();
 
-        _speakerObj->reset();           
-        _callTimer.start(_callInterval);
+        _speaker->reset();
+        _call_timer.start(_call_interval);
     }
 
     //--------------------------------------------------------------------
     // SPEAKER: call = where are you?
     // Set the speaker codes on every loop
-    // uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-    uint8_t inCodes[]   = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
-    _speakerObj->setSoundCodes(inCodes,4);
-    uint16_t inFreqs[]  = {NOTE_A4,NOTE_G4,NOTE_G4,NOTE_A6,0,0,0,0};
-    uint16_t inDurs[]   = {300,0,200,0,0,0,0,0};
-    _speakerObj->setSoundFreqs(inFreqs,8);
-    _speakerObj->setSoundDurs(inDurs,8);    
+    // uint8_t in_codes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
+    uint8_t in_codes[]   = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
+    _speaker->set_sound_codes(in_codes,4);
+    uint16_t in_freqs[]  = {NOTE_A4,NOTE_G4,NOTE_G4,NOTE_A6,0,0,0,0};
+    uint16_t in_durs[]   = {300,0,200,0,0,0,0,0};
+    _speaker->set_sound_freqs(in_freqs,8);
+    _speaker->set_sound_durations(in_durs,8);
 
 
-    if(_callTimer.finished()){
-        _speakerObj->reset();
-        _callTimer.start(_callInterval);
+    if(_call_timer.finished()){
+        _speaker->reset();
+        _call_timer.start(_call_interval);
     }
 
     //--------------------------------------------------------------------
     // FIND SOUND: Track based on ear state from Xiao
-    // EAR STATE = 0: uncertain, 1: forward, 2: left, 3: right 
-    if(_earState == EAR_COM_LEFT){
-        //_moveObj->left();
-        //_moveObj->forwardLeft(_speedDiffLR); 
-        _moveObj->forwardLeftDiffFrac(_speedDiffFracLR);
+    // EAR STATE = 0: uncertain, 1: forward, 2: left, 3: right
+    if(_ear_state == EAR_COM_LEFT){
+        //_move_manager->left();
+        //_move_manager->forward_left(_speed_diff_leftright);
+        _move_manager->forward_left_diff_frac(_speed_diff_frac_leftright);
     }
-    else if(_earState == EAR_COM_RIGHT){ 
-        //_moveObj->right();
-        //_moveObj->forwardRight(_speedDiffLR);  
-        _moveObj->forwardRightDiffFrac(_speedDiffFracLR);
+    else if(_ear_state == EAR_COM_RIGHT){
+        //_move_manager->right();
+        //_move_manager->forward_right(_speed_diff_leftright);
+        _move_manager->forward_right_diff_frac(_speed_diff_frac_leftright);
     }
-    else if(_earState == EAR_COM_FORWARD){ 
-        _moveObj->forward();  
+    else if(_ear_state == EAR_COM_FORWARD){
+        _move_manager->forward();
     }
-    else if(_earState == EAR_COM_SENV){     
-        _moveObj->forward(); 
+    else if(_ear_state == EAR_COM_SENV){
+        _move_manager->forward();
     }
     else{
-        //_moveObj->updateMove();
-        //_moveObj->go();
-        _moveObj->forward();  
+        //_move_manager->update_move();
+        //_move_manager->go();
+        _move_manager->forward();
     }
 }
 
 //---------------------------------------------------------------------------
 // PRIVATE FUNCTIONS
-void TaskFindSound::_I2CSendByte(){
-    Wire.beginTransmission(ADDR_FOLLBOARD);
-    Wire.write(_sendByte);
+void TaskFindSound::_I2C_send_byte(){
+    Wire.beginTransmission(ADDR_FOLLOW_XIAO_2);
+    Wire.write(_send_byte);
     Wire.endTransmission();
 }
 
-void TaskFindSound::_I2CSendSampEnvFlag(){
-    byte sampEnvByte = _sendByte | B01000000;    
-    Wire.beginTransmission(ADDR_FOLLBOARD);
+void TaskFindSound::_I2C_send_samp_env_flag(){
+    byte sampEnvByte = _send_byte | B01000000;
+    Wire.beginTransmission(ADDR_FOLLOW_XIAO_2);
     Wire.write(sampEnvByte);
     Wire.endTransmission();
 }
 
-void TaskFindSound::_I2CReadEarState(){
-    Wire.requestFrom(ADDR_FOLLBOARD, 1);
+void TaskFindSound::_I2C_read_ear_state(){
+    Wire.requestFrom(ADDR_FOLLOW_XIAO_2, 1);
     while (Wire.available()){
-        _earState = Wire.read();
+        _ear_state = Wire.read();
     }
 }

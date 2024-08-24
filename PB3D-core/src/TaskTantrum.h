@@ -1,12 +1,11 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3! 
-// CLASS: TaskTantrum
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 #ifndef TASKTANTRUM_H
 #define TASKTANTRUM_H
 
@@ -15,14 +14,12 @@ Author: Lloyd Fletcher
 #include "TaskManager.h"
 #include "MoveManager.h"
 #include "Speaker.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 class TaskTantrum{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskTantrum(MoodManager* inMood, TaskManager* inTask, 
-              MoveManager* inMove, Speaker* inSpeaker);
+  TaskTantrum(MoodManager* mood, TaskManager* task,
+              MoveManager* move, Speaker* speaker);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -30,36 +27,36 @@ public:
 
   //---------------------------------------------------------------------------
   // TANTRUM
-  void haveTantrum();
+  void chuck_tantrum();
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-  void setStartTantrumFlag();
+  void set_start_tantrum();
 
-  uint8_t getThreshold(){return _tantrumThreshold;}
-  uint16_t getDuration(){return _tantrumDuration;}
-  bool getCompleteFlag(){return _tantrumComplete;}
+  uint8_t get_threshold(){return _tantrum_threshold;}
+  uint16_t get_duration(){return _tantrum_duration;}
+  bool get_complete(){return _tantrum_complete;}
 
 private:
   // MAIN OBJECT POINTERS
-  MoodManager* _moodObj = NULL;
-  TaskManager* _taskObj = NULL;
-  MoveManager* _moveObj = NULL;
-  Speaker* _speakerObj = NULL;
+  MoodManager* _mood_manager = NULL;
+  TaskManager* _task_manager = NULL;
+  MoveManager* _move_manager = NULL;
+  Speaker* _speaker = NULL;
   // Timers
-  Timer _timerObj1 = Timer();
-  Timer _timerObj2 = Timer();
-  
-  // SUBTASK - TANTRUM Variables
-  bool _startTantrumFlag = false;
-  bool _tantrumComplete = false;
-  uint16_t _tantrumThreshold = 31;
-  uint16_t _tantrumFBDuration = 400;
-  uint8_t _tantrumFBNum = 5;
-  uint16_t _tantrumDuration = 2*_tantrumFBNum*_tantrumFBDuration;
+  Timer _tantrum_timer = Timer();
+  Timer _growl_timer = Timer();
 
-  bool _growlFlag = true;
-  uint16_t _tantrumGrowlDuration = 2*_tantrumFBDuration;
-  uint16_t _tantrumGrowlPause = 1*_tantrumFBDuration;
+  // SUBTASK - TANTRUM Variables
+  bool _start_tantrum = false;
+  bool _tantrum_complete = false;
+  const uint16_t _tantrum_threshold = 31;
+  const uint16_t _tantrum_FB_duration = 400;
+  const uint8_t _tantrum_FB_num = 5;
+  const uint16_t _tantrum_duration = 2*_tantrum_FB_num*_tantrum_FB_duration;
+
+  bool _growl_on = true;
+  const uint16_t _tantrum_growl_duration = 2*_tantrum_FB_duration;
+  const uint16_t _tantrum_growl_pause = 1*_tantrum_FB_duration;
 };
-#endif // TASKTANTRUM
+#endif

@@ -1,5 +1,5 @@
 #include <Wire.h>
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 // Address for nervous system peripherial sensor array
 #define NERVSYS_ADDR 9
@@ -11,12 +11,12 @@ typedef struct stateData_t{
   uint8_t mood;
   uint8_t task;
   bool collisionFlags[4];
-  float wheelSpeed;  
+  float wheelSpeed;
 };
 
 typedef union dataPacket_t{
   stateData_t state;
-  byte dataPacket[sizeof(stateData_t)];
+  byte data_packet[sizeof(stateData_t)];
 };
 
 #define PACKET_SIZE sizeof(stateData_t)
@@ -24,11 +24,11 @@ typedef union dataPacket_t{
 
 // VARIABLES
 bool dataSwitch = false;
-dataPacket_t _currState;
+dataPacket_t _curr_state;
 
-Timer _I2CTimer = Timer();
-uint16_t _I2CTime = 500; // ms
-Timer _sendTimer = Timer();
+Timer _I2C_timer = Timer();
+uint16_t _I2C_time = 500; // ms
+Timer _send_timer = Timer();
 
 //----------------------------------------------------------------------------
 // SETUP
@@ -39,33 +39,33 @@ void setup(){
   delay(1000);
 
   // INIT CLASS:
-  _currState.state.mood = 1;
-  _currState.state.task = 2;
-  _currState.state.collisionFlags[0] = true;
-  _currState.state.collisionFlags[1] = false;
-  _currState.state.collisionFlags[2] = true;
-  _currState.state.collisionFlags[3] = false;
-  _currState.state.wheelSpeed = 202.2;
-  
+  _curr_state.state.mood = 1;
+  _curr_state.state.task = 2;
+  _curr_state.state.collisionFlags[0] = true;
+  _curr_state.state.collisionFlags[1] = false;
+  _curr_state.state.collisionFlags[2] = true;
+  _curr_state.state.collisionFlags[3] = false;
+  _curr_state.state.wheelSpeed = 202.2;
+
   Serial.println(F("INITIAL DATA STRUCT"));
   printDataStruct();
 
-  _I2CTimer.start(_I2CTime);
+  _I2C_timer.start(_I2C_time);
 }
 
 void loop(){
-  if(_I2CTimer.finished()){
-    _I2CTimer.start(_I2CTime);
-    _sendTimer.start(0);
+  if(_I2C_timer.finished()){
+    _I2C_timer.start(_I2C_time);
+    _send_timer.start(0);
 
     Wire.beginTransmission(NERVSYS_ADDR);
-    Wire.write(_currState.dataPacket,PACKET_SIZE);
+    Wire.write(_curr_state.data_packet,PACKET_SIZE);
     Wire.endTransmission();
 
-    Serial.print(F("I2C Send Time: "));    
-    Serial.print(_sendTimer.getTime());
+    Serial.print(F("I2C Send Time: "));
+    Serial.print(_send_timer.get_time());
     Serial.println(F("ms"));
-    
+
     Serial.println(F("SENT DATA STRUCTURE:"));
     printDataStruct();
     changeData();
@@ -76,16 +76,16 @@ void loop(){
 // DIAGNOSTIC FUNCTIONS
 void printDataStruct(){
   Serial.print(F("Mood: "));
-  Serial.print(_currState.state.mood);
+  Serial.print(_curr_state.state.mood);
   Serial.print(F("; "));
-  
+
   Serial.print(F("TaskManager: "));
-  Serial.print(_currState.state.task);
+  Serial.print(_curr_state.state.task);
   Serial.print(F("; "));
 
   Serial.print(F("Col Flags: "));
   for(uint8_t ii = 0; ii < 4; ii++){
-    if(_currState.state.collisionFlags[ii]){
+    if(_curr_state.state.collisionFlags[ii]){
       Serial.print(F("1"));
     }
     else{
@@ -95,7 +95,7 @@ void printDataStruct(){
   Serial.print(F("; "));
 
   Serial.print(F("Speed: "));
-  Serial.print(_currState.state.wheelSpeed);
+  Serial.print(_curr_state.state.wheelSpeed);
   Serial.print(F("; "));
   Serial.println();
 }
@@ -103,21 +103,21 @@ void printDataStruct(){
 void changeData(){
   dataSwitch = !dataSwitch;
   if(dataSwitch){
-    _currState.state.mood = 7;
-    _currState.state.task = 8;
-    _currState.state.collisionFlags[0] = true;
-    _currState.state.collisionFlags[1] = true;
-    _currState.state.collisionFlags[2] = true;
-    _currState.state.collisionFlags[3] = true;
-    _currState.state.wheelSpeed = 277.7;
+    _curr_state.state.mood = 7;
+    _curr_state.state.task = 8;
+    _curr_state.state.collisionFlags[0] = true;
+    _curr_state.state.collisionFlags[1] = true;
+    _curr_state.state.collisionFlags[2] = true;
+    _curr_state.state.collisionFlags[3] = true;
+    _curr_state.state.wheelSpeed = 277.7;
   }
   else{
-    _currState.state.mood = 1;
-    _currState.state.task = 2;
-    _currState.state.collisionFlags[0] = true;
-    _currState.state.collisionFlags[1] = false;
-    _currState.state.collisionFlags[2] = true;
-    _currState.state.collisionFlags[3] = false;
-    _currState.state.wheelSpeed = 202.2;
+    _curr_state.state.mood = 1;
+    _curr_state.state.task = 2;
+    _curr_state.state.collisionFlags[0] = true;
+    _curr_state.state.collisionFlags[1] = false;
+    _curr_state.state.collisionFlags[2] = true;
+    _curr_state.state.collisionFlags[3] = false;
+    _curr_state.state.wheelSpeed = 202.2;
   }
 }

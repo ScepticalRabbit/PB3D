@@ -1,70 +1,63 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TEMPLATE
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 #include "BumperSensor.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR: pass in pointers to main objects and other sensors
-//---------------------------------------------------------------------------
-BumperSensor::BumperSensor(){
-
-}
-
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // BEGIN: called once during SETUP
-//---------------------------------------------------------------------------
 void BumperSensor::begin(){
-    // TODO: check that there is something at this address 
+    // TODO: check that there is something at this address
     //Wire.requestFrom(ADDR_BUMPERS,1);
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // UPDATE: called during every LOOP
-//---------------------------------------------------------------------------
 void BumperSensor::update(){
-    if(!_isEnabled){return;}
+    if(!_enabled){return;}
 
     // Request a byte worth of digital pins from the follower Xiao
-    Wire.requestFrom(ADDR_BUMPERS,1);
+    Wire.requestFrom(ADDR_FOLLOW_XIAO_1,1);
+
     // Read a byte from the follower
     byte bumperByte = B00000000;
     while(Wire.available()){
-        bumperByte  = Wire.read();   
+        bumperByte  = Wire.read();
     }
-    _bumperReadByte = bumperByte;
+    _bumper_read_byte = bumperByte;
 
-    if((_bumperReadByte & _bumperBytes[_bumpLeft]) == _bumperBytes[_bumpLeft]){
-        _bumperFlags[_bumpLeft] = true;
+    if((_bumper_read_byte & _bumper_bytes[_bump_left])
+        == _bumper_bytes[_bump_left]) {
+        _bumper_flags[_bump_left] = true;
     }
-    if ((_bumperReadByte & _bumperBytes[_bumpRight]) == _bumperBytes[_bumpRight]){
-        _bumperFlags[_bumpRight] = true;
+    if ((_bumper_read_byte & _bumper_bytes[_bump_right])
+        == _bumper_bytes[_bump_right]){
+        _bumper_flags[_bump_right] = true;
     }
 
     // Loop over bumper flags to see if any are tripped
-    for(uint8_t ii=0; ii<_numBumpers; ii++){
-        if(_bumperFlags[ii]){
-            _bumperAnyFlag = true;
+    for(uint8_t ii=0; ii<_num_bumpers; ii++){
+        if(_bumper_flags[ii]){
+            _bumper_any_flag = true;
         }
     }
 
     // If the bumpers are hit too many times decrease mood
-    if(_bumperAnyFlag){
-        _bumpCount++;
+    if(_bumper_any_flag){
+        _bump_count++;
     }
 }
 
-//---------------------------------------------------------------------------
-uint8_t BumperSensor::getColCode(uint8_t bumpCode){
-    if(bumpCode >= _numBumpers){
+
+EDangerCode BumperSensor::get_collision_code(EBumpCode bumpCode){
+    if(bumpCode >= _num_bumpers){
         return DANGER_NONE;
     }
-    if(_bumperFlags[bumpCode]){
+    if(_bumper_flags[bumpCode]){
         return DANGER_CLOSE;
     }
     else{
@@ -72,10 +65,10 @@ uint8_t BumperSensor::getColCode(uint8_t bumpCode){
     }
 }
 
-//---------------------------------------------------------------------------
+
 void BumperSensor::reset(){
-    _bumperAnyFlag = false;
-    for(uint8_t ii=0; ii<_numBumpers; ii++){
-        _bumperFlags[ii] = false;    
+    _bumper_any_flag = false;
+    for(uint8_t ii=0; ii<_num_bumpers; ii++){
+        _bumper_flags[ii] = false;
     }
 }

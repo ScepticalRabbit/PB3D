@@ -1,32 +1,30 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskInteract
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKINTERACT_H
 #define TASKINTERACT_H
 
-#include <Wire.h> // I2C 
+#include <Wire.h> // I2C
 #include <Seeed_CY8C401XX.h> // Capcitive Touch Sensor
+
 #include "MoodManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
 #include "TaskDance.h"
 #include "Speaker.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "PatSensor.h"
 
 class TaskInteract{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskInteract(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
-               Speaker* inSpeaker, TaskDance* inDance, PatSensor* inPatSens);
+  TaskInteract(MoodManager* mood, TaskManager* task, MoveManager* move,
+               Speaker* speaker, TaskDance* dance, PatSensor* pat_sens);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -42,39 +40,36 @@ public:
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-  void setStartInteractFlag(bool inFlag);
+  void set_start_interact_flag(bool start);
 
-  bool getEnabledFlag(){return _isEnabled;}
-  uint16_t getTimeOut(){return _patTimeOut;}
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  bool get_enabled_flag(){return _enabled;}
+  uint16_t get_timeout(){return _pat_timeout;}
+  void set_enabled_flag(bool start){_enabled = start;}
 
-  
 private:
-  // MAIN OBJECT POINTERS
-  MoodManager* _moodObj = NULL;
-  TaskManager* _taskObj = NULL;
-  MoveManager* _moveObj = NULL;
-  TaskDance* _taskDanceObj = NULL;
-  Speaker* _speakerObj = NULL;
-  PatSensor* _patSensObj = NULL; 
+  MoodManager* _mood_manager = NULL;
+  TaskManager* _task_manager = NULL;
+  MoveManager* _move_manager = NULL;
+  TaskDance* _task_dance = NULL;
+  Speaker* _speaker = NULL;
+  PatSensor* _pat_sensor = NULL;
 
   // TASK - INTERACT - Enabled Flag
-  bool _isEnabled = true;
+  bool _enabled = true;
 
-  // TASK - INTERACT Variables
-  bool _interactStartFlag = true;
- 
-  // 'Ask' update variables
-  bool _askFlag = false;
-  uint16_t _askSqueakInterval = 7000;
-  Timer _askSqueakTimer = Timer();
-  uint16_t _askWiggleLeftDur = 500;
-  uint16_t _askWiggleRightDur = 500;
-  uint16_t _askWiggleDuration = 2*(_askWiggleLeftDur+_askWiggleRightDur);
-  Timer _askWiggleTimer = Timer();
- 
- 
-  uint16_t _patTimeOut = 30000;
-  Timer _patTimeOutTimer = Timer();
+  bool _interact_start = true;
+
+  bool _ask_start = false;
+  const uint16_t _ask_squeak_interval = 7000;
+  Timer _ask_squeak_timer = Timer();
+
+  const uint16_t _ask_wiggle_left_dur = 500;
+  const uint16_t _ask_wiggle_right_dur = 500;
+  const uint16_t _askWiggleDuration =
+                    2*(_ask_wiggle_left_dur+_ask_wiggle_right_dur);
+  Timer _ask_wiggle_timer = Timer();
+
+  const uint16_t _pat_timeout = 30000;
+  Timer _pat_timeout_timer = Timer();
 };
-#endif // TASKINTERACT
+#endif

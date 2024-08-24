@@ -1,298 +1,115 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: SPEAKER
-//---------------------------------------------------------------------------
-/*
-The speaker class is part of the PetBot (PB) program.
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef SPEAKER_H
 #define SPEAKER_H
 
 #include <Arduino.h>
-#include "Timer.h"
-#include "MusicNotes.h"
 
-#define SPEAKER_POUT A0
+#include <PB3DPins.h>
+#include <PB3DConstants.h>
+#include "PB3DTimer.h"
 
-#define SPEAKER_OFF 0
-#define SPEAKER_BEEP 1
-#define SPEAKER_SLIDE 2
-#define SPEAKER_SNORE 3
-#define SPEAKER_GROWL 4
-#define SPEAKER_SCREECH 5
-#define SPEAKER_BABBLE 6
-
-#define SOUND_PLAY 0
-#define SOUND_PAUSE 1
-#define SOUND_END 2
 
 class Speaker{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR
   Speaker(){}
 
-  //---------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // BEGIN: called once during SETUP
-  void begin(){
-    // NOTE: see adafruit guidance about metro M4 dac here:
-    // https://learn.adafruit.com/adafruit-metro-m4-express-featuring-atsamd51/adapting-sketches-to-m0
-    // pinMode(SPEAKER_POUT,OUTPUT);
-    
-    digitalWrite(SPEAKER_POUT,LOW);
-    _soundTimer.start(0);
-    _noteTimer.start(0);
-    _songTimer.start(0);
-  }
-
-  void off(){
-    noTone(SPEAKER_POUT);
-    digitalWrite(SPEAKER_POUT,LOW);
-  }
+  void begin();
 
   //---------------------------------------------------------------------------
   // UPDATE: called during every LOOP
-  void update(){
-    // If the current sound has ended increment to play the next one
-    if(_soundCount == SOUND_END){
-      _soundStart = true;
-      _soundCount = SOUND_PLAY;
-      _soundCodeInd++; 
+  void update();
 
-      // If we have run out of codes in the array wait until reset is called
-      // Reset must be called externally to this class
-      if(_soundCodeInd >= _numCodes){
-        _soundCount = SOUND_END;
-        _soundCodeInd = _numCodes-1;
-      }
-    }
-    
-    if(_soundTimer.finished()){
-      _soundTimer.start(_soundUpdateTime);
+  //----------------------------------------------------------------------------
+  // SET, GET, RESET
+  void set_sound_codes(uint8_t codes[], uint8_t num_codes);
+  void set_sound_freqs(uint16_t freqs[], uint8_t num_freqs);
+  void set_sound_durations(uint16_t durations[], uint8_t num_durations);
+  uint32_t get_total_sound_duration();
+  void off();
 
-      uint8_t ss = _soundCodeInd;
-      uint8_t ff = 2*_soundCodeInd;
+  uint8_t get_curr_sound_code(){return _curr_sound_code;}
+  uint8_t get_sound_count(){return _sound_count;}
+  uint8_t get_num_codes(){return _num_codes;}
+  uint8_t get_num_freqs(){return _num_freqs;}
+  uint8_t get_num_durs(){return _num_durs;}
 
-      _currSoundCode = _soundCodes[ss];
-      if(_currSoundCode == SPEAKER_SNORE){
-        _soundDurs[ff] = _snoreDur;
-      }
-      else if (_currSoundCode == SPEAKER_GROWL){
-        _soundDurs[ff] = _growlDur;
-      }
-      
-      makeSound(_currSoundCode,
-                _soundFreqs[ff],_soundFreqs[ff+1],
-                _soundDurs[ff] ,_soundDurs[ff+1]); 
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------
-  // SETTERS
-  //--------------------------------------------------------------------------------------------
-  void setSoundCodes(uint8_t inCodes[], uint8_t numCodes){
-    for(uint8_t ii=0; ii<numCodes; ii++){
-      _soundCodes[ii] = inCodes[ii];  
-    }
-  }
-
-  void setSoundFreqs(uint16_t inFreqs[], uint8_t numFreqs){
-    for(uint8_t ii=0; ii<numFreqs; ii++){
-      _soundFreqs[ii] = inFreqs[ii];  
-    }
-  }
-
-  void setSoundDurs(uint16_t inDurs[], uint8_t numDurs){
-    for(uint8_t ii=0; ii<numDurs; ii++){
-      _soundDurs[ii] = inDurs[ii];  
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------
-  // GETTERS
-  //--------------------------------------------------------------------------------------------
-  uint8_t getCurrSoundCode(){return _currSoundCode;}
-  uint8_t getSoundCount(){return _soundCount;}
-  uint8_t getNumCodes(){return _numCodes;}
-  uint8_t getNumFreqs(){return _numFreqs;}
-  uint8_t getNumDurs(){return _numDurs;}
-  
-  uint32_t getTotalSoundDur(){
-    uint32_t durSum = 0;
-    for(uint8_t ii=0; ii<_numDurs; ii++){
-      durSum += _soundDurs[ii];
-    }
-    return durSum;
-  }
-
-  //--------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // MAIN SOUND - ON
-  //--------------------------------------------------------------------------------------------
-  void makeSound(uint8_t inCode, uint16_t freq1, uint16_t freq2, uint16_t onDur, uint16_t offDur){
-    if(_soundStart){
-      _soundStart = false;
-      _soundCount = SOUND_PLAY;
-      _noteTimer.start(onDur);
-      /*
-      Serial.print(F("SPEAKER: start, SC:"));
-      Serial.print(inCode);
-      Serial.print(F(", F1:"));
-      Serial.print(freq1);
-      Serial.print(F(", F2:"));
-      Serial.print(freq2);
-      Serial.print(F(", OnD:"));
-      Serial.print(onDur);      
-      Serial.print(F(", OffD:"));
-      Serial.print(offDur);
-      Serial.println();
-      */ 
-    }
+  void make_sound(uint8_t code,
+                  uint16_t freq1, uint16_t freq2,
+                  uint16_t on_dur, uint16_t off_dur);
+  void reset();
 
-    if(_noteTimer.finished()){
-      _soundCount++;
-      if(_soundCount == SOUND_PAUSE){
-        _noteTimer.start(offDur);
-      }
-      else if(_soundCount >= SOUND_END){
-        _soundCount = SOUND_END;
-      }
-    }
-
-    if(_soundCount == SOUND_PLAY){
-      if(inCode == SPEAKER_BEEP){
-        beep(freq1);
-      }
-      else if(inCode == SPEAKER_SLIDE){
-        slide(freq1,freq2,onDur);  
-      }
-      else if(inCode == SPEAKER_GROWL){
-        growl();  
-      }
-      else if(inCode == SPEAKER_SCREECH){
-        screech(freq1,freq2);  
-      }
-      else if(inCode == SPEAKER_SNORE){
-        snore();  
-      }    
-      else{
-        off();
-      }
-    }
-    else{
-      off();
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------
-  // MAIN SOUND - RESET
-  //--------------------------------------------------------------------------------------------
-  void reset(){
-    //Serial.println(F("SPEAKER: ext reset."));
-    _soundStart = true;
-    _soundCount = SOUND_PLAY;
-    _soundCodeInd = 0;
-  }
-  
-  //--------------------------------------------------------------------------------------------
-  // SUB-SOUND - BEEP
-  //--------------------------------------------------------------------------------------------
-  void beep(uint16_t beepFreq){
-      tone(SPEAKER_POUT,beepFreq);
-  }
-
-  //--------------------------------------------------------------------------------------------
-  // SUB-SOUND - SLIDE
-  //--------------------------------------------------------------------------------------------
-  void slide(uint16_t startFreq, uint16_t endFreq, uint16_t onDur){            
-    uint16_t currFreq = _calcSlideFreq(startFreq,endFreq,onDur,_noteTimer.getTime());
-    tone(SPEAKER_POUT,currFreq);
-  }
- 
-  //--------------------------------------------------------------------------------------------
-  // SUB-SOUND - GROWL
-  //--------------------------------------------------------------------------------------------
-  void growl(){
-    _growlOscillator = !_growlOscillator;
-    if(_growlOscillator){
-      tone(SPEAKER_POUT,_growlFreq1);
-    }
-    else{
-      tone(SPEAKER_POUT,_growlFreq2);
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------
-  // SUB-SOUND - RANDOM SCREECH
-  //-------------------------------------------------------------------------------------------- 
-  void screech(uint16_t freq1, uint16_t freq2){
-    if(_randTimer.finished()){
-      _randTimer.start(_screechRandInt);
-      uint16_t currFreq = _genRandomFreq(freq1,freq2);
-      tone(SPEAKER_POUT,currFreq);  
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------
-  // SUB-SOUND - SNORE
-  //--------------------------------------------------------------------------------------------
-  void snore(){
-    _snoreCurrFreq = round(float(_snoreStartFreq) + _snoreSlope*float(_noteTimer.getTime()));
-    tone(SPEAKER_POUT,_snoreCurrFreq);
-  }
+  //----------------------------------------------------------------------------
+  // SUB-SOUNDS
+  void beep(uint16_t beepFreq);
+  void slide(uint16_t start_freq, uint16_t end_freq, uint16_t on_dur);
+  void growl();
+  void screech(uint16_t freq1, uint16_t freq2);
+  void snore();
 
 private:
-  //------------------------------------------------------------------------
-  // Functions
-  uint16_t _calcSlideFreq(uint16_t startNote, uint16_t endNote, uint16_t dur, uint16_t currTime){
-    float slideSlope = (float(startNote)-float(endNote))/float(0.0-dur);
-    uint16_t currFreq = round(float(startNote) + slideSlope*float(currTime));
-    return currFreq;
+  uint16_t _calc_slide_freq(uint16_t start_note,
+                            uint16_t end_note,
+                            uint16_t dur,
+                            uint16_t curr_time){
+    float slide_slope = (float(start_note)-float(end_note)) /
+                        float(0.0-dur);
+    uint16_t curr_freq = round(float(start_note) +
+                         slide_slope*float(curr_time));
+    return curr_freq;
   }
 
-  uint16_t _genRandomFreq(uint16_t freq1, uint16_t freq2){
-    uint16_t randFreq = 0;
+  uint16_t _gen_random_freq(uint16_t freq1, uint16_t freq2){
+    uint16_t rand_freq = 0;
     if(freq1 > freq2){
-      randFreq = random(freq2,freq1);    
+      rand_freq = random(freq2,freq1);
     }
     else if(freq2 > freq1){
-      randFreq = random(freq1,freq2);
+      rand_freq = random(freq1,freq2);
     }
-    return randFreq;
+    return rand_freq;
   }
 
-  //------------------------------------------------------------------------
-  // Variables
-  uint8_t _currSoundCode = SPEAKER_OFF;
-  bool _soundStart = false;
-  uint16_t _soundUpdateTime = 20; 
+
+  uint8_t _curr_sound_code = SPEAKER_OFF;
+  bool _sound_start = false;
+  uint16_t _sound_update_time = 20;
 
   // FREQUENCIES AND TIMES
-  uint8_t _soundCodeInd = 0;
-  uint8_t _soundCount = 0;
-  const static uint8_t _numCodes = 4;
-  const static uint8_t _numFreqs = 8;
-  const static uint8_t _numDurs = 8;
-  uint8_t _soundCodes[_numCodes] = {SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF,SPEAKER_OFF};
-  uint16_t _soundFreqs[_numFreqs] = {NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5,NOTE_C5};
-  uint16_t _soundDurs[_numDurs] = {100,100,100,100,100,100,100,100};
-  
-  // TIMERS
-  Timer _soundTimer;
-  Timer _songTimer;
-  Timer _noteTimer;
+  uint8_t _sound_code_index = 0;
+  uint8_t _sound_count = 0;
 
-  // BEEP BEEP Variables
-  /* 
-  bool _bbStart = true;
-  uint16_t _bbNoteDur = 100;
-  uint16_t _bbPause = 100;
-  uint8_t _bbNumBB = 2;
-  uint8_t _bbNoteCount = 0;
-  uint8_t _bbCount = 0;
-  */
+  const static uint8_t _num_codes = 4;
+  const static uint8_t _num_freqs = 8;
+  const static uint8_t _num_durs = 8;
+  uint8_t _sound_codes[_num_codes] = {SPEAKER_OFF,
+                                      SPEAKER_OFF,
+                                      SPEAKER_OFF,
+                                      SPEAKER_OFF};
+  uint16_t _sound_freqs[_num_freqs] = {NOTE_C5,
+                                       NOTE_C5,
+                                       NOTE_C5,
+                                       NOTE_C5,
+                                       NOTE_C5,
+                                       NOTE_C5,
+                                       NOTE_C5};
+  uint16_t _sound_durations[_num_durs] = {100,100,100,100,100,100,100,100};
+
+  // TIMERS
+  Timer _sound_timer = Timer();
+  Timer _song_timer = Timer();
+  Timer _note_timer = Timer();
 
   // SLIDE Variables
   bool _startSlide = true;
@@ -301,22 +118,22 @@ private:
 
   // GROWL Variables
   bool _startGrowl = true;
-  bool _growlOscillator = true;
-  uint16_t _growlDur = 1000;
-  uint16_t _growlFreq1 = NOTE_B2;
-  uint16_t _growlFreq2 = NOTE_B3; 
+  bool _growl_oscillator = true;
+  uint16_t _growl_duration = 1000;
+  uint16_t _growl_freq1 = NOTE_B2;
+  uint16_t _growl_freq2 = NOTE_B3;
 
   // SCREECH Variables
-  bool _startScreech = true;
-  uint16_t _screechRandInt = 25;
-  Timer _randTimer = Timer();
+  bool _start_screech = true;
+  uint16_t _screech_rand_interval = 25;
+  Timer _rand_timer = Timer();
 
   // SNORE Variables
-  bool _startSnore = true;
-  uint16_t _snoreDur = 2000;
-  uint16_t _snoreStartFreq = NOTE_C4; 
+  bool _start_snore = true;
+  uint16_t _snore_duration = 2000;
+  uint16_t _snore_start_freq = NOTE_C4;
   uint16_t _snoreEndFreq = NOTE_B2;
-  float _snoreSlope = -float(_snoreStartFreq -_snoreEndFreq)/float(_snoreDur);
-  uint16_t _snoreCurrFreq = _snoreStartFreq;
+  float _snore_slope = -float(_snore_start_freq -_snoreEndFreq)/float(_snore_duration);
+  uint16_t _snore_curr_freq = _snore_start_freq;
 };
 #endif // SPEAKER_H

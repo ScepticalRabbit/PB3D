@@ -1,0 +1,8 @@
+#line 1 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/.vscode/arduino.json"
+{
+    "configuration": "usbstack=arduino,debug=off,sercom4=include",
+    "board": "Seeeduino:samd:seeed_XIAO_m0",
+    "sketch": "test_gpio_lasers.ino",
+    "port": "/dev/ttyACM0",
+    "output": "./build"
+}

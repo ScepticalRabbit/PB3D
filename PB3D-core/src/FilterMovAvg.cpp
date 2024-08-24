@@ -1,19 +1,14 @@
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS: FilterMovAvg
-//---------------------------------------------------------------------------
-/*
-This class is part of the PetBot (PB) program. It is a moving average filter
-with a window size defined using the constructor. The window size must be an
-integer less than 255 and much smaller values are recommended to avoid memory
-issues.
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "FilterMovAvg.h"
 
- //---------------------------------------------------------------------------
-// CONSTRUCTOR/DESTRUCTOR
 FilterMovAvg::FilterMovAvg(){
     _dataArray = new double[_window];
     for(uint8_t ii=0 ; ii<_window ; ii++){
@@ -21,19 +16,19 @@ FilterMovAvg::FilterMovAvg(){
     }
 }
 
-FilterMovAvg::FilterMovAvg(uint8_t inWin){
-    _window = inWin;
-    _dataArray = new double[inWin];
-    for(uint8_t ii=0 ; ii<inWin ; ii++){
+FilterMovAvg::FilterMovAvg(uint8_t window){
+    _window = window;
+    _dataArray = new double[window];
+    for(uint8_t ii=0 ; ii<window ; ii++){
         _dataArray[ii] = 0.0;
     }
 }
 
-FilterMovAvg::FilterMovAvg(uint8_t inWin, uint16_t inUpdateTime){
-    _window = inWin;
-    _updateTime = inUpdateTime;
-    _dataArray = new double[inWin];
-    for(uint8_t ii=0 ; ii<inWin ; ii++){
+FilterMovAvg::FilterMovAvg(uint8_t window, uint16_t inUpdateTime){
+    _window = window;
+    _update_time = inUpdateTime;
+    _dataArray = new double[window];
+    for(uint8_t ii=0 ; ii<window ; ii++){
         _dataArray[ii] = 0.0;
     }
 }
@@ -45,13 +40,13 @@ FilterMovAvg::~FilterMovAvg(){
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void FilterMovAvg::begin(){
-    _filtTimer.start(0);
+    _filter_timer.start(0);
 }
 
 //---------------------------------------------------------------------------
 // FILTER
 double FilterMovAvg::filter(double inData){
-    if(_filtTimer.finished()){
+    if(_filter_timer.finished()){
         // Remove the data point at the current position from the running total
         _dataSum = _dataSum - _dataArray[_currIndex];
         // Overwrite the data point at the current position
@@ -64,11 +59,11 @@ double FilterMovAvg::filter(double inData){
         _currIndex = 0;
         }
         // The filtered value is the average over our window, return it
-        _currFiltered = _dataSum / _window;
+        _curr_filtered = _dataSum / _window;
 
-        _filtTimer.start(_updateTime);
+        _filter_timer.start(_update_time);
     }
-    return _currFiltered;
+    return _curr_filtered;
 }
 
 //---------------------------------------------------------------------------

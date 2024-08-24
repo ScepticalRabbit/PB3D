@@ -1,197 +1,197 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TEMPLATE
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "MoodManager.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR: pass in pointers to main objects and other sensors
-//---------------------------------------------------------------------------
-// MoodManager(Adafruit_NeoPixel_ZeroDMA* RGBLEDs){_moodLEDs = RGBLEDs;}
-
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // BEGIN: called once during SETUP
-//---------------------------------------------------------------------------
 void MoodManager::begin(){
     // Generate a probability, start the mood timer and set the mood
-    _moodPc = random(0,100); // NOTE: random num between (min,max-1)
-    setMood(_moodPc);
-    _moodTimer.start(_moodDuration);
+    _mood_percent = random(0,100); // NOTE: random num between (min,max-1)
+    set_mood(MOOD_NEUTRAL);
+    _mood_timer.start(0);
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // UPDATE: called during every LOOP
-//---------------------------------------------------------------------------
 void MoodManager::update(){
-    if(!_isEnabled){return;}
-    if(_moodTimer.finished()){
-        // Randomly update mood score before generating new mood
+    if(!_enabled){return;}
+
+    if(_mood_timer.finished()){
         int8_t prob = random(0,100);
-        if(prob <= 10){decMoodScore();}
-        else if(prob >= 90){incMoodScore();}
 
-        // Generate a new mood probability
-        _moodPc = random(0,100)+_moodScore; // NOTE: random num between (min,max-1)
-        _moodPc = constrain(_moodPc,0,100);
+        if(prob <= 10){
+            dec_mood_score();
+        }
+        else if(prob >= 90){
+            inc_mood_score();
+        }
 
-        // Determine where on the happy/sad axis
-        if((_moodPc >= 0) && (_moodPc < _moodProbVec[0])){ // NEGATIVE MOOD
-        _moodNegPc = random(0,100)+_moodScore;
-        
-            if((_moodNegPc >= 0) && (_moodNegPc <= _moodProbVec[0])){
-                setMood(MOOD_SAD);
+        _mood_percent = random(0,100)+_mood_score;
+        _mood_percent = constrain(_mood_percent,0,100);
+
+        if((_mood_percent >= 0) && (_mood_percent < _mood_prob_array[0])){ // NEGATIVE MOOD
+            _mood_neg_percent = random(0,100)+_mood_score;
+
+            if((_mood_neg_percent >= 0) && (_mood_neg_percent <= _mood_prob_array[0])){
+                set_mood(MOOD_SAD);
             }
-            else if((_moodPc >= _moodProbVec[1]) && (_moodPc <= _moodProbVec[2])){
-                setMood(MOOD_ANGRY);  
+            else if((_mood_percent >= _mood_prob_array[1]) && (_mood_percent <= _mood_prob_array[2])){
+                set_mood(MOOD_ANGRY);
             }
-            else if((_moodPc >= _moodProbVec[2]) && (_moodPc <= _moodProbVec[3])){
-                setMood(MOOD_SCARED);
+            else if((_mood_percent >= _mood_prob_array[2]) && (_mood_percent <= _mood_prob_array[3])){
+                set_mood(MOOD_SCARED);
             }
             else{
-                setMood(MOOD_SAD);
+                set_mood(MOOD_SAD);
             }
         }
-        else if((_moodPc >= _moodProbVec[0]) && (_moodPc <= _moodProbVec[1])){ // NEUTRAL MOOD
-            setMood(MOOD_NEUTRAL);
+        else if((_mood_percent >= _mood_prob_array[0]) && (_mood_percent <= _mood_prob_array[1])){ // NEUTRAL MOOD
+            set_mood(MOOD_NEUTRAL);
         }
-        else if((_moodPc >= _moodProbVec[1]) && (_moodPc <= _moodProbVec[2])){ // POSITIVE MOOD
-            setMood(MOOD_HAPPY);
+        else if((_mood_percent >= _mood_prob_array[1]) && (_mood_percent <= _mood_prob_array[2])){ // POSITIVE MOOD
+            set_mood(MOOD_HAPPY);
         }
         else{ // DEFAULT NEUTRAL
-            setMood(MOOD_NEUTRAL);
+            set_mood(MOOD_NEUTRAL);
         }
     }
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Get, set and reset
-//---------------------------------------------------------------------------
-void MoodManager::setMood(int16_t moodIn){
-    if(moodIn != _moodCode){
-        _setMood(moodIn);
-        
-        _moodNewFlag = true;
-        _moodDuration = random(_moodMinDuration,_moodMaxDuration);
-        _moodTimer.start(_moodDuration);
+void MoodManager::set_mood(EMoodCode mood){
+    if(mood != _mood_code){
+        _set_mood(mood);
+
+        _mood_new_flag = true;
+        _mood_duration = random(_mood_min_duration,_mood_max_duration);
+        _mood_timer.start(_mood_duration);
     }
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Mood Score Functions
-//---------------------------------------------------------------------------
-void MoodManager::modMoodScore(int8_t modifier){
-    int16_t tempScore = _moodScore+modifier;
-    tempScore = constrain(tempScore,_moodScoreMin,_moodScoreMax);
-    _moodScore = tempScore;
+void MoodManager::mod_mood_score(int8_t modifier){
+    int16_t tempScore = _mood_score+modifier;
+    tempScore = constrain(tempScore,_mood_score_min,_mood_score_max);
+    _mood_score = tempScore;
 }
 
-void MoodManager::incMoodScore(){
-    int16_t tempScore = _moodScore+_moodScoreInc;
-    tempScore = constrain(tempScore,_moodScoreMin,_moodScoreMax);
-    _moodScore = tempScore;
+void MoodManager::inc_mood_score(){
+    int16_t tempScore = _mood_score+_mood_score_increment;
+    tempScore = constrain(tempScore,_mood_score_min,_mood_score_max);
+    _mood_score = tempScore;
 }
 
-void MoodManager::decMoodScore(){
-    int16_t tempScore = _moodScore-_moodScoreInc;
-    tempScore = constrain(tempScore,_moodScoreMin,_moodScoreMax);
-    _moodScore = tempScore;
+void MoodManager::dec_mood_score(){
+    int16_t tempScore = _mood_score-_mood_score_increment;
+    tempScore = constrain(tempScore,_mood_score_min,_mood_score_max);
+    _mood_score = tempScore;
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // Mood LED Functions
-//---------------------------------------------------------------------------
 
-void MoodManager::moodLEDNeutral(){
-    uint8_t ledVal = 205+_moodScore;
+void MoodManager::mood_LED_neutral(){
+    uint8_t ledVal = 205+_mood_score;
     _moodLEDs->setPixelColor(1, _moodLEDs->Color(ledVal, ledVal, 0));
     _moodLEDs->setPixelColor(2, _moodLEDs->Color(ledVal, ledVal, 0));
     _moodLEDs->show();
 }
 
-void MoodManager::moodLEDHappy(){
-    uint8_t ledVal = 205+_moodScore;
+void MoodManager::mood_LED_happy(){
+    uint8_t ledVal = 205+_mood_score;
     _moodLEDs->setPixelColor(1, _moodLEDs->Color(0, ledVal, 0));
     _moodLEDs->setPixelColor(2, _moodLEDs->Color(0, ledVal, 0));
     _moodLEDs->show();
 }
 
-void MoodManager::moodLEDAngry(){
-    uint8_t ledVal = 205+_moodScore;
+void MoodManager::mood_LED_angry(){
+    uint8_t ledVal = 205+_mood_score;
     _moodLEDs->setPixelColor(1, _moodLEDs->Color(ledVal, 0, 0));
     _moodLEDs->setPixelColor(2, _moodLEDs->Color(ledVal, 0, 0));
     _moodLEDs->show();
 }
 
-void MoodManager::moodLEDSad(){
-    uint8_t ledVal = 205+_moodScore;
+void MoodManager::mood_LED_sad(){
+    uint8_t ledVal = 205+_mood_score;
     _moodLEDs->setPixelColor(1, _moodLEDs->Color(0, 0, ledVal));
     _moodLEDs->setPixelColor(2, _moodLEDs->Color(0, 0, ledVal));
     _moodLEDs->show();
 }
 
-void MoodManager::moodLEDScared(){
-    uint8_t ledVal = 205+_moodScore;
+void MoodManager::mood_LED_scared(){
+    uint8_t ledVal = 205+_mood_score;
     _moodLEDs->setPixelColor(1, _moodLEDs->Color(0, ledVal, ledVal));
     _moodLEDs->setPixelColor(2, _moodLEDs->Color(0, ledVal, ledVal));
     _moodLEDs->show();
 }
 
-void MoodManager::moodLEDCurious(){
-    uint8_t ledVal = 205+_moodScore;
+void MoodManager::mood_LED_curious(){
+    uint8_t ledVal = 205+_mood_score;
     _moodLEDs->setPixelColor(1, _moodLEDs->Color(ledVal, 0, ledVal));
     _moodLEDs->setPixelColor(2, _moodLEDs->Color(ledVal, 0, ledVal));
     _moodLEDs->show();
 }
 
-void MoodManager::moodLEDTest(){
-    uint8_t ledVal = 205+_moodScore;
+void MoodManager::mood_LED_test(){
+    uint8_t ledVal = 205+_mood_score;
     _moodLEDs->setPixelColor(1, _moodLEDs->Color(ledVal, ledVal, ledVal));
     _moodLEDs->setPixelColor(2, _moodLEDs->Color(ledVal, ledVal, ledVal));
     _moodLEDs->show();
 }
 
-void MoodManager::moodLEDOff(){
+void MoodManager::mood_LED_off(){
     _moodLEDs->setPixelColor(1, _moodLEDs->Color(0, 0, 0));
     _moodLEDs->setPixelColor(2, _moodLEDs->Color(0, 0, 0));
     _moodLEDs->show();
 }
 
-//---------------------------------------------------------------------------
-// Helper Functions
-//---------------------------------------------------------------------------
-void MoodManager::_setMood(int8_t moodIn){
-    if(moodIn == MOOD_NEUTRAL){
-        _moodCode = MOOD_NEUTRAL;
-        moodLEDNeutral();
+
+void MoodManager::_set_mood(EMoodCode mood){
+
+    switch(mood){
+        case MOOD_NEUTRAL:
+            _mood_code = MOOD_NEUTRAL;
+            mood_LED_neutral();
+            break;
+
+        case MOOD_HAPPY:
+            _mood_code = MOOD_HAPPY;
+            mood_LED_happy();
+            break;
+
+        case MOOD_SAD:
+            _mood_code = MOOD_SAD;
+            mood_LED_sad();
+            break;
+
+        case MOOD_ANGRY:
+            _mood_code = MOOD_ANGRY;
+            mood_LED_angry();
+            break;
+
+        case MOOD_SCARED:
+            _mood_code = MOOD_SCARED;
+            mood_LED_scared();
+            break;
+
+        case MOOD_TEST:
+            _mood_code = MOOD_TEST;
+            mood_LED_test();
+            break;
+
+        default:
+            _mood_code = MOOD_NEUTRAL;
+            mood_LED_neutral();
+            break;
     }
-    else if(moodIn == MOOD_HAPPY){
-        _moodCode = MOOD_HAPPY;
-        moodLEDHappy();
-    }
-    else if(moodIn == MOOD_SAD){
-        _moodCode = MOOD_SAD;
-        moodLEDSad();
-    }
-    else if(moodIn == MOOD_ANGRY){
-        _moodCode = MOOD_ANGRY;
-        moodLEDAngry();
-    }
-    else if(moodIn == MOOD_SCARED){
-        _moodCode = MOOD_SCARED;
-        moodLEDScared();
-    }
-    else if(moodIn == MOOD_TEST){
-        _moodCode = MOOD_TEST;
-        moodLEDTest();
-    }
-    else{
-        _moodCode = MOOD_NEUTRAL;
-        moodLEDNeutral();
-    }
+
 }
-  

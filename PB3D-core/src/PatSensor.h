@@ -1,27 +1,25 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: PatSensor
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef PATSENSOR_H
 #define PATSENSOR_H
 
 #include <Arduino.h>
-#include <Wire.h> // I2C
+#include <Wire.h>
 #include <Seeed_CY8C401XX.h> // Capacitive Touch Sensor
-#include "Timer.h"
 
-#define ADDR_TOUCHSENS 0x08
+#include <PB3DI2CAddresses.h>
+#include "PB3DTimer.h"
+
 
 class PatSensor{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
   PatSensor(){}
 
   //---------------------------------------------------------------------------
@@ -34,51 +32,50 @@ public:
 
   //---------------------------------------------------------------------------
   // ACCEPT PATS - called during the main during decision tree
-  void acceptPats();
+  void accept_pats();
 
   //---------------------------------------------------------------------------
   // Get, set and reset
   void reset();
-  void genPatCountThres();
+  void gen_pat_count_thres();
 
-  bool getEnabledFlag(){return _isEnabled;}
-  bool getPatFlag(){return _patFlag;}
-  bool getButtonOneFlag(){return _buttonOneFlag;}
-  bool getButtonTwoFlag(){return _buttonTwoFlag;}
-  uint8_t getPatCount(){return _sensPatCount;}
-  bool getPatFinished(){return (_sensPatCount >= _sensPatCountThres);}
+  bool get_enabled_flag(){return _enabled;}
+  bool get_pat_flag(){return _pat_flag;}
+  bool get_button_one_flag(){return _button_one_flag;}
+  bool get_button_two_flag(){return _button_two_flag;}
+  uint8_t get_pat_count(){return _sens_pat_count;}
+  bool get_pat_finished(){return (_sens_pat_count >= _sens_pat_count_thres);}
 
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
-  void setPatFlag(bool inFlag){_patFlag = inFlag;}
-  void setPatCountThres(uint8_t inCount){_sensPatCountThres = inCount;}
-  void setButtonsEnabled(bool inFlag){_buttonsEnabled = inFlag;}
-  
+  void set_enabled_flag(bool enabled){_enabled = enabled;}
+  void set_pat_flag(bool enabled){_pat_flag = enabled;}
+  void set_pat_count_thres(uint8_t count){_sens_pat_count_thres = count;}
+  void set_buttons_enabled(bool enabled){_buttons_enabled = enabled;}
+
 private:
-  //---------------------------------------------------------------------------
-  // TOUCH SENSOR
-  CY8C _touchSens = CY8C();
+  CY8C _touch_sens = CY8C();
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _isEnabled = true;
+  bool _enabled = true;
 
-  bool _patFlag = false;
-  bool _patComplete = false;
+  bool _pat_flag = false;
+  bool _pat_complete = false;
 
-  bool _buttonOneFlag = false;
-  bool _buttonTwoFlag = false;
-  bool _buttonsEnabled = true;
-  
-  uint8_t _sensPatCountThres = 3;
-  uint8_t _sensPatCountThresMin = 2, _sensPatCountThresMax = 5;
-  uint8_t _sensPatCount = 0;
-  int16_t _sensPatTol = 10;
-  int16_t _sensPatInc = 10;
-  int16_t _sensPatThres = 100-_sensPatTol;
+  bool _button_one_flag = false;
+  bool _button_two_flag = false;
+  bool _buttons_enabled = true;
+
+  uint8_t _sens_pat_count_thres = 3;
+  const uint8_t _sens_pat_count_thres_min = 2;
+  const uint8_t _sens_pat_count_thres_max = 5;
+  uint8_t _sens_pat_count = 0;
+  const int16_t _sens_pat_tol = 10;
+  const int16_t _sens_pat_inc = 10;
+  int16_t _sens_pat_thres = 100-_sens_pat_tol;
 
   // Timer to disable buttons after successful pat
-  uint16_t _disableButtonsTime = 5000;
-  Timer _disableButtonsTimer = Timer();
+  const uint16_t _disable_buttons_time = 5000;
+  Timer _disable_buttons_timer = Timer();
 
 };
 #endif // CLASS PATSENSOR

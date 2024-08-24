@@ -1,42 +1,42 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskInteract
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskInteract.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskInteract::TaskInteract(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
-            Speaker* inSpeaker, TaskDance* inDance, PatSensor* inPatSens){
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
-    _taskDanceObj = inDance;
-    _speakerObj = inSpeaker;
-    _patSensObj = inPatSens;
+
+TaskInteract::TaskInteract(MoodManager* mood, TaskManager* task,
+                           MoveManager* move, Speaker* speaker,
+                           TaskDance* dance, PatSensor* pat_sens){
+    _mood_manager = mood;
+    _task_manager = task;
+    _move_manager = move;
+    _task_dance = dance;
+    _speaker = speaker;
+    _pat_sensor = pat_sens;
 }
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void TaskInteract::begin(){
-    _askSqueakTimer.start(0);
-    _askWiggleTimer.start(0);
+    _ask_squeak_timer.start(0);
+    _ask_wiggle_timer.start(0);
 }
 
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskInteract::update(){
-    if(!_isEnabled){return;}
+    if(!_enabled){return;}
 
     // SENSOR: Check for start of pat
-    if(_patSensObj->getButtonTwoFlag()){
-        _taskObj->setTask(TASK_INTERACT);
-        _taskObj->setTaskDuration(_patTimeOut);
+    if(_pat_sensor->get_button_two_flag()){
+        _task_manager->set_task(TASK_INTERACT);
+        _task_manager->set_task_duration(_pat_timeout);
     }
 }
 
@@ -44,118 +44,118 @@ void TaskInteract::update(){
 // INTERACT - called during the main during decision tree
 void TaskInteract::interact(){
     // Set the LEDs on every loop
-    _taskObj->taskLEDInteract();
+    _task_manager->task_LED_interact();
 
     // If this is the first time we enter the function set key variables
-    if(_interactStartFlag){
-        _interactStartFlag = false;
-        
-        _moveObj-> stop();
-        _moveObj->resetSubMoveTimer();
-        
-        _patSensObj->reset();
-        _patSensObj->setButtonsEnabled(false);
-        _patTimeOutTimer.start(_patTimeOut);
+    if(_interact_start){
+        _interact_start = false;
 
-        _askFlag = true;
-        _askSqueakTimer.start(_askSqueakInterval);
-        _askWiggleTimer.start(_askWiggleDuration);
+        _move_manager-> stop();
+        _move_manager->reset_submove_timer();
 
-        _speakerObj->reset();
+        _pat_sensor->reset();
+        _pat_sensor->set_buttons_enabled(false);
+        _pat_timeout_timer.start(_pat_timeout);
+
+        _ask_start = true;
+        _ask_squeak_timer.start(_ask_squeak_interval);
+        _ask_wiggle_timer.start(_askWiggleDuration);
+
+        _speaker->reset();
     }
 
     // Set the speaker codes on every loop
-    uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-    _speakerObj->setSoundCodes(inCodes,4);
-    //uint16_t inFreqs[]  = {NOTE_C5,NOTE_C7,NOTE_C4,NOTE_G7,0,0,0,0};
-    uint16_t inFreqs[]  = {NOTE_B4,NOTE_B6,NOTE_B3,NOTE_F7,0,0,0,0};
-    uint16_t inDurs[]   = {200,200,300,200,0,0,0,0};
-    _speakerObj->setSoundFreqs(inFreqs,8);
-    _speakerObj->setSoundDurs(inDurs,8);
+    uint8_t in_codes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
+    _speaker->set_sound_codes(in_codes,4);
+    //uint16_t in_freqs[]  = {NOTE_C5,NOTE_C7,NOTE_C4,NOTE_G7,0,0,0,0};
+    uint16_t in_freqs[]  = {NOTE_B4,NOTE_B6,NOTE_B3,NOTE_F7,0,0,0,0};
+    uint16_t in_durs[]   = {200,200,300,200,0,0,0,0};
+    _speaker->set_sound_freqs(in_freqs,8);
+    _speaker->set_sound_durations(in_durs,8);
 
     // Check if we need to ask for a pat again
-    if(_askSqueakTimer.finished()){
-        _askFlag = true;
-        _askSqueakTimer.start(_askSqueakInterval);
-        _askWiggleTimer.start(_askWiggleDuration);
-        
-        // Reset the speaker 
-        _speakerObj->reset();
+    if(_ask_squeak_timer.finished()){
+        _ask_start = true;
+        _ask_squeak_timer.start(_ask_squeak_interval);
+        _ask_wiggle_timer.start(_askWiggleDuration);
+
+        // Reset the speaker
+        _speaker->reset();
     }
 
-    if(_askFlag){
+    if(_ask_start){
         // If we are done 'asking' reset the flag
-        if(_askWiggleTimer.finished()){
-        _askFlag = false;
+        if(_ask_wiggle_timer.finished()){
+        _ask_start = false;
         }
         else{
         // Otherwise 'wiggle' to ask for a pat
-        _moveObj->wiggle(_askWiggleLeftDur,_askWiggleRightDur);     
+        _move_manager->wiggle(_ask_wiggle_left_dur,_ask_wiggle_right_dur);
         }
     }
     else{
         // Wait for a pat until next wiggle time
-        _moveObj->stop();
+        _move_manager->stop();
     }
 
     //-----------------------------------------------------------------------
     // ACCEPT PATS
-    _patSensObj->acceptPats();
+    _pat_sensor->accept_pats();
 
-    if(_patSensObj->getPatFinished()){
+    if(_pat_sensor->get_pat_finished()){
         // INTERACT EXIT CONDITION - reset start flag
-        _interactStartFlag = true;
-        
+        _interact_start = true;
+
         // Reset the pat sensor
-        _patSensObj->reset();
-        _patSensObj->setButtonsEnabled(true);
-        
+        _pat_sensor->reset();
+        _pat_sensor->set_buttons_enabled(true);
+
         // Update mood to happy
         int8_t prob = random(0,100);
         if(prob <= 80){
-        _moodObj->setMood(MOOD_HAPPY);
+        _mood_manager->set_mood(MOOD_HAPPY);
         }
         else{
-        _moodObj->setMood(MOOD_NEUTRAL);
+        _mood_manager->set_mood(MOOD_NEUTRAL);
         }
-        _moodObj->incMoodScore();      
-        
+        _mood_manager->inc_mood_score();
+
         // Update task to dance
-        _taskObj->setTask(TASK_DANCE);
+        _task_manager->set_task(TASK_DANCE);
         // Overide default task duration to be a specific number of bars
-        _taskObj->setTaskDuration(round(4*_taskDanceObj->getDanceBarMs()));
-        _taskObj->setDanceUpdateFlag(false);
-        _taskDanceObj->setStartFlag(true);
-        _taskDanceObj->setSpeakerFlag(true);
+        _task_manager->set_task_duration(round(4*_task_dance->get_dance_bar_ms()));
+        _task_manager->set_dance_update_flag(false);
+        _task_dance->set_start_flag(true);
+        _task_dance->set_speaker_flag(true);
     }
 
     // Check for timeout, if so set mood to sad and explore
-    if(_patTimeOutTimer.finished()){
+    if(_pat_timeout_timer.finished()){
         // INTERACT EXIT CONDITION - reset start flag
-        _interactStartFlag = true;
+        _interact_start = true;
 
         // Reset the pat sensor
-        _patSensObj->reset();
-        _patSensObj->setButtonsEnabled(true);
-        
+        _pat_sensor->reset();
+        _pat_sensor->set_buttons_enabled(true);
+
         // Update mood to sad
         int8_t prob = random(0,100);
-        if(prob <= 75){ 
-        _moodObj->setMood(MOOD_SAD);
+        if(prob <= 75){
+        _mood_manager->set_mood(MOOD_SAD);
         }
         else{
-        _moodObj->setMood(MOOD_NEUTRAL);
+        _mood_manager->set_mood(MOOD_NEUTRAL);
         }
-        _moodObj->decMoodScore();
-        
+        _mood_manager->dec_mood_score();
+
         // Update task to explore
-        _taskObj->setTask(TASK_EXPLORE);
+        _task_manager->set_task(TASK_EXPLORE);
     }
 }
 
 //---------------------------------------------------------------------------
 // Get, set and reset
-void TaskInteract::setStartInteractFlag(bool inFlag){
-    _interactStartFlag = inFlag;
-    _patSensObj->setPatFlag(inFlag);
+void TaskInteract::set_start_interact_flag(bool start){
+    _interact_start = start;
+    _pat_sensor->set_pat_flag(start);
 }

@@ -1,145 +1,135 @@
-//---------------------------------------------------------------------------
-// PET BOT 3D - PB3D!
-// CLASS: LaserManager
-//---------------------------------------------------------------------------
-/*
-The X class is part of the PetBot (PB) program. 
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #ifndef LASERMANAGER_H
 #define LASERMANAGER_H
 
-// Core libraries
 #include <Arduino.h>
 #include <Wire.h>
+#include <Adafruit_PCF8574.h>
 
-// Internal libraries
-#include "Timer.h"
+#include <PB3DI2CAddresses.h>
+#include <PB3DConstants.h>
+
+#include "PB3DTimer.h"
 #include "LaserSensor.h"
-#include "CollisionDangerFlags.h"
-
-// Definitions
-// Address for digital out 
-#ifndef ADDR_FOLLBOARD
-  #define ADDR_FOLLBOARD 0x11
-#endif
-// Addresses for lasers on I2C
-#define ADDR_LSR_L 0x31
-#define ADDR_LSR_R 0x32
-#define ADDR_LSR_A 0x33
-#define ADDR_LSR_U 0x34
-#define ADDR_LSR_D 0x35
+#include "CollisionStrategy.h"
 
 // DEBUG Flag: used to print debugging info to serial on laser status and range
-//#define DEBUG_LSRMANAGER_L
-//#define DEBUG_LSRMANAGER_R
+// #define DEBUG_LSRMANAGER
 
 class LaserManager{
 public:
-    //---------------------------------------------------------------------------
-    // CONSTRUCTOR: pass in pointers to main objects and other sensors
-    LaserManager();
+    LaserManager(){};
 
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // BEGIN: called once during SETUP
     void begin();
 
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // UPDATE: called during every LOOP
     void update();
 
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Get, set and reset
-     int16_t getRangeL(){return _laserL.getRange();}
-    int16_t getRangeR(){return _laserR.getRange();}
-    int16_t getRangeA(){return _laserA.getRange();}
-    int16_t getRangeU(){return _laserU.getRange();}
-    int16_t getRangeD(){return _laserD.getRange();}
+    int16_t get_range(ELaserIndex laser_loc){
+        return _laser_ptr_array[laser_loc]->get_range();}
+    int16_t get_range(uint8_t laser_loc){
+        return _laser_ptr_array[laser_loc]->get_range();}
 
-    int8_t getStatusL(){return _laserL.getRangeStatus();}
-    int8_t getStatusR(){return _laserR.getRangeStatus();}
-    int8_t getStatusA(){return _laserA.getRangeStatus();}
-    int8_t getStatusU(){return _laserU.getRangeStatus();} 
-    int8_t getStatusD(){return _laserD.getRangeStatus();}
+    int8_t get_status(ELaserIndex laser_loc){
+        return _laser_ptr_array[laser_loc]->get_range_status();}
+    int8_t get_status(uint8_t laser_loc){
+        return _laser_ptr_array[laser_loc]->get_range_status();}
 
-    uint8_t getColCodeL();
-    uint8_t getColCodeR();
-    uint8_t getColCodeU();
-    uint8_t getColCodeD();
-    uint8_t getColCodeA();
+    EDangerCode get_collision_code(ELaserIndex _ind);
 
 private:
-    //---------------------------------------------------------------------------
-    // HELPER Functions
-    //---------------------------------------------------------------------------
-    void _sendByteWithI2C(uint8_t sendAddr, byte sendByte);
-    void _updateColLSRs();
-    void _updateAltLSR();
-    void _updateUpDownLSRs();
+    //--------------------------------------------------------------------------
+    // Laser ranges for collision handling
+    uint16_t _half_body_leng_mm = 80;
+    uint16_t _reset_delay = 100;
 
-    uint8_t _getColCode(LaserSensor* laser,
-                    int16_t colClose,int16_t colFar);    
-    uint8_t _getColCode(LaserSensor* laser,
-                    int16_t colClose,int16_t colFar,int16_t colSlowDown);    
-    uint8_t _getCliffCode(LaserSensor* laser,
-                    int16_t cliffClose,int16_t cliffFar);     
-    uint8_t _getColCliffCode(LaserSensor* laser,
-                    int16_t colClose,int16_t colFar,
-                    int16_t cliffClose, int16_t cliffFar);
-    
-    
-    //---------------------------------------------------------------------------
-    // CLASS VARIABLES
-    //---------------------------------------------------------------------------
-    // Objects for the laser rangers
-    LaserSensor _laserL = LaserSensor(ADDR_LSR_L,'L');
-    LaserSensor _laserR = LaserSensor(ADDR_LSR_R,'R');
-    LaserSensor _laserA = LaserSensor(ADDR_LSR_A,'A');
-    LaserSensor _laserU = LaserSensor(ADDR_LSR_U,'U');
-    LaserSensor _laserD = LaserSensor(ADDR_LSR_D,'D');
+    int16_t _col_dist_close = _half_body_leng_mm;  // mm
+    int16_t _col_dist_far = 120;   // mm
+    int16_t _col_dist_slow = 240; // mm
 
-    // LASER ranger variables
-    uint16_t _halfBodyLengMM = 80;
-    uint16_t _resetDelay = 100;
-    byte _toSend = B00000000;
+    int16_t _alt_dist_lim = 0;     // mm
+    int16_t _alt_dist_close = 80;  // mm
+    int16_t _alt_dist_far = 180;   // mm
 
-    int16_t _colDistClose = _halfBodyLengMM;  // mm
-    int16_t _colDistFar = 120;   // mm
-    int16_t _colDistSlowD = 240; // mm
-    int16_t _colDistLim = 40;    // mm 
-    int16_t _altDistLim = 0;     // mm 
-    int16_t _altDistClose = 80;  // mm
-    int16_t _altDistFar = 180;   // mm
+    int16_t _up_col_dist_far = 220;    // mm
+    int16_t _up_col_dist_close = 180;   // mm
 
-    // LSR - Multi-ranging averaging and error catching
-    int16_t _laserRngsL[3] = {0,0,0};
-    int16_t _laserRngsR[3] = {0,0,0};
-    int16_t _laserRngsU[3] = {0,0,0};
-    int16_t _laserRngsD[3] = {0,0,0};
-
-    int8_t _laserStatL[3] = {0,0,0};
-    int8_t _laserStatR[3] = {0,0,0};
-    int8_t _laserStatU[3] = {0,0,0};
-    int8_t _laserStatD[3] = {0,0,0}; 
-
-    // LSR - UP - DONT CHANGE!!!
-    int16_t _upColDistFar = 220;    // mm
-    int16_t _upColDistClose = 180;   // mm
-    int16_t _upColDistLim = 40;     // mm  
-    // LSR- DWN - DONT CHANGE!!!
     int16_t _downCliffDistFar = 170, _downColDistFar = 90;     // mm
     int16_t _downCliffDistClose = 160, _downColDistClose = 70;   // mm
     int16_t _downCliffDistLim = 2000, _downColDistLim = 20;       // mm
     int16_t _downDistCent = 120; // actually measured closer to 125mm
-  
-    // Timers
-    // NOTE: fastest update time on lasers at current setting is 40ms
-    uint16_t _colLSRUpdateTime = 40;
-    Timer _colLSRTimer = Timer();
-    uint16_t _altLSRUpdateTime = 101;
-    Timer _altLSRTimer = Timer();
-    uint16_t _upDownLSRUpdateTime = 101;
-    Timer _upDownLSRTimer = Timer();
+    //--------------------------------------------------------------------------
+
+    // Objects for the laser rangers
+    LaserSensor _laser_CC = LaserSensor(ADDR_LSR_UC,LASER_UP_CENTRE);
+    LaserSensor _laser_UC = LaserSensor(ADDR_LSR_CC,LASER_CENTRE);
+    LaserSensor _laser_DL = LaserSensor(ADDR_LSR_DL,LASER_DOWN_LEFT);
+    LaserSensor _laser_DR = LaserSensor(ADDR_LSR_DR,LASER_DOWN_RIGHT);
+    LaserSensor _laser_HL = LaserSensor(ADDR_LSR_HL,LASER_HALF_LEFT);
+    LaserSensor _laser_HR = LaserSensor(ADDR_LSR_HR,LASER_HALF_RIGHT);
+    LaserSensor _laser_LL = LaserSensor(ADDR_LSR_LL,LASER_LEFT);
+    LaserSensor _laser_RR = LaserSensor(ADDR_LSR_RR,LASER_RIGHT);
+    LaserSensor _laser_BB = LaserSensor(ADDR_LSR_BB,LASER_BACK);
+    LaserSensor _laser_AA = LaserSensor(ADDR_LSR_AA,LASER_ALT);
+
+    const static uint8_t _num_lasers = LASER_COUNT;
+    LaserSensor* _laser_ptr_array[_num_lasers] = {&_laser_CC,
+                                                  &_laser_UC,
+                                                  &_laser_DL,
+                                                  &_laser_DR,
+                                                  &_laser_HL,
+                                                  &_laser_HR,
+                                                  &_laser_LL,
+                                                  &_laser_RR,
+                                                  &_laser_BB,
+                                                  &_laser_AA};
+
+    // Collision handling strategies for the lasers
+    CollisionAvoidBasic _avoid_basic = CollisionAvoidBasic(_col_dist_close,
+                                                           _col_dist_far);
+
+    CollisionAvoidSlow _avoid_flat_slow = CollisionAvoidSlow(_col_dist_close,
+                                                             _col_dist_far,
+                                                             _col_dist_slow);
+    CollisionAvoidBasic _avoid_overhead = CollisionAvoidBasic(_up_col_dist_close,
+                                                              _up_col_dist_far);
+    CollisionCliffAvoid _avoid_cliff = CollisionCliffAvoid(_downColDistClose ,
+                                                           _downColDistFar,
+                                                           _downCliffDistClose,
+                                                           _downCliffDistFar);
+    CliffAvoid _avoid_pickup = CliffAvoid(_alt_dist_close,
+                                          _alt_dist_far);
+
+    ECollisionStrategy _laser_strategy_array[_num_lasers] = {AVOID_FLAT_SLOW, // CC
+                                                             AVOID_OVERHEAD,  // UC
+                                                             AVOID_CLIFF,     // DL
+                                                             AVOID_CLIFF,     // DR
+                                                             AVOID_FLAT_SLOW, // HL
+                                                             AVOID_FLAT_SLOW, // HR
+                                                             AVOID_BASIC, // LL
+                                                             AVOID_BASIC, // RR
+                                                             AVOID_FLAT_SLOW, // BB
+                                                             AVOID_PICKUP,    // AA
+                                                            };
+
+    // GPIO Expander
+    Adafruit_PCF8574 _gpio_expander;
+
+    uint16_t _laser_update_time = 51;
+    Timer _laser_timer = Timer();
 };
+
 #endif

@@ -1,6 +1,6 @@
 #include <Wire.h>
 #include "RFDataSenderTX.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 // Address for nervous system peripherial sensor array
 #define NERVSYS_ADDR 9
@@ -15,14 +15,14 @@ uint16_t _printTime = 100; // ms
 //----------------------------------------------------------------------------
 // I2C HANDLER FUNCTIONS
 void requestEvent(){
-  
+
 }
 
 void receiveEvent(int bytesRec){
   int16_t ii = 0;
   while(0<Wire.available()){
     if(ii < PACKET_SIZE){
-      //_currState.dataPacket[ii] = Wire.read();
+      //_curr_state.data_packet[ii] = Wire.read();
       sender.setStateByte(Wire.read(),ii);
     }
     else{
@@ -50,8 +50,8 @@ void loop(){
 
   if(_printTimer.finished()){
     _printTimer.start(_printTime);
-    
+
     Serial.println(F("I2C DATA STRUCT REC:"));
-    sender.printDataStruct(); 
+    sender.printDataStruct();
   }
 }

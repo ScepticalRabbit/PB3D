@@ -1,126 +1,129 @@
-//-----------------------------------------------------------------------------
-// PB3D - Follower Board - Digital Out and Sound Loc
-// Author: Lloyd Fletcher
-// Version: v0.3a
-// Date Created: 23rd May 2021
-// Date Edited: 10th Dec 2022
-//-----------------------------------------------------------------------------
-/* 
-TODO
-*/ 
-//-----------------------------------------------------------------------------
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-// Include Arduino Wire library for I2C
+#include <Arduino.h>
 #include <Wire.h>
 
-//---------------------------------------------------------------------------
+#include <PB3DConstants.h>
+#include <PB3DI2CAddresses.h>
+
+// Debug Flags
+//#define DEBUG_STATE
+//#define DEBUG_SOUND_TIME
+//#define DEBUG_ENVSAMP
+
+//------------------------------------------------------------------------------
 // SENSOR SELECT
 //#define EAR_GROVE
 #define EAR_DFROB
 
 #ifdef EAR_GROVE
   // 12bit = 1585 average with Grove mems mic
-  int16_t LEnvAvgStd = 1585;
-  // Pins for 'ears'
-  #define EAR_L_AIN A7
-  #define EAR_R_AIN A9
+  int16_t env_avg_std = 1585;
+
+  enum EEarAPins{
+    EAR_L_AIN = A7,
+    EAR_R_AIN = A9,
+  };
 #endif
 
 #ifdef EAR_DFROB
   // 12bit = 1845 average with DFRobot Fermion Mic
   // 10bit = 460 average with DFRobot Fermion Mic
-  int16_t LEnvAvgStd = 1845;
-  // Pins for 'ears'
-  #define EAR_L_AIN A8
-  #define EAR_R_AIN A9
+  int16_t env_avg_std = 1845;
+
+  enum EEarAPins{
+    EAR_L_AIN = A8,
+    EAR_R_AIN = A9,
+  };
 #endif
 
-//---------------------------------------------------------------------------
-// I2C VARS
-// Define follower I2C Address
-//#define ADDR_MAINBOARD 0x12
-#define ADDR_FOLLBOARD 0x11
+//------------------------------------------------------------------------------
+// PINS
+enum EXiaoPins{
+    DOUT_PURR = 0,
+    DOUT_LSR_L = 1,
+    DOUT_LSR_R = 2,
+    DOUT_LSR_B = 3,
+    DOUT_LSR_U = 6,
+    DOUT_LSR_D = 7,
+};
 
-// Digital pins for output
-#define DOUT_PURR  0
-#define DOUT_LSR_L 1
-#define DOUT_LSR_R 2
-#define DOUT_LSR_B 3
-#define DOUT_LSR_U 6
-#define DOUT_LSR_D 7
-
-// Byte to receive from main board 
-byte recByte = B00000000;
+byte rec_byte = B00000000;
 
 //---------------------------------------------------------------------------
 // SOUND LOC/EAR VARS
 // Codes for ear state
-#define EAR_MODE_ENVSAMP 0
-#define EAR_MODE_SNDLOC 1
-
-#define EAR_COM_NOSOUND 0
-#define EAR_COM_FORWARD 1
-#define EAR_COM_LEFT 2
-#define EAR_COM_RIGHT 3
-#define EAR_COM_SENV 4
-
-// Mode 0 = sample environment
-// Mode 1 = locate sound
-uint8_t modeFlag = 0;
+enum EEarMode{
+    EAR_MODE_ENVSAMP = 0,
+    EAR_MODE_SNDLOC,
+};
+EEarMode ear_mode = EAR_MODE_ENVSAMP;
 
 // Variables for sound location code
 // 0: no sound
 // 1: forward -> sound but uncertain direction
 // 2: left
 // 3: right
-byte earState = 0; // byte to send 
+byte ear_state = 0; // byte to send
 
-uint16_t sampInterval = 10;
-uint32_t sampLastTime = 0;
-uint16_t numEnvSamples = 100;
-uint32_t LEnvSum = 0, REnvSum = 0;
-int16_t envSampInd = 0;
-int16_t LEnvAvg = LEnvAvgStd, REnvAvg = LEnvAvgStd;
-int16_t LEnvDiffSum = 0, REnvDiffSum = 0; 
-int16_t LEnvSD = 0, REnvSD = 0; 
+uint16_t sample_interval = 10;
+uint32_t sample_last_time = 0;
+uint16_t num_env_samples = 100;
+uint32_t env_sum_left = 0;
+uint32_t env_sum_right = 0;
+int16_t env_sample_ind = 0;
+int16_t env_avg_left = env_avg_std;
+int16_t env_avg_right = env_avg_std;
+int16_t env_diff_sum_left = 0;
+int16_t env_diff_sum_right = 0;
+int16_t env_SD_left = 0;
+int16_t env_SD_right = 0;
 
-bool foundSoundBoth = false;
-int32_t soundLRTimeDiff = 0;
+bool found_sound_both = false;
+int32_t sound_LR_timer_diff = 0;
 
-bool foundSoundL = false, foundSoundR = false;
-uint32_t soundLTimeStamp = 0, soundRTimeStamp = 0;
-int16_t soundL = 0, soundR = 0;
-int16_t soundLOffset = 500, soundROffset = 500;
+bool found_sound_left = false;
+bool found_sound_right = false;
+uint32_t sound_time_stamp_left = 0;
+uint32_t sound_time_stamp_right = 0;
+int16_t sound_left = 0;
+int16_t sound_right = 0;
+int16_t sound_offset_left = 500;
+int16_t sound_offset_right = 500;
 
-uint32_t earResetTime = 500;
-uint32_t earPrevResetTime = 0;
+uint32_t ear_reset_time = 500;
+uint32_t ear_prev_reset_time = 0;
 
-int16_t soundLUpper = LEnvAvg + soundLOffset;
-int16_t soundRUpper = REnvAvg + soundROffset;
-int16_t soundLLower = LEnvAvg - soundLOffset;
-int16_t soundRLower = REnvAvg - soundROffset;
-int16_t timeDiffMinMUS = 75, timeDiffMaxMUS = 400;
+int16_t sound_upper_left = env_avg_left + sound_offset_left;
+int16_t sound_upper_right = env_avg_right + sound_offset_right;
+int16_t sound_lower_left = env_avg_left - sound_offset_left;
+int16_t sound_lower_right = env_avg_right - sound_offset_right;
+int16_t time_diff_min_mus = 75;
+int16_t time_diff_max_mus = 400;
 
-uint32_t tStart = 0, tEnd = 0;
-uint32_t tElapsed = 0;
-uint16_t numSamples = 1000;
-int16_t sampVal = 0;
+uint32_t time_start = 0;
+uint32_t time_end = 0;
+uint32_t time_elapsed = 0;
+uint16_t num_samples = 1000;
+int16_t sample_val = 0;
 
-byte prevByte = B00000000;
+byte prev_byte = B00000000;
 
 //---------------------------------------------------------------------------
-// SETUP
 void setup(){
-  // Initialize I2C communications
-  Wire.begin(ADDR_FOLLBOARD);
-  // Function to run when data received from leader
+  Wire.begin(ADDR_FOLLOW_XIAO_1);
   Wire.onReceive(receiveEvent);
   Wire.onRequest(requestEvent);
-  
-  // Setup Serial Monitor 
+
   Serial.begin(115200);
 
-  // Setup Digital Output Pins
   pinMode(DOUT_PURR,OUTPUT);
   pinMode(DOUT_LSR_L,OUTPUT);
   pinMode(DOUT_LSR_R,OUTPUT);
@@ -137,93 +140,82 @@ void setup(){
 
   // Set the analog read resolution for SAMD51
   analogReadResolution(12);
-
-  /*
-  delay(2000);
-  Serial.println();
-  Serial.println("----------------------------------------");
-  Serial.println("SETUP DEBUG");
-  */
 }
 
-//---------------------------------------------------------------------------
-// MAIN LOOP
+
 void loop(){
-  //---------------------------------------------------------------------------
-  // DIGITAL OUTPUTS
-  //---------------------------------------------------------------------------
   // Vibration Motor - Purring
-  if((recByte & B00000001) == B00000001){
+  if((rec_byte & B00000001) == B00000001){
     digitalWrite(DOUT_PURR,HIGH);
   }
   else{
     digitalWrite(DOUT_PURR,LOW);
   }
   // Left Laser Sensor
-  if((recByte & B00000010) == B00000010){
+  if((rec_byte & B00000010) == B00000010){
     digitalWrite(DOUT_LSR_L,HIGH);
   }
   else{
     digitalWrite(DOUT_LSR_L,LOW);
   }
   // Right Laser Sensor
-  if((recByte & B00000100) == B00000100){
+  if((rec_byte & B00000100) == B00000100){
     digitalWrite(DOUT_LSR_R,HIGH);
   }
   else{
     digitalWrite(DOUT_LSR_R,LOW);
   }
   // Bottom Laser Sensor
-  if((recByte & B00001000) == B00001000){
+  if((rec_byte & B00001000) == B00001000){
     digitalWrite(DOUT_LSR_B,HIGH);
   }
   else{
     digitalWrite(DOUT_LSR_B,LOW);
   }
   // Up Laser Sensor
-  if((recByte & B00010000) == B00010000){
+  if((rec_byte & B00010000) == B00010000){
     digitalWrite(DOUT_LSR_U,HIGH);
   }
   else{
     digitalWrite(DOUT_LSR_U,LOW);
   }
   // Down Laser Sensor
-  if((recByte & B00100000) == B00100000){
+  if((rec_byte & B00100000) == B00100000){
     digitalWrite(DOUT_LSR_D,HIGH);
   }
   else{
     digitalWrite(DOUT_LSR_D,LOW);
   }
 
-  //---------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
   // SOUND LOCATION
-  //---------------------------------------------------------------------------
-  // HACK: for some reason the recByte keeps being set to 255 (B11111111)
+
+  // HACK: for some reason the rec_byte keeps being set to 255 (B11111111)
   // So we ignore this case here to prevent errors
-  if((recByte != B11111111) && ((recByte & B01000000) == B01000000)){
-    modeFlag = EAR_MODE_ENVSAMP;  
+  if((rec_byte != B11111111) && ((rec_byte & B01000000) == B01000000)){
+    ear_mode = EAR_MODE_ENVSAMP;
   }
-  
-  if(modeFlag == EAR_MODE_SNDLOC){
-    locSound();
+
+  if(ear_mode == EAR_MODE_SNDLOC){
+    locate_sound();
   }
   else{
-    sampleEnv();
+    sample_environment();
   }
 
   //tttttttttttttttttttttttttttttttttttttttttttttttt
   // TIMING CODE
-  /*
-  tStart = micros();
-  for(int i=0; i<numSamples; i++) {
-    foundSoundL = true;
-    locSound();
+  #ifdef DEBUG_SOUND_TIME
+  time_start = micros();
+  for(int ii=0; ii<num_samples; ii++) {
+    found_sound_left = true;
+    locate_sound();
   }
-  tEnd = micros();
-  tElapsed = tEnd - tStart;
-  float tAvgMicroS = float(tElapsed)/float(numSamples);
+  time_end = micros();
+  time_elapsed = time_end - time_start;
+  float tAvgMicroS = float(time_elapsed)/float(num_samples);
   float tAvgS = tAvgMicroS/1000000.0;
-  float freqAvg = 1.0/tAvgS;   
+  float freqAvg = 1.0/tAvgS;
 
   Serial.print("Avg. Time per Sample: ");
   Serial.print(tAvgMicroS);
@@ -233,171 +225,175 @@ void loop(){
   Serial.println(" Hz");
   Serial.println();
   delay(5000);
-  */
+  #endif
+
   //tttttttttttttttttttttttttttttttttttttttttttttttt
-  
+
 }
 
 //---------------------------------------------------------------------------
 // FUNCTIONS - I2C COMMS
 void receiveEvent(int numBytes) {
-  recByte = Wire.read();
+  rec_byte = Wire.read();
 }
 
 void requestEvent() {
-  Wire.write(earState);
+  Wire.write(ear_state);
 }
 
 //---------------------------------------------------------------------------
 // FUNCTIONS - SOUND LOCATION
-void sampleEnv(){
-  earState = EAR_COM_SENV;
-  
-  if((millis()-sampLastTime)>sampInterval){
-    sampLastTime = millis();
+void sample_environment(){
+  ear_state = EAR_COM_SENV;
+
+  if((millis()-sample_last_time)>sample_interval){
+    sample_last_time = millis();
     int16_t LSamp = analogRead(EAR_L_AIN);
     int16_t RSamp = analogRead(EAR_R_AIN);
     //int16_t RSamp = 0;
-    
+
     // Sum of values to calculate average
-    LEnvSum = LEnvSum + LSamp;
-    REnvSum = REnvSum + RSamp;
+    env_sum_left = env_sum_left + LSamp;
+    env_sum_right = env_sum_right + RSamp;
 
     // Difference to prelim average for SD calc
-    LEnvDiffSum = LEnvDiffSum + abs(LEnvAvg - LSamp);
-    REnvDiffSum = REnvDiffSum + abs(REnvAvg - RSamp);
-    
-    envSampInd++;
+    env_diff_sum_left = env_diff_sum_left + abs(env_avg_left - LSamp);
+    env_diff_sum_right = env_diff_sum_right + abs(env_avg_right - RSamp);
+
+    env_sample_ind++;
   }
 
-  if(envSampInd >= numEnvSamples){
-    envSampInd = 0;
-    modeFlag = EAR_MODE_SNDLOC;
-    earState = EAR_COM_NOSOUND;
+  if(env_sample_ind >= num_env_samples){
+    env_sample_ind = 0;
+    ear_mode = EAR_MODE_SNDLOC;
+    ear_state = EAR_COM_NOSOUND;
 
-    LEnvAvg = int(float(LEnvSum)/float(numEnvSamples));
-    REnvAvg = int(float(REnvSum)/float(numEnvSamples));
-    LEnvSD = int(float(LEnvDiffSum)/float(numEnvSamples));
-    REnvSD = int(float(REnvDiffSum)/float(numEnvSamples));
+    env_avg_left = int(float(env_sum_left)/float(num_env_samples));
+    env_avg_right = int(float(env_sum_right)/float(num_env_samples));
+    env_SD_left = int(float(env_diff_sum_left)/float(num_env_samples));
+    env_SD_right = int(float(env_diff_sum_right)/float(num_env_samples));
 
-    if(6*LEnvSD >= soundLOffset){soundLOffset = 6*LEnvSD;}
-    if(6*REnvSD >= soundROffset){soundROffset = 6*REnvSD;}
-    
-    soundLUpper = LEnvAvg + soundLOffset;
-    soundRUpper = REnvAvg + soundROffset;
-    soundLLower = LEnvAvg - soundLOffset;
-    soundRLower = REnvAvg - soundROffset;
-    /*
+    if(6*env_SD_left >= sound_offset_left){sound_offset_left = 6*env_SD_left;}
+    if(6*env_SD_right >= sound_offset_right){sound_offset_right = 6*env_SD_right;}
+
+    sound_upper_left = env_avg_left + sound_offset_left;
+    sound_upper_right = env_avg_right + sound_offset_right;
+    sound_lower_left = env_avg_left - sound_offset_left;
+    sound_lower_right = env_avg_right - sound_offset_right;
+
+    #ifdef DEBUG_ENVSAMP
     Serial.println();
     Serial.println("----------------------------------------");
     Serial.println("EAR-ENVSAMP");
     Serial.print("L Sum: ");
-    Serial.print(LEnvSum);
+    Serial.print(env_sum_left);
     Serial.print(" , ");
     Serial.print("R Sum: ");
-    Serial.println(REnvSum);
+    Serial.println(env_sum_right);
     Serial.print("L Avg: ");
-    Serial.print(LEnvAvg);
+    Serial.print(env_avg_left);
     Serial.print(" , ");
     Serial.print("R Avg: ");
-    Serial.println(REnvAvg);
+    Serial.println(env_avg_right);
     Serial.print("L SD: ");
-    Serial.print(LEnvSD);
+    Serial.print(env_SD_left);
     Serial.print(" , ");
     Serial.print("R SD: ");
-    Serial.println(REnvSD);
+    Serial.println(env_SD_right);
     Serial.print("L 6xSD: ");
-    Serial.print(6*LEnvSD);
+    Serial.print(6*env_SD_left);
     Serial.print(" , ");
     Serial.print("R 6xSD: ");
-    Serial.println(6*REnvSD);
-    */
+    Serial.println(6*env_SD_right);
+    #endif
+
     // Reset environment calc sums
-    LEnvSum = 0, REnvSum = 0;
-    LEnvDiffSum = 0, REnvDiffSum = 0;
+    env_sum_left = 0, env_sum_right = 0;
+    env_diff_sum_left = 0, env_diff_sum_right = 0;
   }
 }
 
-void locSound(){
-  if(!foundSoundL){
-    soundL = analogRead(EAR_L_AIN);
-    if(((soundL > soundLUpper) || (soundL < soundLLower))){
-      soundLTimeStamp = micros();
-      foundSoundL = true;
+void locate_sound(){
+  if(!found_sound_left){
+    sound_left = analogRead(EAR_L_AIN);
+    if(((sound_left > sound_upper_left) || (sound_left < sound_lower_left))){
+      sound_time_stamp_left = micros();
+      found_sound_left = true;
     }
   }
 
-  if(!foundSoundR){
-    soundR = analogRead(EAR_R_AIN);
-    if(!foundSoundR && ((soundR > soundRUpper) || (soundR < soundRLower))){
-      soundRTimeStamp = micros();
-      foundSoundR = true;
+  if(!found_sound_right){
+    sound_right = analogRead(EAR_R_AIN);
+    if(!found_sound_right && ((sound_right > sound_upper_right) || (sound_right < sound_lower_right))){
+      sound_time_stamp_right = micros();
+      found_sound_right = true;
     }
   }
 
-  if(foundSoundL && foundSoundR){
-    foundSoundBoth = true;
-    soundLRTimeDiff = soundLTimeStamp - soundRTimeStamp;
+  if(found_sound_left && found_sound_right){
+    found_sound_both = true;
+    sound_LR_timer_diff = sound_time_stamp_left - sound_time_stamp_right;
 
-    if(abs(soundLRTimeDiff) > timeDiffMaxMUS){
+    if(abs(sound_LR_timer_diff) > time_diff_max_mus){
       // if greater than max time then this is a reflection
-      earState = EAR_COM_FORWARD;
+      ear_state = EAR_COM_FORWARD;
     }
-    else if(soundLRTimeDiff >= timeDiffMinMUS){
+    else if(sound_LR_timer_diff >= time_diff_min_mus){
       // if positive the right first
-      earState = EAR_COM_RIGHT;
+      ear_state = EAR_COM_RIGHT;
     }
-    else if(soundLRTimeDiff <= -timeDiffMinMUS){
+    else if(sound_LR_timer_diff <= -time_diff_min_mus){
       // if negative, then left first
-      earState = EAR_COM_LEFT;
+      ear_state = EAR_COM_LEFT;
     }
     else{
       // if in the uncertainty range then go forward
-      earState = EAR_COM_FORWARD;
+      ear_state = EAR_COM_FORWARD;
     }
   }
-  else if(foundSoundL || foundSoundR){
-    if(foundSoundL){
-      earState = EAR_COM_LEFT;
+  else if(found_sound_left || found_sound_right){
+    if(found_sound_left){
+      ear_state = EAR_COM_LEFT;
     }
-    else if(foundSoundR){
-      earState = EAR_COM_RIGHT;
+    else if(found_sound_right){
+      ear_state = EAR_COM_RIGHT;
     }
     else{
       // If only one ear is tripped then go forward
-      earState = EAR_COM_FORWARD;
+      ear_state = EAR_COM_FORWARD;
     }
   }
   else{
-    earState = EAR_COM_NOSOUND;
+    ear_state = EAR_COM_NOSOUND;
   }
 
-  if((millis()-earPrevResetTime) > earResetTime){
-    earPrevResetTime = millis();
+  if((millis()-ear_prev_reset_time) > ear_reset_time){
+    ear_prev_reset_time = millis();
 
-    /*
+    #ifdef DEBUG_STATE
     Serial.print("STATE: ");
-    Serial.print(earState);
+    Serial.print(ear_state);
     Serial.print(", FL: ");
-    Serial.print(foundSoundL);
+    Serial.print(found_sound_left);
     Serial.print(", FR: ");
-    Serial.print(foundSoundR);
+    Serial.print(found_sound_right);
     Serial.print(", TDiff: ");
-    Serial.print(soundLRTimeDiff);
+    Serial.print(sound_LR_timer_diff);
     Serial.print(", M: ");
-    if(_earState==EAR_COM_FORWARD){Serial.print("F");}
-    else if(_earState==EAR_COM_LEFT){Serial.print("L");}
-    else if(_earState==EAR_COM_RIGHT){Serial.print("R");}
-    else if(_earState==EAR_COM_SENV){Serial.print("E");}
+    if(ear_state==EAR_COM_FORWARD){Serial.print("F");}
+    else if(ear_state==EAR_COM_LEFT){Serial.print("L");}
+    else if(ear_state==EAR_COM_RIGHT){Serial.print("R");}
+    else if(ear_state==EAR_COM_SENV){Serial.print("E");}
     else{Serial.print("N");}
     Serial.println();
-    */
+    #endif
+
     // Reset Vars
-    foundSoundBoth = false;
-    foundSoundL = false;
-    foundSoundR = false;
-    soundLTimeStamp = 0;
-    soundRTimeStamp = 0;
-    soundLRTimeDiff = 0;
+    found_sound_both = false;
+    found_sound_left = false;
+    found_sound_right = false;
+    sound_time_stamp_left = 0;
+    sound_time_stamp_right = 0;
+    sound_LR_timer_diff = 0;
   }
 }

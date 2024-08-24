@@ -1,179 +1,92 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TAIL
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-Date Created: 12th February 2021
-Date Edited:  12th February 2021 
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TAIL_H
 #define TAIL_H
 
 #include <Arduino.h>
-#include <Wire.h> // I2C
-//#include "CollisionManager.h" 
+#include <Wire.h>
+
+#include <PB3DPins.h>
+#include <PB3DConstants.h>
 #include "TaskManager.h"
 #include "MoveManager.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "Speaker.h"
 
 #include <Servo.h>
 
-#define TAIL_SERVO_POUT 8
-
-#define TAIL_CENT 0
-#define TAIL_SET_POS 1
-#define TAIL_WAG_CON 2
-#define TAIL_WAG_INT 3
 
 class Tail{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  Tail(){
-  }
+  Tail(){}
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
-  void begin(){
-    // Servo - for wagging tail
-    _tailServo.attach(TAIL_SERVO_POUT);
-    // Timer start
-    _wagTimer.start(0);
-  }
+  void begin();
 
   //---------------------------------------------------------------------------
   // UPDATE: called during every LOOP
-  void update(){
-    if(!_isEnabled){return;}
-
-    // Update the tail servo based on the main timer
-    if(_updateTimer.finished()){
-      _updateTimer.start(_updateInt);
-
-      // Decision tree based on tail state - set by tasks+mood
-      if(_currState == TAIL_SET_POS){
-        _tailServo.write(_tailPosCurr);
-      }
-      else if(_currState == TAIL_WAG_CON){
-        wagContinuous();  
-      }
-      else if(_currState == TAIL_WAG_INT){
-        wagInterval();  
-      }
-      else{
-        _tailServo.write(_tailPosCent);
-      }
-    }
-  }
+  void update();
 
   //---------------------------------------------------------------------------
   // TAIL FUNCTIONS
-  void wagContinuous(){
-    if(_wagTimer.finished()){
-      _wagTimer.start(_wagMoveTime);
-      if(_wagSwitch){
-        _wagSwitch = !_wagSwitch;
-        _tailServo.write(_tailPosCent-_wagPosOffset);
-      }
-      else{
-        _wagSwitch = !_wagSwitch;
-        _tailServo.write(_tailPosCent+_wagPosOffset);
-      }
-    }
-  }
-
-  void wagInterval(){
-    if(_wagTimer.finished()){
-      if(_wagCount<_wagCountLim){
-        _wagTimer.start(_wagMoveTime);
-  
-        if(_wagSwitch){
-          _wagSwitch = !_wagSwitch;
-          _tailServo.write(_tailPosCent-_wagPosOffset);
-        }
-        else{
-          _wagSwitch = !_wagSwitch;
-          _tailServo.write(_tailPosCent+_wagPosOffset);
-          _wagCount++;
-        }
-      }
-      else{
-        _wagTimer.start(_wagPauseTime);
-        _tailServo.write(_tailPosCent);
-        _wagCount = 0;
-      }
-    }
-  }
+  void wag_continuous();
+  void wag_interval();
 
   //---------------------------------------------------------------------------
-  // GET FUNCTIONS
-  bool getEnabledFlag(){return _isEnabled;}
+  // GET, SET, RESET FUNCTIONS
+  bool get_enabled_flag(){return _enabled;}
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
-  //---------------------------------------------------------------------------
-  // SET FUNCTIONS
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
-  
-  void setState(uint8_t inState){_currState = inState;}
-  void setPos(int16_t inPos){_tailPosCurr = inPos;}
+  void set_state(ETailCode state){_curr_state = state;}
+  void set_pos(int16_t pos){_tail_pos_curr = pos;}
 
-  void setWagMoveTime(uint16_t inMoveTime){_wagMoveTime = inMoveTime;}
-  void setWagPosOffset(int16_t inOffset){_wagPosOffset = inOffset;}
-  void setWagPauseTime(uint16_t inPauseTime){_wagPauseTime = inPauseTime;}
-  void setWagCountLim(uint8_t inCountLim){_wagCountLim = inCountLim;}
+  void set_wag_move_time(uint16_t move_time){_wag_move_time = move_time;}
+  void set_wag_pos_offset(int16_t offset){_wag_pos_offset = offset;}
+  void set_wag_pause_time(uint16_t pause_time){_wag_pause_time = pause_time;}
+  void set_wag_count_lim(uint8_t count_limit){_wag_count_limit = count_limit;}
 
-  void setWagParams(uint16_t inMoveTime, int16_t inOffset, uint16_t inPauseTime, uint8_t inCountLim){
-    _wagMoveTime = inMoveTime;
-    _wagPosOffset = inOffset;
-    _wagPauseTime = inPauseTime;
-    _wagCountLim = inCountLim;      
-  }
-  
-  void setWagConParams(uint16_t inMoveTime, int16_t inOffset){
-    _wagMoveTime = inMoveTime;
-    _wagPosOffset = inOffset;  
-  }
-    
-  void setWagIntParams(uint16_t inMoveTime, int16_t inOffset, uint16_t inPauseTime, uint8_t inCountLim){
-    _wagMoveTime = inMoveTime;
-    _wagPosOffset = inOffset;
-    _wagPauseTime = inPauseTime;
-    _wagCountLim = inCountLim;      
-  }
+  void set_wag_params(uint16_t move_time,
+                      int16_t offset,
+                      uint16_t pause_time,
+                      uint8_t count_limit);
 
-  void reset(){
-    _currState = TAIL_CENT;
-    _wagCount = 0;
-  }
+  void set_wag_con_params(uint16_t move_time, int16_t offset);
+  void set_wag_int_params(uint16_t move_time,
+                          int16_t offset,
+                          uint16_t pause_time,
+                          uint8_t count_limit);
+
+  void reset();
 
 private:
-  //---------------------------------------------------------------------------
-  // CLASS VARIABLES
-  bool _isEnabled = true;
+  bool _enabled = true;
 
-  Servo _tailServo;
+  Servo _tail_servo;
 
-  uint8_t _currState = TAIL_CENT;
-  uint16_t _updateInt = 50;
-  Timer _updateTimer = Timer();
+  uint8_t _curr_state = TAIL_CENT;
+  const uint16_t _update_interval = 50;
+  Timer _update_timer = Timer();
 
-  // MODE: SET POS
-  int16_t _tailPosCurr = 90;
-  int16_t _tailPosCent = 90;
-  
+  int16_t _tail_pos_curr = 90;
+  const int16_t _tail_pos_cent = 90;
+
   // MODE: WAG CONTINUOUS
-  bool _wagSwitch = true;
-  int16_t _wagPosOffset = 30;
-  uint16_t _wagMoveTime = 400;
-  Timer _wagTimer = Timer();
+  bool _wag_switch = true;
+  int16_t _wag_pos_offset = 30;
+  uint16_t _wag_move_time = 400;
+  Timer _wag_timer = Timer();
 
   // MODE: WAG INTERVAL
-  uint8_t _wagCountLim = 4;
-  uint8_t _wagCount = 0;
-  uint16_t _wagPauseTime = 4000;
+  uint8_t _wag_count_limit = 4;
+  uint8_t _wag_count = 0;
+  uint16_t _wag_pause_time = 4000;
 };
-#endif // END CLASS TAIL
+#endif // CLASS TAIL

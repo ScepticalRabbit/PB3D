@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
+// PET BOT 3D - PB3D!
 // RF DATA LOGGER RX - Use with Xiao+RF chip to log data to laptop
 //-----------------------------------------------------------------------------
 
 #include "RFDataLoggerRX.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 RFDataLoggerRX rfLogger;
 

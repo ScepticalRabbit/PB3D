@@ -1,35 +1,33 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskPounce
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKPOUNCE_H
 #define TASKPOUNCE_H
 
 #include <Wire.h> // I2C
+
+#include <PB3DConstants.h>
 #include "MoodManager.h"
-#include "CollisionManager.h" 
+#include "CollisionManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 #include "Speaker.h"
 
-#define POUNCE_SEEK 0
-#define POUNCE_LOCKON 1
-#define POUNCE_RUN 2
-#define POUNCE_REALIGN 3 
 
 class TaskPounce{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPounce(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
-             Speaker* inSpeaker);
+  TaskPounce(CollisionManager* collision,
+             MoodManager* mood,
+             TaskManager* task,
+             MoveManager* move,
+             Speaker* speaker);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -41,112 +39,114 @@ public:
 
   //---------------------------------------------------------------------------
   // Pounce! - called during the main during decision tree
-  void seekAndPounce();
+  void seek_and_pounce();
 
   //---------------------------------------------------------------------------
   // Get, set and reset
   void reset();
-  void collisionResetToRealign();
-  void setRealignCent(int16_t inAng);
+  void collision_reset_to_realign();
+  void set_realign_cent(int16_t angle);
 
-  bool getEnabledFlag(){return _isEnabled;}
-  int8_t getState(){return _state;}
-  int16_t getAngCentForCollision(){return _realignAngCentCollision;}
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
-  
+  bool get_enabled_flag(){return _enabled;}
+  EPounce get_state(){return _state;}
+  int16_t get_ang_cent_for_collision(){return _realign_ang_cent_collision;}
+  void set_enabled_flag(bool enabled){_enabled = enabled;}
+
 private:
-  //---------------------------------------------------------------------------
-  // PRIVATE FUNCTIONS
 
   //---------------------------------------------------------------------------
   // START
-  void _startAll();
+  void _start();
 
   //---------------------------------------------------------------------------
   // SEEK
-  void _seekTarget();
+  void _seek_target();
 
   //---------------------------------------------------------------------------
   // LOCK
-  void _lockOn();
+  void _lock_on();
 
   //---------------------------------------------------------------------------
   // RUN
-  void _runToTarget();
+  void _run_to_target();
 
   //---------------------------------------------------------------------------
   // REALIGN
   void _realign();
-  
+
   //---------------------------------------------------------------------------
   // MAIN OBJECT POINTERS
-  CollisionManager* _collisionObj = NULL;
-  MoodManager* _moodObj = NULL;
-  TaskManager* _taskObj = NULL;
-  MoveManager* _moveObj = NULL;
-  Speaker* _speakerObj = NULL;
+  CollisionManager* _collision_manager = NULL;
+  MoodManager* _mood_manager = NULL;
+  TaskManager* _task_manager = NULL;
+  MoveManager* _move_manager = NULL;
+  Speaker* _speaker = NULL;
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _isEnabled = true;
-  bool _startAllFlag = true;
+  bool _enabled = true;
+  bool _start_all = true;
 
-  // Overall state
-  int8_t _state = POUNCE_SEEK;
-  int8_t _prevState = POUNCE_REALIGN;
+  EPounce _state = POUNCE_SEEK;
+  EPounce _prev_state = POUNCE_REALIGN;
 
   // LED Colours
-  uint8_t _seekCol = 0;
-  uint8_t _lockCol = 2;
-  uint8_t _runCol = 4;
-  uint8_t _realignCol = 6;
-  uint8_t _lowSat = 128;
+  uint8_t _seek_colour = 0;
+  uint8_t _lock_colour = 2;
+  uint8_t _run_colour = 4;
+  uint8_t _realign_colour = 6;
+  uint8_t _low_saturation = 128;
 
   // Seek
-  bool _seekStart = true;
-  Timer _measTimer = Timer();
-  uint16_t _measPrePauseTime = 150;
-  uint16_t _measInterval = 110;
-  bool _measFlag = false;
-  
-  uint8_t _measCurInd = 0;
-  uint8_t _measNumVals = 3;
-  int16_t _measVec[3] = {-1,-1,-1};
-  float _measAngs[3] = {30.0,0.0,-30.0};
-  
-  int16_t _measSumForAvg = 0;
-  int16_t _measNumForAvg = 3;
-  int16_t _measCountForAvg = 0;
+  bool _seek_start = true;
+  Timer _meas_timer = Timer();
+  uint16_t _meas_pre_pause_time = 150;
+  uint16_t _meas_interval = 110;
+  bool _meas_complete = false;
+
+  uint8_t _meas_index = 0;
+  static const uint8_t _meas_num_vals = 3;
+  int16_t _meas_array[_meas_num_vals] = {-1,-1,-1};
+  float _meas_angles[_meas_num_vals] = {30.0,0.0,-30.0};
+
+  int16_t _meas_sum_for_avg = 0;
+  int16_t _meas_count_for_avg = 0;
 
   // Lock On
-  bool _lockStartFlag = true;
-  Timer _lockOnTimer = Timer();
-  uint16_t _lockSpoolUpTime = 800; // ms
-  int16_t _lockLimRangeMin = 250, _lockLimRangeMax = 5000; // in mm
-  int16_t _lockValidRangeMin = _lockLimRangeMax, _lockValidRangeMax = 0;
-  uint8_t _lockValidRangeMinInd = 0, _lockValidRangeMaxInd = 0;
-  uint8_t _lockValidRangeCount =  0;
-  float _lockOnAng = 0.0, _lockOnRange = 0.0;
-  
+  bool _lock_start = true;
+  Timer _lock_on_timer = Timer();
+  uint16_t _lock_spool_up_time = 800; // ms
+  int16_t _lock_limit_range_min = 250;
+  int16_t _lock_limit_range_max = 5000; // in mm
+  int16_t _lock_valid_range_min = _lock_limit_range_max;
+  int16_t _lock_valid_range_max = 0;
+  uint8_t _lock_valid_range_min_ind = 0;
+  uint8_t _lock_valid_range_max_ind = 0;
+  uint8_t _lock_valid_range_count =  0;
+  float _lock_on_ang = 0.0;
+  float _lock_on_range = 0.0;
+
   // Run
-  bool _runStartFlag = true;
-  Timer _runTimer = Timer();
-  uint16_t _runRangeLim = 240; //mm
-  int32_t _runEndEncCount = 0;
-  float _runSpeed = 300.0; //mmps
-  uint16_t _runTimeout = 5000;
+  bool _run_start = true;
+  Timer _run_timer = Timer();
+  uint16_t _run_range_limit = 240; //mm
+  int32_t _run_end_encoder_count = 0;
+  float _run_speed = 300.0; //mmps
+  uint16_t _run_timeout = 5000;
 
   // Realign
-  bool _realignStartFlag = true;
-  int8_t _realignState = 0;
-  Timer _realignTimer = Timer();
-  uint16_t _realignPrePauseTime = 1000, _realignPostPauseTime = 1000;
-  uint16_t _realignTimeout = 2000;
+  bool _realign_start = true;
+  int8_t _realign_state = 0;
+  Timer _realign_timer = Timer();
+  const uint16_t _realign_pre_pause_time = 1000;
+  const uint16_t _realign_post_pause_time = 1000;
+  const uint16_t _realignTimeout = 2000;
 
-  int16_t _realignAngCent = 180, _realignAngDev = 45;
-  int16_t _realignAngCentCollision = 60;
-  int16_t _realignAngMin = _realignAngCent-_realignAngDev;
-  int16_t _realignAngMax = _realignAngCent+_realignAngDev;
-  float _realignAng = 180.0;
+  int16_t _realign_angle_cent = 180;
+  int16_t _realign_angle_dev = 45;
+  int16_t _realign_ang_cent_collision = 60;
+  int16_t _realign_ang_min = _realign_angle_cent-_realign_angle_dev;
+  int16_t _realign_ang_max = _realign_angle_cent+_realign_angle_dev;
+  float _realign_angle = 180.0;
 };
 #endif // END TASKPOUNCE

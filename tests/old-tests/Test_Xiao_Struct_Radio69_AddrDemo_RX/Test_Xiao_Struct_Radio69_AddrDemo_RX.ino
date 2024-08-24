@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
+// PET BOT 3D - PB3D!
 // Test Code - RF TX/RX with ackMsg structures
 //-----------------------------------------------------------------------------
 // Based on Adafruit RF example
@@ -9,7 +9,7 @@
 #include <RH_RF69.h>
 #include <RHReliableDatagram.h>
 
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF69_FREQ 434.2
@@ -24,7 +24,7 @@
 #define CLIN_RF_ADDR     1
 
 // Radio class and radio ackMsg manager class
-// RH_RF69_MAX_MESSAGE_LEN = 60 
+// RH_RF69_MAX_MESSAGE_LEN = 60
 RH_RF69 rf69(RFM69_CS, RFM69_INT);
 RHReliableDatagram rf69_manager(rf69, CLIN_RF_ADDR);
 int16_t packetnum = 0;  // packet counter, we increment per xmission
@@ -36,7 +36,7 @@ typedef struct stateData_t{
   uint8_t mood;
   uint8_t task;
   bool collisionFlags[4];
-  float wheelSpeed;  
+  float wheelSpeed;
 };
 
 typedef union radioPacket_t{
@@ -53,9 +53,9 @@ radioPacket_t currState;
 // SETUP
 void setup(){
   Serial.begin(115200);
-  
-  // RF: reset pin 
-  pinMode(LED, OUTPUT);     
+
+  // RF: reset pin
+  pinMode(LED, OUTPUT);
   pinMode(RFM69_RST, OUTPUT);
   digitalWrite(RFM69_RST, LOW);
 
@@ -67,13 +67,13 @@ void setup(){
   delay(10);
   digitalWrite(RFM69_RST, LOW);
   delay(10);
-  
+
   if (!rf69_manager.init()) {
     Serial.println(F("RF RX: Failed to init RF RX"));
     while (1);
   }
   Serial.println(F("RF TX: initialised."));
-  
+
   // RF: set parameters
   if (!rf69.setFrequency(RF69_FREQ)) {
     Serial.println("setFrequency failed");
@@ -84,7 +84,7 @@ void setup(){
   uint8_t key[] = { 0x04, 0x05, 0x09, 0x08, 0x02, 0x01, 0x03, 0x08,
                     0x04, 0x05, 0x09, 0x08, 0x02, 0x01, 0x03, 0x08};
   rf69.setEncryptionKey(key);
-  
+
   Serial.print("RFM69 RX radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
 
   // INIT CLASS:
@@ -95,13 +95,13 @@ void setup(){
   currState.state.collisionFlags[2] = false;
   currState.state.collisionFlags[3] = false;
   currState.state.wheelSpeed = 0.0;
-  
+
   Serial.println(F("INITIAL ackMsg STRUCT"));
   printRFMsgStruct();
 }
 
 // Dont put this on the stack:
-// RH_RF69_MAX_MESSAGE_LEN = 60 
+// RH_RF69_MAX_MESSAGE_LEN = 60
 uint8_t ackMsg[] = "Struct Rec.";
 uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
 
@@ -111,7 +111,7 @@ void loop(){
   if(rf69_manager.available()){
     uint8_t len = sizeof(buf);
     uint8_t from;
-    
+
     if (rf69_manager.recvfromAck(currState.rfPacket, &len, &from)) {
       buf[len] = 0; // zero out remaining string
 
@@ -136,7 +136,7 @@ void printRFMsgStruct(){
   Serial.print(F("Mood: "));
   Serial.print(currState.state.mood);
   Serial.print(F("; "));
-  
+
   Serial.print(F("TaskManager: "));
   Serial.print(currState.state.task);
   Serial.print(F("; "));

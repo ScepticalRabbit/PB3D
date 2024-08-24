@@ -1,20 +1,17 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TEMPLATE
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "MoveBasic.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR: pass in pointers to main objects and other sensors
-//---------------------------------------------------------------------------
 MoveBasic::MoveBasic(){
 
-} 
+}
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
@@ -27,7 +24,7 @@ void MoveBasic::begin(){
 // UPDATE: called during every LOOP
 //---------------------------------------------------------------------------
 void MoveBasic::update(){
-    if(!_isEnabled){return;}
+    if(!_enabled){return;}
 
 
 }
@@ -36,10 +33,10 @@ void MoveBasic::update(){
 // DOSOMETHING - called during the main during decision tree
 //---------------------------------------------------------------------------
 void MoveBasic::doSomething(){
-    if(!_isEnabled){return;}
+    if(!_enabled){return;}
 
-    if(_startFlag){
-        _startFlag = false;
+    if(_start_flag){
+        _start_flag = false;
     }
 
 }

@@ -1,51 +1,51 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskPause
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskPause.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskPause::TaskPause(CollisionManager* inCollision, TaskManager* inTask, MoveManager* inMove, Speaker* inSpeaker){
-    _collisionObj = inCollision;
-    _taskObj = inTask;
-    _moveObj = inMove;
-    _speakerObj = inSpeaker;
+
+TaskPause::TaskPause(CollisionManager* collision, TaskManager* task,
+                     MoveManager* move, Speaker* speaker){
+    _collision_manager = collision;
+    _task_manager = task;
+    _move_manager = move;
+    _speaker = speaker;
 }
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void TaskPause::begin(){
-    _pauseTimer.start(0);
+    _pause_timer.start(0);
 }
 
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskPause::update(){
-    if(!_isEnabled){return;}
+    if(!_enabled){return;}
 
-    if(_taskObj->getNewTaskFlag()){
-        _pauseDur = random(_pauseDurMin,_pauseDurMax);
-        _pauseTimer.start(_pauseDur);
+    if(_task_manager->get_new_task_flag()){
+        _pause_dur = random(_pause_dur_min,_pause_dur_max);
+        _pause_timer.start(_pause_dur);
     }
 }
 
 //---------------------------------------------------------------------------
 // PAUSE
 void TaskPause::pause(){
-    if(!_isEnabled){return;}
+    if(!_enabled){return;}
 
-    if(_pauseTimer.finished()){
-        _taskObj->forceUpdate();
+    if(_pause_timer.finished()){
+        _task_manager->force_update();
     }
     else{
-        _taskObj->taskLEDPause(_pauseDur);
-        _collisionObj->setEnabledFlag(false);
-        _moveObj->stop();
+        _task_manager->task_LED_pause(_pause_dur);
+        _collision_manager->set_enabled_flag(false);
+        _move_manager->stop();
     }
 }

@@ -1,13 +1,11 @@
-//-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
-// CLASS - RFDATALOGGERRX
-//-----------------------------------------------------------------------------
-/*
-TODO
-
-Author: Lloyd Fletcher
-Date Created: 10th Dec. 2022
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef RFDATALOGGERRX_H
 #define RFDATALOGGERRX_H
@@ -49,23 +47,23 @@ public:
   //---------------------------------------------------------------------------
   // BEGIN - called during setup function before main loop
   void begin(){
-    // RF: reset pin 
-    pinMode(LED, OUTPUT);     
+    // RF: reset pin
+    pinMode(LED, OUTPUT);
     pinMode(RFM69_RST, OUTPUT);
     digitalWrite(RFM69_RST, LOW);
-  
+
     // RF: Reset the RF chip
     digitalWrite(RFM69_RST, HIGH);
     delay(10);
     digitalWrite(RFM69_RST, LOW);
     delay(10);
-    
+
     if (!_rf69Manager.init()) {
       Serial.println(F("RF RX: Failed to init RF RX"));
       while(1);
     }
     Serial.println(F("RF TX: initialised."));
-    
+
     // RF: set parameters
     if (!_rf69.setFrequency(RF69_FREQ)) {
       Serial.println("setFrequency failed");
@@ -79,10 +77,10 @@ public:
     */
 
     Serial.print("RFM69 RX radio @");  Serial.print((int)RF69_FREQ);  Serial.println(" MHz");
-  
+
     Serial.println(F("INITIAL DATA STRUCT"));
-    _initStateData(&_currState);
-    _printStateData(&_currState);
+    _init_state_data(&_curr_state);
+    _print_state_data(&_curr_state);
   }
 
   //---------------------------------------------------------------------------
@@ -91,28 +89,28 @@ public:
     if(_rf69Manager.available()){
       uint8_t len = sizeof(_buf);
       uint8_t from;
-      
-      if (_rf69Manager.recvfromAck(_currState.dataPacket, &len, &from)) {
+
+      if (_rf69Manager.recvfromAck(_curr_state.data_packet, &len, &from)) {
         _buf[len] = 0; // zero out remaining string
 
         #if defined(RFRX_DEBUG_PRINT)
         Serial.println();
         Serial.print("Rec packet from #"); Serial.print(from);
         Serial.print(" [RSSI :"); Serial.print(_rf69.lastRssi()); Serial.print("] : ");
-  
+
         Serial.println();
         Serial.println(F("REC DATA STRUCTURE:"));
-        _printStateData(&_currState);
+        _print_state_data(&_curr_state);
         #endif
 
         #if defined(RFRX_DEBUG_SPEED)
         _DEBUG_PlotSpeed();
         #else
-        _serialLogData(&_currState);
+        _serial_log_data(&_curr_state);
         #endif
 
         // end a reply back to the originator client
-        /*        
+        /*
         uint8_t ackMsg[] = "Data Rec.";
         if (!_rf69Manager.sendtoWait(ackMsg, sizeof(ackMsg), from)){
           #if defined(RFRX_DEBUG_PRINT)
@@ -126,23 +124,23 @@ public:
 
   //---------------------------------------------------------------------------
   // GET FUNCTIONS
-  bool getEnabledFlag(){return _isEnabled;}
+  bool get_enabled_flag(){return _enabled;}
 
   //---------------------------------------------------------------------------
   // SET FUNCTIONS
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
-  
-private: 
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
+
+private:
   //---------------------------------------------------------------------------
-  // CLASS VARIABLES 
-  bool _isEnabled = true;
-  bool _startFlag = true;
+  // CLASS VARIABLES
+  bool _enabled = true;
+  bool _start_flag = true;
 
   // Declare instance of the packet to send
-  dataPacket_t _currState;
+  dataPacket_t _curr_state;
 
   // Radio class and radio ackMsg manager class
-  // RH_RF69_MAX_MESSAGE_LEN = 60 
+  // RH_RF69_MAX_MESSAGE_LEN = 60
   RH_RF69 _rf69 = RH_RF69(RFM69_CS, RFM69_INT);
   RHReliableDatagram _rf69Manager = RHReliableDatagram(_rf69, CLIN_RF_ADDR);
   int16_t _packetnum = 0;  // packet counter, we increment per xmission
@@ -157,11 +155,11 @@ private:
   // PRIVATE FUNCTIONS
   #if defined(RFRX_DEBUG_SPEED)
   void _DEBUG_PlotSpeed(){
-    Serial.print(_currState.state.onTime-_lastTime); Serial.print(",");
-    _lastTime = _currState.state.onTime; 
-    Serial.print(_currState.state.wheelSpeedL); Serial.print(",");
-    Serial.print(_currState.state.wheelSpeedR); Serial.print(",");
-    Serial.println(); 
+    Serial.print(_curr_state.state.on_time-_lastTime); Serial.print(",");
+    _lastTime = _curr_state.state.on_time;
+    Serial.print(_curr_state.state.wheel_speed_left); Serial.print(",");
+    Serial.print(_curr_state.state.wheel_speed_right); Serial.print(",");
+    Serial.println();
   }
   #endif
 };

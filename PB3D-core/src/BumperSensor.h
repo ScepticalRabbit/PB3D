@@ -1,79 +1,62 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: BumperSensor
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-*/
-
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 #ifndef BUMPERSENSOR_H
 #define BUMPERSENSOR_H
 
 #include <Arduino.h>
-#include <Wire.h> // I2C
+#include <Wire.h>
 
-#include "Timer.h"
-#include "CollisionDangerFlags.h"
+#include <PB3DConstants.h>
+#include <PB3DI2CAddresses.h>
+#include "PB3DTimer.h"
 
-#define ADDR_BUMPERS 9
 
-#define BUMP_NUM = 2
-#define BUMP_LEFT = 0
-#define BUMP_RIGHT = 1
-
-//---------------------------------------------------------------------------
-// CLASS TEMPLATE: 
-//---------------------------------------------------------------------------
 class BumperSensor{
 public:
-    //---------------------------------------------------------------------------
-    // CONSTRUCTOR: pass in pointers to main objects and other sensors
-    //---------------------------------------------------------------------------
-    BumperSensor();
+    BumperSensor(){}
 
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // BEGIN: called once during SETUP
-    //---------------------------------------------------------------------------
     void begin();
 
-    //---------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // UPDATE: called during every LOOP
-    //---------------------------------------------------------------------------
     void update();
 
     //---------------------------------------------------------------------------
     // Get, set and reset
-    //---------------------------------------------------------------------------
-    bool getEnabledFlag(){return _isEnabled;}
-    void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+    bool get_enabled_flag(){return _enabled;}
+    void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
-    bool getBumpFlag(){return _bumperAnyFlag;}
-    bool getBumpThresCheck(){return (_bumpCount >= _bumpThres);}
-    int8_t getBumpCount(){return _bumpCount;}
-    void resetBumpCount(){_bumpCount= 0;}
+    bool get_bump_flag(){return _bumper_any_flag;}
+    bool get_bump_thres_check(){return (_bump_count >= _bump_thres);}
+    int8_t get_bump_count(){return _bump_count;}
+    void reset_bump_count(){_bump_count= 0;}
 
-    uint8_t getColCode(uint8_t bumpCode);
+    EDangerCode get_collision_code(EBumpCode bump_code);
+
     void reset();
 
 private:
-    //---------------------------------------------------------------------------
-    // CLASS VARIABLES
-    //---------------------------------------------------------------------------
-    bool _isEnabled = true;
-    bool _startFlag = true;
+    bool _enabled = true;
+    bool _start_flag = true;
 
-    const static uint8_t _numBumpers = 2;
-    const uint8_t _bumpLeft = 0;
-    const uint8_t _bumpRight = 1;
+    const static uint8_t _num_bumpers = 2;
+    const uint8_t _bump_left = 0;
+    const uint8_t _bump_right = 1;
 
-    byte _bumperReadByte = B00000000;
-    bool _bumperAnyFlag = false;
-    bool _bumperFlags[_numBumpers] = {false,false};
-    byte _bumperBytes[_numBumpers] = {B00000001,B00000010};
+    byte _bumper_read_byte = B00000000;
+    bool _bumper_any_flag = false;
+    bool _bumper_flags[_num_bumpers] = {false,false};
+    const byte _bumper_bytes[_num_bumpers] = {B00000001,B00000010};
 
-    int8_t _bumpCount = 0;
-    int8_t _bumpThres = 13;
+    int8_t _bump_count = 0;
+    const int8_t _bump_thres = 13;
 };
-#endif 
+#endif

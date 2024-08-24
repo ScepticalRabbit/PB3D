@@ -1,87 +1,84 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: TaskFindHuman
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "TaskFindHuman.h"
 
-//---------------------------------------------------------------------------
-// CONSTRUCTOR - pass in pointers to main objects and other sensors
-TaskFindHuman::TaskFindHuman(MoodManager* inMood, TaskManager* inTask, MoveManager* inMove, 
-            Speaker* inSpeaker, TaskInteract* inTInt){
-    _moodObj = inMood;
-    _taskObj = inTask;
-    _moveObj = inMove;
-    _speakerObj = inSpeaker;
-    _taskInteractObj = inTInt;
+
+TaskFindHuman::TaskFindHuman(MoodManager* inMood, TaskManager* inTask,
+                             MoveManager* inMove, Speaker* inSpeaker,
+                             TaskInteract* inTInt){
+    _mood_manager = inMood;
+    _task_manager = inTask;
+    _move_manager = inMove;
+    _speaker = inSpeaker;
+    _task_interact = inTInt;
 }
 
-//---------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void TaskFindHuman::begin(){
     delay(500);
-    _presDetector = PresenceDetector(_movementSensor, _sensitivityPresence, _sensitivityMovement, _detectInterval);
-    if (_movementSensor.initialize() == false){
-        Serial.println(F("TASKFINDHUMAN: Failed to initialise presence sensor."));  
-        _isEnabled = false;
+    _pres_detector = PresenceDetector(_movement_sens, _sensitivity_presence, _sensitivity_movement, _detect_interval);
+    if (_movement_sens.initialize() == false){
+        Serial.println(F("TASKFINDHUMAN: Failed to initialise presence sensor."));
+        _enabled = false;
     }
-    Serial.println(F("TASKFINDHUMAN: IR presence sensor initialised."));  
-    _IRPFlags1 = false; _IRPFlags2 = false; _IRPFlags3 = false; _IRPFlags4 = false;
-    _sensUpdateTimer.start(0);
+    Serial.println(F("TASKFINDHUMAN: IR presence sensor initialised."));
+    _IR_detect1 = false; _IR_detect2 = false; _IR_detect3 = false; _IR_detect4 = false;
+    _sens_update_timer.start(0);
 }
 
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskFindHuman::update(){
-    // If the human presence sensor wasn't found then do nothing
-    if(!_isEnabled){
-        return;
-    }
+    if(!_enabled){return;}
 
-    if(_taskObj->getNewTaskFlag()){
-        _startFlag = true;
+    if(_task_manager->get_new_task_flag()){
+        _start_flag = true;
     }
 
     // SENSOR: IR Human Presence Sensor
-    _presDetector.loop();
-    if(_sensUpdateTimer.finished()){
-        _sensUpdateHumanIRSensor();
-        _sensUpdateTimer.start(_humIRSensUpdateTime);
+    _pres_detector.loop();
+    if(_sens_update_timer.finished()){
+        _update_human_IR_sensor();
+        _sens_update_timer.start(_IR_sens_update_time);
     }
 }
 
 //---------------------------------------------------------------------------
 // FIND HUMAN - called during task decision tree
-void TaskFindHuman::findHuman(){
+void TaskFindHuman::find_human(){
     // Set the LEDs on every loop regardless
-    _taskObj->taskLEDFindHuman();
+    _task_manager->task_LED_find_human();
 
     // If the human presence sensor wasn't found then bypass the rest of the function
-    if(!_isEnabled){
-        _taskObj->forceUpdate();
+    if(!_enabled){
+        _task_manager->force_update();
         return;
     }
 
     // First time this is called as a new task reset some variables
-    if(_startFlag){
-        _startFlag = false;
+    if(_start_flag){
+        _start_flag = false;
 
-        _speakerObj->reset();                      
-        _callTimer.start(_callInterval);
+        _speaker->reset();
+        _call_timer.start(_call_interval);
     }
 
 
     // Set the speaker codes on every loop
     uint8_t inCodes[]   = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
-    _speakerObj->setSoundCodes(inCodes,4);
+    _speaker->set_sound_codes(inCodes,4);
     uint16_t inFreqs[]  = {NOTE_A4,NOTE_A4,NOTE_A4,NOTE_CS7,0,0,0,0};
     uint16_t inDurs[]   = {300,0,200,0,0,0,0,0};
-    _speakerObj->setSoundFreqs(inFreqs,8);
-    _speakerObj->setSoundDurs(inDurs,8);
+    _speaker->set_sound_freqs(inFreqs,8);
+    _speaker->set_sound_durations(inDurs,8);
 
     //--------------------------------------------------------------------
     // Found you!
@@ -89,67 +86,67 @@ void TaskFindHuman::findHuman(){
     // NOTE SENSOR ORIENTATION DIFFERENT ON PB3D
     // Sensor 1 is pointing LEFT
     // Sensor 1: LEFT, Sensor 2: FRONT, Sensor 3: RIGHT, Sensor 4: BACK
-    if(_IRPFlags1 && _IRPFlags2 && _IRPFlags3 && _IRPFlags4){ 
+    if(_IR_detect1 && _IR_detect2 && _IR_detect3 && _IR_detect4){
         // If all flags are tripped a human has been found!
-        _taskObj->setTask(TASK_INTERACT);
+        _task_manager->set_task(TASK_INTERACT);
         // Overide the default task duration
-        _taskObj->setTaskDuration(_taskInteractObj->getTimeOut());
-        _taskObj->taskLEDInteract();
-        _taskInteractObj->setStartInteractFlag(true);  
+        _task_manager->set_task_duration(_task_interact->get_timeout());
+        _task_manager->task_LED_interact();
+        _task_interact->set_start_interact_flag(true);
         // Update mood score
-        _moodObj->incMoodScore();
+        _mood_manager->inc_mood_score();
     }
-    else{ 
+    else{
         //--------------------------------------------------------------------
         // Speaker call = where you?
         //--------------------------------------------------------------------
-        if(_callTimer.finished()){
-            _speakerObj->reset();
-            _callTimer.start(_callInterval);
+        if(_call_timer.finished()){
+            _speaker->reset();
+            _call_timer.start(_call_interval);
         }
-        
+
         //--------------------------------------------------------------------
         // Track based on IR sensor readings
         //--------------------------------------------------------------------
         // If grove connector points backwards then the sensors are:
         // 1: back, 2: left, 3: front, 4: right
-        if(_diffIR13 > _sensitivityTrack){
-            // Sensor 1 greater than sensor 3 
-            _moveObj->left();     
+        if(_diff_IR_1to3 > _sensitivity_track){
+            // Sensor 1 greater than sensor 3
+            _move_manager->left();
         }
-        else if(_diffIR13 < -_sensitivityTrack){ 
-            // Sensor 3 greater than 1 
-            _moveObj->forward();  
+        else if(_diff_IR_1to3 < -_sensitivity_track){
+            // Sensor 3 greater than 1
+            _move_manager->forward();
         }
-        else if(_diffIR24 > _sensitivityTrack){ 
+        else if(_diff_IR_2to4 > _sensitivity_track){
             // Sensor 2 greater than sensor 4
-            _moveObj->left();  
+            _move_manager->left();
         }
-        else if(_diffIR24 < -_sensitivityTrack){
-            // Sensor 4 greater than sensor 2 
-            _moveObj->right();  
+        else if(_diff_IR_2to4 < -_sensitivity_track){
+            // Sensor 4 greater than sensor 2
+            _move_manager->right();
         }
         else{
-            _moveObj->updateMove();
-            _moveObj->go();  
+            _move_manager->update_move();
+            _move_manager->go();
         }
     }
 }
 
 //---------------------------------------------------------------------------
-void TaskFindHuman::_sensUpdateHumanIRSensor(){
-    _presDetector.presentFullField(false);
+void TaskFindHuman::_update_human_IR_sensor(){
+    _pres_detector.presentFullField(false);
 
-    _IRtDer1 = _presDetector.getDerivativeOfIR1();
-    _IRtDer2 = _presDetector.getDerivativeOfIR2();
-    _IRtDer3 = _presDetector.getDerivativeOfIR3();
-    _IRtDer4 = _presDetector.getDerivativeOfIR4();
+    _IR_deriv1 = _pres_detector.getDerivativeOfIR1();
+    _IR_deriv2 = _pres_detector.getDerivativeOfIR2();
+    _IR_deriv3 = _pres_detector.getDerivativeOfIR3();
+    _IR_deriv4 = _pres_detector.getDerivativeOfIR4();
 
-    _diffIR13 = _presDetector.getDerivativeOfDiff13();
-    _diffIR24 = _presDetector.getDerivativeOfDiff24();
+    _diff_IR_1to3 = _pres_detector.getDerivativeOfDiff13();
+    _diff_IR_2to4 = _pres_detector.getDerivativeOfDiff24();
 
-    _IRPFlags1 = _presDetector.presentField1();
-    _IRPFlags2 = _presDetector.presentField2();
-    _IRPFlags3 = _presDetector.presentField3();
-    _IRPFlags4 = _presDetector.presentField4();
-}  
+    _IR_detect1 = _pres_detector.presentField1();
+    _IR_detect2 = _pres_detector.presentField2();
+    _IR_detect3 = _pres_detector.presentField3();
+    _IR_detect4 = _pres_detector.presentField4();
+}

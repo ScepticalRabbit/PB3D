@@ -2,7 +2,7 @@
 #include <Wire.h>
 
 // Include timer library
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 // Define Follower I2C Address
 #define FOLL_ADDR 0x0a
@@ -13,7 +13,7 @@ Timer sendTimer = Timer();
 
 bool purrOn = true;
 byte toSend = B00000000;
- 
+
 void setup(){
   // Initialize I2C communications as Leader
   Wire.begin();
@@ -25,7 +25,7 @@ void setup(){
 
   sendTimer.start(0);
 }
- 
+
 void loop(){
   if(sendTimer.finished()){
     sendTimer.start(testTime);

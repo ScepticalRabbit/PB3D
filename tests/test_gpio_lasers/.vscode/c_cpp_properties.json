@@ -19,18 +19,18 @@
             ],
             "intelliSenseMode": "gcc-x64",
             "includePath": [
-                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.4/libraries/Adafruit_TinyUSB_Arduino/src/arduino",
-                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.4/libraries/Adafruit_TinyUSB_Arduino/src/arduino",
+                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Adafruit_TinyUSB_Arduino/src/arduino",
+                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Adafruit_TinyUSB_Arduino/src/arduino",
                 "/home/lloydf/.arduino15/packages/Seeeduino/tools/CMSIS/5.7.0/CMSIS/Core/Include/",
                 "/home/lloydf/.arduino15/packages/Seeeduino/tools/CMSIS/5.7.0/CMSIS/DSP/Include/",
                 "/home/lloydf/.arduino15/packages/Seeeduino/tools/CMSIS-Atmel/1.2.1/CMSIS-Atmel/CMSIS/Device/ATMEL/",
-                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.4/cores/arduino",
-                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.4/variants/XIAO_m0",
-                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.4/libraries/Wire",
+                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/cores/arduino",
+                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/variants/XIAO_m0",
+                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Wire",
                 "/home/lloydf/Arduino/libraries/Adafruit_PCF8574",
                 "/home/lloydf/Arduino/libraries/Adafruit_BusIO",
-                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.4/libraries/SPI",
-                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.4/libraries/Adafruit_ZeroDMA",
+                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/SPI",
+                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/libraries/Adafruit_ZeroDMA",
                 "/home/lloydf/Arduino/libraries/Adafruit_VL53L0X/src",
                 "/home/lloydf/.arduino15/packages/Seeeduino/tools/arm-none-eabi-gcc/7-2017q4/arm-none-eabi/include/c++/7.2.1",
                 "/home/lloydf/.arduino15/packages/Seeeduino/tools/arm-none-eabi-gcc/7-2017q4/arm-none-eabi/include/c++/7.2.1/arm-none-eabi",
@@ -40,7 +40,7 @@
                 "/home/lloydf/.arduino15/packages/Seeeduino/tools/arm-none-eabi-gcc/7-2017q4/arm-none-eabi/include"
             ],
             "forcedInclude": [
-                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.4/cores/arduino/Arduino.h"
+                "/home/lloydf/.arduino15/packages/Seeeduino/hardware/samd/1.8.5/cores/arduino/Arduino.h"
             ],
             "cStandard": "c11",
             "cppStandard": "c++14",

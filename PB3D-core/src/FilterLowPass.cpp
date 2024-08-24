@@ -1,12 +1,12 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: FilterLowPass
-//---------------------------------------------------------------------------
-/*
-The task X class is part of the PetBot (PB) program. It is used to...
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
-Author: Lloyd Fletcher
-*/
 #include "FilterLowPass.h"
 
  //---------------------------------------------------------------------------
@@ -14,28 +14,28 @@ Author: Lloyd Fletcher
 FilterLowPass::FilterLowPass(){
 }
 
-FilterLowPass::FilterLowPass(double inAlpha){
-    _alpha = inAlpha;
+FilterLowPass::FilterLowPass(double alpha){
+    _alpha = alpha;
 }
 
-FilterLowPass::FilterLowPass(double inAlpha, uint16_t inUpdateTime){
-    _alpha = inAlpha;
-    _updateTime = inUpdateTime;
+FilterLowPass::FilterLowPass(double alpha, uint16_t update_time){
+    _alpha = alpha;
+    _update_time = update_time;
 }
 
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void FilterLowPass::begin(){
-    _filtTimer.start(0);
+    _filter_timer.start(0);
 }
 
 //---------------------------------------------------------------------------
 // FILTER
-double FilterLowPass::filter(double inData){
-    if(_filtTimer.finished()){
-        _currFiltered = _alpha*inData + (1-_alpha)*_prevFiltered;
-        _prevFiltered = _currFiltered;
-        _filtTimer.start(_updateTime);
+double FilterLowPass::filter(double data){
+    if(_filter_timer.finished()){
+        _curr_filtered = _alpha*data + (1-_alpha)*_prev_filtered;
+        _prev_filtered = _curr_filtered;
+        _filter_timer.start(_update_time);
     }
-    return _currFiltered;
+    return _curr_filtered;
 }

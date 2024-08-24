@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
+// PET BOT 3D - PB3D!
 // CLASS: TIMER
 //-----------------------------------------------------------------------------
 /*
@@ -8,21 +8,21 @@ timing of different functions of the robot.
 
 Author: Lloyd Fletcher
 */
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 Timer::Timer(){
 
 }
 
 void Timer::start(uint32_t timerDuration){
-    _timerStart = millis();
-    _timerDuration = timerDuration;
+    _timer_start = millis();
+    _timer_duration = timerDuration;
 }
 
-uint32_t Timer::getTime(){
-    return (millis()-_timerStart);
+uint32_t Timer::get_time(){
+    return (millis()-_timer_start);
 }
 
 bool Timer::finished(){
-    return ((millis()-_timerStart)>_timerDuration);
+    return ((millis()-_timer_start)>_timer_duration);
 }

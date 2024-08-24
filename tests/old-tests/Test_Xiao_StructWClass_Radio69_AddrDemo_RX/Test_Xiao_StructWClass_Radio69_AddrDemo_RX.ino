@@ -1,10 +1,10 @@
 //-----------------------------------------------------------------------------
-// PET BOT 3D - PB3D! 
+// PET BOT 3D - PB3D!
 // Test Code - RF TX/RX with data structures
 //-----------------------------------------------------------------------------
 
 #include "RFLoggerRX.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 RFLoggerRX rfLogger;
 

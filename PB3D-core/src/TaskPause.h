@@ -1,31 +1,26 @@
-//---------------------------------------------------------------------------
-// PET BOT - PB3D! 
-// CLASS: PAUSE
-//---------------------------------------------------------------------------
-/*
-The task ? class is part of the PetBot (PB) program. It is used to...
-
-Author: Lloyd Fletcher
-Date Created: 12th December 2021
-Date Edited:  12th December 2021 
-*/
+//==============================================================================
+// PB3D: A pet robot that is 3D printed
+//==============================================================================
+//
+// Author: ScepticalRabbit
+// License: MIT
+// Copyright (C) 2024 ScepticalRabbit
+//------------------------------------------------------------------------------
 
 #ifndef TASKPAUSE_H
 #define TASKPAUSE_H
 
 #include <Wire.h> // I2C
-#include "CollisionManager.h" 
+#include "CollisionManager.h"
 #include "TaskManager.h"
 #include "MoveManager.h"
 #include "Speaker.h"
-#include "Timer.h"
+#include "PB3DTimer.h"
 
 class TaskPause{
 public:
-  //---------------------------------------------------------------------------
-  // CONSTRUCTOR - pass in pointers to main objects and other sensors
-  TaskPause(CollisionManager* inCollision, TaskManager* inTask, 
-            MoveManager* inMove, Speaker* inSpeaker);
+  TaskPause(CollisionManager* collision, TaskManager* task,
+            MoveManager* move, Speaker* speaker);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -41,21 +36,22 @@ public:
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-  bool getEnabledFlag(){return _isEnabled;}
-  void setEnabledFlag(bool inFlag){_isEnabled = inFlag;}
+  bool get_enabled_flag(){return _enabled;}
+  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
 private:
   // MAIN OBJECT POINTERS
-  CollisionManager* _collisionObj = NULL;
-  MoodManager* _moodObj = NULL;
-  TaskManager* _taskObj = NULL;
-  MoveManager* _moveObj = NULL;
-  Speaker* _speakerObj = NULL;
+  CollisionManager* _collision_manager = NULL;
+  MoodManager* _mood_manager = NULL;
+  TaskManager* _task_manager = NULL;
+  MoveManager* _move_manager = NULL;
+  Speaker* _speaker = NULL;
 
   // TASK - PAUSE
-  bool _isEnabled = true;
-  Timer _pauseTimer = Timer();
-  uint16_t _pauseDur = 2000;
-  uint16_t _pauseDurMin = 2000, _pauseDurMax = 4000; 
+  bool _enabled = true;
+  Timer _pause_timer = Timer();
+  uint16_t _pause_dur = 2000;
+  const uint16_t _pause_dur_min = 2000;
+  const uint16_t _pause_dur_max = 4000;
 };
 #endif // PAUSE

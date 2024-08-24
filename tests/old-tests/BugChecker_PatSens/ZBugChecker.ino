@@ -1,11 +1,11 @@
 #include "PatSensor.h"
 
-PatSensor patSensorObj = PatSensor();
+PatSensor pat_sensor = PatSensor();
 
 void setup() {
-  patSensorObj.begin();
+  pat_sensor.begin();
 }
 
 void loop() {
-  patSensorObj.update();
+  pat_sensor.update();
 }
