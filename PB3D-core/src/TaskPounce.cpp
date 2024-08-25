@@ -294,20 +294,20 @@ void TaskPounce::_run_to_target(){
     // EXIT CONDITION: Found target
     if(_collision_manager->get_laser_range(LASER_CENTRE) <= _run_range_limit){
         _state = POUNCE_REALIGN;
-        Serial.println("RUN END: US Range");
+        Serial.println("RUN END: laser range");
     }
     else if((_move_manager->get_encoder_count_left() >= _run_end_encoder_count) || (_move_manager->get_encoder_count_right() >= _run_end_encoder_count)){
         _state = POUNCE_REALIGN;
-        Serial.println("RUN END: Enc Counts");
+        Serial.println("RUN END: encoder counts");
     }
     else{ // Go forward fast
-        _move_manager->forward(_run_speed);
+        _move_manager->forward();
     }
 
     // EXIT CONDITION: TIMEOUT
     if(_run_timer.finished()){
         _state = POUNCE_REALIGN;
-        Serial.println("RUN END: Timer");
+        Serial.println("RUN END: timeout");
     }
 }
 

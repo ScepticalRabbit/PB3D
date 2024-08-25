@@ -81,12 +81,12 @@ uint32_t _test_timeStamp = 0;
 //------------------------------------------------------------------------------
 // EXTERNAL CLASSES
 
-// MOOD LEDs
+// MOOD / TASK LEDs - required by mood and task manager
 Adafruit_NeoPixel_ZeroDMA leds = Adafruit_NeoPixel_ZeroDMA(
-  NUM_PIX, MOOD_LED_PIN, NEO_GRB + NEO_KHZ800);
+  NUM_PIX, MOOD_TASK_LED_PIN, NEO_GRB + NEO_KHZ800);
 
 // MOTORS - Create the motor shield object with the default I2C address
-Adafruit_MotorShield motor_shield = Adafruit_MotorShield();
+//Adafruit_MotorShield motor_shield = Adafruit_MotorShield(ADDR_MOTOR_SHIELD);
 
 //------------------------------------------------------------------------------
 // INTERNAL CLASSES
@@ -95,9 +95,8 @@ Adafruit_MotorShield motor_shield = Adafruit_MotorShield();
 Encoder encoder_left = Encoder(ENCODER_PINA_LEFT,ENCODER_PINB_LEFT);
 Encoder encoder_right = Encoder(ENCODER_PINA_RIGHT,ENCODER_PINB_RIGHT);
 
-// BASIC CLASSES
-MoveManager move_manager = MoveManager(&motor_shield,
-                                       &encoder_left,
+// Core managers for decision engine: mood determines task probability
+MoveManager move_manager = MoveManager(&encoder_left,
                                        &encoder_right);
 MoodManager mood_manager = MoodManager(&leds);
 TaskManager task_manager = TaskManager(&leds);

@@ -84,6 +84,13 @@ enum EMoveCompound{
 };
 
 //------------------------------------------------------------------------------
+// Motors
+enum EMotorNums{
+    MOTOR_LEFT = 2,
+    MOTOR_RIGHT = 1,
+};
+
+//------------------------------------------------------------------------------
 // Encoders
 enum EEncoderDirection{
     ENCODER_FORWARD = 0,

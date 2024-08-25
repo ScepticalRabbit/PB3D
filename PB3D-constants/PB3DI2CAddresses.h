@@ -30,6 +30,8 @@
 #define ADDR_LSR_BB 0x38
 #define ADDR_LSR_AA 0x39
 
+#define ADDR_MOTOR_SHIELD 0x60
+
 #define ADDR_IR_PRES_SENS 0x64
 
 #define ADDR_TCA_I2CMULTIPLEX 0x70
