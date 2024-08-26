@@ -35,19 +35,11 @@ public:
 
     void forward_left();
     void forward_left_diff_frac(float diff_frac);
-    void forward_left(float speed_diff);
-    void forward_left(float speed, float speed_diff);
-    void forward_left(uint8_t power_diff);
-    void forward_left(uint8_t power, uint8_t power_diff);
 
     void forward_right();
     void forward_right_diff_frac(float diff_frac);
-    void forward_right(float speed_diff);
-    void forward_right(float speed, float speed_diff);
-    void forward_right(uint8_t power_diff);
-    void forward_right(uint8_t power, uint8_t power_diff);
 
-         // MOVE - POWER CONTROL - SPECIFY POWER
+    // MOVE - POWER CONTROL - SPECIFY POWER
     void forward_power(uint8_t power);
     void back_power(uint8_t power);
     void left_power(uint8_t power);
@@ -59,8 +51,8 @@ public:
     void forward_speed(float speed);
     void back_speed(float speed);
     void left_speed(float speed);
-    void forward_left_speed(float speed, float speed_diff);
     void right_speed(float speed);
+    void forward_left_speed(float speed, float speed_diff);
     void forward_right_speed(float speed, float speed_diff);
 
 private:

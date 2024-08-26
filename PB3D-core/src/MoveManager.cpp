@@ -175,77 +175,27 @@ void MoveManager::right(){
 }
 
 
-//----------------------------------------------------------------------------
-// Move Forward Left
 void MoveManager::forward_left(){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
-        forward_left(_cur_forward_speed, _curTurnSpeedDiff);
-    }
-    else{
-        forward_left(_cur_forward_power, _cur_turn_power_diff);
-    }
+    _update_basic_move(MOVE_B_FORLEFT);
+    _move_basic.forward_left();
 }
 
-void MoveManager::forward_left_diff_frac(float diffFrac){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
-        float speedDiff = _cur_forward_speed*diffFrac;
-        forward_left(_cur_forward_speed, speedDiff);
-    }
-    else{
-        uint8_t PowerDiff = round(diffFrac*float(_cur_forward_power));
-        forward_left(_cur_forward_power, PowerDiff);
-    }
+void MoveManager::forward_left_diff_frac(float diff_frac){
+    _update_basic_move(MOVE_B_FORLEFT);
+    _move_basic.forward_left_diff_frac(diff_frac);
 }
 
-void MoveManager::forward_left(float inSpeedDiff){
-    _move_basic.forward_left_speed(_cur_turn_speed,inSpeedDiff);
-}
-void MoveManager::forward_left(float inSpeed, float inSpeedDiff){
-    _move_basic.forward_left_speed(inSpeed,inSpeedDiff);
-}
 
-void MoveManager::forward_left(uint8_t inPowerDiff){
-    _move_basic.forward_left_power(_cur_turn_power,inPowerDiff);
-}
-void MoveManager::forward_left(uint8_t inPower, uint8_t inPowerDiff){
-    _move_basic.forward_left_power(inPower,inPowerDiff);
-}
-
-//----------------------------------------------------------------------------
-// Move Forward Right
 void MoveManager::forward_right(){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
-        forward_right(_cur_forward_speed, _curTurnSpeedDiff);
-    }
-    else{
-        forward_right(_cur_forward_power, _cur_turn_power_diff);
-    }
+    _update_basic_move(MOVE_B_FORRIGHT);
+    _move_basic.forward_right();
 }
 
-void MoveManager::forward_right_diff_frac(float diffFrac){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
-        float speedDiff = _cur_forward_speed*diffFrac;
-        forward_right(_cur_forward_speed, speedDiff);
-    }
-    else{
-        uint8_t PowerDiff = round(diffFrac*float(_cur_forward_power));
-        forward_right(_cur_forward_power, PowerDiff);
-    }
+void MoveManager::forward_right_diff_frac(float diff_frac){
+    _update_basic_move(MOVE_B_FORRIGHT);
+    _move_basic.forward_right_diff_frac(diff_frac);
 }
 
-void MoveManager::forward_right(float inSpeedDiff){
-    _move_basic.forward_right_speed(_cur_turn_speed,inSpeedDiff);
-}
-void MoveManager::forward_right(float inSpeed, float inSpeedDiff){
-    _move_basic.forward_right_speed(inSpeed,inSpeedDiff);
-}
-
-void MoveManager::forward_right(uint8_t inPowerDiff){
-    _move_basic.forward_right_power(_cur_turn_power,inPowerDiff);
-}
-void MoveManager::forward_right(uint8_t inPower, uint8_t inPowerDiff){
-    _move_basic.forward_right_power(inPower,inPowerDiff);
-}
 
 //----------------------------------------------------------------------------
 // Move Circle
@@ -504,10 +454,10 @@ void MoveManager::spiral_speed(int8_t turnDir){
     }
     else{
         if(turnDir == MOVE_B_LEFT){
-            _move_basic.forward_left(_cur_forward_speed,_cur_spiral_speed_diff);
+            _move_basic.forward_left_speed(_cur_forward_speed,_cur_spiral_speed_diff);
         }
         else{
-            _move_basic.forward_right(_cur_forward_speed,_cur_spiral_speed_diff);
+            _move_basic.forward_right_speed(_cur_forward_speed,_cur_spiral_speed_diff);
         }
     }
 }
@@ -538,10 +488,10 @@ void MoveManager::spiral_power(int8_t turnDir){
     }
     else{
         if(turnDir == MOVE_B_LEFT){
-            _move_basic.forward_left(_cur_forward_power,_cur_spiral_speed_diff_power);
+            _move_basic.forward_left_power(_cur_forward_power,_cur_spiral_speed_diff_power);
         }
         else{
-            _move_basic.forward_right(_cur_forward_power,_cur_spiral_speed_diff_power);
+            _move_basic.forward_right_power(_cur_forward_power,_cur_spiral_speed_diff_power);
         }
     }
 }
@@ -553,18 +503,18 @@ void MoveManager::zig_zag(){
         if(!_submove_timer.finished()){
         if(_zz_turn_dir == MOVE_B_LEFT){
             if(_move_control_code == MOVE_CONTROL_SPEED){
-                forward_left(_cur_turn_speed,_zz_turn_diff_speed);
+                _move_basic.forward_left_speed(_cur_turn_speed,_zz_turn_diff_speed);
             }
             else{
-                forward_left(_cur_turn_power,_zz_turn_diff_power);
+                _move_basic.forward_left_power(_cur_turn_power,_zz_turn_diff_power);
             }
         }
         else{
             if(_move_control_code == MOVE_CONTROL_SPEED){
-                forward_right(_cur_turn_speed,_zz_turn_diff_speed);
+                _move_basic.forward_right_speed(_cur_turn_speed,_zz_turn_diff_speed);
             }
             else{
-                forward_right(_cur_turn_power,_zz_turn_diff_power);
+                _move_basic.forward_right_power(_cur_turn_power,_zz_turn_diff_power);
             }
         }
         }

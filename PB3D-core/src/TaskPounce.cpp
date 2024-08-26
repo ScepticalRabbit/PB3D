@@ -121,7 +121,6 @@ void TaskPounce::_seek_target(){
 if(_seek_start){
     _seek_start = false;
     _move_manager->reset_look();
-    _move_manager->reset_PIDs();
     _collision_manager->set_enabled_flag(false);
 }
 _collision_manager->set_enabled_flag(false); // Disable collision detection
@@ -153,7 +152,7 @@ if(!_move_manager->get_look_finished()){
     if(_meas_index < _meas_num_vals){
     // Get to the set point and start the measurement timer
     if(!_meas_complete){
-        if(_move_manager->get_pos_PID_attained_set_point()){
+        if(_move_manager->get_pos_PID_at_setpoint()){
         //Serial.print("SP ATTAINED for "),Serial.println(_meas_index);
         _meas_complete = true;
         _meas_timer.start(_meas_pre_pause_time);
@@ -230,7 +229,7 @@ void TaskPounce::_lock_on(){
         _lock_on_range = float(_meas_array[_lock_valid_range_min_ind]);
         _lock_on_timer.start(_lock_spool_up_time);  // Start timer
 
-        _move_manager->reset_PIDs(); // Reset PIDs
+        //_move_manager->reset_PIDs(); // Reset PIDs
         _collision_manager->set_enabled_flag(false); // Disable collisition detection
 
         // DEBUG: Lock on start
@@ -253,7 +252,7 @@ void TaskPounce::_lock_on(){
         _move_manager->turn_to_angle_ctrl_pos(_lock_on_ang);
 
         // EXIT CONDITION: SET POINT REACHED
-        if(_move_manager->get_pos_PID_attained_set_point()){
+        if(_move_manager->get_pos_PID_at_setpoint()){
         _state = POUNCE_RUN;
         }
 
@@ -325,7 +324,7 @@ void TaskPounce::_realign(){
         _realign_timer.start(_realign_pre_pause_time);
 
         _collision_manager->set_enabled_flag(false); // Disable collision detection
-        _move_manager->reset_PIDs();  // Reset move PIDs
+        //_move_manager->reset_PIDs();  // Reset move PIDs
 
         // DEBUG: Run to start
         Serial.println("REALIGN: Start, Pre-pause");
@@ -351,7 +350,7 @@ void TaskPounce::_realign(){
         _move_manager->turn_to_angle_ctrl_pos(_realign_angle);
 
         // If angle is obtained or timeout go back to the start
-        if(_move_manager->get_pos_PID_attained_set_point() || _realign_timer.finished()){
+        if(_move_manager->get_pos_PID_at_setpoint() || _realign_timer.finished()){
         _realign_timer.start(_realign_post_pause_time);
         _realign_state++;
         Serial.println("REALIGN: Post pause");

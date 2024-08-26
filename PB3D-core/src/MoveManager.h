@@ -48,7 +48,6 @@ public:
     int8_t get_compound_move(){return _move_compound_code;}
     void set_compound_move(int8_t move_code){_move_compound_code = move_code;}
 
-
     // MOTOR POWER CONTROL - Get/Set
     uint8_t get_forward_power(){return _cur_forward_power;}
     uint8_t get_back_power(){return _cur_back_power;}
@@ -109,23 +108,18 @@ public:
     // Move Forward Left
     void forward_left();
     void forward_left_diff_frac(float diff_frac);
-    void forward_left(float speed_diff);
-    void forward_left(float speed, float speed_diff);
-    void forward_left(uint8_t power_diff);
-    void forward_left(uint8_t power, uint8_t power_diff);
 
     //--------------------------------------------------------------------------
     // Move Forward Right
     void forward_right();
     void forward_right_diff_frac(float diff_frac);
-    void forward_right(float speed_diff);
-    void forward_right(float speed, float speed_diff);
-    void forward_right(uint8_t power_diff);
-    void forward_right(uint8_t power, uint8_t power_diff);
 
     //--------------------------------------------------------------------------
     // Controlled movement
     // NOTE: position can be negative to move backwards
+    bool get_pos_PID_at_setpoint(){
+        return _move_controller.get_pos_PID_both_at_setpoint();}
+
     void to_dist_ctrl_pos(float set_dist);
     void to_dist_ctrl_pos(float set_dist_left, float set_dist_right);
     void turn_to_angle_ctrl_pos(float set_angle);

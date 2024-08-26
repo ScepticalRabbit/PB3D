@@ -29,6 +29,8 @@ public:
 
     PID* get_speed_PID_left(){return &_speed_PID_left;}
     PID* get_speed_PID_right(){return &_speed_PID_right;}
+
+    bool get_pos_PID_both_at_setpoint(){return _pos_at_both;}
     PID* get_pos_PID_left(){return &_pos_PID_left;}
     PID* get_pos_PID_right(){return &_pos_PID_right;}
 

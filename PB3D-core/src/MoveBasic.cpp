@@ -84,73 +84,47 @@ void MoveBasic::right(){
 // Move Forward Left
 void MoveBasic::forward_left(){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        forward_left(_cur_forward_speed, _curTurnSpeedDiff);
+        forward_left_speed(_cur_forward_speed, _curTurnSpeedDiff);
     }
     else{
-        forward_left(_cur_forward_power, _cur_turn_power_diff);
+        forward_left_power(_cur_forward_power, _cur_turn_power_diff);
     }
 }
 
 void MoveBasic::forward_left_diff_frac(float diffFrac){
     if(_move_control_code == MOVE_CONTROL_SPEED){
         float speedDiff = _cur_forward_speed*diffFrac;
-        forward_left(_cur_forward_speed, speedDiff);
+        forward_left_speed(_cur_forward_speed, speedDiff);
     }
     else{
         uint8_t PowerDiff = round(diffFrac*float(_cur_forward_power));
-        forward_left(_cur_forward_power, PowerDiff);
+        forward_left_power(_cur_forward_power, PowerDiff);
     }
-}
-
-void MoveBasic::forward_left(float inSpeedDiff){
-    forward_left_speed(_cur_turn_speed,inSpeedDiff);
-}
-void MoveBasic::forward_left(float inSpeed, float inSpeedDiff){
-    forward_left_speed(inSpeed,inSpeedDiff);
-}
-
-void MoveBasic::forward_left(uint8_t inPowerDiff){
-    forward_left_power(_cur_turn_power,inPowerDiff);
-}
-void MoveBasic::forward_left(uint8_t inPower, uint8_t inPowerDiff){
-    forward_left_power(inPower,inPowerDiff);
 }
 
 //----------------------------------------------------------------------------
 // Move Forward Right
 void MoveBasic::forward_right(){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        forward_right(_cur_forward_speed, _curTurnSpeedDiff);
+        forward_right_speed(_cur_forward_speed, _curTurnSpeedDiff);
     }
     else{
-        forward_right(_cur_forward_power, _cur_turn_power_diff);
+        forward_right_power(_cur_forward_power, _cur_turn_power_diff);
     }
 }
 
 void MoveBasic::forward_right_diff_frac(float diffFrac){
     if(_move_control_code == MOVE_CONTROL_SPEED){
         float speedDiff = _cur_forward_speed*diffFrac;
-        forward_right(_cur_forward_speed, speedDiff);
+        forward_right_speed(_cur_forward_speed, speedDiff);
     }
     else{
         uint8_t PowerDiff = round(diffFrac*float(_cur_forward_power));
-        forward_right(_cur_forward_power, PowerDiff);
+        forward_right_power(_cur_forward_power, PowerDiff);
     }
 }
 
-void MoveBasic::forward_right(float inSpeedDiff){
-    forward_right_speed(_cur_turn_speed,inSpeedDiff);
-}
-void MoveBasic::forward_right(float inSpeed, float inSpeedDiff){
-    forward_right_speed(inSpeed,inSpeedDiff);
-}
 
-void MoveBasic::forward_right(uint8_t inPowerDiff){
-    forward_right_power(_cur_turn_power,inPowerDiff);
-}
-void MoveBasic::forward_right(uint8_t inPower, uint8_t inPowerDiff){
-    forward_right_power(inPower,inPowerDiff);
-}
 
 //============================================================================
 // BASIC MOVEMENT FUNCTIONS - CONTROL BY POWER

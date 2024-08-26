@@ -85,9 +85,6 @@ uint32_t _test_timeStamp = 0;
 Adafruit_NeoPixel_ZeroDMA leds = Adafruit_NeoPixel_ZeroDMA(
   NUM_PIX, MOOD_TASK_LED_PIN, NEO_GRB + NEO_KHZ800);
 
-// MOTORS - Create the motor shield object with the default I2C address
-//Adafruit_MotorShield motor_shield = Adafruit_MotorShield(ADDR_MOTOR_SHIELD);
-
 //------------------------------------------------------------------------------
 // INTERNAL CLASSES
 

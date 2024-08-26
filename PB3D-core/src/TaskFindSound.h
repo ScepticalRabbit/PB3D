@@ -37,7 +37,7 @@ public:
   void update();
 
   //---------------------------------------------------------------------------
-  // FINDSOUND - called during task decision tree
+  // FINDSOUND - calle d during task decision tree
   void find_sound();
 
   //---------------------------------------------------------------------------
