@@ -60,17 +60,14 @@ private:
     const float _pos_PID_max_speed = 200.0;
     int16_t _pos_tol = 3;
 
-    const float _wheel_base = 172.0; // UPDATED: 1st Jan 2023 - new stable geom chassis with large wheels
-    const float _wheel_circ = _wheel_base*PI;
-    const float _wheel_circ_ang = (_wheel_base*PI)/(360.0); // FIXED factor of 2 by adding encode interrupt
     bool _pos_at_left = false;
     bool _pos_at_right = false;
     bool _pos_at_both = false;
-    // NOTE: D(inner) = 122mm, D(outer) = 160mm, D(avg) = 141mm
 
     int32_t _start_encoder_count_left = 0;
     int32_t _set_point_rel_counts_left = 0;
     int32_t _curr_relative_count_left = 0;
+
     int32_t _start_encoder_count_right = 0;
     int32_t _set_point_rel_counts_right = 0;
     int32_t _curr_relative_count_right = 0;

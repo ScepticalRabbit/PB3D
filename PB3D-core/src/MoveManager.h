@@ -124,24 +124,21 @@ public:
     void forward_right(uint8_t power, uint8_t power_diff);
 
     //--------------------------------------------------------------------------
-    // Move Circle
-    void circle();
-    void circle(int8_t turn_dir);
-
-    //==========================================================================
-    // BASIC MOVEMENT - SPEED CONTROL with PID
-    //==========================================================================
-
+    // Controlled movement
     // NOTE: position can be negative to move backwards
-    /*
     void to_dist_ctrl_pos(float set_dist);
     void to_dist_ctrl_pos(float set_dist_left, float set_dist_right);
     void turn_to_angle_ctrl_pos(float set_angle);
+
     int8_t to_dist_ctrl_speed(float speed_left, float speed_right,
-                             float set_dist_left, float set_dist_right);
+                              float set_dist_left, float set_dist_right);
     int8_t to_dist_ctrl_speed(float set_dist);
     int8_t turn_to_angle_ctrl_speed(float set_angle);
-    */
+
+    //--------------------------------------------------------------------------
+    // Move Circle
+    void circle();
+    //void circle(int8_t turn_dir);
 
     //==========================================================================
     // COMPOUND MOVEMENT FUNCTIONS
@@ -194,8 +191,6 @@ public:
 private:
     void _update_basic_move(EMoveBasic move);
     void _update_compound_move();
-    void at_speed(float speed_left,float speed_right);
-    void to_position(float set_pos_left, float set_pos_right);
     void _update_speed();
 
     Adafruit_MotorShield _motor_shield = Adafruit_MotorShield(ADDR_MOTOR_SHIELD);
@@ -227,15 +222,6 @@ private:
   Timer _move_timer = Timer();
   Timer _submove_timer = Timer();
   Timer _timeout_timer = Timer();
-
-  // Encoder counter variables
-  bool _encoder_count_start = true;
-  int32_t _start_encoder_count_left = 0;
-  int32_t _start_encoder_count_right = 0;
-  int32_t _end_encoder_count_left = 0;
-  int32_t _end_encoder_count_right = 0;
-  int32_t _encoder_count_diff_left = 0;
-  int32_t _enc_count_diff_right = 0;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Motor Power (Speed) Variables
@@ -281,45 +267,11 @@ private:
   float _speed_timeout_accel = 1220.0;
   float _speed_timeout_SF = 2.0;
 
-  /*
-  //----------------------------------------------------------------------------
-  // MOVE OBJ - Control PIDs
-  // TODO: 1st Jan 2023 - need to update gains based on new encoder counts, halved gain as temporary fix (was 0.02)
-  //double _speed_P = 2.5, _speed_I = 0.0, _speed_D = 0.0; // NOTE: 2.5 causes osc with 50ms period
-  //double _speed_P = 0.45*2.5, _speed_I = 50.0e-3/1.2, _speed_D = 0.0; // Ziegler-Nichols tuning [0.45,/1.2,0.0]
-  double _speed_P = 0.6*0.8;
-  double _speed_I = 0.5*50.0e-3;
-  double _speed_D = 50.0e-3/8.0; // Ziegler-Nichols tuning [0.6,0.5,/8]
-  double _speed_P_rev = _speed_P*0.9; // NOTE: turned off setting gains! Caused problems
-
-  PID _speed_PID_left = PID(false,_speed_P,_speed_I,_speed_D,10);
-  PID _speed_PID_right = PID(false,_speed_P,_speed_I,_speed_D,10);
-
-  // Position Control PIDs and Variables
-  PID _pos_PID_left = PID(false,0.6,0.0,0.0,20);
-  PID _pos_PID_right = PID(false,0.6,0.0,0.0,20);
-
-  float _pos_PID_min_speed = 100.0;
-  float _pos_PID_max_speed = 200.0;
-  int16_t _pos_tol = 3;
-
-  float _wheel_base = 172.0; // UPDATED: 1st Jan 2023 - new stable geom chassis with large wheels
-  float _wheel_circ = _wheel_base*PI;
-  float _wheel_circ_ang = (_wheel_base*PI)/(360.0); // FIXED factor of 2 by adding encode interrupt
-  bool _pos_at_left = false;
-  bool _pos_at_right = false;
-  bool _pos_at_both = false;
+  // Wheel base constant parameters
   // NOTE: D(inner) = 122mm, D(outer) = 160mm, D(avg) = 141mm
-
-  //TODO: Fix naming mishap here when refactoring out move code. There was a
-  //conflict with the encoder variables defined previously
-  int32_t _PID_start_encoder_count_left = 0;
-  int32_t _PID_set_point_rel_counts_left = 0;
-  int32_t _PID_curr_relative_count_left = 0;
-  int32_t _PID_start_encoder_count_right = 0;
-  int32_t _PID_set_point_rel_counts_right = 0;
-  int32_t _PID_curr_relative_count_right = 0;
-  */
+  const float _wheel_base = 172.0; // UPDATED: 1st Jan 2023 - new stable geom chassis with large wheels
+  const float _wheel_circ = _wheel_base*PI;
+  const float _wheel_circ_ang = (_wheel_base*PI)/(360.0); // FIXED factor of 2 by adding encoder interrupt
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - To Dist/Angle
@@ -329,6 +281,15 @@ private:
   float _to_ang_set_pt = 0.0;
   float _to_ang_tol = 1.0;
 
+  // Encoder counter variables - Used for PID controlled movement functions
+  bool _encoder_count_start = true;
+  int32_t _start_encoder_count_left = 0;
+  int32_t _start_encoder_count_right = 0;
+  int32_t _end_encoder_count_left = 0;
+  int32_t _end_encoder_count_right = 0;
+  int32_t _encoder_count_diff_left = 0;
+  int32_t _enc_count_diff_right = 0;
+
   //----------------------------------------------------------------------------
   // MOVE OBJ - Circle Variables
   uint8_t _circle_diff_power = 30;
@@ -337,7 +298,7 @@ private:
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Zig Zag Variables
-    bool _zz_turn_flag = true;
+  bool _zz_turn_flag = true;
   uint16_t _zz_init_turn_dur = 800;
   uint16_t _zz_left_turn_dur = _zz_init_turn_dur;
   uint16_t _zz_right_turn_dur = _zz_init_turn_dur;
@@ -350,10 +311,9 @@ private:
   uint8_t _zz_turn_diff_power = round(_def_forward_power/2);
   float _zz_turn_diff_speed = 0.5*_def_forward_speed;
 
-
   //----------------------------------------------------------------------------
   // MOVE OBJ - Spiral Variables
-    bool _spiral_start = true;
+  bool _spiral_start = true;
   uint32_t _spiral_start_time = 0;
   uint32_t _spiral_duration = 20000;
   uint32_t _spiral_curr_time = 0;
@@ -368,7 +328,6 @@ private:
   float _spiral_slope_power = 0.0;
   uint8_t _init_spiral_speed_diff_power = _def_forward_power-_min_power;
   uint8_t _cur_spiral_speed_diff_power = 0;
-
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Wiggle Variables
@@ -396,5 +355,6 @@ private:
   uint8_t _look_max_angs = 8;
   float _look_angles[8] = {30,0,-30,0,0,0,0,0};
   uint16_t _look_tot_time = _look_num_angs*(_look_move_time+_look_pause_time);
+
 };
 #endif // MOVE_H

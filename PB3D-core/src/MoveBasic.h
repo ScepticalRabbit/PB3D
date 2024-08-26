@@ -63,17 +63,6 @@ public:
     void right_speed(float speed);
     void forward_right_speed(float speed, float speed_diff);
 
-
-    // NOTE: position can be negative to move backwards
-    void to_dist_ctrl_pos(float set_dist);
-    void to_dist_ctrl_pos(float set_dist_left, float set_dist_right);
-    void turn_to_angle_ctrl_pos(float set_angle);
-    int8_t to_dist_ctrl_speed(float speed_left, float speed_right,
-                              float set_dist_left, float set_dist_right);
-    int8_t to_dist_ctrl_speed(float set_dist);
-    int8_t turn_to_angle_ctrl_speed(float set_angle);
-
-
 private:
     EMoveControl _move_control_code = MOVE_CONTROL_POWER;
     Adafruit_MotorShield* _motor_shield = NULL;
