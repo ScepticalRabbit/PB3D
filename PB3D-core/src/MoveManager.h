@@ -19,8 +19,10 @@
 #include "PID.h"
 #include "MoveController.h"
 #include "MoveBasic.h"
-#include "MoveCircle.h"
 
+#include "MoveCircle.h"
+#include "MoveWiggle.h"
+#include "MoveForwardBack.h"
 
 
 class MoveManager{
@@ -34,61 +36,41 @@ public:
 
     //----------------------------------------------------------------------------
     // UPDATE: Called during LOOP
-    void update_move();
-    void update_move(int8_t move_type);
+    void update();
+    void update(EMoveCompound move_type);
+    void force_update(EMoveCompound move_type);
 
     //----------------------------------------------------------------------------
     // GO: Called during explore or other task to randomise movements
     void go();
 
     //----------------------------------------------------------------------------
-    // GET,SET and RESET functions: Inline
+    // GET,SET and RESET functions
     // MOVE TYPE - Get/Set
-    int8_t get_basic_move(){return _move_basic_code;}
-    int8_t get_compound_move(){return _move_compound_code;}
-    void set_compound_move(int8_t move_code){_move_compound_code = move_code;}
-
-    // MOTOR POWER CONTROL - Get/Set
-    uint8_t get_forward_power(){return _cur_forward_power;}
-    uint8_t get_back_power(){return _cur_back_power;}
-    uint8_t get_turn_power(){return _cur_turn_power;}
-
-    void set_forward_power(uint8_t power){_cur_forward_power = power;}
-    void set_back_power(uint8_t power){_cur_back_power = power;}
-    void set_turn_power(uint8_t power){_cur_turn_power = power;}
+    EMoveBasic get_basic_move(){return _move_basic_code;}
+    EMoveCompound get_compound_move(){return _move_compound_code;}
+    void set_compound_move(EMoveCompound move_code){_move_compound_code = move_code;}
 
     // MOTOR SPEED CONTROL - Get/Set
-    float get_min_speed(){return _min_speed;}
-    float get_max_speed(){return _max_speed;}
-
     float get_forward_speed(){return _cur_forward_speed;}
     float get_back_speed(){return _cur_back_speed;}
     float get_turn_speed(){return _cur_turn_speed;}
 
-    void set_forward_speed(float speed){_cur_forward_speed = fabs(speed);}
-    void set_back_speed(float speed){_cur_back_speed = -1.0*fabs(speed);}
-    void set_turn_speed(float speed){_cur_turn_speed = fabs(speed);}
+    // NOTE: these are not used - why?
+    //void set_forward_speed(float speed){_cur_forward_speed = fabs(speed);}
+    //void set_back_speed(float speed){_cur_back_speed = -1.0*fabs(speed);}
+    //void set_turn_speed(float speed){_cur_turn_speed = fabs(speed);}
 
-    // ENCODERS - Get/Set
-    int32_t get_encoder_count_left(){return _encoder_left->get_count();}
-    int32_t get_encoder_count_right(){return _encoder_right->get_count();}
-    float get_encoder_speed_left(){
-    return _encoder_left->get_smooth_speed_mmps();}
-    float get_encoder_speed_right(){
-    return _encoder_right->get_smooth_speed_mmps();}
-    float get_encoder_mm_per_count(){return _encoder_left->get_mm_per_count();}
-
-    // MOVE TIMERS - Reset
-    void reset_move_timer(){_move_timer.start(0);}
-    void reset_submove_timer(){_submove_timer.start(0);}
-
-    //---------------------------------------------------------------------------
     // GET,SET and RESET functions: full implementation
-    void set_power_by_diff(int8_t diff);
-    void set_speed_by_col_code(bool obstacle_close);
-    void set_move_control(int8_t move_control);
+    void set_speed_by_col_code(EDangerCode obstacle_close);
+    void set_speed_by_mood_fact(float mood_fact);
+
     void change_circ_dir();
-    void set_speed_by_mood_fact(float moode_fact);
+
+    // ENCODERS - Get, allows forwarding through move manager
+    // NOTE: encoders must be in main for interrupts
+    Encoder* get_encoder_left(){return _encoder_left;}
+    Encoder* get_encoder_right(){return _encoder_left;}
 
     //--------------------------------------------------------------------------
     // CALCULATORS
@@ -104,20 +86,18 @@ public:
     void left();
     void right();
 
-    //--------------------------------------------------------------------------
-    // Move Forward Left
     void forward_left();
     void forward_left_diff_frac(float diff_frac);
+    void forward_left_diff_speed(float diff_speed);
 
-    //--------------------------------------------------------------------------
-    // Move Forward Right
     void forward_right();
     void forward_right_diff_frac(float diff_frac);
+    void forward_right_diff_speed(float diff_speed);
 
     //--------------------------------------------------------------------------
     // Controlled movement
     // NOTE: position can be negative to move backwards
-    bool get_pos_PID_at_setpoint(){
+    bool get_pos_controller_at_setpoint(){
         return _move_controller.get_pos_PID_both_at_setpoint();}
 
     void to_dist_ctrl_pos(float set_dist);
@@ -137,18 +117,13 @@ public:
     //==========================================================================
     // COMPOUND MOVEMENT FUNCTIONS
     //==========================================================================
-    // NOTE: these two functions already work with the default speed
-    // ADD: compound move code to each of these
 
-    //--------------------------------------------------------------------------
-    // MOVE WIGGLE LEFT/RIGHT
-    void wiggle();
-    void wiggle(uint16_t left_dur, uint16_t right_dur);
 
-    //--------------------------------------------------------------------------
-    // MOVE FORWARD/BACK
     void forward_back();
-    void forward_back(uint16_t forward_dur, uint16_t back_dur);
+    void forward_back(uint16_t forward_time, uint16_t back_time);
+
+    void wiggle();
+    void wiggle(uint16_t left_time, uint16_t right_time);
 
     //--------------------------------------------------------------------------
     // MOVE SPIRAL
@@ -184,7 +159,7 @@ public:
 
 private:
     void _update_basic_move(EMoveBasic move);
-    void _update_compound_move();
+    void _update_compound_move(EMoveCompound move);
     void _update_speed();
 
     Adafruit_MotorShield _motor_shield = Adafruit_MotorShield(ADDR_MOTOR_SHIELD);
@@ -199,23 +174,25 @@ private:
     MoveBasic _move_basic = MoveBasic(_move_control_code,&_motor_shield);
 
     MoveCircle _move_circle = MoveCircle(&_move_basic);
+    MoveWiggle _move_wiggle = MoveWiggle(&_move_basic,&_submove_timer);
+    MoveForwardBack _move_forward_back =
+            MoveForwardBack(&_move_basic,&_submove_timer);
 
+    //----------------------------------------------------------------------------
+    // MOVE OBJ - Type and General Variables
+    bool _enabled = true;
 
-  //----------------------------------------------------------------------------
-  // MOVE OBJ - Type and General Variables
-  bool _enabled = true;
+    EMoveBasic _move_basic_code = MOVE_B_FORWARD;
+    EMoveCompound _move_compound_code = MOVE_C_STRAIGHT;
+    EMoveCompound _move_compound_count = MOVE_C_COUNT;
 
-  int8_t _move_basic_code = MOVE_B_FORWARD;
-  int8_t _move_compound_code = MOVE_C_STRAIGHT;
-  int8_t _move_compound_count = MOVE_C_COUNT;
+    uint32_t _move_update_time = 5000;
+    uint32_t _move_update_min_time = 4000;
+    uint32_t _move_update_max_time = 12000;
 
-  uint32_t _move_update_time = 5000;
-  uint32_t _move_update_min_time = 4000;
-  uint32_t _move_update_max_time = 12000;
-
-  Timer _move_timer = Timer();
-  Timer _submove_timer = Timer();
-  Timer _timeout_timer = Timer();
+    Timer _move_timer = Timer();
+    Timer _submove_timer = Timer();
+    Timer _timeout_timer = Timer();
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Motor Power (Speed) Variables
@@ -323,19 +300,6 @@ private:
   uint8_t _init_spiral_speed_diff_power = _def_forward_power-_min_power;
   uint8_t _cur_spiral_speed_diff_power = 0;
 
-  //----------------------------------------------------------------------------
-  // MOVE OBJ - Wiggle Variables
-  bool _wiggle_left_flag = true;
-  uint16_t _wiggle_def_left_dur = 600;
-  uint16_t _wiggle_def_right_dur = 600;
-  uint16_t _wiggle_curr_dur = _wiggle_def_left_dur;
-
-  //----------------------------------------------------------------------------
-  // MOVE OBJ - Forward/Back Variables
-  bool _FB_forward_flag = true;
-  uint16_t _FB_def_forward_dur = 500;
-  uint16_t _FB_def_back_dur = 500;
-  uint16_t _FB_curr_dur = _FB_def_forward_dur;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Look Around

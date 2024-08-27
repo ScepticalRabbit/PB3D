@@ -91,14 +91,25 @@ void MoveBasic::forward_left(){
     }
 }
 
-void MoveBasic::forward_left_diff_frac(float diffFrac){
+void MoveBasic::forward_left_diff_frac(float diff_fraction){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        float speedDiff = _cur_forward_speed*diffFrac;
+        float speedDiff = _cur_forward_speed*diff_fraction;
         forward_left_speed(_cur_forward_speed, speedDiff);
     }
     else{
-        uint8_t PowerDiff = round(diffFrac*float(_cur_forward_power));
-        forward_left_power(_cur_forward_power, PowerDiff);
+        uint8_t power_diff = round(diff_fraction*float(_cur_forward_power));
+        forward_left_power(_cur_forward_power, power_diff);
+    }
+}
+
+void MoveBasic::forward_left_diff_speed(float diff_speed){
+    if(_move_control_code == MOVE_CONTROL_SPEED){
+        forward_left_speed(_cur_forward_speed, diff_speed);
+    }
+    else{
+        // TODO: need to calculate power for speed using calculator
+        uint8_t power_diff = uint8_t(diff_speed);
+        forward_left_power(_cur_forward_power, power_diff);
     }
 }
 
@@ -113,18 +124,27 @@ void MoveBasic::forward_right(){
     }
 }
 
-void MoveBasic::forward_right_diff_frac(float diffFrac){
+void MoveBasic::forward_right_diff_frac(float diff_fraction){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        float speedDiff = _cur_forward_speed*diffFrac;
+        float speedDiff = _cur_forward_speed*diff_fraction;
         forward_right_speed(_cur_forward_speed, speedDiff);
     }
     else{
-        uint8_t PowerDiff = round(diffFrac*float(_cur_forward_power));
-        forward_right_power(_cur_forward_power, PowerDiff);
+        uint8_t power_diff = round(diff_fraction*float(_cur_forward_power));
+        forward_right_power(_cur_forward_power, power_diff);
     }
 }
 
-
+void MoveBasic::forward_right_diff_speed(float diff_speed){
+    if(_move_control_code == MOVE_CONTROL_SPEED){
+        forward_right_speed(_cur_forward_speed, diff_speed);
+    }
+    else{
+        // TODO: need to calculate power for speed using calculator
+        uint8_t power_diff = uint8_t(diff_speed);
+        forward_right_power(_cur_forward_power, power_diff);
+    }
+}
 
 //============================================================================
 // BASIC MOVEMENT FUNCTIONS - CONTROL BY POWER

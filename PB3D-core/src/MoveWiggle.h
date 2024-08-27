@@ -11,16 +11,25 @@
 #define MOVE_WIGGLE_H
 
 #include <Arduino.h>
+#include "MoveBasic.h"
 
 class MoveWiggle{
 public:
-    MoveWiggle(){};
+    MoveWiggle(MoveBasic* move_basic, Timer* move_timer){
+        _move_basic = move_basic;
+        _move_timer = move_timer;
+    };
 
+    void wiggle(uint16_t left_time, uint16_t right_time);
     void wiggle();
-    void wiggle(uint16_t left_dur, uint16_t right_dur);
-
 
 private:
+    MoveBasic* _move_basic = NULL;
+    Timer* _move_timer = NULL;
 
+    bool _wiggle_left_flag = true;
+    const uint16_t _wiggle_left_dur = 600;
+    const uint16_t _wiggle_right_dur = 600;
+    uint16_t _wiggle_curr_dur = _wiggle_left_dur;
 };
 #endif

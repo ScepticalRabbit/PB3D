@@ -152,7 +152,7 @@ void TaskFindSound::find_sound(){
         _move_manager->forward();
     }
     else{
-        //_move_manager->update_move();
+        //_move_manager->update();
         //_move_manager->go();
         _move_manager->forward();
     }

@@ -152,7 +152,7 @@ if(!_move_manager->get_look_finished()){
     if(_meas_index < _meas_num_vals){
     // Get to the set point and start the measurement timer
     if(!_meas_complete){
-        if(_move_manager->get_pos_PID_at_setpoint()){
+        if(_move_manager->get_pos_controller_at_setpoint()){
         //Serial.print("SP ATTAINED for "),Serial.println(_meas_index);
         _meas_complete = true;
         _meas_timer.start(_meas_pre_pause_time);
@@ -252,7 +252,7 @@ void TaskPounce::_lock_on(){
         _move_manager->turn_to_angle_ctrl_pos(_lock_on_ang);
 
         // EXIT CONDITION: SET POINT REACHED
-        if(_move_manager->get_pos_PID_at_setpoint()){
+        if(_move_manager->get_pos_controller_at_setpoint()){
         _state = POUNCE_RUN;
         }
 
@@ -274,8 +274,10 @@ void TaskPounce::_run_to_target(){
         _run_timer.start(_run_timeout); // Start timer
 
         // Calculate encoder counts to get to target
-        int32_t runEncCounts = int32_t((_lock_on_range-float(_run_range_limit))/(_move_manager->get_encoder_mm_per_count()));
-        int32_t encAvgCounts = (_move_manager->get_encoder_count_left()+_move_manager->get_encoder_count_right())/2;
+        int32_t runEncCounts = int32_t((_lock_on_range-float(_run_range_limit))/
+                (_move_manager->get_encoder_left()->get_mm_per_count()));
+        int32_t encAvgCounts = (_move_manager->get_encoder_left()->get_count()+
+                                _move_manager->get_encoder_right()->get_count())/2;
         _run_end_encoder_count = encAvgCounts+runEncCounts;
 
         _collision_manager->set_enabled_flag(true); // Re-enable collision detection
@@ -295,7 +297,10 @@ void TaskPounce::_run_to_target(){
         _state = POUNCE_REALIGN;
         Serial.println("RUN END: laser range");
     }
-    else if((_move_manager->get_encoder_count_left() >= _run_end_encoder_count) || (_move_manager->get_encoder_count_right() >= _run_end_encoder_count)){
+    else if((_move_manager->get_encoder_left()->get_count() >=
+                _run_end_encoder_count) ||
+            (_move_manager->get_encoder_right()->get_count() >=
+                _run_end_encoder_count)){
         _state = POUNCE_REALIGN;
         Serial.println("RUN END: encoder counts");
     }
@@ -350,7 +355,7 @@ void TaskPounce::_realign(){
         _move_manager->turn_to_angle_ctrl_pos(_realign_angle);
 
         // If angle is obtained or timeout go back to the start
-        if(_move_manager->get_pos_PID_at_setpoint() || _realign_timer.finished()){
+        if(_move_manager->get_pos_controller_at_setpoint() || _realign_timer.finished()){
         _realign_timer.start(_realign_post_pause_time);
         _realign_state++;
         Serial.println("REALIGN: Post pause");

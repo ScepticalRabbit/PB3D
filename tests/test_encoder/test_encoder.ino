@@ -23,10 +23,10 @@ Encoder encoder_left = Encoder(encoder_pinA_left,encoder_pinB_left);
 Encoder encoder_right = Encoder(encoder_pinA_right,encoder_pinB_right);
 
 // Interrupt function prototypes
-void updateEncLA();
-void updateEncLB();
-void updateEncRA();
-void updateEncRB();
+void update_encoder_left_pina();
+void update_encoder_left_pinb();
+void update_encoder_right_pina();
+void updateencoder_right_pinb();
 
 //---------------------------------------------------------------------------
 // SETUP
@@ -39,13 +39,13 @@ void setup(){
 
     // Encoders - Attach Interrupt Pins - CHANGE,RISING,FALLING
     attachInterrupt(digitalPinToInterrupt(encoder_pinA_left),
-                updateEncLA,CHANGE);
+                update_encoder_left_pina,CHANGE);
     attachInterrupt(digitalPinToInterrupt(encoder_pinA_right),
-                updateEncRA,CHANGE);
+                update_encoder_right_pina,CHANGE);
     attachInterrupt(digitalPinToInterrupt(encoder_pinB_left),
-                updateEncLB,CHANGE);
+                update_encoder_left_pinb,CHANGE);
     attachInterrupt(digitalPinToInterrupt(encoder_pinB_right),
-                updateEncRB,CHANGE);
+                updateencoder_right_pinb,CHANGE);
 }
 
 //---------------------------------------------------------------------------
@@ -56,19 +56,19 @@ void loop(){
 
 //---------------------------------------------------------------------------
 // INTERRUPT FUNCTIONS
-void updateEncLA(){
+void update_encoder_left_pina(){
   encoder_left.update_not_equal();
   printEncCount(&encoder_left);
 }
-void updateEncLB(){
+void update_encoder_left_pinb(){
   encoder_left.update_equal();
   printEncCount(&encoder_left);
 }
-void updateEncRA(){
+void update_encoder_right_pina(){
   encoder_right.update_equal();
   printEncCount(&encoder_right);
 }
-void updateEncRB(){
+void updateencoder_right_pinb(){
   encoder_right.update_not_equal();
   printEncCount(&encoder_right);
 }

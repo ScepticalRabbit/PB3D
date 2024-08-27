@@ -75,14 +75,14 @@ void CollisionManager::update(){
 
         if(_collision_slow_down && _slow_down_timer.finished()){
             _slow_down_timer.start(_slow_down_int);
-            _move_manager->set_speed_by_col_code(true);
+            _move_manager->set_speed_by_col_code(DANGER_CLOSE);
         }
         else if(!_collision_slow_down && _slow_down_timer.finished()){
-            _move_manager->set_speed_by_col_code(false);
+            _move_manager->set_speed_by_col_code(DANGER_NONE);
         }
     }
     if(!_slow_down_timer.finished()){
-        _move_manager->set_speed_by_col_code(true);
+        _move_manager->set_speed_by_col_code(DANGER_CLOSE);
     }
 
     // DISABLED: If collision detection is turned off set flags to false and

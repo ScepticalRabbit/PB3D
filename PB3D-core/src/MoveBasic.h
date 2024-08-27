@@ -34,10 +34,12 @@ public:
     void right();
 
     void forward_left();
-    void forward_left_diff_frac(float diff_frac);
+    void forward_left_diff_frac(float diff_fraction);
+    void forward_left_diff_speed(float diff_speed);
 
     void forward_right();
-    void forward_right_diff_frac(float diff_frac);
+    void forward_right_diff_frac(float diff_fraction);
+    void forward_right_diff_speed(float diff_speed);
 
     // MOVE - POWER CONTROL - SPECIFY POWER
     void forward_power(uint8_t power);
@@ -54,6 +56,10 @@ public:
     void right_speed(float speed);
     void forward_left_speed(float speed, float speed_diff);
     void forward_right_speed(float speed, float speed_diff);
+
+    // Get, set, reset
+    float get_current_speed(){return _cur_forward_speed;}
+    float get_min_speed(){return _min_speed;}
 
 private:
     EMoveControl _move_control_code = MOVE_CONTROL_POWER;

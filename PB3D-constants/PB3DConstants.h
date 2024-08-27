@@ -74,6 +74,8 @@ enum EMoveBasic{
 };
 
 enum EMoveCompound{
+    MOVE_C_WIGGLE = -3,
+    MOVE_C_FORWARDBACK = -2,
     MOVE_C_ESCAPE = -1,
     MOVE_C_STRAIGHT = 0,
     MOVE_C_ZIGZAG = 1,
