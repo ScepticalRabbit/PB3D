@@ -155,7 +155,6 @@ public:
 private:
     void _update_basic_move(EMoveBasic move);
     void _update_compound_move(EMoveCompound move);
-    void _update_speed();
 
     Adafruit_MotorShield _motor_shield = Adafruit_MotorShield(ADDR_MOTOR_SHIELD);
     Adafruit_DCMotor* _motor_left = NULL;

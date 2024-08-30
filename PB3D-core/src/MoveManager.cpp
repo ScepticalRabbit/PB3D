@@ -88,21 +88,11 @@ void MoveManager::go(){
 // GET,SET and RESET functions: full implementation
 
 void MoveManager::set_speed_by_col_code(EDangerCode obstacle_close){
-
-    switch(obstacle_close){
-        case DANGER_CLOSE:
-            _speed_danger_fact = speed_danger_true;
-            break;
-        default:
-            _speed_danger_fact = speed_danger_false;
-            break;
-    }
-    _update_speed();
+    _move_basic.set_speed_danger_multiplier(obstacle_close);
 }
 
-void MoveManager::set_speed_by_mood_fact(float inFact){
-    _speed_mood_fact = inFact;
-    _update_speed();
+void MoveManager::set_speed_by_mood_fact(float in_fact){
+    _move_basic.set_speed_mood_multiplier(in_fact);
 }
 
 void MoveManager::change_turn_dir(){
@@ -489,20 +479,3 @@ void MoveManager::_update_compound_move(EMoveCompound move){
     }
 }
 
-//----------------------------------------------------------------------------
-void MoveManager::_update_speed(){
-    forward_speed = constrain(
-            fabs(_move_basic.default_forward_speed*_speed_mood_fact*_speed_danger_fact),
-                _move_basic.min_speed,
-                _move_basic.max_speed);
-
-    back_speed = -1.0*constrain(
-            fabs(default_back_speed*_speed_mood_fact*_speed_danger_fact),
-            min_speed,
-            max_speed);
-
-    turn_speed = constrain(
-            fabs(default_turn_speed*_speed_mood_fact*_speed_danger_fact),
-            min_speed,
-            max_speed);
-}

@@ -38,7 +38,7 @@ void MoveBasic::stop(){
 // Move Forward
 void MoveBasic::forward(){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        forward_at_speed(forward_speed);
+        forward_at_speed(_forward_speed);
     }
     else{
         forward_at_power(forward_power);
@@ -50,7 +50,7 @@ void MoveBasic::forward(){
 // Move Back
 void MoveBasic::back(){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        back_at_speed(back_speed);
+        back_at_speed(_back_speed);
     }
     else{
         back_at_power(back_power);
@@ -61,7 +61,7 @@ void MoveBasic::back(){
 // Move Left
 void MoveBasic::left(){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        left_at_speed(turn_speed);
+        left_at_speed(_turn_speed);
     }
     else{
         left_at_power(turn_power);
@@ -73,7 +73,7 @@ void MoveBasic::left(){
 // Move Right
 void MoveBasic::right(){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        right_at_speed(turn_speed);
+        right_at_speed(_turn_speed);
     }
     else{
         right_at_power(turn_power);
@@ -84,7 +84,7 @@ void MoveBasic::right(){
 // Move Forward Left
 void MoveBasic::forward_left(){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        forward_left_at_speed(forward_speed, turn_speed_diff);
+        forward_left_at_speed(_forward_speed, _turn_speed_diff);
     }
     else{
         forward_left_at_power(forward_power, turn_power_diff);
@@ -93,8 +93,8 @@ void MoveBasic::forward_left(){
 
 void MoveBasic::forward_left_diff_frac(float diff_fraction){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        float speedDiff = forward_speed*diff_fraction;
-        forward_left_at_speed(forward_speed, speedDiff);
+        float speedDiff = _forward_speed*diff_fraction;
+        forward_left_at_speed(_forward_speed, speedDiff);
     }
     else{
         uint8_t power_diff = round(diff_fraction*float(forward_power));
@@ -104,7 +104,7 @@ void MoveBasic::forward_left_diff_frac(float diff_fraction){
 
 void MoveBasic::forward_left_diff_speed(float diff_speed){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        forward_left_at_speed(forward_speed, diff_speed);
+        forward_left_at_speed(_forward_speed, diff_speed);
     }
     else{
         // TODO: need to calculate power for speed using calculator
@@ -117,7 +117,7 @@ void MoveBasic::forward_left_diff_speed(float diff_speed){
 // Move Forward Right
 void MoveBasic::forward_right(){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        forward_right_at_speed(forward_speed, turn_speed_diff);
+        forward_right_at_speed(_forward_speed, _turn_speed_diff);
     }
     else{
         forward_right_at_power(forward_power, turn_power_diff);
@@ -126,8 +126,8 @@ void MoveBasic::forward_right(){
 
 void MoveBasic::forward_right_diff_frac(float diff_fraction){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        float speedDiff = forward_speed*diff_fraction;
-        forward_right_at_speed(forward_speed, speedDiff);
+        float speedDiff = _forward_speed*diff_fraction;
+        forward_right_at_speed(_forward_speed, speedDiff);
     }
     else{
         uint8_t power_diff = round(diff_fraction*float(forward_power));
@@ -137,7 +137,7 @@ void MoveBasic::forward_right_diff_frac(float diff_fraction){
 
 void MoveBasic::forward_right_diff_speed(float diff_speed){
     if(_move_control_code == MOVE_CONTROL_SPEED){
-        forward_right_at_speed(forward_speed, diff_speed);
+        forward_right_at_speed(_forward_speed, diff_speed);
     }
     else{
         // TODO: need to calculate power for speed using calculator
@@ -215,5 +215,59 @@ void MoveBasic::right_at_speed(float inSpeed){
 
 void MoveBasic::forward_right_at_speed(float inSpeed, float inSpeedDiff){
     _move_controller->at_speed(inSpeed+(0.5*inSpeedDiff),inSpeed-(0.5*inSpeedDiff));
+}
+
+//------------------------------------------------------------------------------
+void MoveBasic::set_forward_speed(float speed){
+    _forward_speed = constrain(fabs(speed),min_speed,max_speed);
+}
+
+void MoveBasic::set_back_speed(float speed){
+    _back_speed = -1.0*constrain(fabs(speed),min_speed,max_speed);
+}
+
+void MoveBasic::set_turn_speed(float speed){
+    _turn_speed = constrain(fabs(speed),min_speed,max_speed);
+}
+
+void MoveBasic::set_speed_base_multiplier(float multiplier){
+    _speed_base_multiplier = multiplier;
+    _update_speed_with_multipliers();
+}
+
+void MoveBasic::set_speed_mood_multiplier(float multiplier){
+    _speed_mood_multiplier = multiplier;
+    _update_speed_with_multipliers();
+}
+
+void MoveBasic::set_speed_danger_multiplier(EDangerCode danger_code){
+    switch(danger_code){
+        case DANGER_CLOSE:
+            _speed_danger_multiplier = speed_danger_true;
+            break;
+        default:
+            _speed_danger_multiplier = speed_danger_false;
+            break;
+    }
+    _update_speed_with_multipliers();
+}
+
+//------------------------------------------------------------------------------
+void MoveBasic::_update_speed_with_multipliers(){
+    float total_multiplier = _speed_base_multiplier*
+                             _speed_mood_multiplier*
+                             _speed_danger_multiplier;
+
+    _forward_speed = constrain(fabs(default_forward_speed*total_multiplier),
+                                    min_speed,
+                                    max_speed);
+
+    _back_speed = -1.0*constrain(fabs(default_back_speed*total_multiplier),
+                                      min_speed,
+                                      max_speed);
+
+    _turn_speed = constrain(fabs(default_turn_speed*total_multiplier),
+                                 min_speed,
+                                 max_speed);
 }
 

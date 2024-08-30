@@ -58,12 +58,17 @@ public:
     void forward_right_at_speed(float speed, float speed_diff);
 
     // MOTOR SPEED CONTROL - Get/Set
-    float get_forward_speed(){return forward_speed;}
-    float get_back_speed(){return back_speed;}
-    float get_turn_speed(){return turn_speed;}
-    void set_forward_speed(float speed){forward_speed = fabs(speed);}
-    void set_back_speed(float speed){back_speed = -1.0*fabs(speed);}
-    void set_turn_speed(float speed){turn_speed = fabs(speed);}
+    float get_forward_speed(){return _forward_speed;}
+    float get_back_speed(){return _back_speed;}
+    float get_turn_speed(){return _turn_speed;}
+
+    void set_forward_speed(float speed);
+    void set_back_speed(float speed);
+    void set_turn_speed(float speed);
+
+    void set_speed_base_multiplier(float multiplier);
+    void set_speed_mood_multiplier(float multiplier);
+    void set_speed_danger_multiplier(EDangerCode danger_code);
 
     // Motor power variables in pwm counts
     const uint8_t default_forward_power = 120;
@@ -84,6 +89,8 @@ public:
     const float speed_danger_false = 1.0;
 
 private:
+    void _update_speed_with_multipliers();
+
     EMoveControl _move_control_code = MOVE_CONTROL_POWER;
     Adafruit_MotorShield* _motor_shield = NULL;
     Adafruit_DCMotor* _motor_left = NULL;
@@ -96,13 +103,13 @@ private:
     uint8_t turn_power = default_turn_power;
     uint8_t turn_power_diff = default_turn_power_diff;
 
-    float forward_speed = default_forward_speed;
-    float back_speed = default_back_speed;
-    float turn_speed = default_turn_speed;
-    float turn_speed_diff = default_turn_speed_diff;
+    float _forward_speed = default_forward_speed;
+    float _back_speed = default_back_speed;
+    float _turn_speed = default_turn_speed;
+    float _turn_speed_diff = default_turn_speed_diff;
 
-    float _speed_mood_fact = 1.0;
-    float _speed_danger_fact = 1.0;
-
+    float _speed_base_multiplier = 1.0;
+    float _speed_mood_multiplier = 1.0;
+    float _speed_danger_multiplier = 1.0;
 };
 #endif
