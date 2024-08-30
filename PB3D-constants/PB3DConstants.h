@@ -42,19 +42,6 @@ enum ETaskCode{
 
 //------------------------------------------------------------------------------
 // Move
-
-// MOVEMENT CONTROL
-enum EMoveControl{
-    MOVE_CONTROL_POWER = 0,
-    MOVE_CONTROL_SPEED = 1
-};
-
-enum EMoveEscapeCode{
-    MOVE_E_RANDDIR = -1,
-    MOVE_E_NOREV = -2,
-};
-
-// BASIC movement codes
 enum EMoveBasic{
     MOVE_B_STOP = -2,
     MOVE_B_FORCEUPD = -1,
@@ -95,6 +82,24 @@ enum EMoveZigZag{
     ZIGZAG_STRAIGHT = 0,
     ZIGZAG_TURN,
 };
+
+enum EMoveControlMode{
+    MOVE_CONTROL_POWER = 0,
+    MOVE_CONTROL_SPEED = 1
+};
+
+enum EMoveControlState{
+    MOVE_CONTROL_INCOMPLETE = 0,
+    MOVE_CONTROL_COMPLETE,
+    MOVE_CONTROL_TIMEOUT,
+};
+
+enum EMoveEscapeCode{
+    MOVE_E_RANDDIR = -1,
+    MOVE_E_NOREV = -2,
+};
+
+
 
 //------------------------------------------------------------------------------
 // Motors

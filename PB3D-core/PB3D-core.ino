@@ -262,7 +262,7 @@ void loop(){
     mood_manager.set_new_mood_flag(false); // Reset the flag
     task_manager.assign_probability(mood_manager.get_mood());
 
-    move_manager.set_speed_by_mood_fact(mood_manager.get_speed_fact());
+    move_manager.set_speed_mood_multiplier(mood_manager.get_speed_fact());
   }
   if(debug_force_mood){mood_manager.set_mood(debug_mood_code);}
 

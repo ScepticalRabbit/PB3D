@@ -54,18 +54,13 @@ public:
     void set_compound_move(EMoveCompound move_code){_move_compound_code = move_code;}
 
     // MOTOR SPEED CONTROL - Get/Set
-    float get_forward_speed(){return forward_speed;}
-    float get_back_speed(){return back_speed;}
-    float get_turn_speed(){return turn_speed;}
+    float get_forward_speed();
+    float get_back_speed();
+    float get_turn_speed();
 
-    // NOTE: these are not used - why?
-    //void set_forward_speed(float speed){forward_speed = fabs(speed);}
-    //void set_back_speed(float speed){back_speed = -1.0*fabs(speed);}
-    //void set_turn_speed(float speed){turn_speed = fabs(speed);}
-
-    // GET,SET and RESET functions: full implementation
-    void set_speed_by_col_code(EDangerCode obstacle_close);
-    void set_speed_by_mood_fact(float mood_fact);
+    void set_speed_base_multiplier(float multiplier);
+    void set_speed_mood_multiplier(float multiplier);
+    void set_speed_danger_multiplier(EDangerCode danger_code);
 
     void change_turn_dir();
 
@@ -106,19 +101,16 @@ public:
     void to_dist_ctrl_pos(float set_dist_left, float set_dist_right);
     void turn_to_angle_ctrl_pos(float set_angle);
 
-    int8_t to_dist_ctrl_speed(float speed_left, float speed_right,
-                              float set_dist_left, float set_dist_right);
-    int8_t to_dist_ctrl_speed(float set_dist);
-    int8_t turn_to_angle_ctrl_speed(float set_angle);
+    EMoveControlState to_dist_ctrl_speed(float speed_left, float speed_right,
+                                    float set_dist_left, float set_dist_right);
+    EMoveControlState to_dist_ctrl_speed(float set_dist);
+    EMoveControlState turn_to_angle_ctrl_speed(float set_angle);
 
-    //--------------------------------------------------------------------------
-    // Move Circle
-    void circle();
-    //void circle(int8_t turn_dir);
 
     //==========================================================================
     // COMPOUND MOVEMENT FUNCTIONS
     //==========================================================================
+    void circle();
 
     void forward_back();
     void forward_back(uint16_t forward_time, uint16_t back_time);
@@ -163,7 +155,7 @@ private:
     Encoder* _encoder_left = NULL;
     Encoder* _encoder_right = NULL;
 
-    EMoveControl _move_control_code = MOVE_CONTROL_SPEED;
+    EMoveControlMode _move_control_code = MOVE_CONTROL_SPEED;
     MoveController _move_controller = MoveController(&_motor_shield);
     MoveBasic _move_basic = MoveBasic(_move_control_code,&_motor_shield);
 
@@ -189,28 +181,6 @@ private:
     Timer _move_timer = Timer();
     Timer _submove_timer = Timer();
     Timer _timeout_timer = Timer();
-
-
-    //----------------------------------------------------------------------------
-    // MOVE OBJ - Motor Speed Variables in mm/s (millimeters per second)
-
-    const float default_forward_speed = 350.0;
-    const float default_back_speed = -225.0;
-    const float default_turn_speed = 250.0;
-    const float default_turn_speed_diff = 0.75*default_turn_speed;
-
-    float forward_speed = default_forward_speed;
-    float back_speed = default_back_speed;
-    float turn_speed = default_turn_speed;
-    float turn_speed_diff = default_turn_speed_diff;
-
-    float _speed_mood_fact = 1.0;
-    float _speed_danger_fact = 1.0;
-    const float speed_danger_true = 0.8;
-    const float speed_danger_false = 1.0;
-    const float min_speed = 50.0;
-    const float _max_speed = 1000.0;
-
 
   // Estimating power for given speed - updated for new wheels - 24th Sept 2022
   // NOTE: turned speed estimation off because PID has less overshoot without

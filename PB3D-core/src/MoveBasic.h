@@ -17,7 +17,7 @@
 
 class MoveBasic{
 public:
-    MoveBasic(EMoveControl move_control,
+    MoveBasic(EMoveControlMode move_control,
               Adafruit_MotorShield* motor_shield){
         _move_control_code = move_control;
         _motor_shield = motor_shield;
@@ -91,7 +91,7 @@ public:
 private:
     void _update_speed_with_multipliers();
 
-    EMoveControl _move_control_code = MOVE_CONTROL_POWER;
+    EMoveControlMode _move_control_code = MOVE_CONTROL_SPEED;
     Adafruit_MotorShield* _motor_shield = NULL;
     Adafruit_DCMotor* _motor_left = NULL;
     Adafruit_DCMotor* _motor_right = NULL;

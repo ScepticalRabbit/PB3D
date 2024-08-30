@@ -20,8 +20,8 @@ void MoveSpiral::spiral(EMoveTurn turn_dir){
 
         // Calculate the speed/time slope for the linear increase of speed
         // for the slow wheel
-        _init_spiral_speed_diff = _move_basic->get_current_speed() -
-                                  _move_basic->get_min_speed();
+        _init_spiral_speed_diff = _move_basic->get_forward_speed() -
+                                  _move_basic->min_speed;
         _cur_spiral_speed_diff = _init_spiral_speed_diff;
         _spiral_slope = _init_spiral_speed_diff/float(duration);
 
@@ -34,9 +34,9 @@ void MoveSpiral::spiral(EMoveTurn turn_dir){
                              _spiral_slope*float(_spiral_curr_time);
 
     // Check if we are increasing the speed of the slow wheel above the fast one
-    if(_cur_spiral_speed_diff>_move_basic->get_current_speed()){
-        _cur_spiral_speed_diff = _move_basic->get_current_speed() -
-                                 _move_basic->get_min_speed();
+    if(_cur_spiral_speed_diff>_move_basic->get_forward_speed()){
+        _cur_spiral_speed_diff = _move_basic->get_forward_speed() -
+                                 _move_basic->min_speed;
     }
 
     if(_move_timer->finished()){
@@ -44,12 +44,10 @@ void MoveSpiral::spiral(EMoveTurn turn_dir){
     }
     else{
         if(turn_dir == MOVE_TURN_LEFT){
-            _move_basic->forward_left_speed(_move_basic->get_current_speed(),
-                                           _cur_spiral_speed_diff);
+            _move_basic->forward_left_diff_speed(_cur_spiral_speed_diff);
         }
         else{
-            _move_basic->forward_right_speed(_move_basic->get_current_speed(),
-                                            _cur_spiral_speed_diff);
+            _move_basic->forward_right_diff_speed(_cur_spiral_speed_diff);
         }
     }
 }

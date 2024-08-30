@@ -86,13 +86,29 @@ void MoveManager::go(){
 
 //---------------------------------------------------------------------------
 // GET,SET and RESET functions: full implementation
-
-void MoveManager::set_speed_by_col_code(EDangerCode obstacle_close){
-    _move_basic.set_speed_danger_multiplier(obstacle_close);
+float MoveManager::get_forward_speed(){
+    return _move_basic.get_forward_speed();
 }
 
-void MoveManager::set_speed_by_mood_fact(float in_fact){
-    _move_basic.set_speed_mood_multiplier(in_fact);
+float MoveManager::get_back_speed(){
+    return _move_basic.get_back_speed();
+}
+
+float MoveManager::get_turn_speed(){
+    return _move_basic.get_turn_speed();
+}
+
+
+void MoveManager::set_speed_base_multiplier(float multiplier){
+    _move_basic.set_speed_base_multiplier(multiplier);
+}
+
+void MoveManager::set_speed_mood_multiplier(float multiplier){
+    _move_basic.set_speed_mood_multiplier(multiplier);
+}
+
+void MoveManager::set_speed_danger_multiplier(EDangerCode danger_code){
+    _move_basic.set_speed_danger_multiplier(danger_code);
 }
 
 void MoveManager::change_turn_dir(){
@@ -221,11 +237,13 @@ void MoveManager::turn_to_angle_ctrl_pos(float set_angle){
     _move_controller.to_position(-1.0*arcLeng,arcLeng);
 }
 
-int8_t MoveManager::to_dist_ctrl_speed(float speed_left, float speed_right,
-                                       float set_dist_left, float set_dist_right){
+EMoveControlState MoveManager::to_dist_ctrl_speed(float speed_left,
+                                                  float speed_right,
+                                                  float set_dist_left,
+                                                  float set_dist_right){
 
     _update_basic_move(MOVE_B_TODIST_CSpeed);
-    int8_t isComplete = 0;
+    EMoveControlState ctrl_state = MOVE_CONTROL_INCOMPLETE;
 
     // If the set distance changes outside tolerance force update
     if(!((set_dist_left >= (_to_dist_set_pt_left-_to_dist_tol)) && (set_dist_left <= (_to_dist_set_pt_left+_to_dist_tol)))){
@@ -242,10 +260,10 @@ int8_t MoveManager::to_dist_ctrl_speed(float speed_left, float speed_right,
         uint16_t timeoutL = calc_timeout(speed_left,set_dist_left);
         uint16_t timeoutR = calc_timeout(speed_right,set_dist_right);
         if(timeoutL > timeoutR){
-        _timeout_timer.start(timeoutL);
+            _timeout_timer.start(timeoutL);
         }
         else{
-        _timeout_timer.start(timeoutR);
+            _timeout_timer.start(timeoutR);
         }
 
         _encoder_count_start = false;
@@ -267,7 +285,7 @@ int8_t MoveManager::to_dist_ctrl_speed(float speed_left, float speed_right,
     }
 
     if(_timeout_timer.finished()){
-        isComplete = 2;
+        ctrl_state = MOVE_CONTROL_TIMEOUT;
     }
     else{
         if((set_dist_left > 0.0) && (set_dist_right > 0.0)){ // Go forward
@@ -275,7 +293,7 @@ int8_t MoveManager::to_dist_ctrl_speed(float speed_left, float speed_right,
             _move_controller.at_speed(abs(speed_left),abs(speed_right));
         }
         else{
-            isComplete = 1;
+            ctrl_state = MOVE_CONTROL_COMPLETE;
             stop_no_update();
         }
         }
@@ -284,7 +302,7 @@ int8_t MoveManager::to_dist_ctrl_speed(float speed_left, float speed_right,
                 _move_controller.at_speed(-1.0*abs(speed_left),abs(speed_right));
             }
             else{
-                isComplete = 1;
+                ctrl_state = MOVE_CONTROL_COMPLETE;
                 stop_no_update();
             }
         }
@@ -293,7 +311,7 @@ int8_t MoveManager::to_dist_ctrl_speed(float speed_left, float speed_right,
                 _move_controller.at_speed(abs(speed_left),-1.0*abs(speed_right));
             }
             else{
-                isComplete = 1;
+                ctrl_state = MOVE_CONTROL_COMPLETE;
                 stop_no_update();
             }
         }
@@ -302,42 +320,56 @@ int8_t MoveManager::to_dist_ctrl_speed(float speed_left, float speed_right,
                 _move_controller.at_speed(-1.0*abs(speed_left),-1.0*abs(speed_right));
             }
             else{
-                isComplete = 1;
+                ctrl_state = MOVE_CONTROL_COMPLETE;
                 stop_no_update();
             }
         }
         else{
-            isComplete = 1;
+            ctrl_state = MOVE_CONTROL_COMPLETE;
             stop_no_update();
         }
     }
-    return isComplete;
+    return ctrl_state;
 }
 
-int8_t MoveManager::to_dist_ctrl_speed(float set_dist){
-    int8_t isComplete = 0;
+EMoveControlState MoveManager::to_dist_ctrl_speed(float set_dist){
+    EMoveControlState ctrl_state = MOVE_CONTROL_INCOMPLETE;
+
     if(set_dist < 0.0){
-        isComplete = to_dist_ctrl_speed(back_speed,back_speed,set_dist,set_dist);
+        ctrl_state = to_dist_ctrl_speed(_move_basic.get_back_speed(),
+                                        _move_basic.get_back_speed(),
+                                        set_dist,
+                                        set_dist);
     }
     else{
-        isComplete = to_dist_ctrl_speed(forward_speed,forward_speed,set_dist,set_dist);
+        ctrl_state = to_dist_ctrl_speed(_move_basic.get_forward_speed(),
+                                        _move_basic.get_forward_speed(),
+                                        set_dist,
+                                        set_dist);
     }
-    return isComplete;
+    return ctrl_state;
 }
 
-int8_t MoveManager::turn_to_angle_ctrl_speed(float set_angle){
+EMoveControlState MoveManager::turn_to_angle_ctrl_speed(float set_angle){
     float set_dist = set_angle*_wheel_circ_ang;
-    int8_t isComplete = 0;
+    EMoveControlState ctrl_state = MOVE_CONTROL_INCOMPLETE;
+
     if(set_angle > 0.0){ // Turn left
-        isComplete = to_dist_ctrl_speed(-1.0*turn_speed,turn_speed,-1.0*set_dist,set_dist);
+        ctrl_state = to_dist_ctrl_speed(-1.0*_move_basic.get_turn_speed(),
+                                        _move_basic.get_turn_speed(),
+                                        -1.0*set_dist,
+                                        set_dist);
     }
     else if(set_angle < 0.0){
-        isComplete = to_dist_ctrl_speed(turn_speed,-1.0*turn_speed,-1.0*set_dist,set_dist);
+        ctrl_state = to_dist_ctrl_speed(_move_basic.get_turn_speed(),
+                                        -1.0*_move_basic.get_turn_speed(),
+                                        -1.0*set_dist,
+                                        set_dist);
     }
     else{
-        isComplete = 1;
+        ctrl_state = MOVE_CONTROL_COMPLETE;
     }
-    return isComplete;
+    return ctrl_state;
 }
 
 //==============================================================================
