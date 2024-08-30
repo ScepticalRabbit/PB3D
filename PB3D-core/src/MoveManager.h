@@ -21,8 +21,10 @@
 #include "MoveBasic.h"
 
 #include "MoveCircle.h"
-#include "MoveWiggle.h"
 #include "MoveForwardBack.h"
+#include "MoveSpiral.h"
+#include "MoveWiggle.h"
+#include "MoveZigZag.h"
 
 
 class MoveManager{
@@ -52,20 +54,20 @@ public:
     void set_compound_move(EMoveCompound move_code){_move_compound_code = move_code;}
 
     // MOTOR SPEED CONTROL - Get/Set
-    float get_forward_speed(){return _cur_forward_speed;}
-    float get_back_speed(){return _cur_back_speed;}
-    float get_turn_speed(){return _cur_turn_speed;}
+    float get_forward_speed(){return forward_speed;}
+    float get_back_speed(){return back_speed;}
+    float get_turn_speed(){return turn_speed;}
 
     // NOTE: these are not used - why?
-    //void set_forward_speed(float speed){_cur_forward_speed = fabs(speed);}
-    //void set_back_speed(float speed){_cur_back_speed = -1.0*fabs(speed);}
-    //void set_turn_speed(float speed){_cur_turn_speed = fabs(speed);}
+    //void set_forward_speed(float speed){forward_speed = fabs(speed);}
+    //void set_back_speed(float speed){back_speed = -1.0*fabs(speed);}
+    //void set_turn_speed(float speed){turn_speed = fabs(speed);}
 
     // GET,SET and RESET functions: full implementation
     void set_speed_by_col_code(EDangerCode obstacle_close);
     void set_speed_by_mood_fact(float mood_fact);
 
-    void change_circ_dir();
+    void change_turn_dir();
 
     // ENCODERS - Get, allows forwarding through move manager
     // NOTE: encoders must be in main for interrupts
@@ -118,22 +120,15 @@ public:
     // COMPOUND MOVEMENT FUNCTIONS
     //==========================================================================
 
-
     void forward_back();
     void forward_back(uint16_t forward_time, uint16_t back_time);
 
     void wiggle();
     void wiggle(uint16_t left_time, uint16_t right_time);
 
-    //--------------------------------------------------------------------------
-    // MOVE SPIRAL
     void spiral();
-    void spiral(int8_t turn_dir);
-    void spiral_speed(int8_t turn_dir);
-    void spiral_power(int8_t turn_dir);
+    void spiral(EMoveTurn turn_dir);
 
-    //--------------------------------------------------------------------------
-    // MOVE ZIG/ZAG
     void zig_zag();
 
     //--------------------------------------------------------------------------
@@ -177,6 +172,8 @@ private:
     MoveWiggle _move_wiggle = MoveWiggle(&_move_basic,&_submove_timer);
     MoveForwardBack _move_forward_back =
             MoveForwardBack(&_move_basic,&_submove_timer);
+    MoveSpiral _move_spiral = MoveSpiral(&_move_basic,&_submove_timer);
+    MoveZigZag _mov_zig_zag = MoveZigZag(&_move_basic,&_submove_timer);
 
     //----------------------------------------------------------------------------
     // MOVE OBJ - Type and General Variables
@@ -194,39 +191,27 @@ private:
     Timer _submove_timer = Timer();
     Timer _timeout_timer = Timer();
 
-  //----------------------------------------------------------------------------
-  // MOVE OBJ - Motor Power (Speed) Variables
-  const uint8_t _def_forward_power = 120;
-  const uint8_t _def_back_power = 120;
-  const uint8_t _def_turn_power = 100;
-  const uint8_t _def_turn_power_diff = 80;
 
-  uint8_t _cur_forward_power = _def_forward_power;
-  uint8_t _cur_back_power = _def_back_power;
-  uint8_t _cur_turn_power = _def_turn_power;
-  uint8_t _cur_turn_power_diff = _def_turn_power_diff;
+    //----------------------------------------------------------------------------
+    // MOVE OBJ - Motor Speed Variables in mm/s (millimeters per second)
 
-  const uint8_t _min_power = 25;
-  const uint8_t _max_power = 255;
+    const float default_forward_speed = 350.0;
+    const float default_back_speed = -225.0;
+    const float default_turn_speed = 250.0;
+    const float default_turn_speed_diff = 0.75*default_turn_speed;
 
-  //----------------------------------------------------------------------------
-  // MOVE OBJ - Motor Speed Variables in mm/s (millimeters per second)
-  const float _def_forward_speed = 350.0;
-  const float _def_back_speed = -225.0;
-  const float _def_turn_speed = 250.0;
-  const float _def_turn_speed_diff = 0.75*_def_turn_speed;
+    float forward_speed = default_forward_speed;
+    float back_speed = default_back_speed;
+    float turn_speed = default_turn_speed;
+    float turn_speed_diff = default_turn_speed_diff;
 
-  float _cur_forward_speed = _def_forward_speed;
-  float _cur_back_speed = _def_back_speed;
-  float _cur_turn_speed = _def_turn_speed;
-  float _curTurnSpeedDiff = _def_turn_speed_diff;
+    float _speed_mood_fact = 1.0;
+    float _speed_danger_fact = 1.0;
+    const float speed_danger_true = 0.8;
+    const float speed_danger_false = 1.0;
+    const float min_speed = 50.0;
+    const float _max_speed = 1000.0;
 
-  float _speed_mood_fact = 1.0;
-  float _speed_col_fact = 1.0;
-  float _speed_col_true = 0.8;
-  float _speed_col_false = 1.0;
-  const float _min_speed = 50.0;
-  const float _max_speed = 1000.0;
 
   // Estimating power for given speed - updated for new wheels - 24th Sept 2022
   // NOTE: turned speed estimation off because PID has less overshoot without
@@ -260,46 +245,6 @@ private:
   int32_t _end_encoder_count_right = 0;
   int32_t _encoder_count_diff_left = 0;
   int32_t _enc_count_diff_right = 0;
-
-  //----------------------------------------------------------------------------
-  // MOVE OBJ - Circle Variables
-  uint8_t _circle_diff_power = 30;
-  float _circle_diff_speed = _def_forward_speed*0.5;
-  int8_t _circle_direction = MOVE_B_LEFT;
-
-  //----------------------------------------------------------------------------
-  // MOVE OBJ - Zig Zag Variables
-  bool _zz_turn_flag = true;
-  uint16_t _zz_init_turn_dur = 800;
-  uint16_t _zz_left_turn_dur = _zz_init_turn_dur;
-  uint16_t _zz_right_turn_dur = _zz_init_turn_dur;
-  uint16_t _zz_turn_duration = _zz_left_turn_dur;
-
-  bool _zz_straight_flag = false;
-  uint32_t _zz_straight_duration = 1000;
-  int8_t _zz_turn_dir = MOVE_B_LEFT;
-
-  uint8_t _zz_turn_diff_power = round(_def_forward_power/2);
-  float _zz_turn_diff_speed = 0.5*_def_forward_speed;
-
-  //----------------------------------------------------------------------------
-  // MOVE OBJ - Spiral Variables
-  bool _spiral_start = true;
-  uint32_t _spiral_start_time = 0;
-  uint32_t _spiral_duration = 20000;
-  uint32_t _spiral_curr_time = 0;
-  int8_t _spiral_direction = MOVE_B_LEFT;
-
-  float _spiral_min_speed = 5.0;
-  float _spiral_slope = 0.0;
-  float _init_spiral_speed_diff = _def_forward_speed-_min_speed;
-  float _cur_spiral_speed_diff = 0.0;
-
-  uint8_t _spiral_min_power = 5.0;
-  float _spiral_slope_power = 0.0;
-  uint8_t _init_spiral_speed_diff_power = _def_forward_power-_min_power;
-  uint8_t _cur_spiral_speed_diff_power = 0;
-
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - Look Around

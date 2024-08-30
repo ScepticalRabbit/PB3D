@@ -21,13 +21,11 @@ public:
     };
 
     void circle();
-    void circle(int8_t turn_dir);
+    void circle(EMoveTurn turn_dir);
 
-    void set_turn_dir(EMoveBasic turn_dir){_turn_direction = turn_dir;}
+    EMoveTurn turn_direction = MOVE_TURN_LEFT;
 
 private:
     MoveBasic* _move_basic = NULL;
-    EMoveBasic _turn_direction = MOVE_B_LEFT;
-
 };
 #endif

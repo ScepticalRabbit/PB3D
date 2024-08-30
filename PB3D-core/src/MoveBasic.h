@@ -42,24 +42,46 @@ public:
     void forward_right_diff_speed(float diff_speed);
 
     // MOVE - POWER CONTROL - SPECIFY POWER
-    void forward_power(uint8_t power);
-    void back_power(uint8_t power);
-    void left_power(uint8_t power);
-    void right_power(uint8_t power);
-    void forward_left_power(uint8_t power, uint8_t power_diff);
-    void forward_right_power(uint8_t power, uint8_t power_diff);
+    void forward_at_power(uint8_t power);
+    void back_at_power(uint8_t power);
+    void left_at_power(uint8_t power);
+    void right_at_power(uint8_t power);
+    void forward_left_at_power(uint8_t power, uint8_t power_diff);
+    void forward_right_at_power(uint8_t power, uint8_t power_diff);
 
     // MOVE - SPEED CONTROL - SPECIFY SPEED
-    void forward_speed(float speed);
-    void back_speed(float speed);
-    void left_speed(float speed);
-    void right_speed(float speed);
-    void forward_left_speed(float speed, float speed_diff);
-    void forward_right_speed(float speed, float speed_diff);
+    void forward_at_speed(float speed);
+    void back_at_speed(float speed);
+    void left_at_speed(float speed);
+    void right_at_speed(float speed);
+    void forward_left_at_speed(float speed, float speed_diff);
+    void forward_right_at_speed(float speed, float speed_diff);
 
-    // Get, set, reset
-    float get_current_speed(){return _cur_forward_speed;}
-    float get_min_speed(){return _min_speed;}
+    // MOTOR SPEED CONTROL - Get/Set
+    float get_forward_speed(){return forward_speed;}
+    float get_back_speed(){return back_speed;}
+    float get_turn_speed(){return turn_speed;}
+    void set_forward_speed(float speed){forward_speed = fabs(speed);}
+    void set_back_speed(float speed){back_speed = -1.0*fabs(speed);}
+    void set_turn_speed(float speed){turn_speed = fabs(speed);}
+
+    // Motor power variables in pwm counts
+    const uint8_t default_forward_power = 120;
+    const uint8_t default_back_power = 120;
+    const uint8_t default_turn_power = 100;
+    const uint8_t default_turn_power_diff = 80;
+    const uint8_t min_power = 25;
+    const uint8_t max_power = 255;
+
+    // Motor speed variables in mm/s (millimeters per second)
+    const float default_forward_speed = 350.0;
+    const float default_back_speed = -225.0;
+    const float default_turn_speed = 250.0;
+    const float default_turn_speed_diff = 0.75*default_turn_speed;
+    const float min_speed = 50.0;
+    const float max_speed = 1000.0;
+    const float speed_danger_true = 0.8;
+    const float speed_danger_false = 1.0;
 
 private:
     EMoveControl _move_control_code = MOVE_CONTROL_POWER;
@@ -69,36 +91,18 @@ private:
 
     MoveController* _move_controller = NULL;
 
-    // MOVE Motor Power (Speed) Variables
-    uint8_t _def_forward_power = 120;
-    uint8_t _def_back_power = 120;
-    uint8_t _def_turn_power = 100;
-    uint8_t _def_turn_power_diff = 80;
+    uint8_t forward_power = default_forward_power;
+    uint8_t back_power = default_back_power;
+    uint8_t turn_power = default_turn_power;
+    uint8_t turn_power_diff = default_turn_power_diff;
 
-    uint8_t _cur_forward_power = _def_forward_power;
-    uint8_t _cur_back_power = _def_back_power;
-    uint8_t _cur_turn_power = _def_turn_power;
-    uint8_t _cur_turn_power_diff = _def_turn_power_diff;
-
-    uint8_t _min_power = 25;
-    uint8_t _max_power = 255;
-
-    // MOVE OBJ - Motor Speed Variables in mm/s (millimeters per second)
-    float _def_forward_speed = 350.0;
-    float _def_back_speed = -225.0;
-    float _def_turn_speed = 250.0;
-    float _def_turn_speed_diff = 0.75*_def_turn_speed;
-
-    float _cur_forward_speed = _def_forward_speed;
-    float _cur_back_speed = _def_back_speed;
-    float _cur_turn_speed = _def_turn_speed;
-    float _curTurnSpeedDiff = _def_turn_speed_diff;
+    float forward_speed = default_forward_speed;
+    float back_speed = default_back_speed;
+    float turn_speed = default_turn_speed;
+    float turn_speed_diff = default_turn_speed_diff;
 
     float _speed_mood_fact = 1.0;
-    float _speed_col_fact = 1.0;
-    float _speed_col_true = 0.8;
-    float _speed_col_false = 1.0;
-    const float _min_speed = 50.0;
-    const float _max_speed = 1000.0;
+    float _speed_danger_fact = 1.0;
+
 };
 #endif

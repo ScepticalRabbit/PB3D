@@ -91,10 +91,10 @@ void MoveManager::set_speed_by_col_code(EDangerCode obstacle_close){
 
     switch(obstacle_close){
         case DANGER_CLOSE:
-            _speed_col_fact = _speed_col_true;
+            _speed_danger_fact = speed_danger_true;
             break;
         default:
-            _speed_col_fact = _speed_col_false;
+            _speed_danger_fact = speed_danger_false;
             break;
     }
     _update_speed();
@@ -105,18 +105,19 @@ void MoveManager::set_speed_by_mood_fact(float inFact){
     _update_speed();
 }
 
-void MoveManager::change_circ_dir(){
-    if(_spiral_direction == MOVE_B_LEFT){
-        _spiral_direction = MOVE_B_RIGHT;
+void MoveManager::change_turn_dir(){
+    if(_move_spiral.turn_direction == MOVE_TURN_LEFT){
+        _move_spiral.turn_direction = MOVE_TURN_RIGHT;
     }
     else{
-        _spiral_direction = MOVE_B_LEFT;
+        _move_spiral.turn_direction = MOVE_TURN_LEFT;
     }
-    if(_circle_direction == MOVE_B_LEFT){
-        _circle_direction = MOVE_B_RIGHT;
+
+    if(_move_circle.turn_direction == MOVE_TURN_LEFT){
+        _move_circle.turn_direction = MOVE_TURN_RIGHT;
     }
     else{
-        _circle_direction = MOVE_B_LEFT;
+        _move_circle.turn_direction = MOVE_TURN_LEFT;
     }
 }
 
@@ -207,9 +208,7 @@ void MoveManager::forward_right_diff_speed(float diff_speed){
 
 //----------------------------------------------------------------------------
 // Move Circle
-void MoveManager::circle(){
-    _move_circle.circle();
-}
+
 
 //============================================================================
 // ENCODER/PID CONTROLLED MOVEMENT FUNCTIONS
@@ -328,10 +327,10 @@ int8_t MoveManager::to_dist_ctrl_speed(float speed_left, float speed_right,
 int8_t MoveManager::to_dist_ctrl_speed(float set_dist){
     int8_t isComplete = 0;
     if(set_dist < 0.0){
-        isComplete = to_dist_ctrl_speed(_cur_back_speed,_cur_back_speed,set_dist,set_dist);
+        isComplete = to_dist_ctrl_speed(back_speed,back_speed,set_dist,set_dist);
     }
     else{
-        isComplete = to_dist_ctrl_speed(_cur_forward_speed,_cur_forward_speed,set_dist,set_dist);
+        isComplete = to_dist_ctrl_speed(forward_speed,forward_speed,set_dist,set_dist);
     }
     return isComplete;
 }
@@ -340,10 +339,10 @@ int8_t MoveManager::turn_to_angle_ctrl_speed(float set_angle){
     float set_dist = set_angle*_wheel_circ_ang;
     int8_t isComplete = 0;
     if(set_angle > 0.0){ // Turn left
-        isComplete = to_dist_ctrl_speed(-1.0*_cur_turn_speed,_cur_turn_speed,-1.0*set_dist,set_dist);
+        isComplete = to_dist_ctrl_speed(-1.0*turn_speed,turn_speed,-1.0*set_dist,set_dist);
     }
     else if(set_angle < 0.0){
-        isComplete = to_dist_ctrl_speed(_cur_turn_speed,-1.0*_cur_turn_speed,-1.0*set_dist,set_dist);
+        isComplete = to_dist_ctrl_speed(turn_speed,-1.0*turn_speed,-1.0*set_dist,set_dist);
     }
     else{
         isComplete = 1;
@@ -355,15 +354,27 @@ int8_t MoveManager::turn_to_angle_ctrl_speed(float set_angle){
 // COMPOUND MOVEMENT FUNCTIONS
 //==============================================================================
 
+void MoveManager::circle(){
+    _move_circle.circle();
+}
 
 void MoveManager::forward_back(){
-    _move_compound_code = MOVE_C_FORWARDBACK;
+    _update_compound_move(MOVE_C_FORWARDBACK);
     _move_forward_back.forward_back();
 }
 
 void MoveManager::forward_back(uint16_t forward_time, uint16_t back_time){
-    _move_compound_code = MOVE_C_FORWARDBACK;
+    _update_compound_move(MOVE_C_FORWARDBACK);
     _move_forward_back.forward_back(forward_time,back_time);
+}
+
+void MoveManager::spiral(){
+    _update_compound_move(MOVE_C_SPIRAL);
+    _move_spiral.spiral();
+}
+
+void MoveManager::spiral(EMoveTurn turn_dir){
+    _move_spiral.spiral(turn_dir);
 }
 
 void MoveManager::wiggle(){
@@ -376,139 +387,8 @@ void MoveManager::wiggle(uint16_t left_time, uint16_t right_time){
     _move_wiggle.wiggle(left_time,right_time);
 }
 
-
-//----------------------------------------------------------------------------
-// MOVE SPIRAL
-void MoveManager::spiral(){
-    spiral(_spiral_direction);
-}
-
-void MoveManager::spiral(int8_t turnDir){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
-        spiral_speed(turnDir);
-    }
-    else{
-        spiral_power(turnDir);
-    }
-}
-
-void MoveManager::spiral_speed(int8_t turnDir){
-    if(_spiral_start || (_move_compound_code != MOVE_C_SPIRAL)){
-        _spiral_start = false;
-        _move_compound_code = MOVE_C_SPIRAL;
-        // Calculate the speed/time slope for the linear increase of speed
-        // for the slow wheel
-        _init_spiral_speed_diff = _cur_forward_speed-_spiral_min_speed;
-        _cur_spiral_speed_diff = _init_spiral_speed_diff;
-        _spiral_slope = _init_spiral_speed_diff/float(_spiral_duration);
-
-        _submove_timer.start(_spiral_duration);
-    }
-
-    // Calculate the current speed for the slope wheel based on the timer
-    _spiral_curr_time = _submove_timer.get_time();
-    _cur_spiral_speed_diff = _init_spiral_speed_diff -
-                             _spiral_slope*float(_spiral_curr_time);
-
-    // Check if we are increasing the speed of the slow wheel above the fast one
-    if(_cur_spiral_speed_diff>_cur_forward_speed){
-        _cur_spiral_speed_diff = _cur_forward_speed-_min_speed;
-    }
-
-    if(_submove_timer.finished()){
-        _spiral_start = true;
-    }
-    else{
-        if(turnDir == MOVE_B_LEFT){
-            _move_basic.forward_left_speed(_cur_forward_speed,_cur_spiral_speed_diff);
-        }
-        else{
-            _move_basic.forward_right_speed(_cur_forward_speed,_cur_spiral_speed_diff);
-        }
-    }
-}
-
-void MoveManager::spiral_power(int8_t turnDir){
-    if(_spiral_start || (_move_compound_code != MOVE_C_SPIRAL)){
-        // Reset the flag so we don't re-init,
-        _spiral_start = false;
-        _move_compound_code = MOVE_C_SPIRAL;
-        // Calculate the speed/time slope for the linear increase of speed
-        // for the slow wheel
-        _init_spiral_speed_diff_power = _cur_forward_power-_spiral_min_power;
-        _cur_spiral_speed_diff_power = _init_spiral_speed_diff_power;
-        _spiral_slope_power = float(_init_spiral_speed_diff_power)/float(_spiral_duration);
-        // Start the spiral timer
-        _submove_timer.start(_spiral_duration);
-    }
-
-    _spiral_curr_time = _submove_timer.get_time();
-    _cur_spiral_speed_diff_power = round(float(_init_spiral_speed_diff) - _spiral_slope_power*float(_spiral_curr_time));
-
-    if(_cur_spiral_speed_diff_power>_cur_forward_power){
-        _cur_spiral_speed_diff_power = _cur_forward_power-_spiral_min_power;
-    }
-
-    if(_submove_timer.finished()){
-        _spiral_start = true;
-    }
-    else{
-        if(turnDir == MOVE_B_LEFT){
-            _move_basic.forward_left_power(_cur_forward_power,_cur_spiral_speed_diff_power);
-        }
-        else{
-            _move_basic.forward_right_power(_cur_forward_power,_cur_spiral_speed_diff_power);
-        }
-    }
-}
-
-//----------------------------------------------------------------------------
-// MOVE ZIG/ZAG
 void MoveManager::zig_zag(){
-    if(_zz_turn_flag){
-        if(!_submove_timer.finished()){
-        if(_zz_turn_dir == MOVE_B_LEFT){
-            if(_move_control_code == MOVE_CONTROL_SPEED){
-                _move_basic.forward_left_speed(_cur_turn_speed,_zz_turn_diff_speed);
-            }
-            else{
-                _move_basic.forward_left_power(_cur_turn_power,_zz_turn_diff_power);
-            }
-        }
-        else{
-            if(_move_control_code == MOVE_CONTROL_SPEED){
-                _move_basic.forward_right_speed(_cur_turn_speed,_zz_turn_diff_speed);
-            }
-            else{
-                _move_basic.forward_right_power(_cur_turn_power,_zz_turn_diff_power);
-            }
-        }
-        }
-        else{
-        if(_zz_turn_dir == MOVE_B_LEFT){
-            _zz_turn_dir = MOVE_B_RIGHT;
-            _zz_turn_duration = _zz_right_turn_dur;
-        }
-        else{
-            _zz_turn_dir = MOVE_B_LEFT;
-            _zz_turn_duration = _zz_left_turn_dur;
-        }
-        _zz_turn_flag = false;
-        _zz_straight_flag = true;
-        _submove_timer.start(_zz_straight_duration);
-        }
-    }
-
-    if(_zz_straight_flag){
-        if(!_submove_timer.finished()){
-            forward();
-        }
-        else{
-            _zz_turn_flag = true;
-            _zz_straight_flag = false;
-            _submove_timer.start(_zz_turn_duration);
-        }
-    }
+    _mov_zig_zag.zig_zag();
 }
 
 //----------------------------------------------------------------------------
@@ -575,7 +455,7 @@ void MoveManager::reset_look(){
 
 
 //----------------------------------------------------------------------------
-// PRIVATE HELPER FUNCTIONS
+// Update helper functions to reset movements
 void MoveManager::_update_basic_move(EMoveBasic move){
     if(_move_basic_code != move){
         _move_basic_code = move;
@@ -586,42 +466,43 @@ void MoveManager::_update_basic_move(EMoveBasic move){
     }
 }
 
-//----------------------------------------------------------------------------
 void MoveManager::_update_compound_move(EMoveCompound move){
-    _move_compound_code = move;
-    _move_update_time = random(_move_update_min_time,_move_update_max_time);
+    if(_move_compound_code != move || _move_timer.finished()){
+        _move_compound_code = move;
+        _move_update_time = random(_move_update_min_time,_move_update_max_time);
 
-    if(_move_compound_code == MOVE_C_SPIRAL){
-        _spiral_start = true;
-        _spiral_direction = random(0,2);
-        _move_update_time = _spiral_duration;
-    }
-    else if(_move_compound_code == MOVE_C_CIRCLE){
-        _circle_direction = random(0,2);
-    }
-    else if(_move_compound_code == MOVE_C_LOOK){
-        _look_start_flag = true;
-        _move_update_time = _look_tot_time;
-    }
+        if(_move_compound_code == MOVE_C_SPIRAL){
+            _move_spiral.reset();
+            _move_spiral.turn_direction = EMoveTurn(random(0,MOVE_TURN_COUNT));
+            _move_update_time = _move_spiral.duration;
+        }
+        else if(_move_compound_code == MOVE_C_CIRCLE){
+            _move_circle.turn_direction = EMoveTurn(random(0,MOVE_TURN_COUNT));
+        }
+        else if(_move_compound_code == MOVE_C_LOOK){
+            _look_start_flag = true;
+            _move_update_time = _look_tot_time;
+        }
 
-    _move_timer.start(_move_update_time);
-    _submove_timer.start(0);
+        _move_timer.start(_move_update_time);
+        _submove_timer.start(0);
+    }
 }
 
 //----------------------------------------------------------------------------
 void MoveManager::_update_speed(){
-    _cur_forward_speed = constrain(
-            fabs(_def_forward_speed*_speed_mood_fact*_speed_col_fact),
-            _min_speed,
-            _max_speed);
+    forward_speed = constrain(
+            fabs(_move_basic.default_forward_speed*_speed_mood_fact*_speed_danger_fact),
+                _move_basic.min_speed,
+                _move_basic.max_speed);
 
-    _cur_back_speed = -1.0*constrain(
-            fabs(_def_back_speed*_speed_mood_fact*_speed_col_fact),
-            _min_speed,
-            _max_speed);
+    back_speed = -1.0*constrain(
+            fabs(default_back_speed*_speed_mood_fact*_speed_danger_fact),
+            min_speed,
+            max_speed);
 
-    _cur_turn_speed = constrain(
-            fabs(_def_turn_speed*_speed_mood_fact*_speed_col_fact),
-            _min_speed,
-            _max_speed);
+    turn_speed = constrain(
+            fabs(default_turn_speed*_speed_mood_fact*_speed_danger_fact),
+            min_speed,
+            max_speed);
 }

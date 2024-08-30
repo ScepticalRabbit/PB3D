@@ -283,15 +283,13 @@ void loop(){
 
   //----------------------------------------------------------------------------
   // UPDATE OBJECTS - Each object has own internal timer
-  move_manager.update();
+  move_manager.update(); // TODO: check this doesn't override tasks
   collision_manager.update();
 
   speaker.update();
   pat_sensor.update();
   tail.update();
   IMU.update();
-  encoder_left.update_speed();
-  encoder_right.update_speed();
   navigator.update();
   sender.update();
 
@@ -458,7 +456,7 @@ void detected_collision(){
   collision_manager.set_escape_start();
 
   // If we are moving in a circle or a spiral then switch direction
-  move_manager.change_circ_dir();
+  move_manager.change_turn_dir();
 
   // Reset the PIDs and stop the motors
   move_manager.stop();

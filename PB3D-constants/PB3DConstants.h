@@ -56,21 +56,21 @@ enum EMoveEscapeCode{
 
 // BASIC movement codes
 enum EMoveBasic{
-    MOVE_B_STOP = -0,
+    MOVE_B_STOP = -2,
     MOVE_B_FORCEUPD = -1,
     MOVE_B_FORWARD = 0,
     MOVE_B_BACK = 1,
-    MOVE_B_LEFT = 3,
-    MOVE_B_RIGHT = 4,
-    MOVE_B_FORLEFT = 5,
-    MOVE_B_FORRIGHT = 6,
-    MOVE_B_BACKLEFT = 7,
-    MOVE_B_BACKRIGHT = 8,
-    MOVE_B_TODIST_CPOS = 9,
-    MOVE_B_TODIST_CSpeed = 10,
-    MOVE_B_TOANG_CPOS = 11,
-    MOVE_B_TOANG_CSpeed = 12,
-    MOVE_B_COUNT = 13,
+    MOVE_B_LEFT = 2,
+    MOVE_B_RIGHT = 3,
+    MOVE_B_FORLEFT = 4,
+    MOVE_B_FORRIGHT = 5,
+    MOVE_B_BACKLEFT = 6,
+    MOVE_B_BACKRIGHT = 7,
+    MOVE_B_TODIST_CPOS = 8,
+    MOVE_B_TODIST_CSpeed = 9,
+    MOVE_B_TOANG_CPOS = 10,
+    MOVE_B_TOANG_CSpeed = 11,
+    MOVE_B_COUNT = 12,
 };
 
 enum EMoveCompound{
@@ -83,6 +83,17 @@ enum EMoveCompound{
     MOVE_C_SPIRAL = 3,
     MOVE_C_LOOK = 4,
     MOVE_C_COUNT = 5,
+};
+
+enum EMoveTurn{
+    MOVE_TURN_LEFT = 0,
+    MOVE_TURN_RIGHT = 1,
+    MOVE_TURN_COUNT = 2,
+};
+
+enum EMoveZigZag{
+    ZIGZAG_STRAIGHT = 0,
+    ZIGZAG_TURN,
 };
 
 //------------------------------------------------------------------------------
