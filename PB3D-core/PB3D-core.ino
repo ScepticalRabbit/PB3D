@@ -70,7 +70,7 @@ Timer test_report_timer = Timer();
 bool _test_pause_switch = true;
 uint8_t test_count = 0;
 uint8_t test_count_limit = 4;
-uint32_t test_pause_time = 2000;
+uint32_t test_pause_time = 2000; 
 Timer test_pause_timer = Timer();
 
 bool test_first_loop = true;

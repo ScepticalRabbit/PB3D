@@ -91,7 +91,7 @@ public:
 private:
     void _update_speed_with_multipliers();
 
-    EMoveControlMode _move_control_code = MOVE_CONTROL_SPEED;
+    EMoveControlMode _move_control_code = MOVE_MODE_SPEED;
     Adafruit_MotorShield* _motor_shield = NULL;
     Adafruit_DCMotor* _motor_left = NULL;
     Adafruit_DCMotor* _motor_right = NULL;

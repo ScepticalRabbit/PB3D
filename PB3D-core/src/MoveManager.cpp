@@ -30,14 +30,13 @@ void MoveManager::begin(){
     _move_update_time = random(_move_update_min_time,_move_update_max_time);
     _move_timer.start(_move_update_time);
     _submove_timer.start(0);
-    _look_timer.start(0);
     _timeout_timer.start(0);
   }
 
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void MoveManager::update(){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     if(_move_timer.finished()){
         EMoveCompound move = EMoveCompound(
@@ -47,7 +46,7 @@ void MoveManager::update(){
 }
 
 void MoveManager::update(EMoveCompound move){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     if(_move_timer.finished()){
         _update_compound_move(move);
@@ -55,7 +54,7 @@ void MoveManager::update(EMoveCompound move){
 }
 
 void MoveManager::force_update(EMoveCompound move){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     _update_compound_move(move);
 }
@@ -63,7 +62,7 @@ void MoveManager::force_update(EMoveCompound move){
 //---------------------------------------------------------------------------
 // GO
 void MoveManager::go(){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     switch(_move_compound_code){
         case MOVE_C_ZIGZAG:
@@ -97,7 +96,6 @@ float MoveManager::get_back_speed(){
 float MoveManager::get_turn_speed(){
     return _move_basic.get_turn_speed();
 }
-
 
 void MoveManager::set_speed_base_multiplier(float multiplier){
     _move_basic.set_speed_base_multiplier(multiplier);
@@ -144,7 +142,7 @@ uint16_t MoveManager::calc_timeout(float inSpeed, float inDist){
         timeout = timeAtConstVel+timeToVel;
     }
 
-    return uint16_t(_speed_timeout_SF*timeout*1000.0); // milliseconds
+    return uint16_t(_speed_timeout_safety_factor*timeout*1000.0); // milliseconds
 }
 
 //---------------------------------------------------------------------------
@@ -211,21 +209,11 @@ void MoveManager::forward_right_diff_speed(float diff_speed){
     _move_basic.forward_right_diff_speed(diff_speed);
 }
 
-
-//----------------------------------------------------------------------------
-// Move Circle
-
-
 //============================================================================
 // ENCODER/PID CONTROLLED MOVEMENT FUNCTIONS
 //============================================================================
 
 // NOTE: position can be negative to move backwards
-void MoveManager::to_dist_ctrl_pos(float set_dist){
-    _update_basic_move(MOVE_B_TODIST_CPOS);
-    _move_controller.to_position(set_dist,set_dist);
-}
-
 void MoveManager::to_dist_ctrl_pos(float set_dist_left, float set_dist_right){
     _update_basic_move(MOVE_B_TODIST_CPOS);
     _move_controller.to_position(set_dist_left,set_dist_right);
@@ -233,8 +221,7 @@ void MoveManager::to_dist_ctrl_pos(float set_dist_left, float set_dist_right){
 
 void MoveManager::turn_to_angle_ctrl_pos(float set_angle){
     _update_basic_move(MOVE_B_TOANG_CPOS);
-    float arcLeng = set_angle*_wheel_circ_ang;
-    _move_controller.to_position(-1.0*arcLeng,arcLeng);
+    _move_controller.turn_to_angle_ctrl_pos(set_angle);
 }
 
 EMoveControlState MoveManager::to_dist_ctrl_speed(float speed_left,
@@ -351,7 +338,7 @@ EMoveControlState MoveManager::to_dist_ctrl_speed(float set_dist){
 }
 
 EMoveControlState MoveManager::turn_to_angle_ctrl_speed(float set_angle){
-    float set_dist = set_angle*_wheel_circ_ang;
+    float set_dist = set_angle*wheel_data.circ_per_degree;
     EMoveControlState ctrl_state = MOVE_CONTROL_INCOMPLETE;
 
     if(set_angle > 0.0){ // Turn left
@@ -396,85 +383,37 @@ void MoveManager::spiral(){
 }
 
 void MoveManager::spiral(EMoveTurn turn_dir){
+    _update_compound_move(MOVE_C_SPIRAL);
     _move_spiral.spiral(turn_dir);
 }
 
 void MoveManager::wiggle(){
-    _move_compound_code = MOVE_C_WIGGLE;
+    _update_compound_move(MOVE_C_WIGGLE);
     _move_wiggle.wiggle();
 }
 
 void MoveManager::wiggle(uint16_t left_time, uint16_t right_time){
-    _move_compound_code = MOVE_C_WIGGLE;
+    _update_compound_move(MOVE_C_WIGGLE);
     _move_wiggle.wiggle(left_time,right_time);
 }
 
 void MoveManager::zig_zag(){
+    _update_compound_move(MOVE_C_ZIGZAG);
     _mov_zig_zag.zig_zag();
 }
 
-//----------------------------------------------------------------------------
-// MOVE LOOK AROUND
-void MoveManager::look_around(){
-    if(_look_start_flag){
-        //Serial.println("LOOK START.");
-        _move_compound_code = MOVE_C_LOOK;
-        _look_start_flag = false;
-        _look_timer.start(_look_move_time);
-        _look_cur_ang = 0;
-        _look_move_switch = true;
-        _move_controller.reset();
-    }
-    else{
-        if(_look_timer.finished()){
-        _look_move_switch = !_look_move_switch;
-        //Serial.print("LOOK TIMER FINISHED: ");
-        if(_look_move_switch){
-            //Serial.println("START. Ang++");
-            _look_timer.start(_look_move_time);
-            _look_cur_ang++;
-
-            /*if(_look_cur_ang >= _look_num_angs){
-            _look_cur_ang = 0;
-            }*/
-        }
-        else{
-            //Serial.println("PAUSE.");
-            _look_timer.start(_look_pause_time);
-        }
-        }
-    }
-
-    if(_look_move_switch && (_look_cur_ang <= _look_num_angs)){
-        float moveAng = 0.0;
-        if(_look_cur_ang == 0){
-        moveAng = _look_angles[_look_cur_ang];
-        }
-        else{
-        moveAng = _look_angles[_look_cur_ang] - _look_angles[_look_cur_ang-1];
-        }
-        turn_to_angle_ctrl_pos(moveAng);
-    }
-    else{
-        stop();
-    }
+EMoveLookState MoveManager::look_around(){
+    _update_compound_move(MOVE_C_LOOK);
+    return _move_look.look_around();
 }
 
 void MoveManager::force_look_move(){
-    //Serial.println("FUNC: force look move. Ang++");
-    _look_move_switch = true;
-    _look_cur_ang++;
-    _look_timer.start(_look_move_time);
-    _move_controller.reset();
+    _move_look.force_move();
 }
 
 void MoveManager::reset_look(){
-    //Serial.println("FUNC: reset look.");
-    _look_start_flag = true;
-    _look_cur_ang = 0;
-    _move_controller.reset();
+    _move_look.reset();
 }
-
 
 //----------------------------------------------------------------------------
 // Update helper functions to reset movements
@@ -502,8 +441,8 @@ void MoveManager::_update_compound_move(EMoveCompound move){
             _move_circle.turn_direction = EMoveTurn(random(0,MOVE_TURN_COUNT));
         }
         else if(_move_compound_code == MOVE_C_LOOK){
-            _look_start_flag = true;
-            _move_update_time = _look_tot_time;
+            _move_look.reset();
+            _move_update_time = _move_look.get_look_total_time();
         }
 
         _move_timer.start(_move_update_time);

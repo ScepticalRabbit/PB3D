@@ -127,18 +127,18 @@ _collision_manager->set_enabled_flag(false); // Disable collision detection
 
 // TASK LEDS
 uint8_t seekCol = 1;
-if(_move_manager->get_look_curr_ang_ind() == 0){
+if(_move_manager->get_look_angle_index() == 0){
     //_task_manager->task_LED_CSV(_seek_colour,_seek_colour,255,_low_saturation,255,255);
     _task_manager->task_LED_CSV(_seek_colour,_seek_colour,255,_low_saturation,0,255);
 }
-else if(_move_manager->get_look_curr_ang_ind() == 1){
+else if(_move_manager->get_look_angle_index() == 1){
     _task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,_low_saturation,255,255);
 }
-else if(_move_manager->get_look_curr_ang_ind() == 2){
+else if(_move_manager->get_look_angle_index() == 2){
     //_task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,255,255,255);
     _task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,255,255,0);
 }
-else if(_move_manager->get_look_curr_ang_ind() == 3){
+else if(_move_manager->get_look_angle_index() == 3){
     _task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,_low_saturation,255,255);
 }
 else{
@@ -146,25 +146,21 @@ else{
 }
 
 // Move to different angles and take measurements.
-if(!_move_manager->get_look_finished()){
-    _move_manager->look_around();
-
+if(_move_manager->look_around() == MOVE_LOOK_PAUSE){
     if(_meas_index < _meas_num_vals){
-    // Get to the set point and start the measurement timer
+
     if(!_meas_complete){
         if(_move_manager->get_pos_controller_at_setpoint()){
-        //Serial.print("SP ATTAINED for "),Serial.println(_meas_index);
-        _meas_complete = true;
-        _meas_timer.start(_meas_pre_pause_time);
+
+            _meas_complete = true;
+            _meas_timer.start(_meas_pre_pause_time);
         }
-        else if(_move_manager->look_is_paused()){
-        //Serial.print("SP TIMEOUT for "),Serial.println(_meas_index);
-        _meas_complete = true;
-        _meas_timer.start(_meas_pre_pause_time);
+        else if(_move_manager->get_look_state() == MOVE_LOOK_PAUSE){
+            _meas_complete = true;
+            _meas_timer.start(_meas_pre_pause_time);
         }
     }
 
-    // If measurement timer is finished take a measurement
     if(_meas_complete && _meas_timer.finished()){
         _meas_timer.start(_meas_interval);
         int16_t sample = _collision_manager->get_laser_range(LASER_CENTRE);
@@ -177,21 +173,21 @@ if(!_move_manager->get_look_finished()){
         _meas_count_for_avg++;
 
         if(_meas_count_for_avg >= _meas_num_vals){
-        _meas_array[_meas_index] = _meas_sum_for_avg/_meas_num_vals;
+            _meas_array[_meas_index] = _meas_sum_for_avg/_meas_num_vals;
 
-        Serial.print("Measurement Avg. "),Serial.print(_meas_index);
-        Serial.print(" = "), Serial.print(_meas_array[_meas_index]), Serial.print(" mm");
-        Serial.println();
+            Serial.print("Measurement Avg. "),Serial.print(_meas_index);
+            Serial.print(" = "), Serial.print(_meas_array[_meas_index]), Serial.print(" mm");
+            Serial.println();
 
-        _meas_complete = false;
-        _meas_index++;
+            _meas_complete = false;
+            _meas_index++;
 
-        _meas_sum_for_avg = 0;
-        _meas_count_for_avg = 0;
+            _meas_sum_for_avg = 0;
+            _meas_count_for_avg = 0;
 
-        // Measurement complete - force move to next pos
-        _move_manager->force_look_move();
-        }
+            // Measurement complete - force move to next pos
+            _move_manager->force_look_move();
+            }
     }
     }
 }

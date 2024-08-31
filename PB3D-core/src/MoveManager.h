@@ -22,6 +22,7 @@
 
 #include "MoveCircle.h"
 #include "MoveForwardBack.h"
+#include "MoveLook.h"
 #include "MoveSpiral.h"
 #include "MoveWiggle.h"
 #include "MoveZigZag.h"
@@ -95,7 +96,7 @@ public:
     // Controlled movement
     // NOTE: position can be negative to move backwards
     bool get_pos_controller_at_setpoint(){
-        return _move_controller.get_pos_PID_both_at_setpoint();}
+        return _move_controller.get_pos_PID_state();}
 
     void to_dist_ctrl_pos(float set_dist);
     void to_dist_ctrl_pos(float set_dist_left, float set_dist_right);
@@ -123,26 +124,14 @@ public:
 
     void zig_zag();
 
-    //--------------------------------------------------------------------------
-    // MOVE LOOK AROUND
-    void look_around();
+    EMoveLookState look_around();
     void force_look_move();
     void reset_look();
+    EMoveLookState get_look_state(){return _move_look.get_look_state();}
+    uint8_t get_look_angle_index(){return _move_look.get_look_angle_index();}
 
-    // LOOK - Diagnostics
-    bool look_is_moving(){return _look_move_switch;}
-    bool look_is_paused(){return !_look_move_switch;}
-
-    // LOOK - Getters
-    bool get_look_move_switch(){return _look_move_switch;}
-    bool get_look_finished(){return (_look_cur_ang >= _look_num_angs);}
-    uint8_t get_look_curr_ang_ind(){return _look_cur_ang;}
-    uint8_t get_look_num_angs(){return _look_num_angs;}
-    uint8_t get_look_max_angs(){return _look_max_angs;}
-    float get_look_ang_from_ind(uint8_t index){return _look_angles[index];}
-    uint16_t get_look_move_time(){return _look_move_time;}
-    uint16_t get_look_pause_time(){return _look_pause_time;}
-    uint16_t get_look_tot_time(){return _look_tot_time;}
+    // Turn on/off the movement
+    bool enabled = true;
 
 private:
     void _update_basic_move(EMoveBasic move);
@@ -155,48 +144,42 @@ private:
     Encoder* _encoder_left = NULL;
     Encoder* _encoder_right = NULL;
 
-    EMoveControlMode _move_control_code = MOVE_CONTROL_SPEED;
-    MoveController _move_controller = MoveController(&_motor_shield);
-    MoveBasic _move_basic = MoveBasic(_move_control_code,&_motor_shield);
-
-    MoveCircle _move_circle = MoveCircle(&_move_basic);
-    MoveWiggle _move_wiggle = MoveWiggle(&_move_basic,&_submove_timer);
-    MoveForwardBack _move_forward_back =
-            MoveForwardBack(&_move_basic,&_submove_timer);
-    MoveSpiral _move_spiral = MoveSpiral(&_move_basic,&_submove_timer);
-    MoveZigZag _mov_zig_zag = MoveZigZag(&_move_basic,&_submove_timer);
-
-    //----------------------------------------------------------------------------
-    // MOVE OBJ - Type and General Variables
-    bool _enabled = true;
-
     EMoveBasic _move_basic_code = MOVE_B_FORWARD;
     EMoveCompound _move_compound_code = MOVE_C_STRAIGHT;
     EMoveCompound _move_compound_count = MOVE_C_COUNT;
 
+    EMoveControlMode _move_control_code = MOVE_MODE_SPEED;
+    MoveController _move_controller = MoveController(&_motor_shield);
+    MoveBasic _move_basic = MoveBasic(_move_control_code,&_motor_shield);
+
+    // Compound movements using basic/controller movements
+    MoveCircle _move_circle = MoveCircle(&_move_basic);
+    MoveLook _move_look = MoveLook(&_move_basic,&_move_controller);
+    MoveForwardBack _move_forward_back =
+            MoveForwardBack(&_move_basic,&_submove_timer);
+    MoveSpiral _move_spiral = MoveSpiral(&_move_basic,&_submove_timer);
+    MoveWiggle _move_wiggle = MoveWiggle(&_move_basic,&_submove_timer);
+    MoveZigZag _mov_zig_zag = MoveZigZag(&_move_basic,&_submove_timer);
+
+    WheelData wheel_data = WheelData();
+
     uint32_t _move_update_time = 5000;
-    uint32_t _move_update_min_time = 4000;
-    uint32_t _move_update_max_time = 12000;
+    const uint32_t _move_update_min_time = 4000;
+    const uint32_t _move_update_max_time = 12000;
 
     Timer _move_timer = Timer();
     Timer _submove_timer = Timer();
     Timer _timeout_timer = Timer();
 
-  // Estimating power for given speed - updated for new wheels - 24th Sept 2022
-  // NOTE: turned speed estimation off because PID has less overshoot without
-  // Updated again 5th Jan 2023 - RF wood floor tests - slope=0.166,int=22.7
-  // Used to be set with an offset of 50.0 and slope 0.0
-  float _speed_to_power_slope = 0.166;
-  float _speed_to_power_offset = 22.7;
-  float _speed_to_power_min = 22.7;
-  float _speed_timeout_accel = 1220.0;
-  float _speed_timeout_SF = 2.0;
-
-  // Wheel base constant parameters
-  // NOTE: D(inner) = 122mm, D(outer) = 160mm, D(avg) = 141mm
-  const float _wheel_base = 172.0; // UPDATED: 1st Jan 2023 - new stable geom chassis with large wheels
-  const float _wheel_circ = _wheel_base*PI;
-  const float _wheel_circ_ang = (_wheel_base*PI)/(360.0); // FIXED factor of 2 by adding encoder interrupt
+    // Estimating power for given speed - updated for new wheels - 24th Sept 2022
+    // NOTE: turned speed estimation off because PID has less overshoot without
+    // Updated again 5th Jan 2023 - RF wood floor tests - slope=0.166,int=22.7
+    // Used to be set with an offset of 50.0 and slope 0.0
+    float _speed_to_power_slope = 0.166;
+    float _speed_to_power_offset = 22.7;
+    float _speed_to_power_min = 22.7;
+    float _speed_timeout_accel = 1220.0;
+    float _speed_timeout_safety_factor = 2.0;
 
   //----------------------------------------------------------------------------
   // MOVE OBJ - To Dist/Angle
@@ -214,19 +197,5 @@ private:
   int32_t _end_encoder_count_right = 0;
   int32_t _encoder_count_diff_left = 0;
   int32_t _enc_count_diff_right = 0;
-
-  //----------------------------------------------------------------------------
-  // MOVE OBJ - Look Around
-  bool _look_start_flag = true;
-  Timer _look_timer = Timer();
-  uint16_t _look_move_time = 2200;
-  uint16_t _look_pause_time = 500;
-  bool _look_move_switch = false;
-  uint8_t _look_cur_ang = 0;
-  uint8_t _look_num_angs = 4;
-  uint8_t _look_max_angs = 8;
-  float _look_angles[8] = {30,0,-30,0,0,0,0,0};
-  uint16_t _look_tot_time = _look_num_angs*(_look_move_time+_look_pause_time);
-
 };
-#endif // MOVE_H
+#endif // MOVE_MANAGER_H

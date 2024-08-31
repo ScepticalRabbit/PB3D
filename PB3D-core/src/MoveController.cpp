@@ -37,19 +37,17 @@ void MoveController::begin(Encoder* encoder_left, Encoder* encoder_right){
 }
 
 void MoveController::reset(){
-    // Reset Position Control PIDs and Variables
     _set_point_rel_counts_left = 0;
     _set_point_rel_counts_right = 0;
+
     _pos_PID_left.set_set_point(0.0);
     _pos_PID_right.set_set_point(0.0);
     _pos_PID_left.set_output(0.0);
     _pos_PID_right.set_output(0.0);
     _pos_PID_left.set_controller_on(PID_OFF);
     _pos_PID_right.set_controller_on(PID_OFF);
-    _pos_at_left = false;
-    _pos_at_right = false;
-    _pos_at_both = false;
-    // Reset Speed PIDs
+    _pos_ctrl_state = MOVE_CONTROL_INCOMPLETE;
+
     _speed_PID_left.set_set_point(0.0);
     _speed_PID_right.set_set_point(0.0);
     _speed_PID_left.set_output(0.0);
@@ -58,54 +56,60 @@ void MoveController::reset(){
     _speed_PID_right.set_controller_on(PID_OFF);
 }
 
-void MoveController::at_speed(float speed_left,float speed_right){
+EMoveControlState MoveController::at_speed(float set_speed_left,
+                                           float set_speed_right){
+
+    EMoveControlState ctrl_state = MOVE_CONTROL_INCOMPLETE;
+
     // Check if the left/right PIDs are on if not turn them on
     if(!_speed_PID_left.get_controller_on()){
         _speed_PID_left.set_controller_on(PID_ON);
         _speed_PID_left.set_Pgain_only(_speed_P_rev);
-        if(speed_left < 0.0){
-        _speed_PID_left.set_controller_dir(PID_REVERSE);
+        if(set_speed_left < 0.0){
+            _speed_PID_left.set_controller_dir(PID_REVERSE);
 
         }
         else{
-        _speed_PID_left.set_controller_dir(PID_DIRECT);
+            _speed_PID_left.set_controller_dir(PID_DIRECT);
         }
-        if((speed_left < 0.0) && (speed_right < 0.0)){
-        _speed_PID_right.set_Pgain_only(_speed_P_rev);
-        _speed_PID_left.set_Pgain_only(_speed_P_rev);
+        if((set_speed_left < 0.0) && (set_speed_right < 0.0)){
+            _speed_PID_right.set_Pgain_only(_speed_P_rev);
+            _speed_PID_left.set_Pgain_only(_speed_P_rev);
         }
     }
     if(!_speed_PID_right.get_controller_on()){
         _speed_PID_right.set_controller_on(PID_ON);
         _speed_PID_right.set_Pgain_only(_speed_P_rev);
-        if(speed_right < 0.0){
-        _speed_PID_right.set_controller_dir(PID_REVERSE);
+        if(set_speed_right < 0.0){
+            _speed_PID_right.set_controller_dir(PID_REVERSE);
         }
         else{
-        _speed_PID_right.set_controller_dir(PID_DIRECT);
+            _speed_PID_right.set_controller_dir(PID_DIRECT);
         }
-        if((speed_left < 0.0) && (speed_right < 0.0)){
-        _speed_PID_right.set_Pgain_only(_speed_P_rev);
-        _speed_PID_left.set_Pgain_only(_speed_P_rev);
+        if((set_speed_left < 0.0) && (set_speed_right < 0.0)){
+            _speed_PID_right.set_Pgain_only(_speed_P_rev);
+            _speed_PID_left.set_Pgain_only(_speed_P_rev);
         }
     }
 
     // Update the set point
-    _speed_PID_left.set_set_point(speed_left);
-    _speed_PID_right.set_set_point(speed_right);
+    _speed_PID_left.set_set_point(set_speed_left);
+    _speed_PID_right.set_set_point(set_speed_right);
 
     // Update left and right speed PIDs
-    _speed_PID_left.update(_encoder_left->get_smooth_speed_mmps());
-    _speed_PID_right.update(_encoder_right->get_smooth_speed_mmps());
+    float meas_speed_left = _encoder_left->get_smooth_speed_mmps();
+    float meas_speed_right = _encoder_right->get_smooth_speed_mmps();
+    _speed_PID_left.update(meas_speed_left);
+    _speed_PID_right.update(meas_speed_right);
 
     // If the speed is negative then set motors to run backward
-    if(speed_left < 0.0){
+    if(set_speed_left < 0.0){
         _motor_left->run(BACKWARD);
     }
     else{
         _motor_left->run(FORWARD);
     }
-    if(speed_right < 0.0){
+    if(set_speed_right < 0.0){
         _motor_right->run(BACKWARD);
     }
     else{
@@ -113,32 +117,46 @@ void MoveController::at_speed(float speed_left,float speed_right){
     }
     _motor_left->setSpeed(int(_speed_PID_left.get_output()));
     _motor_right->setSpeed(int(_speed_PID_right.get_output()));
+
+
+    if(meas_speed_left > (set_speed_left - _speed_tol)  &&
+       meas_speed_left < (set_speed_left + _speed_tol)){
+        ctrl_state = MOVE_CONTROL_LEFT_COMPLETE;
+    }
+    if(meas_speed_right > (set_speed_right - _speed_tol)  &&
+       meas_speed_right < (set_speed_right + _speed_tol)){
+        if(ctrl_state == MOVE_CONTROL_LEFT_COMPLETE){
+            ctrl_state = MOVE_CONTROL_COMPLETE;
+        }
+        else{
+            ctrl_state = MOVE_CONTROL_RIGHT_COMPLETE;
+        }
+    }
+    return ctrl_state;
 }
 
 //----------------------------------------------------------------------------
-void MoveController::to_position(float set_pos_left, float set_pos_right){
-    // LEFT
+EMoveControlState MoveController::to_position(float set_pos_left,
+                                              float set_pos_right){
+    _pos_ctrl_state = MOVE_CONTROL_INCOMPLETE;
+
     if(!_pos_PID_left.get_controller_on()){
         _pos_PID_left.set_controller_on(PID_ON);
         _speed_PID_left.set_controller_on(PID_ON);
-        //_speed_PID_left.set_PID_gains(_speed_P,_speed_I,_speed_D);
     }
-    // RIGHT
     if(!_pos_PID_right.get_controller_on()){
         _pos_PID_right.set_controller_on(PID_ON);
         _speed_PID_right.set_controller_on(PID_ON);
-        //_speed_PID_right.set_PID_gains(_speed_P,_speed_I,_speed_D);
     }
 
     // Check if the set point passed to the function has changed
-    // LEFT
     int32_t checkSetPointL =  round(set_pos_left/_encoder_left->get_mm_per_count());
     if(checkSetPointL != _set_point_rel_counts_left){
         _set_point_rel_counts_left = checkSetPointL;
         _start_encoder_count_left = _encoder_left->get_count();
         _pos_PID_left.set_set_point(float(_set_point_rel_counts_left));
     }
-    // RIGHT
+
     int32_t checkSetPointR =  round(set_pos_right/_encoder_right->get_mm_per_count());
     if(checkSetPointR != _set_point_rel_counts_right){
         _set_point_rel_counts_right = checkSetPointR;
@@ -147,48 +165,42 @@ void MoveController::to_position(float set_pos_left, float set_pos_right){
     }
 
     // Update the relative count and send it to the PIDs
-    // LEFT
-    _curr_relative_count_left = _encoder_left->get_count()-_start_encoder_count_left;
-    _pos_PID_left.update(_curr_relative_count_left);
-    // RIGHT
-    _curr_relative_count_right = _encoder_right->get_count()-_start_encoder_count_right;
-    _pos_PID_right.update(_curr_relative_count_right);
+    _relative_count_left = _encoder_left->get_count()-_start_encoder_count_left;
+    _pos_PID_left.update(_relative_count_left);
+    _relative_count_right = _encoder_right->get_count()-_start_encoder_count_right;
+    _pos_PID_right.update(_relative_count_right);
 
     // Update the speed PIDs
-    // LEFT
     _speed_PID_left.update(_encoder_left->get_smooth_speed_mmps());
-    // RIGHT
     _speed_PID_right.update(_encoder_right->get_smooth_speed_mmps());
 
     // Check that the PID is sending a signal above the min speed
-    // LEFT
     if(round(abs(_pos_PID_left.get_output())) < _pos_PID_min_speed){
         if(_pos_PID_left.get_output() < 0.0){
-        _pos_PID_left.set_output(-1.0*_pos_PID_min_speed);
+            _pos_PID_left.set_output(-1.0*_pos_PID_min_speed);
         }
         else{
-        _pos_PID_left.set_output(_pos_PID_min_speed);
+            _pos_PID_left.set_output(_pos_PID_min_speed);
         }
     }
-    // RIGHT
     if(round(abs(_pos_PID_right.get_output())) < _pos_PID_min_speed){
         if(_pos_PID_right.get_output() < 0.0){
-        _pos_PID_right.set_output(-1.0*_pos_PID_min_speed);
+            _pos_PID_right.set_output(-1.0*_pos_PID_min_speed);
         }
         else{
-        _pos_PID_right.set_output(_pos_PID_min_speed);
+            _pos_PID_right.set_output(_pos_PID_min_speed);
         }
     }
 
     // Move forward or back based on the PID value
     // LEFT
-    if(_curr_relative_count_left < (_set_point_rel_counts_left-_pos_tol)){
+    if(_relative_count_left < (_set_point_rel_counts_left-_pos_tol)){
         _speed_PID_left.set_set_point(_pos_PID_left.get_output());
         _speed_PID_left.set_controller_dir(PID_DIRECT);
         _motor_left->run(FORWARD);
         _motor_left->setSpeed(int(_speed_PID_left.get_output()));
     }
-    else if(_curr_relative_count_left > (_set_point_rel_counts_left+_pos_tol)){
+    else if(_relative_count_left > (_set_point_rel_counts_left+_pos_tol)){
         _speed_PID_left.set_set_point(_pos_PID_left.get_output());
         _speed_PID_left.set_controller_dir(PID_REVERSE);
         _motor_left->run(BACKWARD);
@@ -200,16 +212,17 @@ void MoveController::to_position(float set_pos_left, float set_pos_right){
         _speed_PID_left.set_set_point(0.0);
         _motor_left->run(RELEASE);
         _motor_left->setSpeed(0);
-        _pos_at_left = true;
+        _pos_ctrl_state = MOVE_CONTROL_LEFT_COMPLETE;
+
     }
-    // RIGHT
-    if(_curr_relative_count_right < (_set_point_rel_counts_right-_pos_tol)){
+
+    if(_relative_count_right < (_set_point_rel_counts_right-_pos_tol)){
         _speed_PID_right.set_set_point(_pos_PID_right.get_output());
         _speed_PID_right.set_controller_dir(PID_DIRECT);
         _motor_right->run(FORWARD);
         _motor_right->setSpeed(int(_speed_PID_right.get_output()));
     }
-    else if(_curr_relative_count_right > (_set_point_rel_counts_right+_pos_tol)){
+    else if(_relative_count_right > (_set_point_rel_counts_right+_pos_tol)){
         _speed_PID_right.set_set_point(_pos_PID_right.get_output());
         _speed_PID_right.set_controller_dir(PID_REVERSE);
         _motor_right->run(BACKWARD);
@@ -221,11 +234,23 @@ void MoveController::to_position(float set_pos_left, float set_pos_right){
         _speed_PID_right.set_set_point(0.0);
         _motor_right->run(RELEASE);
         _motor_right->setSpeed(0);
-        _pos_at_right = true;
+        if(_pos_ctrl_state == MOVE_CONTROL_LEFT_COMPLETE){
+            _pos_ctrl_state = MOVE_CONTROL_COMPLETE;
+        }
+        else{
+            _pos_ctrl_state = MOVE_CONTROL_RIGHT_COMPLETE;
+        }
     }
 
-    if(_pos_at_left && _pos_at_right){
-        _pos_at_both = true;
-    }
+    return _pos_ctrl_state;
 }
 
+EMoveControlState MoveController::to_dist_ctrl_pos(float set_dist_left,
+                                                   float set_dist_right){
+    return to_position(set_dist_left,set_dist_right);
+}
+
+EMoveControlState MoveController::turn_to_angle_ctrl_pos(float set_angle){
+    float arc_leng = set_angle*wheel_data.circ_per_degree;
+    return to_position(-1.0*arc_leng,arc_leng);
+}

@@ -84,12 +84,14 @@ enum EMoveZigZag{
 };
 
 enum EMoveControlMode{
-    MOVE_CONTROL_POWER = 0,
-    MOVE_CONTROL_SPEED = 1
+    MOVE_MODE_POWER = 0,
+    MOVE_MODE_SPEED = 1
 };
 
 enum EMoveControlState{
     MOVE_CONTROL_INCOMPLETE = 0,
+    MOVE_CONTROL_LEFT_COMPLETE,
+    MOVE_CONTROL_RIGHT_COMPLETE,
     MOVE_CONTROL_COMPLETE,
     MOVE_CONTROL_TIMEOUT,
 };
@@ -99,6 +101,12 @@ enum EMoveEscapeCode{
     MOVE_E_NOREV = -2,
 };
 
+enum EMoveLookState{
+    MOVE_LOOK_START = 0,
+    MOVE_LOOK_PAUSE,
+    MOVE_LOOK_MOVING,
+    MOVE_LOOK_COMPLETE,
+};
 
 
 //------------------------------------------------------------------------------

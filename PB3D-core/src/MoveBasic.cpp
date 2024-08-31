@@ -37,7 +37,7 @@ void MoveBasic::stop(){
 //----------------------------------------------------------------------------
 // Move Forward
 void MoveBasic::forward(){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
+    if(_move_control_code == MOVE_MODE_SPEED){
         forward_at_speed(_forward_speed);
     }
     else{
@@ -49,7 +49,7 @@ void MoveBasic::forward(){
 //----------------------------------------------------------------------------
 // Move Back
 void MoveBasic::back(){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
+    if(_move_control_code == MOVE_MODE_SPEED){
         back_at_speed(_back_speed);
     }
     else{
@@ -60,7 +60,7 @@ void MoveBasic::back(){
 //----------------------------------------------------------------------------
 // Move Left
 void MoveBasic::left(){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
+    if(_move_control_code == MOVE_MODE_SPEED){
         left_at_speed(_turn_speed);
     }
     else{
@@ -72,7 +72,7 @@ void MoveBasic::left(){
 //----------------------------------------------------------------------------
 // Move Right
 void MoveBasic::right(){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
+    if(_move_control_code == MOVE_MODE_SPEED){
         right_at_speed(_turn_speed);
     }
     else{
@@ -83,7 +83,7 @@ void MoveBasic::right(){
 //----------------------------------------------------------------------------
 // Move Forward Left
 void MoveBasic::forward_left(){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
+    if(_move_control_code == MOVE_MODE_SPEED){
         forward_left_at_speed(_forward_speed, _turn_speed_diff);
     }
     else{
@@ -92,7 +92,7 @@ void MoveBasic::forward_left(){
 }
 
 void MoveBasic::forward_left_diff_frac(float diff_fraction){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
+    if(_move_control_code == MOVE_MODE_SPEED){
         float speedDiff = _forward_speed*diff_fraction;
         forward_left_at_speed(_forward_speed, speedDiff);
     }
@@ -103,7 +103,7 @@ void MoveBasic::forward_left_diff_frac(float diff_fraction){
 }
 
 void MoveBasic::forward_left_diff_speed(float diff_speed){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
+    if(_move_control_code == MOVE_MODE_SPEED){
         forward_left_at_speed(_forward_speed, diff_speed);
     }
     else{
@@ -116,7 +116,7 @@ void MoveBasic::forward_left_diff_speed(float diff_speed){
 //----------------------------------------------------------------------------
 // Move Forward Right
 void MoveBasic::forward_right(){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
+    if(_move_control_code == MOVE_MODE_SPEED){
         forward_right_at_speed(_forward_speed, _turn_speed_diff);
     }
     else{
@@ -125,7 +125,7 @@ void MoveBasic::forward_right(){
 }
 
 void MoveBasic::forward_right_diff_frac(float diff_fraction){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
+    if(_move_control_code == MOVE_MODE_SPEED){
         float speedDiff = _forward_speed*diff_fraction;
         forward_right_at_speed(_forward_speed, speedDiff);
     }
@@ -136,7 +136,7 @@ void MoveBasic::forward_right_diff_frac(float diff_fraction){
 }
 
 void MoveBasic::forward_right_diff_speed(float diff_speed){
-    if(_move_control_code == MOVE_CONTROL_SPEED){
+    if(_move_control_code == MOVE_MODE_SPEED){
         forward_right_at_speed(_forward_speed, diff_speed);
     }
     else{
