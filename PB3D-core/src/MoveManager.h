@@ -169,33 +169,5 @@ private:
 
     Timer _move_timer = Timer();
     Timer _submove_timer = Timer();
-    Timer _timeout_timer = Timer();
-
-    // Estimating power for given speed - updated for new wheels - 24th Sept 2022
-    // NOTE: turned speed estimation off because PID has less overshoot without
-    // Updated again 5th Jan 2023 - RF wood floor tests - slope=0.166,int=22.7
-    // Used to be set with an offset of 50.0 and slope 0.0
-    float _speed_to_power_slope = 0.166;
-    float _speed_to_power_offset = 22.7;
-    float _speed_to_power_min = 22.7;
-    float _speed_timeout_accel = 1220.0;
-    float _speed_timeout_safety_factor = 2.0;
-
-  //----------------------------------------------------------------------------
-  // MOVE OBJ - To Dist/Angle
-  float _to_dist_set_pt_left = 0.0;
-  float _to_dist_set_pt_right = 0.0;
-  float _to_dist_tol = 5.0;
-  float _to_ang_set_pt = 0.0;
-  float _to_ang_tol = 1.0;
-
-  // Encoder counter variables - Used for PID controlled movement functions
-  bool _encoder_count_start = true;
-  int32_t _start_encoder_count_left = 0;
-  int32_t _start_encoder_count_right = 0;
-  int32_t _end_encoder_count_left = 0;
-  int32_t _end_encoder_count_right = 0;
-  int32_t _encoder_count_diff_left = 0;
-  int32_t _enc_count_diff_right = 0;
 };
 #endif // MOVE_MANAGER_H

@@ -30,6 +30,11 @@ public:
                                        float set_dist_right);
     EMoveControlState turn_to_angle_ctrl_pos(float set_angle);
 
+    EMoveControlState to_dist_ctrl_speed(float speed_left,
+                                         float speed_right,
+                                         float set_dist_left,
+                                         float set_dist_right);
+
     void reset();
 
     EMoveControlState get_speed_PID_state(){return _speed_ctrl_state;}
@@ -40,13 +45,18 @@ public:
     PID* get_pos_PID_left(){return &_pos_PID_left;}
     PID* get_pos_PID_right(){return &_pos_PID_right;}
 
+    uint16_t calc_timeout(float speed, float dist);
+
 private:
+    void _stop();
+
     Adafruit_MotorShield* _motor_shield = NULL;
     Adafruit_DCMotor* _motor_left = NULL;
     Adafruit_DCMotor* _motor_right = NULL;
     Encoder* _encoder_left = NULL;
     Encoder* _encoder_right = NULL;
 
+    Timer _timeout_timer = Timer();
     WheelData wheel_data = WheelData();
 
     // TODO: 1st Jan 2023 - need to update gains based on new encoder counts, halved gain as temporary fix (was 0.02)
@@ -73,13 +83,36 @@ private:
     const float _pos_PID_max_speed = 200.0;
     const int16_t _pos_tol = 3;
 
-    int32_t _start_encoder_count_left = 0;
-    int32_t _set_point_rel_counts_left = 0;
-    int32_t _relative_count_left = 0;
+    int32_t _to_pos_start_encoder_count_left = 0;
+    int32_t _to_pos_set_point_rel_counts_left = 0;
+    int32_t _to_pos_relative_count_left = 0;
+    int32_t _to_pos_start_encoder_count_right = 0;
+    int32_t _to_pos_set_point_rel_counts_right = 0;
+    int32_t _to_pos_relative_count_right = 0;
 
-    int32_t _start_encoder_count_right = 0;
-    int32_t _set_point_rel_counts_right = 0;
-    int32_t _relative_count_right = 0;
+    // Estimating power for given speed - updated for new wheels - 24th Sept 2022
+    // NOTE: turned speed estimation off because PID has less overshoot without
+    // Updated again 5th Jan 2023 - RF wood floor tests - slope=0.166,int=22.7
+    // Used to be set with an offset of 50.0 and slope 0.0
+    float _speed_to_power_slope = 0.166;
+    float _speed_to_power_offset = 22.7;
+    float _speed_to_power_min = 22.7;
+    float _speed_timeout_accel = 1220.0;
+    float _speed_timeout_safety_factor = 2.0;
+
+    float _to_dist_set_pt_left = 0.0;
+    float _to_dist_set_pt_right = 0.0;
+    float _to_dist_tol = 5.0;
+    float _to_ang_set_pt = 0.0;
+    float _to_ang_tol = 1.0;
+
+    bool _ctrl_speed_encoder_count_start = true;
+    int32_t _ctrl_speed_start_encoder_count_left = 0;
+    int32_t _ctrl_speed_start_encoder_count_right = 0;
+    int32_t _ctrl_speed_end_encoder_count_left = 0;
+    int32_t _ctrl_speed_end_encoder_count_right = 0;
+    int32_t _ctrl_speed_encoder_count_diff_left = 0;
+    int32_t _ctrl_speed_encoder_count_diff_right = 0;
 };
 
 #endif
