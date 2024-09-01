@@ -37,21 +37,15 @@ void MoveController::begin(Encoder* encoder_left, Encoder* encoder_right){
 }
 
 void MoveController::reset(){
-    _to_pos_set_point_rel_counts_left = 0;
-    _to_pos_set_point_rel_counts_right = 0;
-
+    _pos_ctrl_state = MOVE_CONTROL_START;
     _pos_PID_left.set_set_point(0.0);
     _pos_PID_right.set_set_point(0.0);
     _pos_PID_left.set_output(0.0);
     _pos_PID_right.set_output(0.0);
     _pos_PID_left.set_controller_on(PID_OFF);
     _pos_PID_right.set_controller_on(PID_OFF);
-    _pos_ctrl_state = MOVE_CONTROL_INCOMPLETE;
 
-    _ctrl_speed_encoder_count_start = true;
-    _ctrl_speed_start_encoder_count_left = _encoder_left->get_count();
-    _ctrl_speed_start_encoder_count_right = _encoder_right->get_count();
-
+    _speed_ctrl_state = MOVE_CONTROL_START;
     _speed_PID_left.set_set_point(0.0);
     _speed_PID_right.set_set_point(0.0);
     _speed_PID_left.set_output(0.0);
@@ -142,7 +136,25 @@ EMoveControlState MoveController::at_speed(float set_speed_left,
 //----------------------------------------------------------------------------
 EMoveControlState MoveController::to_position(float set_pos_left,
                                               float set_pos_right){
-    _pos_ctrl_state = MOVE_CONTROL_INCOMPLETE;
+    int32_t set_point_count_left =  round(set_pos_left /
+                                _encoder_left->get_mm_per_count());
+    int32_t set_point_count_right =  round(set_pos_right /
+                                    _encoder_right->get_mm_per_count());
+
+    if(set_point_count_left != encoder_state.get_counts_to_end_left() ||
+       set_point_count_right != encoder_state.get_counts_to_end_right()){
+        _pos_ctrl_state = MOVE_CONTROL_START;
+        _pos_PID_left.set_set_point(float(set_point_count_left));
+        _pos_PID_right.set_set_point(float(set_point_count_right));
+    }
+
+    if(_pos_ctrl_state == MOVE_CONTROL_START){
+        _pos_ctrl_state = MOVE_CONTROL_INCOMPLETE;
+        encoder_state.start_with_diff(_encoder_left->get_count(),
+                                      _encoder_right->get_count(),
+                                      set_point_count_left,
+                                      set_point_count_right);
+    }
 
     if(!_pos_PID_left.get_controller_on()){
         _pos_PID_left.set_controller_on(PID_ON);
@@ -153,33 +165,14 @@ EMoveControlState MoveController::to_position(float set_pos_left,
         _speed_PID_right.set_controller_on(PID_ON);
     }
 
-    // Check if the set point passed to the function has changed
-    int32_t check_set_point_left =  round(set_pos_left /
-                                    _encoder_left->get_mm_per_count());
-    if(check_set_point_left != _to_pos_set_point_rel_counts_left){
-        _to_pos_set_point_rel_counts_left = check_set_point_left;
-        _to_pos_start_encoder_count_left = _encoder_left->get_count();
-        _pos_PID_left.set_set_point(float(_to_pos_set_point_rel_counts_left));
-    }
+    int32_t counts_from_start_left =
+            encoder_state.counts_from_start_left(_encoder_left->get_count());
+    int32_t counts_from_start_right =
+            encoder_state.counts_from_start_right(_encoder_right->get_count());
 
-    int32_t check_set_point_right =  round(set_pos_right /
-                                     _encoder_right->get_mm_per_count());
-    if(check_set_point_right != _to_pos_set_point_rel_counts_right){
-        _to_pos_set_point_rel_counts_right = check_set_point_right;
-        _to_pos_start_encoder_count_right = _encoder_right->get_count();
-        _pos_PID_right.set_set_point(float(_to_pos_set_point_rel_counts_right));
-    }
+    _pos_PID_left.update(counts_from_start_left);
+    _pos_PID_right.update(counts_from_start_right);
 
-    // Update the relative count and send it to the PIDs
-    _to_pos_relative_count_left = _encoder_left->get_count()-
-                                  _to_pos_start_encoder_count_left;
-    _pos_PID_left.update(_to_pos_relative_count_left);
-
-    _to_pos_relative_count_right = _encoder_right->get_count()-
-                                   _to_pos_start_encoder_count_right;
-    _pos_PID_right.update(_to_pos_relative_count_right);
-
-    // Update the speed PIDs
     _speed_PID_left.update(_encoder_left->get_smooth_speed_mmps());
     _speed_PID_right.update(_encoder_right->get_smooth_speed_mmps());
 
@@ -202,15 +195,15 @@ EMoveControlState MoveController::to_position(float set_pos_left,
     }
 
     // Move forward or back based on the PID value
-    if(_to_pos_relative_count_left <
-       (_to_pos_set_point_rel_counts_left-_pos_tol)){
+    if(counts_from_start_left <
+       (encoder_state.get_counts_to_end_left()-_pos_tol)){
         _speed_PID_left.set_set_point(_pos_PID_left.get_output());
         _speed_PID_left.set_controller_dir(PID_DIRECT);
         _motor_left->run(FORWARD);
         _motor_left->setSpeed(int(_speed_PID_left.get_output()));
     }
-    else if(_to_pos_relative_count_left >
-            (_to_pos_set_point_rel_counts_left+_pos_tol)){
+    else if(counts_from_start_left >
+            (encoder_state.get_counts_to_end_left()+_pos_tol)){
         _speed_PID_left.set_set_point(_pos_PID_left.get_output());
         _speed_PID_left.set_controller_dir(PID_REVERSE);
         _motor_left->run(BACKWARD);
@@ -226,13 +219,15 @@ EMoveControlState MoveController::to_position(float set_pos_left,
 
     }
 
-    if(_to_pos_relative_count_right < (_to_pos_set_point_rel_counts_right-_pos_tol)){
+    if(counts_from_start_right <
+       (encoder_state.get_counts_to_end_right()-_pos_tol)){
         _speed_PID_right.set_set_point(_pos_PID_right.get_output());
         _speed_PID_right.set_controller_dir(PID_DIRECT);
         _motor_right->run(FORWARD);
         _motor_right->setSpeed(int(_speed_PID_right.get_output()));
     }
-    else if(_to_pos_relative_count_right > (_to_pos_set_point_rel_counts_right+_pos_tol)){
+    else if(counts_from_start_right >
+            (encoder_state.get_counts_to_end_right()+_pos_tol)){
         _speed_PID_right.set_set_point(_pos_PID_right.get_output());
         _speed_PID_right.set_controller_dir(PID_REVERSE);
         _motor_right->run(BACKWARD);
@@ -251,7 +246,6 @@ EMoveControlState MoveController::to_position(float set_pos_left,
             _pos_ctrl_state = MOVE_CONTROL_RIGHT_COMPLETE;
         }
     }
-
     return _pos_ctrl_state;
 }
 
@@ -269,22 +263,24 @@ EMoveControlState MoveController::to_dist_ctrl_speed(float speed_left,
                                                      float speed_right,
                                                      float set_dist_left,
                                                      float set_dist_right){
-    EMoveControlState ctrl_state = MOVE_CONTROL_INCOMPLETE;
 
     // If the set distance changes outside tolerance force update
     if(!((set_dist_left >= (_to_dist_set_pt_left-_to_dist_tol)) &&
          (set_dist_left <= (_to_dist_set_pt_left+_to_dist_tol)))){
         _to_dist_set_pt_left = set_dist_left;
-        _update_basic_move(MOVE_B_FORCEUPD);
+        reset();
+        _speed_ctrl_state = MOVE_CONTROL_START;
     }
     if(!((set_dist_right >= (_to_dist_set_pt_right-_to_dist_tol)) &&
          (set_dist_right <= (_to_dist_set_pt_right+_to_dist_tol)))){
         _to_dist_set_pt_right = set_dist_right;
-        _update_basic_move(MOVE_B_FORCEUPD);
+        reset();
+        _speed_ctrl_state = MOVE_CONTROL_START;
     }
 
-    // At the start we store our target counts for each encode
-    if(_ctrl_speed_encoder_count_start){
+    if(_speed_ctrl_state == MOVE_CONTROL_START){
+        _speed_ctrl_state = MOVE_CONTROL_INCOMPLETE;
+
         uint16_t timeout_left = calc_timeout(speed_left,set_dist_left);
         uint16_t timeout_right = calc_timeout(speed_right,set_dist_right);
         if(timeout_left > timeout_right){
@@ -294,67 +290,73 @@ EMoveControlState MoveController::to_dist_ctrl_speed(float speed_left,
             _timeout_timer.start(timeout_right);
         }
 
-        _ctrl_speed_encoder_count_start = false;
-        _ctrl_speed_encoder_count_diff_left = int32_t(set_dist_left /
-                                   _encoder_left->get_mm_per_count());
-        _ctrl_speed_encoder_count_diff_right = int32_t(set_dist_right /
-                                    _encoder_right->get_mm_per_count());
-        _ctrl_speed_end_encoder_count_left = _ctrl_speed_start_encoder_count_left +
-                                  _ctrl_speed_encoder_count_diff_left;
-        _ctrl_speed_end_encoder_count_right = _ctrl_speed_start_encoder_count_right +
-                                   _ctrl_speed_encoder_count_diff_right;
+        encoder_state.start_with_diff(_encoder_left->get_count(),
+                                      _encoder_right->get_count(),
+                                      int32_t(set_dist_left /
+                                      _encoder_left->get_mm_per_count()),
+                                      int32_t(set_dist_right /
+                                      _encoder_left->get_mm_per_count()));
     }
 
+
+
     if(_timeout_timer.finished()){
-        ctrl_state = MOVE_CONTROL_TIMEOUT;
+        _stop();
+        _speed_ctrl_state = MOVE_CONTROL_TIMEOUT;
+        return _speed_ctrl_state;
     }
-    else{
-        if((set_dist_left > 0.0) && (set_dist_right > 0.0)){ // Go forward
-            if((_encoder_left->get_count() <= _ctrl_speed_end_encoder_count_left)||
-            (_encoder_right->get_count() <= _ctrl_speed_end_encoder_count_right)){
-                at_speed(abs(speed_left),abs(speed_right));
-            }
-            else{
-                ctrl_state = MOVE_CONTROL_COMPLETE;
-                _stop();
-            }
-        }
-        else if((set_dist_left < 0.0) && (set_dist_right > 0.0)){ // Turn left
-            if((_encoder_left->get_count() >= _ctrl_speed_end_encoder_count_left)||
-               (_encoder_right->get_count() <= _ctrl_speed_end_encoder_count_right)){
-                at_speed(-1.0*abs(speed_left),abs(speed_right));
-            }
-            else{
-                ctrl_state = MOVE_CONTROL_COMPLETE;
-                _stop();
-            }
-        }
-        else if((set_dist_left > 0.0) && (set_dist_right < 0.0)){
-            if((_encoder_left->get_count() <= _ctrl_speed_end_encoder_count_left)||
-               (_encoder_right->get_count() >= _ctrl_speed_end_encoder_count_right)){
-                at_speed(abs(speed_left),-1.0*abs(speed_right));
-            }
-            else{
-                ctrl_state = MOVE_CONTROL_COMPLETE;
-                _stop();
-            }
-        }
-        else if((set_dist_left < 0.0) && (set_dist_right < 0.0)){ // Turn right
-            if((_encoder_left->get_count() >= _ctrl_speed_end_encoder_count_left)||
-               (_encoder_right->get_count() >= _ctrl_speed_end_encoder_count_right)){
-                at_speed(-1.0*abs(speed_left),-1.0*abs(speed_right));
-            }
-            else{
-                ctrl_state = MOVE_CONTROL_COMPLETE;
-                _stop();
-            }
+
+    if((set_dist_left > 0.0) && (set_dist_right > 0.0)){ // Go forward
+        if((_encoder_left->get_count() <= encoder_state.end_count_left())||
+        (_encoder_right->get_count() <= encoder_state.end_count_right())){
+            at_speed(abs(speed_left),abs(speed_right));
         }
         else{
-            ctrl_state = MOVE_CONTROL_COMPLETE;
             _stop();
+            _speed_ctrl_state = MOVE_CONTROL_COMPLETE;
+            return _speed_ctrl_state;
         }
     }
-    return ctrl_state;
+    else if((set_dist_left < 0.0) && (set_dist_right > 0.0)){ // Turn left
+        if((_encoder_left->get_count() >= encoder_state.end_count_left())||
+            (_encoder_right->get_count() <= encoder_state.end_count_right())){
+            at_speed(-1.0*abs(speed_left),abs(speed_right));
+        }
+        else{
+            _stop();
+            _speed_ctrl_state = MOVE_CONTROL_COMPLETE;
+            return _speed_ctrl_state;
+        }
+    }
+    else if((set_dist_left > 0.0) && (set_dist_right < 0.0)){
+        if((_encoder_left->get_count() <= encoder_state.end_count_left())||
+            (_encoder_right->get_count() >= encoder_state.end_count_right())){
+            at_speed(abs(speed_left),-1.0*abs(speed_right));
+        }
+        else{
+            _stop();
+            _speed_ctrl_state = MOVE_CONTROL_COMPLETE;
+            return _speed_ctrl_state;
+        }
+    }
+    else if((set_dist_left < 0.0) && (set_dist_right < 0.0)){ // Turn right
+        if((_encoder_left->get_count() >= encoder_state.end_count_left())||
+            (_encoder_right->get_count() >= encoder_state.end_count_right())){
+            at_speed(-1.0*abs(speed_left),-1.0*abs(speed_right));
+        }
+        else{
+            _stop();
+            _speed_ctrl_state = MOVE_CONTROL_COMPLETE;
+            return _speed_ctrl_state;
+        }
+    }
+    else{
+        _stop();
+        _speed_ctrl_state = MOVE_CONTROL_COMPLETE;
+        return _speed_ctrl_state;
+    }
+    
+    return _speed_ctrl_state;
 }
 
 uint16_t MoveController::calc_timeout(float speed, float dist){

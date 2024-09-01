@@ -31,7 +31,6 @@ void MoveManager::begin(){
 
     _move_timer.start(_move_update_time);
     _submove_timer.start(0);
-    _timeout_timer.start(0);
   }
 
 //---------------------------------------------------------------------------
@@ -215,10 +214,10 @@ EMoveControlState MoveManager::to_dist_ctrl_speed(float speed_left,
                                                   float set_dist_right){
 
     _update_basic_move(MOVE_B_TODIST_CSpeed);
-    return _move_controller.to_dist_ctrl_speed(float speed_left,
-                                               float speed_right,
-                                               float set_dist_left,
-                                               float set_dist_right);
+    return _move_controller.to_dist_ctrl_speed(speed_left,
+                                               speed_right,
+                                               set_dist_left,
+                                               set_dist_right);
 }
 
 EMoveControlState MoveManager::to_dist_ctrl_speed(float set_dist){

@@ -14,7 +14,7 @@
 
 class WheelData{
 public:
-    WheelData(){};
+    //WheelData(){};
     // Wheel base constant parameters
     // NOTE: D(inner) = 122mm, D(outer) = 160mm, D(avg) = 141mm
     const float base = 172.0; // UPDATED: 1st Jan 2023 - new stable geom chassis with large wheels

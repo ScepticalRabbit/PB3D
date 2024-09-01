@@ -14,8 +14,10 @@
 #include <Adafruit_MotorShield.h>
 #include <PB3DConstants.h>
 #include "Encoder.h"
+#include "EncoderControlState.h"
 #include "PID.h"
 #include "WheelData.h"
+
 
 class MoveController{
 public:
@@ -45,6 +47,8 @@ public:
     PID* get_pos_PID_left(){return &_pos_PID_left;}
     PID* get_pos_PID_right(){return &_pos_PID_right;}
 
+    EncoderControlState encoder_state = EncoderControlState();
+
     uint16_t calc_timeout(float speed, float dist);
 
 private:
@@ -67,7 +71,7 @@ private:
     const double _speed_D = 50.0e-3/8.0; // Ziegler-Nichols tuning [0.6,0.5,/8]
     const double _speed_P_rev = _speed_P*0.9; // NOTE: turned off setting gains! Caused problems
 
-    EMoveControlState _speed_ctrl_state = MOVE_CONTROL_INCOMPLETE;
+    EMoveControlState _speed_ctrl_state = MOVE_CONTROL_START;
     PID _speed_PID_left = PID(false,_speed_P,_speed_I,_speed_D,10);
     PID _speed_PID_right = PID(false,_speed_P,_speed_I,_speed_D,10);
 
@@ -75,20 +79,14 @@ private:
     const float _speed_tol = 25.0;
 
     // Position Control PIDs and Variables
-    EMoveControlState _pos_ctrl_state = MOVE_CONTROL_INCOMPLETE;
+    EMoveControlState _pos_ctrl_state = MOVE_CONTROL_START;
     PID _pos_PID_left = PID(false,0.6,0.0,0.0,20);
     PID _pos_PID_right = PID(false,0.6,0.0,0.0,20);
 
     const float _pos_PID_min_speed = 100.0;
     const float _pos_PID_max_speed = 200.0;
-    const int16_t _pos_tol = 3;
+    const uint8_t _pos_tol = 3;
 
-    int32_t _to_pos_start_encoder_count_left = 0;
-    int32_t _to_pos_set_point_rel_counts_left = 0;
-    int32_t _to_pos_relative_count_left = 0;
-    int32_t _to_pos_start_encoder_count_right = 0;
-    int32_t _to_pos_set_point_rel_counts_right = 0;
-    int32_t _to_pos_relative_count_right = 0;
 
     // Estimating power for given speed - updated for new wheels - 24th Sept 2022
     // NOTE: turned speed estimation off because PID has less overshoot without
@@ -105,14 +103,5 @@ private:
     float _to_dist_tol = 5.0;
     float _to_ang_set_pt = 0.0;
     float _to_ang_tol = 1.0;
-
-    bool _ctrl_speed_encoder_count_start = true;
-    int32_t _ctrl_speed_start_encoder_count_left = 0;
-    int32_t _ctrl_speed_start_encoder_count_right = 0;
-    int32_t _ctrl_speed_end_encoder_count_left = 0;
-    int32_t _ctrl_speed_end_encoder_count_right = 0;
-    int32_t _ctrl_speed_encoder_count_diff_left = 0;
-    int32_t _ctrl_speed_encoder_count_diff_right = 0;
 };
-
 #endif
