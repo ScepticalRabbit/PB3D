@@ -20,7 +20,7 @@
 
 class MoodManager{
 public:
-  MoodManager(Adafruit_NeoPixel_ZeroDMA* RGBLEDs){_moodLEDs = RGBLEDs;}
+  MoodManager(Adafruit_NeoPixel_ZeroDMA* RGB_LEDs){_mood_LEDs = RGB_LEDs;}
 
   //----------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -32,22 +32,22 @@ public:
 
   //----------------------------------------------------------------------------
   // Get, set and reset
-  bool get_enabled_flag(){return _enabled;}
-  void set_enabled_flag(bool enabled){_enabled = enabled;}
   void reset_mood(){_set_mood(_mood_code);}
+
   EMoodCode get_mood(){return _mood_code;}
-  int8_t get_power_diff(){return _mood_power_diff_array[_mood_code];}
-  float get_speed_fact(){return _mood_speed_fact_array[_mood_code];}
+  void set_mood(EMoodCode mood);
+
+  int8_t get_power_diff(){return mood_power_diff_array[_mood_code];}
+  float get_speed_fact(){return mood_speed_fact_array[_mood_code];}
+
   bool get_new_mood_flag(){return _mood_new_flag;}
   void set_new_mood_flag(bool enabled){_mood_new_flag = enabled;}
-
-  void set_mood(EMoodCode mood);
 
   //----------------------------------------------------------------------------
   // Mood Score Functions
   int8_t get_mood_score(){return _mood_score;}
   void set_mood_score(int8_t score){
-    _mood_score = constrain(score,_mood_score_min,_mood_score_max);
+    _mood_score = constrain(score,mood_score_min,mood_score_max);
   }
   void reset_mood_score(){_mood_score = 0;}
 
@@ -66,13 +66,29 @@ public:
   void mood_LED_test();
   void mood_LED_off();
 
+  //---------------------------------------------------------------------------
+  bool enabled = true;
+
+  const uint32_t mood_min_duration = 10000;
+  const uint32_t mood_max_duration = 40000;
+
+  const int8_t mood_score_min = -50;
+  const int8_t mood_score_max = 50;
+
+  // Moods: [neutral,happy,sad,angry,scared]
+  // Mood axis = [negative,neutral,positive]
+  // Negative moods = [sad,angry,scared]
+  const int8_t mood_prob_array[5] =   {40,70,80,90,100};
+  const int8_t mood_prob_axis_array[3] = {25,75,100};
+  const int8_t mood_prob_neg_array[3] = {33,66,100};
+  const int8_t mood_power_diff_array[5] =  {0,10,-30,20,-10};
+  const float mood_speed_fact_array[5] = {1.0,1.1,0.7,1.2,0.9};
+
 private:
   void _set_mood(EMoodCode mood);
 
   // Moods: [neutral,happy,sad,angry,scared]
   // Mood changes task probabilities
-  bool _enabled = true;
-
   EMoodCode _mood_code = MOOD_NEUTRAL;
   int16_t _mood_percent = 0;
   int16_t _mood_neg_percent = 0;
@@ -81,24 +97,10 @@ private:
   // Mood score variables
   int8_t _mood_score = 0;
   int8_t _mood_score_increment = 10;
-  const int8_t _mood_score_min = -50;
-  const int8_t _mood_score_max = 50;
 
   Timer _mood_timer = Timer();
   uint32_t _mood_duration = 12000;
-  const uint32_t _mood_min_duration = 10000;
-  const uint32_t _mood_max_duration = 40000;
 
-  // Moods: [neutral,happy,sad,angry,scared]
-  // Mood axis = [negative,neutral,positive]
-  // Negative moods = [sad,angry,scared]
-  const int8_t _mood_prob_array[5] =   {40,70,80,90,100};
-  const int8_t _mood_prob_axis_array[3] = {25,75,100};
-  const int8_t _mood_prob_neg_array[3] = {33,66,100};
-  const int8_t _mood_power_diff_array[5] =  {0,10,-30,20,-10};
-  const float _mood_speed_fact_array[5] = {1.0,1.1,0.7,1.2,0.9};
-
-  // Pointer to the mood expression LEDs
-  Adafruit_NeoPixel_ZeroDMA* _moodLEDs = NULL;
+  Adafruit_NeoPixel_ZeroDMA* _mood_LEDs = NULL;
 };
 #endif // MOOD_H

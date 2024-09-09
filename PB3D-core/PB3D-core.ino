@@ -10,8 +10,8 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#include <Adafruit_MotorShield.h>
 #include <Adafruit_NeoPixel_ZeroDMA.h>
+
 
 #include <PB3DConstants.h>
 #include <PB3DPins.h>
@@ -70,7 +70,7 @@ Timer test_report_timer = Timer();
 bool _test_pause_switch = true;
 uint8_t test_count = 0;
 uint8_t test_count_limit = 4;
-uint32_t test_pause_time = 2000; 
+uint32_t test_pause_time = 2000;
 Timer test_pause_timer = Timer();
 
 bool test_first_loop = true;
@@ -84,6 +84,10 @@ uint32_t test_time_stamp = 0;
 // MOOD / TASK LEDs - required by mood and task manager
 Adafruit_NeoPixel_ZeroDMA leds = Adafruit_NeoPixel_ZeroDMA(
             NUM_PIX, MOOD_TASK_LED_PIN, NEO_GRB + NEO_KHZ800);
+
+// IO Expanders - needed for lasers and bumpers
+Adafruit_PCF8574 gpio_expander_1 = Adafruit_PCF8574(); // first 8 lasers
+Adafruit_PCF8574 gpio_expander_2 = Adafruit_PCF8574(); // last 2 lasers + bumpers on last bits
 
 //------------------------------------------------------------------------------
 // INTERNAL CLASSES

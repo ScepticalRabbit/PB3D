@@ -49,12 +49,10 @@ public:
 
     //----------------------------------------------------------------------------
     // GET,SET and RESET functions
-    // MOVE TYPE - Get/Set
     EMoveBasic get_basic_move(){return _move_basic_code;}
     EMoveCompound get_compound_move(){return _move_compound_code;}
     void set_compound_move(EMoveCompound move_code){_move_compound_code = move_code;}
 
-    // MOTOR SPEED CONTROL - Get/Set
     float get_forward_speed();
     float get_back_speed();
     float get_turn_speed();
@@ -69,10 +67,6 @@ public:
     // NOTE: encoders must be in main for interrupts
     Encoder* get_encoder_left(){return _encoder_left;}
     Encoder* get_encoder_right(){return _encoder_left;}
-
-    //--------------------------------------------------------------------------
-    // CALCULATORS
-    uint16_t calc_timeout(float speed, float dist);
 
     //--------------------------------------------------------------------------
     // BASIC MOVEMENT FUNCTIONS - GENERIC (switched by _move_control_code var)
@@ -95,10 +89,10 @@ public:
     //--------------------------------------------------------------------------
     // Controlled movement
     // NOTE: position can be negative to move backwards
-    bool get_pos_controller_at_setpoint(){
+
+    EMoveControlState get_pos_controller_state(){
         return _move_controller.get_pos_PID_state();}
 
-    void to_dist_ctrl_pos(float set_dist);
     void to_dist_ctrl_pos(float set_dist_left, float set_dist_right);
     void turn_to_angle_ctrl_pos(float set_angle);
 

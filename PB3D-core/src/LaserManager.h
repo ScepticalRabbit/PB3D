@@ -12,12 +12,12 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <Adafruit_PCF8574.h>
 
 #include <PB3DI2CAddresses.h>
 #include <PB3DConstants.h>
+#include <PB3DTimer.h>
 
-#include "PB3DTimer.h"
+#include "MultiIOExpander.h"
 #include "LaserSensor.h"
 #include "CollisionStrategy.h"
 
@@ -26,7 +26,9 @@
 
 class LaserManager{
 public:
-    LaserManager(){};
+    LaserManager(MultiIOExpander* multi_expander){
+        _multi_expander = multi_expander;
+    };
 
     //--------------------------------------------------------------------------
     // BEGIN: called once during SETUP
@@ -49,6 +51,8 @@ public:
         return _laser_ptr_array[laser_loc]->get_range_status();}
 
     EDangerCode get_collision_code(ELaserIndex _ind);
+
+    bool enabled = true;
 
 private:
     //--------------------------------------------------------------------------
@@ -125,8 +129,7 @@ private:
                                                              AVOID_PICKUP,    // AA
                                                             };
 
-    // GPIO Expander
-    Adafruit_PCF8574 _gpio_expander;
+    MultiIOExpander* _multi_expander = NULL;
 
     uint16_t _laser_update_time = 51;
     Timer _laser_timer = Timer();

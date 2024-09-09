@@ -21,7 +21,7 @@ void MoodManager::begin(){
 //------------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void MoodManager::update(){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     if(_mood_timer.finished()){
         int8_t prob = random(0,100);
@@ -36,26 +36,26 @@ void MoodManager::update(){
         _mood_percent = random(0,100)+_mood_score;
         _mood_percent = constrain(_mood_percent,0,100);
 
-        if((_mood_percent >= 0) && (_mood_percent < _mood_prob_array[0])){ // NEGATIVE MOOD
+        if((_mood_percent >= 0) && (_mood_percent < mood_prob_array[0])){ // NEGATIVE MOOD
             _mood_neg_percent = random(0,100)+_mood_score;
 
-            if((_mood_neg_percent >= 0) && (_mood_neg_percent <= _mood_prob_array[0])){
+            if((_mood_neg_percent >= 0) && (_mood_neg_percent <= mood_prob_array[0])){
                 set_mood(MOOD_SAD);
             }
-            else if((_mood_percent >= _mood_prob_array[1]) && (_mood_percent <= _mood_prob_array[2])){
+            else if((_mood_percent >= mood_prob_array[1]) && (_mood_percent <= mood_prob_array[2])){
                 set_mood(MOOD_ANGRY);
             }
-            else if((_mood_percent >= _mood_prob_array[2]) && (_mood_percent <= _mood_prob_array[3])){
+            else if((_mood_percent >= mood_prob_array[2]) && (_mood_percent <= mood_prob_array[3])){
                 set_mood(MOOD_SCARED);
             }
             else{
                 set_mood(MOOD_SAD);
             }
         }
-        else if((_mood_percent >= _mood_prob_array[0]) && (_mood_percent <= _mood_prob_array[1])){ // NEUTRAL MOOD
+        else if((_mood_percent >= mood_prob_array[0]) && (_mood_percent <= mood_prob_array[1])){ // NEUTRAL MOOD
             set_mood(MOOD_NEUTRAL);
         }
-        else if((_mood_percent >= _mood_prob_array[1]) && (_mood_percent <= _mood_prob_array[2])){ // POSITIVE MOOD
+        else if((_mood_percent >= mood_prob_array[1]) && (_mood_percent <= mood_prob_array[2])){ // POSITIVE MOOD
             set_mood(MOOD_HAPPY);
         }
         else{ // DEFAULT NEUTRAL
@@ -71,7 +71,7 @@ void MoodManager::set_mood(EMoodCode mood){
         _set_mood(mood);
 
         _mood_new_flag = true;
-        _mood_duration = random(_mood_min_duration,_mood_max_duration);
+        _mood_duration = random(mood_min_duration,mood_max_duration);
         _mood_timer.start(_mood_duration);
     }
 }
@@ -80,19 +80,19 @@ void MoodManager::set_mood(EMoodCode mood){
 // Mood Score Functions
 void MoodManager::mod_mood_score(int8_t modifier){
     int16_t tempScore = _mood_score+modifier;
-    tempScore = constrain(tempScore,_mood_score_min,_mood_score_max);
+    tempScore = constrain(tempScore,mood_score_min,mood_score_max);
     _mood_score = tempScore;
 }
 
 void MoodManager::inc_mood_score(){
     int16_t tempScore = _mood_score+_mood_score_increment;
-    tempScore = constrain(tempScore,_mood_score_min,_mood_score_max);
+    tempScore = constrain(tempScore,mood_score_min,mood_score_max);
     _mood_score = tempScore;
 }
 
 void MoodManager::dec_mood_score(){
     int16_t tempScore = _mood_score-_mood_score_increment;
-    tempScore = constrain(tempScore,_mood_score_min,_mood_score_max);
+    tempScore = constrain(tempScore,mood_score_min,mood_score_max);
     _mood_score = tempScore;
 }
 
@@ -101,57 +101,57 @@ void MoodManager::dec_mood_score(){
 
 void MoodManager::mood_LED_neutral(){
     uint8_t ledVal = 205+_mood_score;
-    _moodLEDs->setPixelColor(1, _moodLEDs->Color(ledVal, ledVal, 0));
-    _moodLEDs->setPixelColor(2, _moodLEDs->Color(ledVal, ledVal, 0));
-    _moodLEDs->show();
+    _mood_LEDs->setPixelColor(1, _mood_LEDs->Color(ledVal, ledVal, 0));
+    _mood_LEDs->setPixelColor(2, _mood_LEDs->Color(ledVal, ledVal, 0));
+    _mood_LEDs->show();
 }
 
 void MoodManager::mood_LED_happy(){
     uint8_t ledVal = 205+_mood_score;
-    _moodLEDs->setPixelColor(1, _moodLEDs->Color(0, ledVal, 0));
-    _moodLEDs->setPixelColor(2, _moodLEDs->Color(0, ledVal, 0));
-    _moodLEDs->show();
+    _mood_LEDs->setPixelColor(1, _mood_LEDs->Color(0, ledVal, 0));
+    _mood_LEDs->setPixelColor(2, _mood_LEDs->Color(0, ledVal, 0));
+    _mood_LEDs->show();
 }
 
 void MoodManager::mood_LED_angry(){
     uint8_t ledVal = 205+_mood_score;
-    _moodLEDs->setPixelColor(1, _moodLEDs->Color(ledVal, 0, 0));
-    _moodLEDs->setPixelColor(2, _moodLEDs->Color(ledVal, 0, 0));
-    _moodLEDs->show();
+    _mood_LEDs->setPixelColor(1, _mood_LEDs->Color(ledVal, 0, 0));
+    _mood_LEDs->setPixelColor(2, _mood_LEDs->Color(ledVal, 0, 0));
+    _mood_LEDs->show();
 }
 
 void MoodManager::mood_LED_sad(){
     uint8_t ledVal = 205+_mood_score;
-    _moodLEDs->setPixelColor(1, _moodLEDs->Color(0, 0, ledVal));
-    _moodLEDs->setPixelColor(2, _moodLEDs->Color(0, 0, ledVal));
-    _moodLEDs->show();
+    _mood_LEDs->setPixelColor(1, _mood_LEDs->Color(0, 0, ledVal));
+    _mood_LEDs->setPixelColor(2, _mood_LEDs->Color(0, 0, ledVal));
+    _mood_LEDs->show();
 }
 
 void MoodManager::mood_LED_scared(){
     uint8_t ledVal = 205+_mood_score;
-    _moodLEDs->setPixelColor(1, _moodLEDs->Color(0, ledVal, ledVal));
-    _moodLEDs->setPixelColor(2, _moodLEDs->Color(0, ledVal, ledVal));
-    _moodLEDs->show();
+    _mood_LEDs->setPixelColor(1, _mood_LEDs->Color(0, ledVal, ledVal));
+    _mood_LEDs->setPixelColor(2, _mood_LEDs->Color(0, ledVal, ledVal));
+    _mood_LEDs->show();
 }
 
 void MoodManager::mood_LED_curious(){
     uint8_t ledVal = 205+_mood_score;
-    _moodLEDs->setPixelColor(1, _moodLEDs->Color(ledVal, 0, ledVal));
-    _moodLEDs->setPixelColor(2, _moodLEDs->Color(ledVal, 0, ledVal));
-    _moodLEDs->show();
+    _mood_LEDs->setPixelColor(1, _mood_LEDs->Color(ledVal, 0, ledVal));
+    _mood_LEDs->setPixelColor(2, _mood_LEDs->Color(ledVal, 0, ledVal));
+    _mood_LEDs->show();
 }
 
 void MoodManager::mood_LED_test(){
     uint8_t ledVal = 205+_mood_score;
-    _moodLEDs->setPixelColor(1, _moodLEDs->Color(ledVal, ledVal, ledVal));
-    _moodLEDs->setPixelColor(2, _moodLEDs->Color(ledVal, ledVal, ledVal));
-    _moodLEDs->show();
+    _mood_LEDs->setPixelColor(1, _mood_LEDs->Color(ledVal, ledVal, ledVal));
+    _mood_LEDs->setPixelColor(2, _mood_LEDs->Color(ledVal, ledVal, ledVal));
+    _mood_LEDs->show();
 }
 
 void MoodManager::mood_LED_off(){
-    _moodLEDs->setPixelColor(1, _moodLEDs->Color(0, 0, 0));
-    _moodLEDs->setPixelColor(2, _moodLEDs->Color(0, 0, 0));
-    _moodLEDs->show();
+    _mood_LEDs->setPixelColor(1, _mood_LEDs->Color(0, 0, 0));
+    _mood_LEDs->setPixelColor(2, _mood_LEDs->Color(0, 0, 0));
+    _mood_LEDs->show();
 }
 
 

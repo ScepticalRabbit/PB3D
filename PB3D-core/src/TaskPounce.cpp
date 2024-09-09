@@ -150,8 +150,8 @@ if(_move_manager->look_around() == MOVE_LOOK_PAUSE){
     if(_meas_index < _meas_num_vals){
 
     if(!_meas_complete){
-        if(_move_manager->get_pos_controller_at_setpoint()){
-
+        if(_move_manager->get_pos_controller_state() ==
+            MOVE_CONTROL_COMPLETE){
             _meas_complete = true;
             _meas_timer.start(_meas_pre_pause_time);
         }
@@ -244,17 +244,15 @@ void TaskPounce::_lock_on(){
         // Spool up - flash lights and wag tail - TODO
         _task_manager->task_LED_CSV(_lock_colour,_lock_colour,_low_saturation,_low_saturation,255,255);
 
-        // Turn to target
         _move_manager->turn_to_angle_ctrl_pos(_lock_on_ang);
 
-        // EXIT CONDITION: SET POINT REACHED
-        if(_move_manager->get_pos_controller_at_setpoint()){
-        _state = POUNCE_RUN;
+        if(_move_manager->get_pos_controller_state()
+           == MOVE_CONTROL_COMPLETE){
+            _state = POUNCE_RUN;
         }
 
-        // EXIT CONDITION: TIMEOUT
         if(_lock_on_timer.finished()){
-        _state = POUNCE_RUN;
+            _state = POUNCE_RUN;
         }
     }
 }
@@ -351,10 +349,12 @@ void TaskPounce::_realign(){
         _move_manager->turn_to_angle_ctrl_pos(_realign_angle);
 
         // If angle is obtained or timeout go back to the start
-        if(_move_manager->get_pos_controller_at_setpoint() || _realign_timer.finished()){
-        _realign_timer.start(_realign_post_pause_time);
-        _realign_state++;
-        Serial.println("REALIGN: Post pause");
+        if((_move_manager->get_pos_controller_state() ==
+            MOVE_CONTROL_COMPLETE) ||
+           _realign_timer.finished()){
+            _realign_timer.start(_realign_post_pause_time);
+            _realign_state++;
+            Serial.println("REALIGN: Post pause");
         }
     }
     else if(_realign_state == 2){// Post-pause
