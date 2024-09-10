@@ -17,7 +17,7 @@
 
 class MultiIOExpander{
 public:
-    MultiIOExpander(uint8_t pin_modes[]);
+    MultiIOExpander(const uint8_t pin_modes[]);
 
     bool begin();
 

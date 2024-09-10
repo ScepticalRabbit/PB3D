@@ -43,7 +43,10 @@ class CollisionManager{
 public:
   //----------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
-  CollisionManager(MoodManager* mood, TaskManager* task, MoveManager* move);
+  CollisionManager(MoodManager* mood,
+                   TaskManager* task,
+                   MoveManager* move,
+                   LaserManager* lasers);
 
   //----------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -70,7 +73,7 @@ public:
   bool get_bumper_flag(){return _bumpers.get_bump_flag();}
 
   int16_t get_laser_range(ELaserIndex _ind){
-    return _laser_manager.get_range(_ind);
+    return _laser_manager->get_range(_ind);
   }
   SLastCollision* get_last_collision(){return &_last_col;}
 
@@ -98,6 +101,7 @@ private:
   MoodManager* _mood_manager = NULL;
   TaskManager* _task_manager = NULL;
   MoveManager* _move_manager = NULL;
+  LaserManager* _laser_manager = NULL;
 
   // Collision management variables
   bool _enabled = true;
@@ -109,7 +113,6 @@ private:
   uint16_t _collision_count = 0;
 
   CollisionEscaper _escaper = CollisionEscaper();
-  LaserManager _laser_manager = LaserManager();
   BumperSensor _bumpers = BumperSensor();
 
   // Check flags for all collision sensors

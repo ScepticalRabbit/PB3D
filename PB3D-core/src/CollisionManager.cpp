@@ -12,14 +12,16 @@
 
 //------------------------------------------------------------------------------
 // CONSTRUCTOR: pass in pointers to main objects and other sensors
-CollisionManager::CollisionManager(MoodManager* inMood,
-                                   TaskManager* inTask,
-                                   MoveManager* inMove){
-    _mood_manager = inMood;
-    _task_manager = inTask;
-    _move_manager = inMove;
+CollisionManager::CollisionManager(MoodManager* mood,
+                                   TaskManager* task,
+                                   MoveManager* move,
+                                   LaserManager* lasers){
+    _mood_manager = mood;
+    _task_manager = task;
+    _move_manager = move;
+    _laser_manager = lasers;
 
-    _escaper.set_move_obj(inMove);
+    _escaper.set_move_obj(move);
 
     for(uint8_t ii=0 ; ii < LASER_COUNT ; ii++){
         _check_lasers[ii] = 0;
@@ -35,11 +37,8 @@ void CollisionManager::begin(){
     _bumper_timer.start(0);
     _slow_down_timer.start(0);
 
-    _laser_manager.begin();
+    _laser_manager->begin();
     _bumpers.begin();
-
-    // Flag to turn off ultrasonic ranger to help with timing interruptions
-    //_ultrasonic_ranger.set_enabled_flag(false);
 }
 
 //------------------------------------------------------------------------------
@@ -53,7 +52,7 @@ void CollisionManager::update(){
     }
 
     // COLLISION SENSOR: Run laser ranging
-    _laser_manager.update();
+    _laser_manager->update();
 
     // COLLISION SENSOR: Bumper Switches slaved to Nervous System
     if(_bumper_timer.finished()){
@@ -97,7 +96,7 @@ void CollisionManager::update(){
 // Get, set and reset
 //------------------------------------------------------------------------------
 bool CollisionManager::get_altitude_flag(){
-    if(_laser_manager.get_collision_code(LASER_ALT) > DANGER_NONE){
+    if(_laser_manager->get_collision_code(LASER_ALT) > DANGER_NONE){
         return true;
     }
     else{
@@ -149,7 +148,7 @@ void CollisionManager::_update_check_vec(){
 
 
     for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
-        _check_lasers[ii] = _laser_manager.get_collision_code(ELaserIndex(ii));
+        _check_lasers[ii] = _laser_manager->get_collision_code(ELaserIndex(ii));
         if(_check_lasers[ii] >= DANGER_SLOW){
             _collision_slow_down = true;
         }
@@ -171,9 +170,9 @@ void CollisionManager::_update_escape_decision(){
 
     for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
         _last_col.check_lasers[ii] = _check_lasers[ii];
-        _last_col.laser_range_array[ii] = _laser_manager.get_range(
+        _last_col.laser_range_array[ii] = _laser_manager->get_range(
                                                         ELaserIndex(ii));
-        _last_col.laser_status_array[ii] = _laser_manager.get_status(
+        _last_col.laser_status_array[ii] = _laser_manager->get_status(
                                                         ELaserIndex(ii));
     }
 

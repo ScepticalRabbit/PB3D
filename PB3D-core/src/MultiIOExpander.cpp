@@ -9,7 +9,7 @@
 
 #include "MultiIOExpander.h"
 
-MultiIOExpander::MultiIOExpander(uint8_t pin_modes[]){
+MultiIOExpander::MultiIOExpander(const uint8_t pin_modes[]){
     for(uint8_t pp=0; pp<total_pins; pp++){
         _pin_modes[pp] = pin_modes[pp];
     }

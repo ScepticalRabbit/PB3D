@@ -12,7 +12,6 @@
 
 #include <Adafruit_NeoPixel_ZeroDMA.h>
 
-
 #include <PB3DConstants.h>
 #include <PB3DPins.h>
 #include <PB3DI2CAddresses.h>
@@ -31,6 +30,7 @@
 #include "src/TaskManager.h"
 #include "src/I2CDataSender.h"
 #include "src/IMUSensor.h"
+#include "src/MultiIOExpander.h"
 #include "src/Navigation.h"
 #include "src/TaskDance.h"
 #include "src/TaskRest.h"
@@ -85,10 +85,6 @@ uint32_t test_time_stamp = 0;
 Adafruit_NeoPixel_ZeroDMA leds = Adafruit_NeoPixel_ZeroDMA(
             NUM_PIX, MOOD_TASK_LED_PIN, NEO_GRB + NEO_KHZ800);
 
-// IO Expanders - needed for lasers and bumpers
-Adafruit_PCF8574 gpio_expander_1 = Adafruit_PCF8574(); // first 8 lasers
-Adafruit_PCF8574 gpio_expander_2 = Adafruit_PCF8574(); // last 2 lasers + bumpers on last bits
-
 //------------------------------------------------------------------------------
 // INTERNAL CLASSES
 
@@ -101,22 +97,31 @@ MoveManager move_manager = MoveManager(&encoder_left,
                                        &encoder_right);
 MoodManager mood_manager = MoodManager(&leds);
 TaskManager task_manager = TaskManager(&leds);
-CollisionManager collision_manager = CollisionManager(&mood_manager,
-                                                      &task_manager,
-                                                      &move_manager);
 
-// Sensors, Actuators and Communications
+// Sensors and Actuators
+MultiIOExpander multi_expander = MultiIOExpander(GPIO_PIN_MODES);
+LaserManager laser_manager = LaserManager(&multi_expander);
 Speaker speaker = Speaker();
 PatSensor pat_sensor = PatSensor();
 Tail tail = Tail();
 IMUSensor IMU = IMUSensor();
 Navigation navigator = Navigation(&encoder_left,&encoder_right,&IMU);
+
+// Collision Detection & Escape
+CollisionManager collision_manager = CollisionManager(&mood_manager,
+                                                      &task_manager,
+                                                      &move_manager,
+                                                      &laser_manager);
+
+// Communications
 I2CDataSender sender = I2CDataSender(&collision_manager,
                                      &mood_manager,
                                      &task_manager,
                                      &move_manager,
                                      &IMU,
                                      &navigator);
+
+
 
 // TASK CLASSES - Uses basic classes
 TaskDance task_dance = TaskDance(&mood_manager,

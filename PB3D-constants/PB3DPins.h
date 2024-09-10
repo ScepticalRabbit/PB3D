@@ -30,4 +30,21 @@ enum EGPIOPinout{
     GPIO_PIN_COUNT = 16
 };
 
+const uint8_t GPIO_PIN_MODES[16] = {OUTPUT,
+                                    OUTPUT,
+                                    OUTPUT,
+                                    OUTPUT,
+                                    OUTPUT,
+                                    OUTPUT,
+                                    OUTPUT,
+                                    OUTPUT,
+                                    OUTPUT,
+                                    OUTPUT,
+                                    OUTPUT,
+                                    OUTPUT,
+                                    OUTPUT,
+                                    INPUT_PULLUP,
+                                    INPUT_PULLUP,
+                                    INPUT_PULLUP};
+
 #endif
