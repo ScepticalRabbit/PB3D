@@ -101,6 +101,7 @@ TaskManager task_manager = TaskManager(&leds);
 // Sensors and Actuators
 MultiIOExpander multi_expander = MultiIOExpander(GPIO_PIN_MODES);
 LaserManager laser_manager = LaserManager(&multi_expander);
+BumperSensor bumpers = BumperSensor(&multi_expander);
 Speaker speaker = Speaker();
 PatSensor pat_sensor = PatSensor();
 Tail tail = Tail();
@@ -111,7 +112,8 @@ Navigation navigator = Navigation(&encoder_left,&encoder_right,&IMU);
 CollisionManager collision_manager = CollisionManager(&mood_manager,
                                                       &task_manager,
                                                       &move_manager,
-                                                      &laser_manager);
+                                                      &laser_manager,
+                                                      &bumpers);
 
 // Communications
 I2CDataSender sender = I2CDataSender(&collision_manager,
@@ -120,8 +122,6 @@ I2CDataSender sender = I2CDataSender(&collision_manager,
                                      &move_manager,
                                      &IMU,
                                      &navigator);
-
-
 
 // TASK CLASSES - Uses basic classes
 TaskDance task_dance = TaskDance(&mood_manager,
@@ -194,6 +194,9 @@ void setup() {
 
   // NOTE: I2C multiplexer and light sensors MUST be initialised first!
   task_find_light.begin();
+  multi_expander.begin();
+  laser_manager.begin();
+  bumpers.begin();
 
   mood_manager.begin();
   task_manager.begin();
@@ -292,6 +295,9 @@ void loop(){
 
   //----------------------------------------------------------------------------
   // UPDATE OBJECTS - Each object has own internal timer
+  laser_manager.update();
+  bumpers.update();
+
   move_manager.update(); // TODO: check this doesn't override tasks
   collision_manager.update();
 

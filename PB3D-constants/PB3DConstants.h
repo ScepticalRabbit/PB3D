@@ -170,7 +170,7 @@ enum ELEDs{
 enum EBumpCode{
     BUMP_LEFT = 0,
     BUMP_RIGHT,
-    BUMP_REAR,
+    BUMP_BACK,
     BUMP_COUNT
 };
 

@@ -15,11 +15,13 @@
 CollisionManager::CollisionManager(MoodManager* mood,
                                    TaskManager* task,
                                    MoveManager* move,
-                                   LaserManager* lasers){
+                                   LaserManager* lasers,
+                                   BumperSensor* bumpers){
     _mood_manager = mood;
     _task_manager = task;
     _move_manager = move;
     _laser_manager = lasers;
+    _bumpers = bumpers;
 
     _escaper.set_move_obj(move);
 
@@ -34,11 +36,7 @@ CollisionManager::CollisionManager(MoodManager* mood,
 //------------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void CollisionManager::begin(){
-    _bumper_timer.start(0);
     _slow_down_timer.start(0);
-
-    _laser_manager->begin();
-    _bumpers.begin();
 }
 
 //------------------------------------------------------------------------------
@@ -49,21 +47,6 @@ void CollisionManager::update(){
     // If a new task is generated turn back on collision detecttion
     if(_task_manager->get_new_task_flag()){
         set_enabled_flag(true);
-    }
-
-    // COLLISION SENSOR: Run laser ranging
-    _laser_manager->update();
-
-    // COLLISION SENSOR: Bumper Switches slaved to Nervous System
-    if(_bumper_timer.finished()){
-        _bumper_timer.start(_bumper_update_time);
-
-        _bumpers.update();
-
-        if(_bumpers.get_bump_thres_check()){
-            _mood_manager->dec_mood_score();
-            _bumpers.reset_bump_count();
-        }
     }
 
     // COLLISION DETECTION & DECISION
@@ -79,7 +62,13 @@ void CollisionManager::update(){
         else if(!_collision_slow_down && _slow_down_timer.finished()){
             _move_manager->set_speed_danger_multiplier(DANGER_NONE);
         }
+
+        if(_bumpers->get_bump_thres_check()){
+            _mood_manager->dec_mood_score();
+            _bumpers->reset_bump_count();
+        }
     }
+
     if(!_slow_down_timer.finished()){
         _move_manager->set_speed_danger_multiplier(DANGER_CLOSE);
     }
@@ -107,7 +96,7 @@ bool CollisionManager::get_altitude_flag(){
 void CollisionManager::reset_flags(){
     _collision_detected = false;
     _collision_slow_down = false;
-    _bumpers.reset();
+    _bumpers->reset();
 }
 
 //-----------------------------------------------------------------------------
@@ -139,7 +128,7 @@ void CollisionManager::_update_check_vec(){
     _collision_slow_down = false;
 
     for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
-        _check_bumpers[ii] = _bumpers.get_collision_code(EBumpCode(ii));
+        _check_bumpers[ii] = _bumpers->get_collision_code(EBumpCode(ii));
 
         if(_check_bumpers[ii] >= DANGER_CLOSE){
             _collision_slow_down = true;
@@ -165,7 +154,7 @@ void CollisionManager::_update_escape_decision(){
     _escaper.update_escape_decision(_check_lasers);
 
     for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
-        _last_col.check_bumpers[ii] = _bumpers.get_collision_code(EBumpCode(ii));
+        _last_col.check_bumpers[ii] = _bumpers->get_collision_code(EBumpCode(ii));
     }
 
     for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
