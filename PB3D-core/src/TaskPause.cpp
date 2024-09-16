@@ -27,7 +27,7 @@ void TaskPause::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskPause::update(){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     if(_task_manager->get_new_task_flag()){
         _pause_dur = random(_pause_dur_min,_pause_dur_max);
@@ -38,14 +38,14 @@ void TaskPause::update(){
 //---------------------------------------------------------------------------
 // PAUSE
 void TaskPause::pause(){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     if(_pause_timer.finished()){
         _task_manager->force_update();
     }
     else{
         _task_manager->task_LED_pause(_pause_dur);
-        _collision_manager->set_enabled_flag(false);
+        _collision_manager->enabled = false;
         _move_manager->stop();
     }
 }

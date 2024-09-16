@@ -29,7 +29,7 @@ void TaskPounce::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskPounce::update(){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     if(_task_manager->get_new_task_flag()){
         _start_all = true;
@@ -39,7 +39,7 @@ void TaskPounce::update(){
 //---------------------------------------------------------------------------
 // Pounce! - called during the main during decision tree
 void TaskPounce::seek_and_pounce(){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     if(_start_all){
         Serial.println("START ALL.");
@@ -121,9 +121,9 @@ void TaskPounce::_seek_target(){
 if(_seek_start){
     _seek_start = false;
     _move_manager->reset_look();
-    _collision_manager->set_enabled_flag(false);
+    _collision_manager->enabled = false;
 }
-_collision_manager->set_enabled_flag(false); // Disable collision detection
+_collision_manager->enabled = false; // Disable collision detection
 
 // TASK LEDS
 uint8_t seekCol = 1;
@@ -226,12 +226,12 @@ void TaskPounce::_lock_on(){
         _lock_on_timer.start(_lock_spool_up_time);  // Start timer
 
         //_move_manager->reset_PIDs(); // Reset PIDs
-        _collision_manager->set_enabled_flag(false); // Disable collisition detection
+        _collision_manager->enabled = false; // Disable collisition detection
 
         // DEBUG: Lock on start
         Serial.println("LOCK ON: Start");
     }
-    _collision_manager->set_enabled_flag(false); // Disable collision detection
+    _collision_manager->enabled = false; // Disable collision detection
 
     // Decide on a target
     // 1) If all ranges less than min range - REALIGN
@@ -274,7 +274,7 @@ void TaskPounce::_run_to_target(){
                                 _move_manager->get_encoder_right()->get_count())/2;
         _run_end_encoder_count = encAvgCounts+runEncCounts;
 
-        _collision_manager->set_enabled_flag(true); // Re-enable collision detection
+        _collision_manager->enabled = true; // Re-enable collision detection
         // DEBUG: Run to start
         Serial.println("RUN: Start");
         Serial.print("RUN: Timeout = ");
@@ -322,13 +322,13 @@ void TaskPounce::_realign(){
         _realign_angle = float(random(_realign_ang_min,_realign_ang_max));
         _realign_timer.start(_realign_pre_pause_time);
 
-        _collision_manager->set_enabled_flag(false); // Disable collision detection
+        _collision_manager->enabled = false; // Disable collision detection
         //_move_manager->reset_PIDs();  // Reset move PIDs
 
         // DEBUG: Run to start
         Serial.println("REALIGN: Start, Pre-pause");
     }
-    _collision_manager->set_enabled_flag(false); // Disable collision detection
+    _collision_manager->enabled = false; // Disable collision detection
 
     // TASK LEDS
     _task_manager->task_LED_CSV(_realign_colour,_realign_colour,_low_saturation,_low_saturation,255,255);

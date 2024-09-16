@@ -13,13 +13,15 @@
 // CONSTRUCTOR - pass in pointers to main objects and other sensors
 TaskPickedUp::TaskPickedUp(CollisionManager* collision, MoodManager* mood,
                           TaskManager* task, MoveManager* move,
-                          Speaker* speaker, PatSensor* pat_sens){
+                          Speaker* speaker, PatSensor* pat_sens,
+                          MultiIOExpander* multi_expander){
     _collision_manager = collision;
     _mood_manager = mood;
     _task_manager = task;
     _move_manager = move;
     _speaker = speaker;
     _pat_sensor = pat_sens;
+    _multi_expander = multi_expander;
 }
 
 //------------------------------------------------------------------------------
@@ -45,7 +47,7 @@ void TaskPickedUp::begin(){
 //------------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskPickedUp::update(){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     // Check the altirude to see if PB has been picked up
     if(_collision_manager->get_altitude_flag() && !_picked_up){
@@ -53,7 +55,7 @@ void TaskPickedUp::update(){
         _start_picked_up = true;
 
         // If picked up turn off collision detection
-        _collision_manager->set_enabled_flag(false);
+        _collision_manager->enabled = false;
 
         // Based on the current task set the panic flag
         if((_task_manager->get_task() == TASK_INTERACT) ||
@@ -72,7 +74,7 @@ void TaskPickedUp::update(){
 // PICKED UP - called during the main during decision tree
 void TaskPickedUp::pickedUp(){
     // If the sensor wasn't found then do nothing
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     //--------------------------------------------
     // START ONLY
@@ -154,35 +156,34 @@ void TaskPickedUp::pickedUp(){
     }
 
     // If picked up turn off collision detection
-    _collision_manager->set_enabled_flag(false);
+    _collision_manager->enabled = false;
 
     //--------------------------------------------
     // VIBRATION MOTOR: PURRING
     if(_pat_flag){
-            // If patted stop panicking
-            _panic_flag = false;
+        // If patted stop panicking
+        _panic_flag = false;
 
-            if(_purr_timer.finished()){
-            // Regenerate random purr times
+        if(_purr_timer.finished()){
             _purr_on_time = random(_purr_on_time_min,_purr_on_time_max);
             _purr_off_time = random(_purr_off_time_min,_purr_off_time_max);
 
-            // Flip the purr switch
             _purr_on = !_purr_on;
             if(_purr_on){
                 _purr_timer.start(_purr_on_time);
-                // Set byte to turn on purr sensor
-                _send_byte = B00001111;
             }
             else{
                 _purr_timer.start(_purr_off_time);
-                // Set byte to turn on purr sensor
-                _send_byte = B00001110;
             }
         }
-        Wire.beginTransmission(ADDR_FOLLOW_XIAO_1);
-        Wire.write(_send_byte);
-        Wire.endTransmission();
+
+        if(_purr_on){
+            _multi_expander->digital_write(GPIO_PURR_VIBE,HIGH);
+        }
+        else{
+            _multi_expander->digital_write(GPIO_PURR_VIBE,LOW);
+        }
+
     }
 
     //--------------------------------------------
@@ -229,25 +230,22 @@ void TaskPickedUp::pickedUp(){
     // EXIT CONDITIONS
     if(_exit_flag && _picked_up){
         _picked_up = false;
-        // Re-enable pat sensor buttons
         _pat_sensor->set_buttons_enabled(true);
-        // Re-enable collision detection
-        _collision_manager->set_enabled_flag(true);
-        // Set task to pause
+        _collision_manager->enabled = true;
         _task_manager->set_task(TASK_PAUSE);
 
         // Based on the state on exit set different conditions
         int8_t prob = random(0,100);
         if(_panic_flag){
-        if(prob<50){_mood_manager->set_mood(MOOD_SCARED);}
-        else{_mood_manager->set_mood(MOOD_ANGRY);}
+            if(prob<50){_mood_manager->set_mood(MOOD_SCARED);}
+            else{_mood_manager->set_mood(MOOD_ANGRY);}
         }
         else if(_pat_complete){
-        if(prob<80){_mood_manager->set_mood(MOOD_HAPPY);}
-        else{_mood_manager->set_mood(MOOD_NEUTRAL);}
+            if(prob<80){_mood_manager->set_mood(MOOD_HAPPY);}
+            else{_mood_manager->set_mood(MOOD_NEUTRAL);}
         }
         else{
-        _mood_manager->set_mood(MOOD_NEUTRAL);
+            _mood_manager->set_mood(MOOD_NEUTRAL);
         }
     }
 }

@@ -161,7 +161,8 @@ TaskPickedUp task_picked_up = TaskPickedUp(&collision_manager,
                                             &task_manager,
                                             &move_manager,
                                             &speaker,
-                                            &pat_sensor);
+                                            &pat_sensor,
+                                            &multi_expander);
 TaskPounce task_pounce = TaskPounce(&collision_manager,
                                     &mood_manager,
                                     &task_manager,
@@ -291,7 +292,7 @@ void loop(){
       task_manager.set_task(debug_taskCode);
     }
   }
-  if(debug_collision_off){collision_manager.set_enabled_flag(false);}
+  if(debug_collision_off){collision_manager.enabled = false;}
 
   //----------------------------------------------------------------------------
   // UPDATE OBJECTS - Each object has own internal timer

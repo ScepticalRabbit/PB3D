@@ -43,14 +43,15 @@ public:
 
   //---------------------------------------------------------------------------
   // Get, set and reset
+  bool enabled = true;
+
   void reset();
   void collision_reset_to_realign();
   void set_realign_cent(int16_t angle);
 
-  bool get_enabled_flag(){return _enabled;}
   EPounce get_state(){return _state;}
   int16_t get_ang_cent_for_collision(){return _realign_ang_cent_collision;}
-  void set_enabled_flag(bool enabled){_enabled = enabled;}
+
 
 private:
 
@@ -84,7 +85,7 @@ private:
 
   //---------------------------------------------------------------------------
   // CLASS VARIABLES
-  bool _enabled = true;
+
   bool _start_all = true;
 
   EPounce _state = POUNCE_SEEK;

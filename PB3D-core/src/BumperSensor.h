@@ -36,7 +36,6 @@ public:
 
     //---------------------------------------------------------------------------
     // Get, set and reset
-
     bool get_bump_flag(){return _bumper_any_flag;}
     bool get_bump_thres_check(){return (_bump_count >= _bump_thres);}
     int8_t get_bump_count(){return _bump_count;}

@@ -57,8 +57,7 @@ public:
 
   //----------------------------------------------------------------------------
   // Get, set and reset
-  bool get_enabled_flag(){return _enabled;}
-  void set_enabled_flag(bool flag){_enabled = flag;}
+  bool enabled = true;
 
   bool get_detected(){return _collision_detected;}
 
@@ -104,7 +103,6 @@ private:
   BumperSensor* _bumpers = NULL;
 
   // Collision management variables
-  bool _enabled = true;
   bool _collision_detected = false; // Key flag controlling collision escape
   bool _collision_slow_down = false;
 

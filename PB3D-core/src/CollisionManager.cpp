@@ -46,7 +46,7 @@ void CollisionManager::update(){
 
     // If a new task is generated turn back on collision detecttion
     if(_task_manager->get_new_task_flag()){
-        set_enabled_flag(true);
+        enabled = true;
     }
 
     // COLLISION DETECTION & DECISION
@@ -75,7 +75,7 @@ void CollisionManager::update(){
 
     // DISABLED: If collision detection is turned off set flags to false and
     // return. Doing this last allows ranges to update but resets flags
-    if(!_enabled){reset_flags();}
+    if(!enabled){reset_flags();}
 
     //uint32_t endTime = micros();
     //Serial.println(endTime-startTime);
