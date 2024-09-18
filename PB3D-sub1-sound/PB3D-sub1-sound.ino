@@ -44,18 +44,6 @@
   };
 #endif
 
-//------------------------------------------------------------------------------
-// PINS
-enum EXiaoPins{
-    DOUT_PURR = 0,
-    DOUT_LSR_L = 1,
-    DOUT_LSR_R = 2,
-    DOUT_LSR_B = 3,
-    DOUT_LSR_U = 6,
-    DOUT_LSR_D = 7,
-};
-
-byte rec_byte = B00000000;
 
 //---------------------------------------------------------------------------
 // SOUND LOC/EAR VARS
@@ -72,6 +60,8 @@ EEarMode ear_mode = EAR_MODE_ENVSAMP;
 // 2: left
 // 3: right
 byte ear_state = 0; // byte to send
+
+byte rec_byte = B00000000;
 
 uint16_t sample_interval = 10;
 uint32_t sample_last_time = 0;
@@ -124,69 +114,12 @@ void setup(){
 
   Serial.begin(115200);
 
-  pinMode(DOUT_PURR,OUTPUT);
-  pinMode(DOUT_LSR_L,OUTPUT);
-  pinMode(DOUT_LSR_R,OUTPUT);
-  pinMode(DOUT_LSR_B,OUTPUT);
-  pinMode(DOUT_LSR_U,OUTPUT);
-  pinMode(DOUT_LSR_D,OUTPUT);
-  // Set all pins low
-  digitalWrite(DOUT_PURR,LOW);
-  digitalWrite(DOUT_LSR_L,LOW);
-  digitalWrite(DOUT_LSR_R,LOW);
-  digitalWrite(DOUT_LSR_B,LOW);
-  digitalWrite(DOUT_LSR_U,LOW);
-  digitalWrite(DOUT_LSR_D,LOW);
-
   // Set the analog read resolution for SAMD51
   analogReadResolution(12);
 }
 
 
 void loop(){
-  // Vibration Motor - Purring
-  if((rec_byte & B00000001) == B00000001){
-    digitalWrite(DOUT_PURR,HIGH);
-  }
-  else{
-    digitalWrite(DOUT_PURR,LOW);
-  }
-  // Left Laser Sensor
-  if((rec_byte & B00000010) == B00000010){
-    digitalWrite(DOUT_LSR_L,HIGH);
-  }
-  else{
-    digitalWrite(DOUT_LSR_L,LOW);
-  }
-  // Right Laser Sensor
-  if((rec_byte & B00000100) == B00000100){
-    digitalWrite(DOUT_LSR_R,HIGH);
-  }
-  else{
-    digitalWrite(DOUT_LSR_R,LOW);
-  }
-  // Bottom Laser Sensor
-  if((rec_byte & B00001000) == B00001000){
-    digitalWrite(DOUT_LSR_B,HIGH);
-  }
-  else{
-    digitalWrite(DOUT_LSR_B,LOW);
-  }
-  // Up Laser Sensor
-  if((rec_byte & B00010000) == B00010000){
-    digitalWrite(DOUT_LSR_U,HIGH);
-  }
-  else{
-    digitalWrite(DOUT_LSR_U,LOW);
-  }
-  // Down Laser Sensor
-  if((rec_byte & B00100000) == B00100000){
-    digitalWrite(DOUT_LSR_D,HIGH);
-  }
-  else{
-    digitalWrite(DOUT_LSR_D,LOW);
-  }
-
   //----------------------------------------------------------------------------
   // SOUND LOCATION
 

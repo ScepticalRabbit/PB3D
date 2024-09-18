@@ -41,9 +41,11 @@ struct SLastCollision{
 // COLLISION MANAGER: class to handle object avoidance behaviour
 class CollisionManager{
 public:
-  //----------------------------------------------------------------------------
-  // CONSTRUCTOR: pass in pointers to main objects and other sensors
-  CollisionManager(MoodManager* mood, TaskManager* task, MoveManager* move);
+  CollisionManager(MoodManager* mood,
+                   TaskManager* task,
+                   MoveManager* move,
+                   LaserManager* lasers,
+                   BumperSensor* bumpers);
 
   //----------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -55,8 +57,7 @@ public:
 
   //----------------------------------------------------------------------------
   // Get, set and reset
-  bool get_enabled_flag(){return _enabled;}
-  void set_enabled_flag(bool flag){_enabled = flag;}
+  bool enabled = true;
 
   bool get_detected(){return _collision_detected;}
 
@@ -67,10 +68,10 @@ public:
   bool get_beepbeep_flag(){return _collision_beepbeep_flag;}
   void set_beepbeep_flag(bool flag){_collision_beepbeep_flag = flag;}
 
-  bool get_bumper_flag(){return _bumpers.get_bump_flag();}
+  bool get_bumper_flag(){return _bumpers->get_bump_flag();}
 
   int16_t get_laser_range(ELaserIndex _ind){
-    return _laser_manager.get_range(_ind);
+    return _laser_manager->get_range(_ind);
   }
   SLastCollision* get_last_collision(){return &_last_col;}
 
@@ -98,9 +99,10 @@ private:
   MoodManager* _mood_manager = NULL;
   TaskManager* _task_manager = NULL;
   MoveManager* _move_manager = NULL;
+  LaserManager* _laser_manager = NULL;
+  BumperSensor* _bumpers = NULL;
 
   // Collision management variables
-  bool _enabled = true;
   bool _collision_detected = false; // Key flag controlling collision escape
   bool _collision_slow_down = false;
 
@@ -109,8 +111,6 @@ private:
   uint16_t _collision_count = 0;
 
   CollisionEscaper _escaper = CollisionEscaper();
-  LaserManager _laser_manager = LaserManager();
-  BumperSensor _bumpers = BumperSensor();
 
   // Check flags for all collision sensors
   uint8_t _check_lasers[LASER_COUNT];
@@ -121,9 +121,6 @@ private:
   // Time to slow down if collision sensor tripped
   uint16_t _slow_down_int = 500;
   Timer _slow_down_timer = Timer();
-
-  int16_t _bumper_update_time = 101;
-  Timer _bumper_timer = Timer();
 
   SLastCollision _last_col;
 };

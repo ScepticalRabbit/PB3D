@@ -14,42 +14,32 @@
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void LaserManager::begin(){
+    if(!enabled){return;}
 
     _laser_timer.start(0);
 
-    if (!_gpio_expander.begin(ADDR_GPIO, &Wire)) {
-        Serial.println("LSRMANAGER: Could not init PCF8574");
-        while (1);
-    }
-    else {
-        Serial.println("LSRMANAGER: init PCF8574 successful!");
-    }
-    for (uint8_t pp=0; pp<8; pp++) {
-        _gpio_expander.pinMode(pp, OUTPUT);
-    }
-
     // Reset all laser sensors - set all low
-    for (uint8_t pp=0; pp<8; pp++) {
-        _gpio_expander.digitalWrite(pp, LOW);
+    for (uint8_t pp=0; pp<LASER_COUNT; pp++) {
+        _multi_expander->digital_write(pp, LOW);
     }
     delay(_reset_delay);
 
     // Turn on all sensors - set all high
-    for (uint8_t pp=0; pp<8; pp++) {
-        _gpio_expander.digitalWrite(pp, HIGH);
+    for (uint8_t pp=0; pp<LASER_COUNT; pp++) {
+        _multi_expander->digital_write(pp, HIGH);
     }
     delay(_reset_delay);
 
     // Reset all laser sensors - set all low
-    for (uint8_t pp=0; pp<8; pp++) {
-        _gpio_expander.digitalWrite(pp, LOW);
+    for (uint8_t pp=0; pp<LASER_COUNT; pp++) {
+        _multi_expander->digital_write(pp, LOW);
     }
     delay(_reset_delay);
 
     // Activate ALL lasers one by one
-    for (uint8_t rr=0; rr<_num_lasers; rr++) {
+    for (uint8_t rr=0; rr<LASER_COUNT; rr++) {
         if (rr < 8){
-            _gpio_expander.digitalWrite(rr, HIGH);
+            _multi_expander->digital_write(rr, HIGH);
         }
 
         _laser_ptr_array[rr]->begin();
@@ -59,6 +49,7 @@ void LaserManager::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void LaserManager::update(){
+    if(!enabled){return;}
 
     bool timer_latch = false;
     if(_laser_timer.finished()){

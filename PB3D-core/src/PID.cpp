@@ -32,7 +32,7 @@ PID::PID(bool inCmdOn, double kp, double ki, double kd, uint16_t sampTime){
 //---------------------------------------------------------------------------
 // BEGIN: called once during SETUP
 void PID::begin(){
-
+    _pid_timer.start(0);
 }
 
 //---------------------------------------------------------------------------
@@ -52,16 +52,16 @@ void PID::update(double input){
 }
 
 // This version of update adds the PID output to the command value, for velocity control
-void PID::update(double inCommand, double input){
+void PID::update(double command, double input){
     // If the PID is turned off do nothing
     if(!_auto_on){return;}
 
     // Update the PID output on a fixed interval based on our timer
     if(_pid_timer.finished()){
 
-        double outPID = _compute_PID(input);
-        outPID = inCommand + outPID;
-        _output = constrain(outPID,_out_min,_out_max);
+        double out_PID = _compute_PID(input);
+        out_PID = command + out_PID;
+        _output = constrain(out_PID,_out_min,_out_max);
 
         // Start the timer again
         _pid_timer.start(_sample_time_ms);

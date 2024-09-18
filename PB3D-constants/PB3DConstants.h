@@ -42,38 +42,27 @@ enum ETaskCode{
 
 //------------------------------------------------------------------------------
 // Move
-
-// MOVEMENT CONTROL
-enum EMoveControl{
-    MOVE_CONTROL_POWER = 0,
-    MOVE_CONTROL_SPEED = 1
-};
-
-enum EMoveEscapeCode{
-    MOVE_E_RANDDIR = -1,
-    MOVE_E_NOREV = -2,
-};
-
-// BASIC movement codes
 enum EMoveBasic{
-    MOVE_B_STOP = -0,
+    MOVE_B_STOP = -2,
     MOVE_B_FORCEUPD = -1,
     MOVE_B_FORWARD = 0,
     MOVE_B_BACK = 1,
-    MOVE_B_LEFT = 3,
-    MOVE_B_RIGHT = 4,
-    MOVE_B_FORLEFT = 5,
-    MOVE_B_FORRIGHT = 6,
-    MOVE_B_BACKLEFT = 7,
-    MOVE_B_BACKRIGHT = 8,
-    MOVE_B_TODIST_CPOS = 9,
-    MOVE_B_TODIST_CSpeed = 10,
-    MOVE_B_TOANG_CPOS = 11,
-    MOVE_B_TOANG_CSpeed = 12,
-    MOVE_B_COUNT = 13,
+    MOVE_B_LEFT = 2,
+    MOVE_B_RIGHT = 3,
+    MOVE_B_FORLEFT = 4,
+    MOVE_B_FORRIGHT = 5,
+    MOVE_B_BACKLEFT = 6,
+    MOVE_B_BACKRIGHT = 7,
+    MOVE_B_TODIST_CPOS = 8,
+    MOVE_B_TODIST_CSpeed = 9,
+    MOVE_B_TOANG_CPOS = 10,
+    MOVE_B_TOANG_CSpeed = 11,
+    MOVE_B_COUNT = 12,
 };
 
 enum EMoveCompound{
+    MOVE_C_WIGGLE = -3,
+    MOVE_C_FORWARDBACK = -2,
     MOVE_C_ESCAPE = -1,
     MOVE_C_STRAIGHT = 0,
     MOVE_C_ZIGZAG = 1,
@@ -81,6 +70,51 @@ enum EMoveCompound{
     MOVE_C_SPIRAL = 3,
     MOVE_C_LOOK = 4,
     MOVE_C_COUNT = 5,
+};
+
+enum EMoveTurn{
+    MOVE_TURN_LEFT = 0,
+    MOVE_TURN_RIGHT = 1,
+    MOVE_TURN_COUNT = 2,
+};
+
+enum EMoveZigZag{
+    ZIGZAG_STRAIGHT = 0,
+    ZIGZAG_TURN,
+};
+
+enum EMoveControlMode{
+    MOVE_MODE_POWER = 0,
+    MOVE_MODE_SPEED = 1
+};
+
+enum EMoveControlState{
+    MOVE_CONTROL_START = 0,
+    MOVE_CONTROL_INCOMPLETE,
+    MOVE_CONTROL_LEFT_COMPLETE,
+    MOVE_CONTROL_RIGHT_COMPLETE,
+    MOVE_CONTROL_COMPLETE,
+    MOVE_CONTROL_TIMEOUT,
+};
+
+enum EMoveEscapeCode{
+    MOVE_E_RANDDIR = -1,
+    MOVE_E_NOREV = -2,
+};
+
+enum EMoveLookState{
+    MOVE_LOOK_START = 0,
+    MOVE_LOOK_PAUSE,
+    MOVE_LOOK_MOVING,
+    MOVE_LOOK_COMPLETE,
+};
+
+
+//------------------------------------------------------------------------------
+// Motors
+enum EMotorNums{
+    MOTOR_LEFT = 2,
+    MOTOR_RIGHT = 1,
 };
 
 //------------------------------------------------------------------------------
@@ -136,7 +170,7 @@ enum ELEDs{
 enum EBumpCode{
     BUMP_LEFT = 0,
     BUMP_RIGHT,
-    BUMP_REAR,
+    BUMP_BACK,
     BUMP_COUNT
 };
 

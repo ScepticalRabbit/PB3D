@@ -13,6 +13,9 @@
 #include <Wire.h> // I2C
 #include <Seeed_CY8C401XX.h> // Capcitive Touch Sensor
 
+#include <PB3DConstants.h>
+#include <PB3DPins.h>
+
 #include "MoodManager.h"
 #include "CollisionManager.h"
 #include "TaskManager.h"
@@ -20,13 +23,14 @@
 #include "PB3DTimer.h"
 #include "Speaker.h"
 #include "PatSensor.h"
+#include "MultiIOExpander.h"
 
 
 class TaskPickedUp{
 public:
   TaskPickedUp(CollisionManager* collision, MoodManager* mood,
                TaskManager* task, MoveManager* move, Speaker* speaker,
-               PatSensor* pat_sens);
+               PatSensor* pat_sens, MultiIOExpander* multi_expander);
 
   //---------------------------------------------------------------------------
   // BEGIN: called once during SETUP
@@ -41,9 +45,8 @@ public:
   void pickedUp();
 
   //---------------------------------------------------------------------------
-  // Get, set and reset
-  bool get_enabled_flag(){return _enabled;}
-  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
+  // Enable/Disable
+  bool enabled = true;
 
 private:
   // MAIN OBJECT POINTERS
@@ -53,25 +56,23 @@ private:
   MoveManager* _move_manager = NULL;
   Speaker* _speaker = NULL;
   PatSensor* _pat_sensor = NULL;
+  MultiIOExpander* _multi_expander = NULL;
 
   // TASK - PICKED UP
-  bool _enabled = true;
   bool _picked_up = false;
   bool _start_picked_up = false;
   bool _pat_flag = false;
   bool _pat_complete = false;
 
   bool _exit_flag = false;
-  bool _exit_timer_on = false;
+  bool _exit_timer_on = false;  // Variables for purring
+  byte _send_byte = B00001110;
   const uint16_t _exit_time = 2000;
   Timer _exit_timer = Timer();
 
   // Call timer and update time
   uint16_t _call_update_time = 2000;
   Timer _call_timer = Timer();
-
-  // Variables for purring
-  byte _send_byte = B00001110;
 
   bool _purr_on = false;
   uint16_t _purr_on_time = 4000;

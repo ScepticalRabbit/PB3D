@@ -147,10 +147,14 @@ private:
         in_state->state.move_basic = _move_manager->get_basic_move();
         in_state->state.move_compound = _move_manager->get_compound_move();
         in_state->state.set_forward_speed = _move_manager->get_forward_speed();
-        in_state->state.wheel_speed_left = _move_manager->get_encoder_speed_left();
-        in_state->state.wheel_speed_right = _move_manager->get_encoder_speed_left();
-        in_state->state.wheel_encoder_count_left = _move_manager->get_encoder_count_left();
-        in_state->state.wheel_encoder_count_right = _move_manager->get_encoder_count_right();
+        in_state->state.wheel_speed_left =
+            _move_manager->get_encoder_left()->get_smooth_speed_mmps();
+        in_state->state.wheel_speed_right =
+            _move_manager->get_encoder_right()->get_smooth_speed_mmps();
+        in_state->state.wheel_encoder_count_left =
+            _move_manager->get_encoder_left()->get_count();
+        in_state->state.wheel_encoder_count_right =
+            _move_manager->get_encoder_right()->get_count();
 
     #endif
   }

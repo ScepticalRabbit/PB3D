@@ -50,8 +50,8 @@ void TaskInteract::interact(){
     if(_interact_start){
         _interact_start = false;
 
-        _move_manager-> stop();
-        _move_manager->reset_submove_timer();
+        _move_manager->stop();
+        // RESET MOVE?
 
         _pat_sensor->reset();
         _pat_sensor->set_buttons_enabled(false);

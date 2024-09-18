@@ -14,12 +14,17 @@
 
 #include <PB3DConstants.h>
 #include <PB3DI2CAddresses.h>
-#include "PB3DTimer.h"
+#include <PB3DPins.h>
+#include <PB3DTimer.h>
+
+#include "MultiIOExpander.h"
 
 
 class BumperSensor{
 public:
-    BumperSensor(){}
+    BumperSensor(MultiIOExpander* multi_expander){
+        _multi_expander = multi_expander;
+    };
 
     //--------------------------------------------------------------------------
     // BEGIN: called once during SETUP
@@ -31,9 +36,6 @@ public:
 
     //---------------------------------------------------------------------------
     // Get, set and reset
-    bool get_enabled_flag(){return _enabled;}
-    void set_enabled_flag(bool inFlag){_enabled = inFlag;}
-
     bool get_bump_flag(){return _bumper_any_flag;}
     bool get_bump_thres_check(){return (_bump_count >= _bump_thres);}
     int8_t get_bump_count(){return _bump_count;}
@@ -43,20 +45,20 @@ public:
 
     void reset();
 
+    bool enabled = true;
+
 private:
-    bool _enabled = true;
-    bool _start_flag = true;
+    MultiIOExpander* _multi_expander = NULL;
 
-    const static uint8_t _num_bumpers = 2;
-    const uint8_t _bump_left = 0;
-    const uint8_t _bump_right = 1;
+    const static uint8_t _num_bumpers = 3;
 
-    byte _bumper_read_byte = B00000000;
     bool _bumper_any_flag = false;
-    bool _bumper_flags[_num_bumpers] = {false,false};
-    const byte _bumper_bytes[_num_bumpers] = {B00000001,B00000010};
+    bool _bumper_flags[_num_bumpers] = {false,false,false};
 
     int8_t _bump_count = 0;
     const int8_t _bump_thres = 13;
+
+    const int16_t _update_time = 51;
+    Timer _timer = Timer();
 };
 #endif

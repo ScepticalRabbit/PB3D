@@ -13,20 +13,6 @@
 #include "RFDataSenderTX.h"
 
 //----------------------------------------------------------------------------
-// BUMPER VARS
-// Pins for collision sensors
-enum EBumpPin{
-    BUMP_DIN_LEFT = 0,
-    BUMP_DIN_RIGHT = 1,
-};
-
-byte collision_flags = B00000000;
-
-// Bumper Timer
-uint16_t bumper_check_time = 100; // ms
-Timer bumper_timer = Timer();
-
-//----------------------------------------------------------------------------
 // RF TX VARS
 // This class owns the data packet
 bool new_packet = false;
@@ -46,44 +32,14 @@ void setup(){
   rf_sender.begin();
   //delay(1000);
 
-  pinMode(BUMP_DIN_RIGHT, INPUT_PULLUP);
-  pinMode(BUMP_DIN_LEFT, INPUT_PULLUP);
-
-  bumper_timer.start(0);
   print_timer.start(0);
 
   Wire.begin(ADDR_FOLLOW_XIAO_2);
-  Wire.onRequest(request_event);
   Wire.onReceive(receive_event);
 }
 
 //------------------------------------------------------------------------------
 void loop(){
-  //----------------------------------------------------------------------------
-  // BUMPERS - Send bumper flags when requested
-  if(bumper_timer.finished()){
-    bumper_timer.start(bumper_check_time);
-    byte temp_byte = B00000000;
-
-    int8_t switch_bump_left = digitalRead(BUMP_DIN_LEFT);
-    int8_t switch_bump_right = digitalRead(BUMP_DIN_RIGHT);
-
-    // Note switches close, allow current to flow, voltage 0
-    if(switch_bump_left == 0){
-      temp_byte = temp_byte | B00000001;
-    }
-    if(switch_bump_right == 0){
-      temp_byte = temp_byte | B00000010;
-    }
-    collision_flags = temp_byte;
-
-    // Print flags to serial for debugging
-    //Serial.print(F("COL FLAGS:"));
-    //Serial.println(collision_flags,BIN);
-  }
-
-  //---------------------------------------------------------------------------
-  // RADIO - Receive data structure from main board by I2C
   rf_sender.update();
 
   if(print_data_on){
@@ -98,10 +54,6 @@ void loop(){
 
 //----------------------------------------------------------------------------
 // I2C HANDLER FUNCTIONS
-void request_event(){
-  Wire.write(collision_flags);
-}
-
 void receive_event(int bytes_rec){
   int16_t ii = 0;
   while(0<Wire.available()){

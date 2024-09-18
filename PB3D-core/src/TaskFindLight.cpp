@@ -145,7 +145,8 @@ void TaskFindLight::_find_lux(EFindLight seekLightFlag){
     if(_grad_move_flag){
         _move_manager->turn_to_angle_ctrl_pos(180.0);
 
-        if(_move_manager->get_pos_PID_attained_set_point() || _grad_move_timeout.finished()){
+        if((_move_manager->get_pos_controller_state() ==
+            MOVE_CONTROL_COMPLETE) || _grad_move_timeout.finished()){
             _grad_move_flag = false;
         }
     }

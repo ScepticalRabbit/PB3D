@@ -10,7 +10,6 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-#include <Adafruit_MotorShield.h>
 #include <Adafruit_NeoPixel_ZeroDMA.h>
 
 #include <PB3DConstants.h>
@@ -31,6 +30,7 @@
 #include "src/TaskManager.h"
 #include "src/I2CDataSender.h"
 #include "src/IMUSensor.h"
+#include "src/MultiIOExpander.h"
 #include "src/Navigation.h"
 #include "src/TaskDance.h"
 #include "src/TaskRest.h"
@@ -45,48 +45,45 @@
 
 //------------------------------------------------------------------------------
 // DEBUG VARIABLES
-bool _debug_collisionOff = false;
-bool _debug_forceMood = true;
-EMoodCode _debug_moodCode = MOOD_NEUTRAL;
-bool _debug_forceTask = true;
-ETaskCode _debug_taskCode = TASK_EXPLORE;
-bool _debug_forceMove = false;
-int8_t _debug_moveType = MOVE_C_CIRCLE;
+bool debug_collision_off = false;
+bool debug_force_mood = false;
+EMoodCode debug_mood_code = MOOD_NEUTRAL;
+bool debug_force_task = false;
+ETaskCode debug_taskCode = TASK_EXPLORE;
+bool debug_force_move = false;
+EMoveCompound debug_move_type = MOVE_C_CIRCLE;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // TEST VARIABLES
-bool _test_switch = true;
-uint16_t _test_time= 2000;
-Timer _test_timer = Timer();
+bool test_switch = true;
+uint16_t test_time= 2000;
+Timer test_timer = Timer();
 
-bool _test_retest = true;
+bool test_retest = true;
 
-float _test_value = 360.0; // Can also set to float
-//uint8_t _test_value = 80;
+float test_value = 360.0; // Can also set to float
+//uint8_t test_value = 80;
 
-uint16_t _test_reportTime = 200;
-Timer _test_reportTimer = Timer();
+uint16_t test_report_time = 200;
+Timer test_report_timer = Timer();
 
-bool _test_pauseSwitch = true;
-uint8_t _test_count = 0;
-uint8_t _test_countLim = 4;
-uint32_t _test_pauseTime = 2000;
-Timer _test_pauseTimer = Timer();
+bool _test_pause_switch = true;
+uint8_t test_count = 0;
+uint8_t test_count_limit = 4;
+uint32_t test_pause_time = 2000;
+Timer test_pause_timer = Timer();
 
-bool _test_firstLoop = true;
+bool test_first_loop = true;
 
-uint32_t _test_timeStamp = 0;
+uint32_t test_time_stamp = 0;
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //------------------------------------------------------------------------------
 // EXTERNAL CLASSES
 
-// MOOD LEDs
+// MOOD / TASK LEDs - required by mood and task manager
 Adafruit_NeoPixel_ZeroDMA leds = Adafruit_NeoPixel_ZeroDMA(
-  NUM_PIX, MOOD_LED_PIN, NEO_GRB + NEO_KHZ800);
-
-// MOTORS - Create the motor shield object with the default I2C address
-Adafruit_MotorShield motor_shield = Adafruit_MotorShield();
+            NUM_PIX, MOOD_TASK_LED_PIN, NEO_GRB + NEO_KHZ800);
 
 //------------------------------------------------------------------------------
 // INTERNAL CLASSES
@@ -95,22 +92,30 @@ Adafruit_MotorShield motor_shield = Adafruit_MotorShield();
 Encoder encoder_left = Encoder(ENCODER_PINA_LEFT,ENCODER_PINB_LEFT);
 Encoder encoder_right = Encoder(ENCODER_PINA_RIGHT,ENCODER_PINB_RIGHT);
 
-// BASIC CLASSES
-MoveManager move_manager = MoveManager(&motor_shield,
-                                       &encoder_left,
+// Core managers for decision engine: mood determines task probability
+MoveManager move_manager = MoveManager(&encoder_left,
                                        &encoder_right);
 MoodManager mood_manager = MoodManager(&leds);
 TaskManager task_manager = TaskManager(&leds);
-CollisionManager collision_manager = CollisionManager(&mood_manager,
-                                                      &task_manager,
-                                                      &move_manager);
 
-// Sensors, Actuators and Communications
+// Sensors and Actuators
+MultiIOExpander multi_expander = MultiIOExpander(GPIO_PIN_MODES);
+LaserManager laser_manager = LaserManager(&multi_expander);
+BumperSensor bumpers = BumperSensor(&multi_expander);
 Speaker speaker = Speaker();
 PatSensor pat_sensor = PatSensor();
 Tail tail = Tail();
 IMUSensor IMU = IMUSensor();
 Navigation navigator = Navigation(&encoder_left,&encoder_right,&IMU);
+
+// Collision Detection & Escape
+CollisionManager collision_manager = CollisionManager(&mood_manager,
+                                                      &task_manager,
+                                                      &move_manager,
+                                                      &laser_manager,
+                                                      &bumpers);
+
+// Communications
 I2CDataSender sender = I2CDataSender(&collision_manager,
                                      &mood_manager,
                                      &task_manager,
@@ -156,7 +161,8 @@ TaskPickedUp task_picked_up = TaskPickedUp(&collision_manager,
                                             &task_manager,
                                             &move_manager,
                                             &speaker,
-                                            &pat_sensor);
+                                            &pat_sensor,
+                                            &multi_expander);
 TaskPounce task_pounce = TaskPounce(&collision_manager,
                                     &mood_manager,
                                     &task_manager,
@@ -189,6 +195,9 @@ void setup() {
 
   // NOTE: I2C multiplexer and light sensors MUST be initialised first!
   task_find_light.begin();
+  multi_expander.begin();
+  laser_manager.begin();
+  bumpers.begin();
 
   mood_manager.begin();
   task_manager.begin();
@@ -215,30 +224,30 @@ void setup() {
   task_manager.set_dance_duration(task_dance.get_duration());
   task_manager.set_tantrum_duration(task_tantrum.get_duration());
 
-  _test_timer.start(0);
-  _test_reportTimer.start(0);
-  _test_pauseTimer.start(_test_pauseTime);
+  test_timer.start(0);
+  test_report_timer.start(0);
+  test_pause_timer.start(test_pause_time);
 
   // Encoders - Attach Interrupt Pins - CHANGE,RISING,FALLING
   attachInterrupt(digitalPinToInterrupt(ENCODER_PINA_LEFT),
-                  updateEncLA,CHANGE);
+                  update_encoder_left_pina,CHANGE);
   attachInterrupt(digitalPinToInterrupt(ENCODER_PINA_RIGHT),
-                  updateEncRA,CHANGE);
+                  update_encoder_right_pina,CHANGE);
   attachInterrupt(digitalPinToInterrupt(ENCODER_PINB_LEFT),
-                  updateEncLB,CHANGE);
+                  update_encoder_left_pinb,CHANGE);
   attachInterrupt(digitalPinToInterrupt(ENCODER_PINB_RIGHT),
-                  updateEncRB,CHANGE);
+                  updateencoder_right_pinb,CHANGE);
 
   //-------------------------------------------------------------------------
   // DEBUG MODE:
-  if(_debug_forceMood){
-    mood_manager.set_mood(_debug_moodCode);
+  if(debug_force_mood){
+    mood_manager.set_mood(debug_mood_code);
   }
-  if(_debug_forceTask){
-    task_manager.set_task(_debug_taskCode);
+  if(debug_force_task){
+    task_manager.set_task(debug_taskCode);
   }
-  if(_debug_forceMove){
-    move_manager.update_move(_debug_moveType);
+  if(debug_force_move){
+    move_manager.update(debug_move_type);
   }
   task_manager.assign_probability(mood_manager.get_mood());
 
@@ -253,7 +262,7 @@ void setup() {
 
 //==============================================================================
 void loop(){
-  //if(!_test_firstLoop){while(true){};}
+  //if(!test_first_loop){while(true){};}
   //uint32_t start_loop = millis();
   uint32_t start_loop = micros();
 
@@ -265,10 +274,10 @@ void loop(){
   if(mood_manager.get_new_mood_flag()){
     mood_manager.set_new_mood_flag(false); // Reset the flag
     task_manager.assign_probability(mood_manager.get_mood());
-    move_manager.set_power_by_diff(mood_manager.get_power_diff());
-    move_manager.set_speed_by_mood_fact(mood_manager.get_speed_fact());
+
+    move_manager.set_speed_mood_multiplier(mood_manager.get_speed_fact());
   }
-  if(_debug_forceMood){mood_manager.set_mood(_debug_moodCode);}
+  if(debug_force_mood){mood_manager.set_mood(debug_mood_code);}
 
   //----------------------------------------------------------------------------
   // GENERATE TASK - Based on internal timer, see Task class
@@ -278,25 +287,25 @@ void loop(){
   if(task_manager.get_new_task_flag()){mood_manager.reset_mood();}
 
   // DEBUG MODE: force task to a particular value
-  if(_debug_forceTask){
-    if(task_manager.get_task() != _debug_taskCode){
-      task_manager.set_task(_debug_taskCode);
+  if(debug_force_task){
+    if(task_manager.get_task() != debug_taskCode){
+      task_manager.set_task(debug_taskCode);
     }
   }
-  if(_debug_collisionOff){collision_manager.set_enabled_flag(false);}
+  if(debug_collision_off){collision_manager.enabled = false;}
 
   //----------------------------------------------------------------------------
   // UPDATE OBJECTS - Each object has own internal timer
-  uint32_t start_update = micros();
+  laser_manager.update();
+  bumpers.update();
+
+  move_manager.update(); // TODO: check this doesn't override tasks
   collision_manager.update();
-  uint32_t end_update = micros();
 
   speaker.update();
   pat_sensor.update();
   tail.update();
   IMU.update();
-  encoder_left.update_speed();
-  encoder_right.update_speed();
   navigator.update();
   sender.update();
 
@@ -314,8 +323,8 @@ void loop(){
 
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   // TEST CODE - SENSOR REPORTS
-  if(_test_reportTimer.finished()){
-    _test_reportTimer.start(_test_reportTime);
+  if(test_report_timer.finished()){
+    test_report_timer.start(test_report_time);
     //DEBUG_PrintColCheck();
     //DEBUG_PrintAllRanges();
     //DEBUG_PrintLightSens();
@@ -337,7 +346,7 @@ void loop(){
   // handling of collisions while these modes are active - should be able to
   // make this smarter so certain things can re-enable collision avoidance
   if(task_manager.get_task() == TASK_TEST){
-    //DEBUG_SpeedTest(_test_value,MOVE_B_FORWARD);
+    //DEBUG_SpeedTest(test_value,MOVE_B_FORWARD);
   }
   else if(task_manager.get_task() == TASK_REST){
     task_rest.rest();
@@ -351,12 +360,12 @@ void loop(){
   else if(task_manager.get_task() == TASK_INTERACT){
     task_interact.interact();
   }
-  else if(collision_manager.get_escape_flag() && !_debug_collisionOff){
-    escapeCollision(); // SEE FUNCTION DEF BELOW MAIN
+  else if(collision_manager.get_escape_flag() && !debug_collision_off){
+    escape_collision(); // SEE FUNCTION DEF BELOW MAIN
   }
-  else if(collision_manager.get_detected() && !_debug_collisionOff){
+  else if(collision_manager.get_detected() && !debug_collision_off){
     //DEBUG_PrintColFlags();
-    detectedCollision(); // SEE FUNCTION DEF BELOW MAIN
+    detected_collision(); // SEE FUNCTION DEF BELOW MAIN
   }
   else if(task_manager.get_task() == TASK_DANCE){
     if(task_manager.get_dance_update_flag()){
@@ -392,11 +401,11 @@ void loop(){
     task_manager.task_LED_explore();
 
     // MOVEMENT: Type Update
-    if(_debug_forceMove){
-      move_manager.update_move(_debug_moveType);
+    if(debug_force_move){
+      move_manager.update(debug_move_type);
     }
     else{
-      move_manager.update_move();
+      move_manager.update();
     }
     // MOVEMENT: Call current movement function
     move_manager.go();
@@ -407,7 +416,7 @@ void loop(){
   // Wag tail if happy - regardless of task use of tail
   if(mood_manager.get_mood() == MOOD_HAPPY){
     tail.set_state(TAIL_WAG_INT);
-    // wagmovetime,wagoffset,_test_pauseTime,wagcount
+    // wagmovetime,wagoffset,test_pause_time,wagcount
     tail.set_wag_params(200,30,4000,6);
   }
 
@@ -423,30 +432,29 @@ void loop(){
   //Serial.print(endLoop-start_loop); Serial.print(",");
   //Serial.print(end_update-start_update); Serial.print(",");
   //Serial.println();
-  //_test_firstLoop = false;
+  //test_first_loop = false;
 
 } // END LOOP
 //==============================================================================
 
-
 //------------------------------------------------------------------------------
 // INTERRUPT FUNCTIONS
-void updateEncLA(){
+void update_encoder_left_pina(){
   encoder_left.update_not_equal();
 }
-void updateEncLB(){
+void update_encoder_left_pinb(){
   encoder_left.update_equal();
 }
-void updateEncRA(){
+void update_encoder_right_pina(){
   encoder_right.update_equal();
 }
-void updateEncRB(){
+void updateencoder_right_pinb(){
   encoder_right.update_not_equal();
 }
 
 //------------------------------------------------------------------------------
 // COLLISION HANDLING TASK TREE FUNCTIONS
-void escapeCollision(){
+void escape_collision(){
   task_manager.task_LED_collision();
   collision_manager.reset_flags();
 
@@ -458,13 +466,13 @@ void escapeCollision(){
   collision_manager.escape();
 }
 
-void detectedCollision(){
+void detected_collision(){
   // Turn on collision LEDs and set escape flags
   task_manager.task_LED_collision();
   collision_manager.set_escape_start();
 
   // If we are moving in a circle or a spiral then switch direction
-  move_manager.change_circ_dir();
+  move_manager.change_turn_dir();
 
   // Reset the PIDs and stop the motors
   move_manager.stop();
@@ -515,25 +523,25 @@ void detectedCollision(){
 #ifdef PB3D_DEBUG
 
 void DEBUG_SpeedTest(uint8_t inPower, uint8_t moveCode){
-  if(_test_pauseTimer.finished()){
-    if(_test_pauseSwitch){
-      _test_pauseSwitch = false;
-      _test_timer.start(_test_time);
-      _test_switch = true;
+  if(test_pause_timer.finished()){
+    if(_test_pause_switch){
+      _test_pause_switch = false;
+      test_timer.start(test_time);
+      test_switch = true;
     }
     DEBUG_PlotSpeedMMPS();
 
-    if(_test_timer.finished()){
-      if(_test_retest){
-        _test_timer.start(_test_time);
-        _test_switch = !_test_switch;
+    if(test_timer.finished()){
+      if(test_retest){
+        test_timer.start(test_time);
+        test_switch = !test_switch;
       }
       else{
-        _test_switch = false;
+        test_switch = false;
       }
     }
 
-    if(_test_switch){
+    if(test_switch){
       if(moveCode == MOVE_B_BACK){
         move_manager.back_power(inPower);
       }
@@ -557,25 +565,25 @@ void DEBUG_SpeedTest(uint8_t inPower, uint8_t moveCode){
 }
 
 void DEBUG_SpeedTest(float inSpeed, uint8_t moveCode){
-  if(_test_pauseTimer.finished()){
-    if(_test_pauseSwitch){
-      _test_pauseSwitch = false;
-      _test_timer.start(_test_time);
-      _test_switch = true;
+  if(test_pause_timer.finished()){
+    if(_test_pause_switch){
+      _test_pause_switch = false;
+      test_timer.start(test_time);
+      test_switch = true;
     }
     DEBUG_PlotSpeedMMPS();
 
-    if(_test_timer.finished()){
-      if(_test_retest){
-        _test_timer.start(_test_time);
-        _test_switch = !_test_switch;
+    if(test_timer.finished()){
+      if(test_retest){
+        test_timer.start(test_time);
+        test_switch = !test_switch;
       }
       else{
-        _test_switch = false;
+        test_switch = false;
       }
     }
 
-    if(_test_switch){
+    if(test_switch){
       if(moveCode == MOVE_B_BACK){
         move_manager.back(inSpeed);
       }
@@ -664,8 +672,8 @@ void DEBUG_PlotSpeedPID_R(){
 
 void DEBUG_PlotSpeedMMPS(){
   uint32_t thisTime = millis();
-  Serial.print(thisTime-_test_timeStamp);
-  _test_timeStamp = thisTime;
+  Serial.print(thisTime-test_time_stamp);
+  test_time_stamp = thisTime;
   Serial.print(",");
   Serial.print(encoder_left.get_smooth_speed_mmps());
   Serial.print(",");

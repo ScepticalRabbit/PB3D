@@ -7,7 +7,9 @@
         "vector": "cpp",
         "string_view": "cpp",
         "initializer_list": "cpp",
-        "pb3dpins": "c"
+        "pb3dpins": "c",
+        "limits": "cpp",
+        "type_traits": "cpp"
     },
 
     "files.trimTrailingWhitespace": true,

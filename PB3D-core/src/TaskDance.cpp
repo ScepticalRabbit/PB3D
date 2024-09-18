@@ -110,7 +110,7 @@ void TaskDance::_start_dance(){
     _dance_curr_bar = 0;
     _dance_move_ind = 0;
     _dance_curr_move = _dance_move_vec[_dance_move_ind];
-    _move_manager->reset_submove_timer();
+    // RESET MOVE?
 
     // Increase mood when dance starts
     _mood_manager->inc_mood_score();

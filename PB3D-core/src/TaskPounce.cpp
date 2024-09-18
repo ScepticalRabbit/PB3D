@@ -29,7 +29,7 @@ void TaskPounce::begin(){
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void TaskPounce::update(){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     if(_task_manager->get_new_task_flag()){
         _start_all = true;
@@ -39,7 +39,7 @@ void TaskPounce::update(){
 //---------------------------------------------------------------------------
 // Pounce! - called during the main during decision tree
 void TaskPounce::seek_and_pounce(){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     if(_start_all){
         Serial.println("START ALL.");
@@ -121,25 +121,24 @@ void TaskPounce::_seek_target(){
 if(_seek_start){
     _seek_start = false;
     _move_manager->reset_look();
-    _move_manager->reset_PIDs();
-    _collision_manager->set_enabled_flag(false);
+    _collision_manager->enabled = false;
 }
-_collision_manager->set_enabled_flag(false); // Disable collision detection
+_collision_manager->enabled = false; // Disable collision detection
 
 // TASK LEDS
 uint8_t seekCol = 1;
-if(_move_manager->get_look_curr_ang_ind() == 0){
+if(_move_manager->get_look_angle_index() == 0){
     //_task_manager->task_LED_CSV(_seek_colour,_seek_colour,255,_low_saturation,255,255);
     _task_manager->task_LED_CSV(_seek_colour,_seek_colour,255,_low_saturation,0,255);
 }
-else if(_move_manager->get_look_curr_ang_ind() == 1){
+else if(_move_manager->get_look_angle_index() == 1){
     _task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,_low_saturation,255,255);
 }
-else if(_move_manager->get_look_curr_ang_ind() == 2){
+else if(_move_manager->get_look_angle_index() == 2){
     //_task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,255,255,255);
     _task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,255,255,0);
 }
-else if(_move_manager->get_look_curr_ang_ind() == 3){
+else if(_move_manager->get_look_angle_index() == 3){
     _task_manager->task_LED_CSV(_seek_colour,_seek_colour,_low_saturation,_low_saturation,255,255);
 }
 else{
@@ -147,25 +146,21 @@ else{
 }
 
 // Move to different angles and take measurements.
-if(!_move_manager->get_look_finished()){
-    _move_manager->look_around();
-
+if(_move_manager->look_around() == MOVE_LOOK_PAUSE){
     if(_meas_index < _meas_num_vals){
-    // Get to the set point and start the measurement timer
+
     if(!_meas_complete){
-        if(_move_manager->get_pos_PID_attained_set_point()){
-        //Serial.print("SP ATTAINED for "),Serial.println(_meas_index);
-        _meas_complete = true;
-        _meas_timer.start(_meas_pre_pause_time);
+        if(_move_manager->get_pos_controller_state() ==
+            MOVE_CONTROL_COMPLETE){
+            _meas_complete = true;
+            _meas_timer.start(_meas_pre_pause_time);
         }
-        else if(_move_manager->look_is_paused()){
-        //Serial.print("SP TIMEOUT for "),Serial.println(_meas_index);
-        _meas_complete = true;
-        _meas_timer.start(_meas_pre_pause_time);
+        else if(_move_manager->get_look_state() == MOVE_LOOK_PAUSE){
+            _meas_complete = true;
+            _meas_timer.start(_meas_pre_pause_time);
         }
     }
 
-    // If measurement timer is finished take a measurement
     if(_meas_complete && _meas_timer.finished()){
         _meas_timer.start(_meas_interval);
         int16_t sample = _collision_manager->get_laser_range(LASER_CENTRE);
@@ -178,21 +173,21 @@ if(!_move_manager->get_look_finished()){
         _meas_count_for_avg++;
 
         if(_meas_count_for_avg >= _meas_num_vals){
-        _meas_array[_meas_index] = _meas_sum_for_avg/_meas_num_vals;
+            _meas_array[_meas_index] = _meas_sum_for_avg/_meas_num_vals;
 
-        Serial.print("Measurement Avg. "),Serial.print(_meas_index);
-        Serial.print(" = "), Serial.print(_meas_array[_meas_index]), Serial.print(" mm");
-        Serial.println();
+            Serial.print("Measurement Avg. "),Serial.print(_meas_index);
+            Serial.print(" = "), Serial.print(_meas_array[_meas_index]), Serial.print(" mm");
+            Serial.println();
 
-        _meas_complete = false;
-        _meas_index++;
+            _meas_complete = false;
+            _meas_index++;
 
-        _meas_sum_for_avg = 0;
-        _meas_count_for_avg = 0;
+            _meas_sum_for_avg = 0;
+            _meas_count_for_avg = 0;
 
-        // Measurement complete - force move to next pos
-        _move_manager->force_look_move();
-        }
+            // Measurement complete - force move to next pos
+            _move_manager->force_look_move();
+            }
     }
     }
 }
@@ -230,13 +225,13 @@ void TaskPounce::_lock_on(){
         _lock_on_range = float(_meas_array[_lock_valid_range_min_ind]);
         _lock_on_timer.start(_lock_spool_up_time);  // Start timer
 
-        _move_manager->reset_PIDs(); // Reset PIDs
-        _collision_manager->set_enabled_flag(false); // Disable collisition detection
+        //_move_manager->reset_PIDs(); // Reset PIDs
+        _collision_manager->enabled = false; // Disable collisition detection
 
         // DEBUG: Lock on start
         Serial.println("LOCK ON: Start");
     }
-    _collision_manager->set_enabled_flag(false); // Disable collision detection
+    _collision_manager->enabled = false; // Disable collision detection
 
     // Decide on a target
     // 1) If all ranges less than min range - REALIGN
@@ -249,17 +244,15 @@ void TaskPounce::_lock_on(){
         // Spool up - flash lights and wag tail - TODO
         _task_manager->task_LED_CSV(_lock_colour,_lock_colour,_low_saturation,_low_saturation,255,255);
 
-        // Turn to target
         _move_manager->turn_to_angle_ctrl_pos(_lock_on_ang);
 
-        // EXIT CONDITION: SET POINT REACHED
-        if(_move_manager->get_pos_PID_attained_set_point()){
-        _state = POUNCE_RUN;
+        if(_move_manager->get_pos_controller_state()
+           == MOVE_CONTROL_COMPLETE){
+            _state = POUNCE_RUN;
         }
 
-        // EXIT CONDITION: TIMEOUT
         if(_lock_on_timer.finished()){
-        _state = POUNCE_RUN;
+            _state = POUNCE_RUN;
         }
     }
 }
@@ -275,11 +268,13 @@ void TaskPounce::_run_to_target(){
         _run_timer.start(_run_timeout); // Start timer
 
         // Calculate encoder counts to get to target
-        int32_t runEncCounts = int32_t((_lock_on_range-float(_run_range_limit))/(_move_manager->get_encoder_mm_per_count()));
-        int32_t encAvgCounts = (_move_manager->get_encoder_count_left()+_move_manager->get_encoder_count_right())/2;
+        int32_t runEncCounts = int32_t((_lock_on_range-float(_run_range_limit))/
+                (_move_manager->get_encoder_left()->get_mm_per_count()));
+        int32_t encAvgCounts = (_move_manager->get_encoder_left()->get_count()+
+                                _move_manager->get_encoder_right()->get_count())/2;
         _run_end_encoder_count = encAvgCounts+runEncCounts;
 
-        _collision_manager->set_enabled_flag(true); // Re-enable collision detection
+        _collision_manager->enabled = true; // Re-enable collision detection
         // DEBUG: Run to start
         Serial.println("RUN: Start");
         Serial.print("RUN: Timeout = ");
@@ -294,20 +289,23 @@ void TaskPounce::_run_to_target(){
     // EXIT CONDITION: Found target
     if(_collision_manager->get_laser_range(LASER_CENTRE) <= _run_range_limit){
         _state = POUNCE_REALIGN;
-        Serial.println("RUN END: US Range");
+        Serial.println("RUN END: laser range");
     }
-    else if((_move_manager->get_encoder_count_left() >= _run_end_encoder_count) || (_move_manager->get_encoder_count_right() >= _run_end_encoder_count)){
+    else if((_move_manager->get_encoder_left()->get_count() >=
+                _run_end_encoder_count) ||
+            (_move_manager->get_encoder_right()->get_count() >=
+                _run_end_encoder_count)){
         _state = POUNCE_REALIGN;
-        Serial.println("RUN END: Enc Counts");
+        Serial.println("RUN END: encoder counts");
     }
     else{ // Go forward fast
-        _move_manager->forward(_run_speed);
+        _move_manager->forward();
     }
 
     // EXIT CONDITION: TIMEOUT
     if(_run_timer.finished()){
         _state = POUNCE_REALIGN;
-        Serial.println("RUN END: Timer");
+        Serial.println("RUN END: timeout");
     }
 }
 
@@ -324,13 +322,13 @@ void TaskPounce::_realign(){
         _realign_angle = float(random(_realign_ang_min,_realign_ang_max));
         _realign_timer.start(_realign_pre_pause_time);
 
-        _collision_manager->set_enabled_flag(false); // Disable collision detection
-        _move_manager->reset_PIDs();  // Reset move PIDs
+        _collision_manager->enabled = false; // Disable collision detection
+        //_move_manager->reset_PIDs();  // Reset move PIDs
 
         // DEBUG: Run to start
         Serial.println("REALIGN: Start, Pre-pause");
     }
-    _collision_manager->set_enabled_flag(false); // Disable collision detection
+    _collision_manager->enabled = false; // Disable collision detection
 
     // TASK LEDS
     _task_manager->task_LED_CSV(_realign_colour,_realign_colour,_low_saturation,_low_saturation,255,255);
@@ -351,10 +349,12 @@ void TaskPounce::_realign(){
         _move_manager->turn_to_angle_ctrl_pos(_realign_angle);
 
         // If angle is obtained or timeout go back to the start
-        if(_move_manager->get_pos_PID_attained_set_point() || _realign_timer.finished()){
-        _realign_timer.start(_realign_post_pause_time);
-        _realign_state++;
-        Serial.println("REALIGN: Post pause");
+        if((_move_manager->get_pos_controller_state() ==
+            MOVE_CONTROL_COMPLETE) ||
+           _realign_timer.finished()){
+            _realign_timer.start(_realign_post_pause_time);
+            _realign_state++;
+            Serial.println("REALIGN: Post pause");
         }
     }
     else if(_realign_state == 2){// Post-pause

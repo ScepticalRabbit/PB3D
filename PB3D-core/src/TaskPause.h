@@ -36,8 +36,7 @@ public:
 
   //---------------------------------------------------------------------------
   // Get, set and reset
-  bool get_enabled_flag(){return _enabled;}
-  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
+  bool enabled = true;
 
 private:
   // MAIN OBJECT POINTERS
@@ -48,7 +47,6 @@ private:
   Speaker* _speaker = NULL;
 
   // TASK - PAUSE
-  bool _enabled = true;
   Timer _pause_timer = Timer();
   uint16_t _pause_dur = 2000;
   const uint16_t _pause_dur_min = 2000;
