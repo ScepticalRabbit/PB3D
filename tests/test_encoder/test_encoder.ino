@@ -26,7 +26,7 @@ Encoder encoder_right = Encoder(encoder_pinA_right,encoder_pinB_right);
 void update_encoder_left_pina();
 void update_encoder_left_pinb();
 void update_encoder_right_pina();
-void updateencoder_right_pinb();
+void update_encoder_right_pinb();
 
 //---------------------------------------------------------------------------
 // SETUP
@@ -45,7 +45,7 @@ void setup(){
     attachInterrupt(digitalPinToInterrupt(encoder_pinB_left),
                 update_encoder_left_pinb,CHANGE);
     attachInterrupt(digitalPinToInterrupt(encoder_pinB_right),
-                updateencoder_right_pinb,CHANGE);
+                update_encoder_right_pinb,CHANGE);
 }
 
 //---------------------------------------------------------------------------
@@ -68,7 +68,7 @@ void update_encoder_right_pina(){
   encoder_right.update_equal();
   printEncCount(&encoder_right);
 }
-void updateencoder_right_pinb(){
+void update_encoder_right_pinb(){
   encoder_right.update_not_equal();
   printEncCount(&encoder_right);
 }

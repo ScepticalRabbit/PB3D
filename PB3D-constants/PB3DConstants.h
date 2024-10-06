@@ -146,9 +146,11 @@ enum EDangerCode{
     DANGER_COUNT
 };
 
-enum EEscapeCode{
-    ESCAPE_REV = 0,
-    ESCAPE_NOREV
+enum EEscapeState{
+    ESC_STATE_BEGIN = 0,
+    ESC_STATE_REV,
+    ESC_STATE_TURN,
+    ESC_STATE_COMPLETE,
 };
 
 enum ECollisionStrategy{

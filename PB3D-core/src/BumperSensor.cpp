@@ -22,11 +22,12 @@ void BumperSensor::update(){
     if(_timer.finished()){
         _timer.start(_update_time);
 
-        _bumper_flags[BUMP_LEFT] = _multi_expander->digital_read(
+        // NOTE: need not here for the way the bumpers are wired
+        _bumper_flags[BUMP_LEFT] = !_multi_expander->digital_read(
                                                     GPIO_BUMPER_LEFT);
-        _bumper_flags[BUMP_RIGHT] = _multi_expander->digital_read(
+        _bumper_flags[BUMP_RIGHT] = !_multi_expander->digital_read(
                                                     GPIO_BUMPER_RIGHT);
-        _bumper_flags[BUMP_BACK] = _multi_expander->digital_read(
+        _bumper_flags[BUMP_BACK] = !_multi_expander->digital_read(
                                                     GPIO_BUMPER_BACK);
 
         // Loop over bumper flags to see if any are tripped

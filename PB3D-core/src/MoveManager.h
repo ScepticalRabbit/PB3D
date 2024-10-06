@@ -57,6 +57,11 @@ public:
     float get_back_speed();
     float get_turn_speed();
 
+    // Mainly used for debugging PID
+    void set_forward_speed(float speed);
+    void set_back_speed(float speed);
+    void set_turn_speed(float speed);
+
     void set_speed_base_multiplier(float multiplier);
     void set_speed_mood_multiplier(float multiplier);
     void set_speed_danger_multiplier(EDangerCode danger_code);
@@ -126,6 +131,11 @@ public:
 
     // Turn on/off the movement
     bool enabled = true;
+
+    //==========================================================================
+    // Get sub objects
+    MoveController* get_move_controller(){return &_move_controller;}
+    MoveBasic* get_move_basic(){return &_move_basic;}
 
 private:
     void _update_basic_move(EMoveBasic move);

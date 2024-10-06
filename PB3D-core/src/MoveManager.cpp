@@ -97,6 +97,18 @@ float MoveManager::get_turn_speed(){
     return _move_basic.get_turn_speed();
 }
 
+void MoveManager::set_forward_speed(float speed){
+    return _move_basic.set_forward_speed(speed);
+}
+
+void MoveManager::set_back_speed(float speed){
+    return _move_basic.set_back_speed(speed);
+}
+
+void MoveManager::set_turn_speed(float speed){
+    return _move_basic.set_turn_speed(speed);
+}
+
 void MoveManager::set_speed_base_multiplier(float multiplier){
     _move_basic.set_speed_base_multiplier(multiplier);
 }

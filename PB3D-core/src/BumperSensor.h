@@ -58,7 +58,7 @@ private:
     int8_t _bump_count = 0;
     const int8_t _bump_thres = 13;
 
-    const int16_t _update_time = 51;
+    const int16_t _update_time = 41;
     Timer _timer = Timer();
 };
 #endif

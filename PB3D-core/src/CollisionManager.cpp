@@ -26,10 +26,10 @@ CollisionManager::CollisionManager(MoodManager* mood,
     _escaper.set_move_obj(move);
 
     for(uint8_t ii=0 ; ii < LASER_COUNT ; ii++){
-        _check_lasers[ii] = 0;
+        _check_lasers[ii] = DANGER_NONE;
     }
     for(uint8_t ii=0 ; ii < BUMP_COUNT ; ii++){
-        _check_bumpers[ii] = 0;
+        _check_bumpers[ii] = DANGER_NONE;
     }
 }
 
@@ -53,6 +53,7 @@ void CollisionManager::update(){
     // NOTE: this sets the collision flags that control escape behaviour!
     if(_check_timer.finished()){
         _check_timer.start(_check_interval);
+
         _update_check_vec(); // Sets collision detection flag
 
         if(_collision_slow_down && _slow_down_timer.finished()){
@@ -102,7 +103,33 @@ void CollisionManager::reset_flags(){
 //-----------------------------------------------------------------------------
 void CollisionManager::set_escape_start(){
     _update_check_vec();
-    _update_escape_decision();
+
+    _escaper.update_escape_decision(_check_bumpers,_check_lasers);
+
+    //--------------------------------------------------------------------------
+    // Update last collision struct
+    for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
+        _last_col.check_bumpers[ii] = _bumpers->get_collision_code(EBumpCode(ii));
+    }
+
+    for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
+        _last_col.check_lasers[ii] = _check_lasers[ii];
+        _last_col.laser_range_array[ii] = _laser_manager->get_range(
+                                                        ELaserIndex(ii));
+        _last_col.laser_status_array[ii] = _laser_manager->get_status(
+                                                        ELaserIndex(ii));
+    }
+
+    _last_col.escape_count = _escaper.get_escape_count();
+    //--------------------------------------------------------------------------
+
+    #if defined(COLL_DEBUG_DECISIONTREE)
+        Serial.println();
+        Serial.println(F("======================================="));
+        Serial.println(F("TODO"));
+        Serial.println(F("======================================="));
+        Serial.println();
+    #endif
 }
 
 //------------------------------------------------------------------------------
@@ -111,14 +138,13 @@ void CollisionManager::escape(){
 }
 
 //------------------------------------------------------------------------------
-bool CollisionManager::get_escape_flag(){
-    return _escaper.get_escape_flag();
+bool CollisionManager::get_escape_state(){
+    return _escaper.get_escape_state();
 }
 
 //------------------------------------------------------------------------------
-int8_t CollisionManager::get_escape_turn(){
-    _update_check_vec();
-    return _escaper.get_escape_turn(_check_lasers);
+EMoveBasic CollisionManager::get_escape_turn(){
+    return _escaper.get_escape_turn();
 }
 
 //------------------------------------------------------------------------------
@@ -145,36 +171,6 @@ void CollisionManager::_update_check_vec(){
             _collision_detected = true;
         }
     }
-}
-
-//------------------------------------------------------------------------------
-// ESCAPE DECISION TREE
-void CollisionManager::_update_escape_decision(){
-    // Forward to escaper
-    _escaper.update_escape_decision(_check_lasers);
-
-    for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
-        _last_col.check_bumpers[ii] = _bumpers->get_collision_code(EBumpCode(ii));
-    }
-
-    for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
-        _last_col.check_lasers[ii] = _check_lasers[ii];
-        _last_col.laser_range_array[ii] = _laser_manager->get_range(
-                                                        ELaserIndex(ii));
-        _last_col.laser_status_array[ii] = _laser_manager->get_status(
-                                                        ELaserIndex(ii));
-    }
-
-
-    _last_col.escape_count = _escaper.get_escape_count();
-
-    #if defined(COLL_DEBUG_DECISIONTREE)
-        Serial.println();
-        Serial.println(F("======================================="));
-        Serial.println(F("TODO"));
-        Serial.println(F("======================================="));
-        Serial.println();
-    #endif
 }
 
 

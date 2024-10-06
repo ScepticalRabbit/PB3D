@@ -84,14 +84,13 @@ public:
   // Command forwarding to escaper
   void set_escape_start();
   void escape();
-  bool get_escape_flag();
-  int8_t get_escape_turn();
+  bool get_escape_state();
+  EMoveBasic get_escape_turn();
 
 private:
   //----------------------------------------------------------------------------
   // Check all ranges and escape decision tree
   void _update_check_vec();
-  void _update_escape_decision(); // Escape decision tree
 
   //----------------------------------------------------------------------------
   // CLASS VARIABLES
@@ -119,7 +118,7 @@ private:
   Timer _check_timer = Timer();
 
   // Time to slow down if collision sensor tripped
-  uint16_t _slow_down_int = 500;
+  uint16_t _slow_down_int = 1000;
   Timer _slow_down_timer = Timer();
 
   SLastCollision _last_col;

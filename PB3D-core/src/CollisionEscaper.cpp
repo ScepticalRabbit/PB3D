@@ -16,120 +16,121 @@ void CollisionEscaper::set_move_obj(MoveManager* inMove){
 }
 
 
-void CollisionEscaper::update_escape_decision(uint8_t check_vec[]){
-    // _check_lasers[7] = {BL,BR,US,LL,LR,LU,LD}
-    // NOTE: first thing in the tree is dealt with first
+//==============================================================================
+//TODO: update this to work with bumpers and new lasers
+void CollisionEscaper::update_escape_decision(uint8_t check_bumpers[],
+                                              uint8_t check_lasers[]){
 
-    // 1) BMPL: reverse a full body length and turn +90 deg away
-    if(check_vec[0] == DANGER_CLOSE){
-        _escape_count = ESCAPE_REV;
-        _escape_dist = 1.0*_def_rev_dist;
-        _escape_angle = -1.0*_def_hard_turn;
+    // BUMPERS
+    if(check_bumpers[BUMP_LEFT] == DANGER_CLOSE){
+        _escape_state = ESC_STATE_REV;
+        _escape_dist = _def_rev_dist;
+        _escape_angle = _hard_turn_right;
     }
-    // 2) BMPR: reverse a full body length and turn -90 deg away
-    else if(check_vec[1] == DANGER_CLOSE){
-        _escape_count = ESCAPE_REV;
-        _escape_dist = 1.0*_def_rev_dist;
-        _escape_angle = 1.0*_def_hard_turn;
+    else if(check_bumpers[BUMP_RIGHT] == DANGER_CLOSE){
+        _escape_state = ESC_STATE_REV;
+        _escape_dist = _def_rev_dist;
+        _escape_angle = _hard_turn_left;
     }
-    // 7) LSRD: check cliff-close/far, check obstacle-close/far
-    else if(check_vec[6] >= DANGER_FAR){
-        if(check_vec[6] == DANGER_CLOSE){
-        _escape_count = ESCAPE_REV;
-        _escape_dist = 1.0*_def_rev_dist;
-        _escape_angle = _get_rand_turn_dir()*_def_hard_turn;
+    else if(check_bumpers[BUMP_BACK] == DANGER_CLOSE){
+        _escape_state = ESC_STATE_REV;
+        _escape_dist = -1.0*_def_rev_dist;
+        _escape_angle = 0.0;
+    }
+    // LASERS: CLIFF EDGES
+    else if(check_lasers[LASER_DOWN_LEFT] >= DANGER_FAR){
+        if(check_lasers[6] == DANGER_CLOSE){
+            _escape_state = ESC_STATE_REV;
+            _escape_dist = _def_rev_dist;
+            _escape_angle = _get_rand_turn_dir()*_hard_turn_left;
         }
         else{
-        _escape_count = ESCAPE_NOREV;
-        _escape_dist = 0.0;
-        _escape_angle = _get_rand_turn_dir()*_def_hard_turn;
+            _escape_state = ESC_STATE_TURN;
+            _escape_dist = 0.0;
+            _escape_angle = _get_rand_turn_dir()*_hard_turn_left;
         }
     }
+
     // 4) LSRL: check far (norev,+45deg), check close (rev,+90deg)
-    else if(check_vec[3] >= DANGER_FAR){
-        if(check_vec[3] == DANGER_CLOSE){
-        _escape_count = ESCAPE_REV;
-        _escape_dist = 0.8*_def_rev_dist;
-        _escape_angle = -1.25*_def_mod_turn;
+    else if(check_lasers[3] >= DANGER_FAR){
+        if(check_lasers[3] == DANGER_CLOSE){
+            _escape_state = ESC_STATE_REV;
+            _escape_dist = 0.8*_def_rev_dist;
+            _escape_angle = -1.25*_mod_turn;
         }
         else{
-        _escape_count = ESCAPE_NOREV;
-        _escape_dist = 0.0;
-        _escape_angle = -1.0*_def_mod_turn;
+            _escape_state = ESC_STATE_TURN;
+            _escape_dist = 0.0;
+            _escape_angle = -1.0*_mod_turn;
         }
 
-        if(check_vec[4] >= DANGER_FAR){ // If the right laser is tripped as well then we are in a corner, do a 180
-        _escape_angle = -180.0 + _get_rand_turn_dir()*float(random(0,45));
+        if(check_lasers[4] >= DANGER_FAR){ // If the right laser is tripped as well then we are in a corner, do a 180
+            _escape_angle = -180.0 + _get_rand_turn_dir()*float(random(0,45));
         }
-        else if(check_vec[2] >= DANGER_FAR){ // If the ultrasonic sensor is tripped as well then turn harder
-        _escape_angle = -1.0*_def_hard_turn;
+        else if(check_lasers[2] >= DANGER_FAR){ // If the ultrasonic sensor is tripped as well then turn harder
+            _escape_angle = -1.0*_hard_turn;
         }
     }
-    // 5) LSRR: check far (norev,-45deg), check close (rev,-90deg)
-    else if(check_vec[4] >= DANGER_FAR){
-        if(check_vec[4] == DANGER_CLOSE){
-        _escape_count = ESCAPE_REV;
-        _escape_dist = 0.8*_def_rev_dist;
-        _escape_angle = 1.25*_def_mod_turn;
+    else if(check_lasers[4] >= DANGER_FAR){
+        if(check_lasers[4] == DANGER_CLOSE){
+            _escape_state = ESC_STATE_REV;
+            _escape_dist = 0.8*_def_rev_dist;
+            _escape_angle = 1.25*_mod_turn;
         }
         else{
-        _escape_count = ESCAPE_NOREV;
-        _escape_dist = 0.0;
-        _escape_angle = 1.0*_def_mod_turn;
+            _escape_state = ESC_STATE_TURN;
+            _escape_dist = 0.0;
+            _escape_angle = 1.0*_mod_turn;
         }
 
-        if(check_vec[3] >= DANGER_FAR){ // If the right laser is tripped as well then we are in a corner, do a 180
-        _escape_angle = 180.0 + _get_rand_turn_dir()*float(random(0,45));
+        if(check_lasers[3] >= DANGER_FAR){ // If the right laser is tripped as well then we are in a corner, do a 180
+            _escape_angle = 180.0 + _get_rand_turn_dir()*float(random(0,45));
         }
-        else if(check_vec[2] >= DANGER_FAR){ // If the ultrasonic sensor is tripped as well then turn harder
-        _escape_angle = -1.0*_def_hard_turn;
+        else if(check_lasers[2] >= DANGER_FAR){ // If the ultrasonic sensor is tripped as well then turn harder
+            _escape_angle = -1.0*_hard_turn;
         }
     }
     // 3) US: check far (norev,+/-45deg), check close (rev,+/-90deg)
-    else if(check_vec[2] >= DANGER_FAR){
-        if(check_vec[2] == DANGER_CLOSE){
-        _escape_count = ESCAPE_REV;
-        _escape_dist = _def_rev_dist;
-        _escape_angle = _get_rand_turn_dir()*_def_hard_turn;
+    else if(check_lasers[2] >= DANGER_FAR){
+        if(check_lasers[2] == DANGER_CLOSE){
+            _escape_state = ESC_STATE_REV;
+            _escape_dist = _def_rev_dist;
+            _escape_angle = _get_rand_turn_dir()*_hard_turn;
         }
         else{
-        _escape_count = ESCAPE_NOREV;
-        _escape_dist = 0.0;
-        _escape_angle = _get_rand_turn_dir()*_def_hard_turn;
+            _escape_state = ESC_STATE_TURN;
+            _escape_dist = 0.0;
+            _escape_angle = _get_rand_turn_dir()*_hard_turn;
         }
     }
     // 6) LSRU: check overhang-close/far
-    else if(check_vec[5] >= DANGER_FAR){
-        if(check_vec[5] == DANGER_CLOSE){
-        _escape_count = ESCAPE_REV;
-        _escape_dist = _def_rev_dist;
-        _escape_angle = _get_rand_turn_dir()*_def_hard_turn;
+    else if(check_lasers[5] >= DANGER_FAR){
+        if(check_lasers[5] == DANGER_CLOSE){
+            _escape_state = ESC_STATE_REV;
+            _escape_dist = _def_rev_dist;
+            _escape_angle = _get_rand_turn_dir()*_hard_turn;
         }
         else{
-        _escape_count = ESCAPE_NOREV;
-        _escape_dist = 0.0;
-        _escape_angle = _get_rand_turn_dir()*_def_hard_turn;
+            _escape_state = ESC_STATE_TURN;
+            _escape_dist = 0.0;
+            _escape_angle = _get_rand_turn_dir()*_hard_turn;
         }
     }
 }
-
-
-void CollisionEscaper::set_escape_start(uint8_t check_vec[]){
-    update_escape_decision(check_vec);  // This is the decision tree
-}
+//==============================================================================
 
 
 void CollisionEscaper::escape(){
-    if(_escape_count == 0){ // Use the first escape count to reverse by a set distance
-        int8_t isComplete = _move_manager->to_dist_ctrl_speed(_escape_dist);
-        if(isComplete > 0){ // this portion of the escape is complete
-            _escape_count = 1;
+    if(_escape_state == ESC_STATE_REV){
+        int8_t is_complete = _move_manager->to_dist_ctrl_speed(_escape_dist);
+        if(is_complete > 0){
+            _escape_state = ESC_STATE_TURN;
         }
     }
-    else if(_escape_count == 1){
-        int8_t isComplete = _move_manager->turn_to_angle_ctrl_speed(_escape_angle);
-        if(isComplete > 0){ // this portion of the escape is complete
-            _escape_count = 2;
+    else if(_escape_state == ESC_STATE_TURN){
+        int8_t is_complete = _move_manager->turn_to_angle_ctrl_speed(_escape_angle);
+        if(is_complete > 0){
+            _escape_state = ESC_STATE_COMPLETE;
         }
     }
     else{
@@ -138,18 +139,16 @@ void CollisionEscaper::escape(){
 }
 
 
-bool CollisionEscaper::get_escape_flag(){
+bool CollisionEscaper::get_escape_state(){
     bool outFlag = false;
-    if(_escape_count <= 1){
+    if(_escape_state <= 1){
         outFlag = true;
     }
     return outFlag;
 }
 
 
-int8_t CollisionEscaper::get_escape_turn(uint8_t check_vec[]){
-    //_update_check_vec();    // Check all collision sensors - used for decision tree
-    update_escape_decision(check_vec);  // This is the decision tree
+EMoveBasic CollisionEscaper::get_escape_turn(){
     if(_escape_angle > 0.0){
         return MOVE_B_LEFT;
     }

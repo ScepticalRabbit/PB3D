@@ -38,10 +38,7 @@ void LaserManager::begin(){
 
     // Activate ALL lasers one by one
     for (uint8_t rr=0; rr<LASER_COUNT; rr++) {
-        if (rr < 8){
-            _multi_expander->digital_write(rr, HIGH);
-        }
-
+        _multi_expander->digital_write(rr, HIGH);
         _laser_ptr_array[rr]->begin();
     }
 }

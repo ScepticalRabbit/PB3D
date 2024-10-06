@@ -48,7 +48,7 @@
 bool debug_collision_off = false;
 bool debug_force_mood = false;
 EMoodCode debug_mood_code = MOOD_NEUTRAL;
-bool debug_force_task = false;
+bool debug_force_task = true;
 ETaskCode debug_taskCode = TASK_EXPLORE;
 bool debug_force_move = false;
 EMoveCompound debug_move_type = MOVE_C_CIRCLE;
@@ -177,7 +177,7 @@ TaskPause task_pause = TaskPause(&collision_manager,
 void setup() {
   Serial.begin(115200);
   // Only use below to stop start up until USB cable connected
-  // while(!Serial){}
+  while(!Serial){}
 
   // Initialize I2C communications for sensors and sub boards
   Wire.begin();  // Join I2C bus as leader
@@ -236,7 +236,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(ENCODER_PINB_LEFT),
                   update_encoder_left_pinb,CHANGE);
   attachInterrupt(digitalPinToInterrupt(ENCODER_PINB_RIGHT),
-                  updateencoder_right_pinb,CHANGE);
+                  update_encoder_right_pinb,CHANGE);
 
   //-------------------------------------------------------------------------
   // DEBUG MODE:
@@ -325,9 +325,11 @@ void loop(){
   // TEST CODE - SENSOR REPORTS
   if(test_report_timer.finished()){
     test_report_timer.start(test_report_time);
-    //DEBUG_PrintColCheck();
-    //DEBUG_PrintAllRanges();
-    //DEBUG_PrintLightSens();
+    //DEBUG_col_check();
+    //DEBUG_ranges();
+    //DEBUG_col_with_ranges();
+    //DEBUG_bumpers();
+    //DEBUG_light_sens();
   }
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -360,11 +362,11 @@ void loop(){
   else if(task_manager.get_task() == TASK_INTERACT){
     task_interact.interact();
   }
-  else if(collision_manager.get_escape_flag() && !debug_collision_off){
+  else if(collision_manager.get_escape_state() && !debug_collision_off){
     escape_collision(); // SEE FUNCTION DEF BELOW MAIN
   }
   else if(collision_manager.get_detected() && !debug_collision_off){
-    //DEBUG_PrintColFlags();
+    DEBUG_col_check();
     detected_collision(); // SEE FUNCTION DEF BELOW MAIN
   }
   else if(task_manager.get_task() == TASK_DANCE){
@@ -448,7 +450,7 @@ void update_encoder_left_pinb(){
 void update_encoder_right_pina(){
   encoder_right.update_equal();
 }
-void updateencoder_right_pinb(){
+void update_encoder_right_pinb(){
   encoder_right.update_not_equal();
 }
 
@@ -520,16 +522,15 @@ void detected_collision(){
 //==============================================================================
 // DEBUG
 // #define PB3D_DEBUG
-#ifdef PB3D_DEBUG
 
-void DEBUG_SpeedTest(uint8_t inPower, uint8_t moveCode){
+void DEBUG_speed_test(float speed, uint8_t move_code){
   if(test_pause_timer.finished()){
     if(_test_pause_switch){
       _test_pause_switch = false;
       test_timer.start(test_time);
       test_switch = true;
     }
-    DEBUG_PlotSpeedMMPS();
+    DEBUG_plot_speed_mmps();
 
     if(test_timer.finished()){
       if(test_retest){
@@ -542,59 +543,21 @@ void DEBUG_SpeedTest(uint8_t inPower, uint8_t moveCode){
     }
 
     if(test_switch){
-      if(moveCode == MOVE_B_BACK){
-        move_manager.back_power(inPower);
+      if(move_code == MOVE_B_BACK){
+        move_manager.set_back_speed(speed);
+        move_manager.back();
       }
-      else if(moveCode == MOVE_B_LEFT){
-        move_manager.left_power(inPower);
+      else if(move_code == MOVE_B_LEFT){
+        move_manager.set_turn_speed(speed);
+        move_manager.left();
       }
-      else if(moveCode == MOVE_B_RIGHT){
-        move_manager.right_power(inPower);
-      }
-      else{
-        move_manager.forward_power(inPower);
-      }
-    }
-    else{
-      move_manager.stop();
-    }
-  }
-  else{
-    move_manager.stop();
-  }
-}
-
-void DEBUG_SpeedTest(float inSpeed, uint8_t moveCode){
-  if(test_pause_timer.finished()){
-    if(_test_pause_switch){
-      _test_pause_switch = false;
-      test_timer.start(test_time);
-      test_switch = true;
-    }
-    DEBUG_PlotSpeedMMPS();
-
-    if(test_timer.finished()){
-      if(test_retest){
-        test_timer.start(test_time);
-        test_switch = !test_switch;
+      else if(move_code == MOVE_B_RIGHT){
+        move_manager.set_turn_speed(speed);
+        move_manager.right();
       }
       else{
-        test_switch = false;
-      }
-    }
-
-    if(test_switch){
-      if(moveCode == MOVE_B_BACK){
-        move_manager.back(inSpeed);
-      }
-      else if(moveCode == MOVE_B_LEFT){
-        move_manager.left(inSpeed);
-      }
-      else if(moveCode == MOVE_B_RIGHT){
-        move_manager.right(inSpeed);
-      }
-      else{
-        move_manager.forward(inSpeed);
+        move_manager.set_forward_speed(speed);
+        move_manager.forward();
       }
     }
     else{
@@ -639,15 +602,15 @@ void DEBUG_PlotSpeedBoth(){
 }
 
 void DEBUG_PlotSpeedPID_L(){
-  Serial.print(move_manager.get_speed_PID_set_point_left());
+  Serial.print(move_manager.get_move_controller()->get_speed_PID_left()->get_set_point());
   Serial.print(",");
-  Serial.print(move_manager.get_speed_PID_output_left());
+  Serial.print(move_manager.get_move_controller()->get_speed_PID_left()->get_output());
   Serial.print(",");
-  Serial.print(move_manager.get_speed_PID_Pterm_left());
+  Serial.print(move_manager.get_move_controller()->get_speed_PID_left()->get_prop_term());
   Serial.print(",");
-  Serial.print(move_manager.get_speed_PID_Iterm_left());
+  Serial.print(move_manager.get_move_controller()->get_speed_PID_left()->get_int_term());
   Serial.print(",");
-  Serial.print(move_manager.get_speed_PID_Dterm_left());
+  Serial.print(move_manager.get_move_controller()->get_speed_PID_left()->get_deriv_term());
   Serial.print(",");
   Serial.print(encoder_left.get_smooth_speed_mmps());
   Serial.print(",");
@@ -655,22 +618,22 @@ void DEBUG_PlotSpeedPID_L(){
 }
 
 void DEBUG_PlotSpeedPID_R(){
-  Serial.print(move_manager.get_speed_PID_set_point_right());
+  Serial.print(move_manager.get_move_controller()->get_speed_PID_right()->get_set_point());
   Serial.print(",");
-  Serial.print(move_manager.get_speed_PID_output_right());
+  Serial.print(move_manager.get_move_controller()->get_speed_PID_right()->get_output());
   Serial.print(",");
-  Serial.print(move_manager.get_speed_PID_Pterm_right());
+  Serial.print(move_manager.get_move_controller()->get_speed_PID_right()->get_prop_term());
   Serial.print(",");
-  Serial.print(move_manager.get_speed_PID_Iterm_right());
+  //Serial.print(move_manager.get_speed_PID_Iterm_right());
   Serial.print(",");
-  Serial.print(move_manager.get_speed_PID_Dterm_right());
+  Serial.print(move_manager.get_move_controller()->get_speed_PID_right()->get_deriv_term());
   Serial.print(",");
-  Serial.print(encoder_right.get_smooth_speed_mmps());
+  Serial.print(encoder_left.get_smooth_speed_mmps());
   Serial.print(",");
   Serial.println();
 }
 
-void DEBUG_PlotSpeedMMPS(){
+void DEBUG_plot_speed_mmps(){
   uint32_t thisTime = millis();
   Serial.print(thisTime-test_time_stamp);
   test_time_stamp = thisTime;
@@ -682,92 +645,89 @@ void DEBUG_PlotSpeedMMPS(){
   Serial.println();
 }
 
-void DEBUG_PrintColCheck(){
+void DEBUG_bumpers(){
   Serial.println();
   Serial.println(F("------------------------------"));
-  Serial.println("CheckVec=[BL,BR,US,LL,LR,LU,LD,]");
-  Serial.print("CheckVec=[");
-  for(uint8_t ii=0;ii<7;ii++){
-      Serial.print(" ");Serial.print(collision_manager.get_col_check(ii));Serial.print(",");
-  }
-  Serial.println("]");
-
-  Serial.print(F("US: "));
-  //Serial.print(collision_manager.getColUSFlag());
-  Serial.print(F(" , "));
-  Serial.print(collision_manager.get_ultrasonic_range_mm());
-  Serial.println(F(" mm"));
-
-  Serial.print(F("LSR,L: "));
-  //Serial.print(collision_manager.getColLSRFlagL());
-  Serial.print(F(" , "));
-  Serial.print(collision_manager.getLSRRangeL());
-  Serial.println(F(" mm"));
-
-  Serial.print(F("LSR,R: "));
-  //Serial.print(collision_manager.getColLSRFlagR());
-  Serial.print(F(" , "));
-  Serial.print(collision_manager.getLSRRangeR());
-  Serial.println(F(" mm"));
-
-  Serial.print(F("LSR,A: "));
-  //Serial.print(collision_manager.getColLSRFlagB());
-  Serial.print(F(" , "));
-  Serial.print(collision_manager.getLSRRangeA());
-  Serial.println(F(" mm"));
-
-  Serial.print(F("LSR,U: "));
-  //Serial.print(collision_manager.getColLSRFlagU());
-  Serial.print(F(" , "));
-  Serial.print(collision_manager.getLSRRangeU());
-  Serial.println(F(" mm"));
-
-  Serial.print(F("LSR,D: "));
-  //Serial.print(collision_manager.getColLSRFlagD());
-  Serial.print(F(" , "));
-  Serial.print(collision_manager.getLSRRangeD());
-  Serial.println(F(" mm"));
-
-  Serial.println(F("------------------------------"));
-  Serial.println();
-}//---------------------------------------------------------------------------
-
-void DEBUG_PrintAllRanges(){
-  Serial.println();
-  Serial.println(F("------------------------------"));
-  Serial.print(F("US: "));
-  Serial.print(collision_manager.get_ultrasonic_range_mm());
-  Serial.println(F(" mm"));
-
-  Serial.print(F("LSR,L: "));
-  Serial.print(collision_manager.getLSRRangeL());
-  Serial.println(F(" mm"));
-
-  Serial.print(F("LSR,R: "));
-  Serial.print(collision_manager.getLSRRangeR());
-  Serial.println(F(" mm"));
-
-  Serial.print(F("LSR,A: "));
-  Serial.print(collision_manager.getLSRRangeA());
-  Serial.println(F(" mm"));
-
-  Serial.print(F("LSR,U: "));
-  Serial.print(collision_manager.getLSRRangeU());
-  Serial.println(F(" mm"));
-
-  Serial.print(F("LSR,D: "));
-  Serial.print(collision_manager.getLSRRangeD());
-  Serial.println(F(" mm"));
+  Serial.println(F("DEBUG BUMPERS"));
+  Serial.print("Bump, L = ");
+  Serial.println(bumpers.get_collision_code(BUMP_LEFT));
+  Serial.print("Bump, R = ");
+  Serial.println(bumpers.get_collision_code(BUMP_RIGHT));
+  Serial.print("Bump, B = ");
+  Serial.println(bumpers.get_collision_code(BUMP_BACK));
 
   Serial.println(F("------------------------------"));
   Serial.println();
 }
 
-void DEBUG_PrintLightSens(){
+void DEBUG_col_check(){
+  Serial.println();
+  Serial.println(F("------------------------------"));
+  Serial.println(F("DEBUG COLLISION CHECK"));
+  Serial.println(F("------------------------------"));
+  Serial.print("Bump, L = ");
+  Serial.println(bumpers.get_collision_code(BUMP_LEFT));
+  Serial.print("Bump, R = ");
+  Serial.println(bumpers.get_collision_code(BUMP_RIGHT));
+  Serial.print("Bump, B = ");
+  Serial.println(bumpers.get_collision_code(BUMP_BACK));
+
+  for(uint8_t ll = 0; ll < LASER_COUNT; ll++){
+    Serial.print("LASER, ");
+    Serial.print(LASER_STRS[ll]);
+    Serial.print(" = ");
+    Serial.print(laser_manager.get_collision_code(ELaserIndex(ll)));
+    Serial.println();
+  }
+
+  Serial.println(F("------------------------------"));
+  Serial.println();
+}
+
+void DEBUG_ranges(){
+  Serial.println();
+  Serial.println(F("------------------------------"));
+  Serial.println(F("DEBUG RANGES CHECK"));
+  Serial.println(F("------------------------------"));
+
+  for(uint8_t ll = 0; ll < LASER_COUNT; ll++){
+    Serial.print("LASER, ");
+    Serial.print(LASER_STRS[ll]);
+    Serial.print(" = ");
+    Serial.print(laser_manager.get_range(ELaserIndex(ll)));
+    Serial.print(" mm");
+    Serial.println();
+  }
+
+  Serial.println(F("------------------------------"));
+  Serial.println();
+}
+
+void DEBUG_col_with_ranges(){
+  Serial.println();
+  Serial.println(F("------------------------------"));
+  Serial.println(F("DEBUG COL & RANGES CHECK"));
+  Serial.println(F("------------------------------"));
+
+  for(uint8_t ll = 0; ll < LASER_COUNT; ll++){
+    Serial.print("LASER, ");
+    Serial.print(LASER_STRS[ll]);
+    Serial.print(": C ");
+    Serial.print(laser_manager.get_collision_code(ELaserIndex(ll)));
+    Serial.print(" , R = ");
+    Serial.print(laser_manager.get_range(ELaserIndex(ll)));
+    Serial.print(" mm");
+    Serial.println();
+  }
+
+  Serial.println(F("------------------------------"));
+  Serial.println();
+}
+
+void DEBUG_light_sens(){
   Serial.print("Light Sens L-");
   Serial.print("Lux: "); Serial.print(task_find_light.get_lux_left());
   Serial.print(", R-");
   Serial.print("Lux: "); Serial.println(task_find_light.get_lux_right());
 }
-#endif
 
