@@ -190,6 +190,18 @@ enum ELaserIndex{
     LASER_COUNT
 };
 
+const static char* LASER_STRS[] = {"CC",
+                                   "UC",
+                                   "DL",
+                                   "DR",
+                                   "HL",
+                                   "HR",
+                                   "LL",
+                                   "RR",
+                                   "BB",
+                                   "AA"};
+
+
 //------------------------------------------------------------------------------
 // Light Sensors through TCA Multiplexer
 enum ELightSens{

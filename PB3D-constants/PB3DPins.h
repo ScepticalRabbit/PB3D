@@ -23,11 +23,11 @@ enum EMainPinout{
 };
 
 enum EGPIOPinout{
-    // See lasers for first 10 pins
+    // See lasers for first 10 pins7
     GPIO_PURR_VIBE = 12,
-    GPIO_BUMPER_LEFT = 13,
-    GPIO_BUMPER_RIGHT = 14,
-    GPIO_BUMPER_BACK = 15,
+    GPIO_BUMPER_LEFT = 13,  // Pin: 5
+    GPIO_BUMPER_RIGHT = 14, // Pin: 6
+    GPIO_BUMPER_BACK = 15,  // Pin: 7
     GPIO_PIN_COUNT = 16
 };
 
