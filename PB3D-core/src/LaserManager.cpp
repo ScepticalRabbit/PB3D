@@ -97,6 +97,10 @@ EDangerCode LaserManager::get_collision_code(ELaserIndex index){
             danger_code = _avoid_pickup.get_collision_code(
                             _laser_ptr_array[index]->get_range());
             break;
+        case AVOID_SLOW_ONLY:
+            danger_code = _avoid_slow_only.get_collision_code(
+                            _laser_ptr_array[index]->get_range());
+            break;
         default:
             danger_code = DANGER_NONE;
             break;

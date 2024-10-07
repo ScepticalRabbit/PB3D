@@ -18,7 +18,7 @@ EDangerCode CollisionAvoidBasic::get_collision_code(int16_t range){
     else{return DANGER_NONE;}
 }
 
-EDangerCode CollisionAvoidSlow::get_collision_code(int16_t range){
+EDangerCode CollisionAvoidWithSlow::get_collision_code(int16_t range){
 
     if(range < 0 ){return DANGER_NONE;}
 

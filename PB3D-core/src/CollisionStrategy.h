@@ -30,9 +30,9 @@ class CollisionAvoidBasic{
 };
 
 
-class CollisionAvoidSlow{
+class CollisionAvoidWithSlow{
     public:
-        CollisionAvoidSlow(int16_t close, int16_t far, int16_t slow){
+        CollisionAvoidWithSlow(int16_t close, int16_t far, int16_t slow){
             _close = close;
             _far = far;
             _slow = slow;
@@ -43,6 +43,18 @@ class CollisionAvoidSlow{
     private:
         int16_t _close = 0;
         int16_t _far = 0;
+        int16_t _slow = 0;
+};
+
+class CollisionAvoidSlowOnly{
+    public:
+        CollisionAvoidSlowOnly(int16_t slow){
+            _slow = slow;
+        }
+
+        EDangerCode get_collision_code(int16_t range);
+
+    private:
         int16_t _slow = 0;
 };
 

@@ -59,7 +59,7 @@ public:
   // Get, set and reset
   bool enabled = true;
 
-  bool get_detected(){return _collision_detected;}
+  bool get_detected(){return _collision_detected_latch;}
 
   uint16_t get_count(){return _collision_count;}
   void inc_count(){_collision_count++;}
@@ -78,7 +78,7 @@ public:
   uint8_t get_col_check(uint8_t pos){return _check_lasers[pos];}
 
   bool get_altitude_flag();
-  void reset_flags();
+  void reset_unlatch();
 
   //----------------------------------------------------------------------------
   // Command forwarding to escaper
@@ -90,7 +90,7 @@ public:
 private:
   //----------------------------------------------------------------------------
   // Check all ranges and escape decision tree
-  void _update_check_vec();
+  void _check_and_latch();
 
   //----------------------------------------------------------------------------
   // CLASS VARIABLES
@@ -102,8 +102,8 @@ private:
   BumperSensor* _bumpers = NULL;
 
   // Collision management variables
-  bool _collision_detected = false; // Key flag controlling collision escape
-  bool _collision_slow_down = false;
+  bool _collision_detected_latch = false; // Key flag controlling collision escape
+  bool _collision_slow_down_latch = false;
 
   uint16_t _half_body_leng_mm = 80;
   bool _collision_beepbeep_flag = false;
@@ -114,7 +114,7 @@ private:
   // Check flags for all collision sensors
   uint8_t _check_lasers[LASER_COUNT];
   uint8_t _check_bumpers[BUMP_COUNT];
-  uint16_t _check_interval = 50;
+  uint16_t _check_interval = 21;
   Timer _check_timer = Timer();
 
   // Time to slow down if collision sensor tripped

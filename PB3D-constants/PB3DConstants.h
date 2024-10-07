@@ -159,6 +159,7 @@ enum ECollisionStrategy{
     AVOID_OVERHEAD,
     AVOID_CLIFF,
     AVOID_PICKUP,
+    AVOID_SLOW_ONLY,
 };
 
 //------------------------------------------------------------------------------

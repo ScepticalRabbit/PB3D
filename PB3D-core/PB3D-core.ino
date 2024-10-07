@@ -300,7 +300,7 @@ void loop(){
   bumpers.update();
 
   move_manager.update(); // TODO: check this doesn't override tasks
-  collision_manager.update();
+  collision_manager.update(); // NOTE: collision latches set in here
 
   speaker.update();
   pat_sensor.update();
@@ -458,7 +458,7 @@ void update_encoder_right_pinb(){
 // COLLISION HANDLING TASK TREE FUNCTIONS
 void escape_collision(){
   task_manager.task_LED_collision();
-  collision_manager.reset_flags();
+  collision_manager.reset_unlatch(); // NOTE: collision unlatch here
 
   if(collision_manager.get_beepbeep_flag()){
     uint8_t inCodes[] = {SPEAKER_SLIDE,SPEAKER_SLIDE,SPEAKER_OFF,SPEAKER_OFF};
@@ -510,7 +510,7 @@ void detected_collision(){
   }
 
   // Reset the collision flags
-  collision_manager.reset_flags();
+  collision_manager.reset_unlatch();
   collision_manager.inc_count();
   if(collision_manager.get_count() >= task_tantrum.get_threshold()){
     collision_manager.reset_Count();

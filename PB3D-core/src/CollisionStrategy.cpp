@@ -18,13 +18,21 @@ EDangerCode CollisionAvoidBasic::get_collision_code(int16_t range){
     else{return DANGER_NONE;}
 }
 
-EDangerCode CollisionAvoidSlow::get_collision_code(int16_t range){
+EDangerCode CollisionAvoidWithSlow::get_collision_code(int16_t range){
 
     if(range < 0 ){return DANGER_NONE;}
 
     if(range <= _close){return DANGER_CLOSE;}
     else if(range <= _far){return DANGER_FAR;}
     else if(range <= _slow){return DANGER_SLOW;}
+    else{return DANGER_NONE;}
+}
+
+EDangerCode CollisionAvoidSlowOnly::get_collision_code(int16_t range){
+
+    if(range < 0 ){return DANGER_NONE;}
+
+    if(range <= _slow){return DANGER_SLOW;}
     else{return DANGER_NONE;}
 }
 

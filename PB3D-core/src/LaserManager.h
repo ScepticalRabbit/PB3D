@@ -104,8 +104,8 @@ private:
     // Collision handling strategies for the lasers
     CollisionAvoidBasic _avoid_basic = CollisionAvoidBasic(_col_dist_close,
                                                            _col_dist_far);
-
-    CollisionAvoidSlow _avoid_flat_slow = CollisionAvoidSlow(_col_dist_close,
+    CollisionAvoidWithSlow _avoid_flat_slow = CollisionAvoidWithSlow(
+                                                             _col_dist_close,
                                                              _col_dist_far,
                                                              _col_dist_slow);
     CollisionAvoidBasic _avoid_overhead = CollisionAvoidBasic(_up_col_dist_close,
@@ -114,6 +114,8 @@ private:
                                                            _downColDistFar,
                                                            _downCliffDistClose,
                                                            _downCliffDistFar);
+    CollisionAvoidSlowOnly _avoid_slow_only =
+                            CollisionAvoidSlowOnly(_col_dist_close);
     CliffAvoid _avoid_pickup = CliffAvoid(_alt_dist_close,
                                           _alt_dist_far);
 
@@ -123,8 +125,8 @@ private:
                                                              AVOID_CLIFF,     // DR
                                                              AVOID_FLAT_SLOW, // HL
                                                              AVOID_FLAT_SLOW, // HR
-                                                             AVOID_BASIC, // LL
-                                                             AVOID_BASIC, // RR
+                                                             AVOID_SLOW_ONLY, // LL
+                                                             AVOID_SLOW_ONLY, // RR
                                                              AVOID_FLAT_SLOW, // BB
                                                              AVOID_PICKUP,    // AA
                                                             };

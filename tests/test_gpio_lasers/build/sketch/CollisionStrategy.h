@@ -36,9 +36,9 @@ class CollisionAvoidBasic : public ICollisionStrategy{
 };
 
 
-class CollisionAvoidSlow : public ICollisionStrategy{
+class CollisionAvoidWithSlow : public ICollisionStrategy{
     public:
-        CollisionAvoidSlow(int16_t close, int16_t far, int16_t slow){
+        CollisionAvoidWithSlow(int16_t close, int16_t far, int16_t slow){
             _close = close;
             _far = far;
             _slow = slow;

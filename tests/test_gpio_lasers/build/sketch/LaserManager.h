@@ -97,7 +97,7 @@ private:
                                                   &_laser_AA};
 
     // Collision handling strategies for the lasers
-    CollisionAvoidSlow _avoid_flat_slow = CollisionAvoidSlow(_col_dist_close,
+    CollisionAvoidWithSlow _avoid_flat_slow = CollisionAvoidWithSlow(_col_dist_close,
                                                              _col_dist_far,
                                                              _col_dist_slow);
     CollisionAvoidBasic _avoid_overhead = CollisionAvoidBasic(_up_col_dist_close,

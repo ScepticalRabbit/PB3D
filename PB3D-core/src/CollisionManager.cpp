@@ -54,13 +54,18 @@ void CollisionManager::update(){
     if(_check_timer.finished()){
         _check_timer.start(_check_interval);
 
-        _update_check_vec(); // Sets collision detection flag
+        _check_and_latch();
 
-        if(_collision_slow_down && _slow_down_timer.finished()){
+        if(_collision_slow_down_latch && _slow_down_timer.finished()){
             _slow_down_timer.start(_slow_down_int);
             _move_manager->set_speed_danger_multiplier(DANGER_CLOSE);
         }
-        else if(!_collision_slow_down && _slow_down_timer.finished()){
+
+        if(!_slow_down_timer.finished()){
+            _move_manager->set_speed_danger_multiplier(DANGER_CLOSE);
+        }
+        else{
+            _collision_slow_down_latch = false;
             _move_manager->set_speed_danger_multiplier(DANGER_NONE);
         }
 
@@ -70,13 +75,9 @@ void CollisionManager::update(){
         }
     }
 
-    if(!_slow_down_timer.finished()){
-        _move_manager->set_speed_danger_multiplier(DANGER_CLOSE);
-    }
-
     // DISABLED: If collision detection is turned off set flags to false and
     // return. Doing this last allows ranges to update but resets flags
-    if(!enabled){reset_flags();}
+    if(!enabled){reset_unlatch();}
 
     //uint32_t endTime = micros();
     //Serial.println(endTime-startTime);
@@ -84,7 +85,6 @@ void CollisionManager::update(){
 
 //------------------------------------------------------------------------------
 // Get, set and reset
-//------------------------------------------------------------------------------
 bool CollisionManager::get_altitude_flag(){
     if(_laser_manager->get_collision_code(LASER_ALT) > DANGER_NONE){
         return true;
@@ -94,15 +94,15 @@ bool CollisionManager::get_altitude_flag(){
     }
 }
 
-void CollisionManager::reset_flags(){
-    _collision_detected = false;
-    _collision_slow_down = false;
+void CollisionManager::reset_unlatch(){
+    _collision_detected_latch = false;
+    _collision_slow_down_latch = false;
     _bumpers->reset();
 }
 
 //-----------------------------------------------------------------------------
 void CollisionManager::set_escape_start(){
-    _update_check_vec();
+    _check_and_latch();
 
     _escaper.update_escape_decision(_check_bumpers,_check_lasers);
 
@@ -148,27 +148,23 @@ EMoveBasic CollisionManager::get_escape_turn(){
 }
 
 //------------------------------------------------------------------------------
-void CollisionManager::_update_check_vec(){
-
-    _collision_detected = false;
-    _collision_slow_down = false;
+void CollisionManager::_check_and_latch(){
 
     for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
         _check_bumpers[ii] = _bumpers->get_collision_code(EBumpCode(ii));
 
         if(_check_bumpers[ii] >= DANGER_CLOSE){
-            _collision_slow_down = true;
+            _collision_detected_latch = true;
         }
     }
-
 
     for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
         _check_lasers[ii] = _laser_manager->get_collision_code(ELaserIndex(ii));
         if(_check_lasers[ii] >= DANGER_SLOW){
-            _collision_slow_down = true;
+            _collision_slow_down_latch = true;
         }
         if(_check_lasers[ii] >= DANGER_FAR){
-            _collision_detected = true;
+            _collision_detected_latch = true;
         }
     }
 }
