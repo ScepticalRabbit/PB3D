@@ -112,6 +112,8 @@ enum EMoveLookState{
 
 //------------------------------------------------------------------------------
 // Motors
+// NOTE: new laser chassis from 2024, motor wires require red on the left!
+
 enum EMotorNums{
     MOTOR_LEFT = 2,
     MOTOR_RIGHT = 1,
@@ -119,6 +121,8 @@ enum EMotorNums{
 
 //------------------------------------------------------------------------------
 // Encoders
+// NOTE: new laser chassis from 2024, encoders have correct directions in code
+
 enum EEncoderDirection{
     ENCODER_FORWARD = 0,
     ENCODER_BACK

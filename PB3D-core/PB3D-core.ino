@@ -45,18 +45,18 @@
 
 //------------------------------------------------------------------------------
 // DEBUG VARIABLES
-bool debug_collision_off = false;
-bool debug_force_mood = false;
+bool debug_collision_off = true;
+bool debug_force_mood = true;
 EMoodCode debug_mood_code = MOOD_NEUTRAL;
 bool debug_force_task = true;
-ETaskCode debug_taskCode = TASK_EXPLORE;
+ETaskCode debug_taskCode = TASK_TEST;
 bool debug_force_move = false;
 EMoveCompound debug_move_type = MOVE_C_CIRCLE;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // TEST VARIABLES
 bool test_switch = true;
-uint16_t test_time= 2000;
+uint16_t test_time= 1000;
 Timer test_timer = Timer();
 
 bool test_retest = true;
@@ -64,7 +64,7 @@ bool test_retest = true;
 float test_value = 360.0; // Can also set to float
 //uint8_t test_value = 80;
 
-uint16_t test_report_time = 200;
+uint16_t test_report_time = 100;
 Timer test_report_timer = Timer();
 
 bool _test_pause_switch = true;
@@ -177,7 +177,7 @@ TaskPause task_pause = TaskPause(&collision_manager,
 void setup() {
   Serial.begin(115200);
   // Only use below to stop start up until USB cable connected
-  while(!Serial){}
+  // while(!Serial){}
 
   // Initialize I2C communications for sensors and sub boards
   Wire.begin();  // Join I2C bus as leader
@@ -298,6 +298,8 @@ void loop(){
   // UPDATE OBJECTS - Each object has own internal timer
   laser_manager.update();
   bumpers.update();
+  encoder_left.update_speed();
+  encoder_right.update_speed();
 
   move_manager.update(); // TODO: check this doesn't override tasks
   collision_manager.update(); // NOTE: collision latches set in here
@@ -325,6 +327,7 @@ void loop(){
   // TEST CODE - SENSOR REPORTS
   if(test_report_timer.finished()){
     test_report_timer.start(test_report_time);
+    DEBUG_print_encoders();
     //DEBUG_col_check();
     //DEBUG_ranges();
     //DEBUG_col_with_ranges();
@@ -348,7 +351,7 @@ void loop(){
   // handling of collisions while these modes are active - should be able to
   // make this smarter so certain things can re-enable collision avoidance
   if(task_manager.get_task() == TASK_TEST){
-    //DEBUG_SpeedTest(test_value,MOVE_B_FORWARD);
+    DEBUG_speed_test(80.0,MOVE_B_FORWARD);
   }
   else if(task_manager.get_task() == TASK_REST){
     task_rest.rest();
@@ -530,7 +533,6 @@ void DEBUG_speed_test(float speed, uint8_t move_code){
       test_timer.start(test_time);
       test_switch = true;
     }
-    DEBUG_plot_speed_mmps();
 
     if(test_timer.finished()){
       if(test_retest){
@@ -569,7 +571,7 @@ void DEBUG_speed_test(float speed, uint8_t move_code){
   }
 }
 
-void DEBUG_PrintSpeedMMPS(){
+void DEBUG_print_encoders(){
   Serial.println();
   Serial.print(F("ENCODER SPEED, L="));
   Serial.print(encoder_left.get_smooth_speed_mmps());
@@ -577,19 +579,15 @@ void DEBUG_PrintSpeedMMPS(){
   Serial.print(encoder_right.get_smooth_speed_mmps());
   Serial.print(F(" mm/s"));
   Serial.println();
+  Serial.print(F("ENCODER COUNTS, L="));
+  Serial.print(encoder_left.get_count());
+  Serial.print(F(" , R = "));
+  Serial.print(encoder_right.get_count());
+  Serial.println();
+
 }
 
-void DEBUG_PrintSpeedCPS(){
-  Serial.println();
-  Serial.print(F("ENCODER SPEED, L="));
-  Serial.print(encoder_left.get_smooth_speed_mmps());
-  Serial.print(F(" mm/s, R = "));
-  Serial.print(encoder_right.get_smooth_speed_mmps());
-  Serial.print(F(" mm/s"));
-  Serial.println();
-}
-
-void DEBUG_PlotSpeedBoth(){
+void DEBUG_plot_speed(){
   Serial.print(encoder_left.get_smooth_speed_cps());
   Serial.print(",");
   Serial.print(encoder_left.get_smooth_speed_mmps());
