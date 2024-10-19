@@ -1,5 +1,5 @@
 //==============================================================================
-// PB3D: A pet robot that is 3D printed
+// PB3D: A 3D printed pet robot
 //==============================================================================
 //
 // Author: ScepticalRabbit
@@ -45,11 +45,11 @@
 
 //------------------------------------------------------------------------------
 // DEBUG VARIABLES
-bool debug_collision_off = true;
+bool debug_collision_off = false;
 bool debug_force_mood = true;
 EMoodCode debug_mood_code = MOOD_NEUTRAL;
 bool debug_force_task = true;
-ETaskCode debug_taskCode = TASK_TEST;
+ETaskCode debug_taskCode = TASK_EXPLORE;
 bool debug_force_move = false;
 EMoveCompound debug_move_type = MOVE_C_CIRCLE;
 

@@ -1,6 +1,6 @@
 #line 1 "/home/lloydf/Arduino/PB3D/tests/test_gpio_lasers/LaserManager.cpp"
 //==============================================================================
-// PB3D: A pet robot that is 3D printed
+// PB3D: A 3D printed pet robot
 //==============================================================================
 //
 // Author: ScepticalRabbit

@@ -1,5 +1,5 @@
 //==============================================================================
-// PB3D: A pet robot that is 3D printed
+// PB3D: A 3D printed pet robot
 //==============================================================================
 //
 // Author: ScepticalRabbit
@@ -355,7 +355,7 @@ EMoveControlState MoveController::to_dist_ctrl_speed(float speed_left,
         _speed_ctrl_state = MOVE_CONTROL_COMPLETE;
         return _speed_ctrl_state;
     }
-    
+
     return _speed_ctrl_state;
 }
 
