@@ -14,19 +14,20 @@
 void Tail::begin(){
     _tail_servo.attach(TAIL_SERVO);
     _wag_timer.start(0);
+    _wag_smoother.begin();
 }
 
 //---------------------------------------------------------------------------
 // UPDATE: called during every LOOP
 void Tail::update(){
-    if(!_enabled){return;}
+    if(!enabled){return;}
 
     if(_update_timer.finished()){
         _update_timer.start(_update_interval);
 
         switch(_curr_state){
         case TAIL_SET_POS:
-            _tail_servo.write(_tail_pos_curr);
+            _tail_servo.write(_wag_smoother.filter(_tail_pos_curr));
             break;
         case TAIL_WAG_CON:
             wag_continuous();
@@ -35,7 +36,7 @@ void Tail::update(){
             wag_interval();
             break;
         default:
-            _tail_servo.write(_tail_pos_cent);
+            _tail_servo.write(_wag_smoother.filter(_tail_pos_cent));
             break;
         }
     }
@@ -48,12 +49,14 @@ void Tail::wag_continuous(){
         _wag_timer.start(_wag_move_time);
 
         if(_wag_switch){
-        _wag_switch = !_wag_switch;
-        _tail_servo.write(_tail_pos_cent-_wag_pos_offset);
+            _wag_switch = !_wag_switch;
+            _tail_servo.write(_wag_smoother.filter(
+                _tail_pos_cent-_wag_pos_offset));
         }
         else{
-        _wag_switch = !_wag_switch;
-        _tail_servo.write(_tail_pos_cent+_wag_pos_offset);
+            _wag_switch = !_wag_switch;
+            _tail_servo.write(_wag_smoother.filter(
+                _tail_pos_cent+_wag_pos_offset));
         }
     }
 }
@@ -61,22 +64,24 @@ void Tail::wag_continuous(){
 void Tail::wag_interval(){
     if(_wag_timer.finished()){
         if(_wag_count<_wag_count_limit){
-        _wag_timer.start(_wag_move_time);
+            _wag_timer.start(_wag_move_time);
 
-        if(_wag_switch){
-            _wag_switch = !_wag_switch;
-            _tail_servo.write(_tail_pos_cent-_wag_pos_offset);
+            if(_wag_switch){
+                _wag_switch = !_wag_switch;
+                _tail_servo.write(_wag_smoother.filter(
+                    _tail_pos_cent-_wag_pos_offset));
+            }
+            else{
+                _wag_switch = !_wag_switch;
+                _tail_servo.write(_wag_smoother.filter(
+                    _tail_pos_cent+_wag_pos_offset));
+                _wag_count++;
+            }
         }
         else{
-            _wag_switch = !_wag_switch;
-            _tail_servo.write(_tail_pos_cent+_wag_pos_offset);
-            _wag_count++;
-        }
-        }
-        else{
-        _wag_timer.start(_wag_pause_time);
-        _tail_servo.write(_tail_pos_cent);
-        _wag_count = 0;
+            _wag_timer.start(_wag_pause_time);
+            _tail_servo.write(_tail_pos_cent);
+            _wag_count = 0;
         }
     }
 }

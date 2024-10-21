@@ -6,6 +6,8 @@
 // License: MIT
 // Copyright (C) 2024 ScepticalRabbit
 //------------------------------------------------------------------------------
+//https://learn.adafruit.com/adafruit-rfm69hcw-and-rfm96-rfm95-rfm98-lora-packet-padio-breakouts/using-the-rfm69-radio
+
 
 #ifndef RFDATASENDERTX_H
 #define RFDATASENDERTX_H
@@ -31,6 +33,9 @@ enum ERadioPins{
     RFM69_INT = 3,
     RFM69_RST = 6,
     LED_PIN = 13,
+    RM69_MOSI = 10,
+    RM69_MISO = 9,
+    RM69_SCK = 8,
 };
 // Server and destination address - this board is the server
 #define DEST_RF_ADDR   1

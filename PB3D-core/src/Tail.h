@@ -19,6 +19,7 @@
 #include "MoveManager.h"
 #include "PB3DTimer.h"
 #include "Speaker.h"
+#include "FilterLowPass.h"
 
 #include <Servo.h>
 
@@ -42,8 +43,6 @@ public:
 
   //---------------------------------------------------------------------------
   // GET, SET, RESET FUNCTIONS
-  bool get_enabled_flag(){return _enabled;}
-  void set_enabled_flag(bool inFlag){_enabled = inFlag;}
 
   void set_state(ETailCode state){_curr_state = state;}
   void set_pos(int16_t pos){_tail_pos_curr = pos;}
@@ -65,10 +64,9 @@ public:
                           uint8_t count_limit);
 
   void reset();
+  bool enabled = true;
 
 private:
-  bool _enabled = true;
-
   Servo _tail_servo;
 
   uint8_t _curr_state = TAIL_CENT;
@@ -77,6 +75,8 @@ private:
 
   int16_t _tail_pos_curr = 90;
   const int16_t _tail_pos_cent = 90;
+
+  FilterLowPass _wag_smoother = FilterLowPass(0.05,10);
 
   // MODE: WAG CONTINUOUS
   bool _wag_switch = true;

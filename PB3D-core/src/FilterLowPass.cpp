@@ -9,8 +9,6 @@
 
 #include "FilterLowPass.h"
 
- //---------------------------------------------------------------------------
-// CONSTRUCTORS
 FilterLowPass::FilterLowPass(){
 }
 
