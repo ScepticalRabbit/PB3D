@@ -20,6 +20,9 @@ void MoveController::begin(Encoder* encoder_left, Encoder* encoder_right){
     _encoder_left = encoder_left;
     _encoder_right = encoder_right;
 
+    _smoother_left.begin();
+    _smoother_right.begin();
+
     // Start the speed PIDs
     _speed_PID_left.begin();
     _speed_PID_right.begin();
@@ -57,9 +60,6 @@ void MoveController::reset(){
 EMoveControlState MoveController::at_speed(float set_speed_left,
                                            float set_speed_right){
 
-    EMoveControlState ctrl_state = MOVE_CONTROL_INCOMPLETE;
-
-    // Check if the left/right PIDs are on if not turn them on
     if(!_speed_PID_left.get_controller_on()){
         _speed_PID_left.set_controller_on(PID_ON);
         _speed_PID_left.set_Pgain_only(_speed_P_rev);
@@ -90,17 +90,20 @@ EMoveControlState MoveController::at_speed(float set_speed_left,
         }
     }
 
-    // Update the set point
-    _speed_PID_left.set_set_point(set_speed_left);
-    _speed_PID_right.set_set_point(set_speed_right);
+    if(smooth_on){
+        _speed_PID_left.set_set_point(_smoother_left.filter(set_speed_left));
+        _speed_PID_right.set_set_point(_smoother_right.filter(set_speed_right));
+    }
+    else{
+        _speed_PID_left.set_set_point(set_speed_left);
+        _speed_PID_right.set_set_point(set_speed_right);
+    }
 
-    // Update left and right speed PIDs
     float meas_speed_left = _encoder_left->get_smooth_speed_mmps();
     float meas_speed_right = _encoder_right->get_smooth_speed_mmps();
     _speed_PID_left.update(meas_speed_left);
     _speed_PID_right.update(meas_speed_right);
 
-    // If the speed is negative then set motors to run backward
     if(set_speed_left < 0.0){
         _motor_left->run(BACKWARD);
     }
@@ -117,6 +120,7 @@ EMoveControlState MoveController::at_speed(float set_speed_left,
     _motor_right->setSpeed(int(_speed_PID_right.get_output()));
 
 
+    EMoveControlState ctrl_state = MOVE_CONTROL_INCOMPLETE;
     if(meas_speed_left > (set_speed_left - _speed_tol)  &&
        meas_speed_left < (set_speed_left + _speed_tol)){
         ctrl_state = MOVE_CONTROL_LEFT_COMPLETE;

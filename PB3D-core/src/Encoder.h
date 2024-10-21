@@ -73,7 +73,7 @@ private:
   double _mm_per_count = _wheel_circ/_counts_per_rev;
 
   uint16_t _speed_update_time = 10;      // Default update time of 100Hz
-  uint16_t _speed_filt_update_time = 5;  // Must be less than speed update time.
+  uint16_t _speed_filt_update_time = _speed_update_time-2;  // Must be less than speed update time.
   int32_t _count_prev_for_speed = 0;
 
   uint8_t _speed_filt_win = 10;

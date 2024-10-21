@@ -40,14 +40,12 @@ void PID::begin(){
 
 // This version directly returns the output, useful for position control
 void PID::update(double input){
-    // If the PID is turned off do nothing
     if(!_auto_on){return;}
 
     // Update the PID output on a fixed interval based on our timer
     if(_pid_timer.finished()){
-        _output = _compute_PID(input);
-        // Start the timer again
         _pid_timer.start(_sample_time_ms);
+        _output = _compute_PID(input);
     }
 }
 
@@ -58,13 +56,11 @@ void PID::update(double command, double input){
 
     // Update the PID output on a fixed interval based on our timer
     if(_pid_timer.finished()){
+        _pid_timer.start(_sample_time_ms);
 
         double out_PID = _compute_PID(input);
         out_PID = command + out_PID;
         _output = constrain(out_PID,_out_min,_out_max);
-
-        // Start the timer again
-        _pid_timer.start(_sample_time_ms);
     }
 }
 
@@ -73,9 +69,7 @@ void PID::update(double command, double input){
 void PID::set_output(double output){
     _output = output;
 
-    // Reset the current output based on the new limits
     _output = constrain(_output,_out_min,_out_max);
-    // Reset the integral term based on the new output limits
     _int_term = _constrain_by_command_mode(_int_term);
 }
 

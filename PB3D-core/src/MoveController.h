@@ -17,6 +17,7 @@
 #include "EncoderControlState.h"
 #include "PID.h"
 #include "WheelData.h"
+#include "FilterLowPass.h"
 
 
 class MoveController{
@@ -51,6 +52,8 @@ public:
 
     uint16_t calc_timeout(float speed, float dist);
 
+    bool smooth_on = true;
+
 private:
     void _stop();
 
@@ -59,6 +62,9 @@ private:
     Adafruit_DCMotor* _motor_right = NULL;
     Encoder* _encoder_left = NULL;
     Encoder* _encoder_right = NULL;
+
+    FilterLowPass _smoother_left = FilterLowPass(0.1);
+    FilterLowPass _smoother_right = FilterLowPass(0.1);
 
     Timer _timeout_timer = Timer();
     WheelData wheel_data = WheelData();

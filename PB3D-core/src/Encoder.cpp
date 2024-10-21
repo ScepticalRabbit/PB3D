@@ -57,24 +57,17 @@ void Encoder::update_equal(){
 // SPEED CALCULATION FUNCTIONS
 void Encoder::update_speed(){
     if(_speed_timer.finished()){
-        // Get the current time and restart the timer
         double timeIntS = double(_speed_timer.get_time())/1000.0;
         _speed_timer.start(_speed_update_time);
 
-        // Calculate distance travelled using the encoder count difference
-        double distMM = double(_current_count-_count_prev_for_speed)*_mm_per_count;
+         double distMM = double(_current_count-_count_prev_for_speed)*_mm_per_count;
 
-        // Calculate speed in 'counts/second'
         _raw_speed_cps = double(_current_count-_count_prev_for_speed)/timeIntS;
-        // Smooth the raw speed using the filter
-        _smooth_speed_cps = _speed_filt_cps.filter(_raw_speed_cps);
+         _smooth_speed_cps = _speed_filt_cps.filter(_raw_speed_cps);
 
-        // Calculate raw and smoothed speed
         _raw_speed_mmps = distMM/timeIntS;
-        // Smooth the raw speed using the filter
         _smooth_speed_mmps = _speed_filt_mmps.filter(_raw_speed_mmps);
 
-        // Store the encoder count for the next round of calculations
         _count_prev_for_speed = _current_count;
     }
 }
