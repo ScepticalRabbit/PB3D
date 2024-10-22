@@ -17,8 +17,9 @@
     #define STATEDATA_DEF
     //#define STATEDATA_NAV
     //#define STATEDATA_LASTCOL
+    //#define STATEDATA_SPEED
 
-    #define STATEDATA_UPD_TIME 101 // milli-seconds
+    #define STATEDATA_UPD_TIME 100 // milli-seconds
 
    //---------------------------------------------------------------------------
    #if defined(STATEDATA_LASTCOL)
@@ -293,6 +294,10 @@
 
             Serial.println(F("----------------------------------------"));
             Serial.println();
+        }
+
+        void _serial_log_data(UDataPacket* in_state){
+        
         }
     #endif
 #endif // STATEDATA_H

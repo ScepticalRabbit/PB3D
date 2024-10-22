@@ -1,0 +1,5 @@
+{
+    "configuration": "usbstack=arduino,debug=off,sercom4=include",
+    "board": "Seeeduino:samd:seeed_XIAO_m0",
+    "sketch": "data-logger.ino"
+}

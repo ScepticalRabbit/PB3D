@@ -63,8 +63,8 @@ private:
     Encoder* _encoder_left = NULL;
     Encoder* _encoder_right = NULL;
 
-    FilterLowPass _smoother_left = FilterLowPass(0.1);
-    FilterLowPass _smoother_right = FilterLowPass(0.1);
+    FilterLowPass _smoother_left = FilterLowPass(0.05);
+    FilterLowPass _smoother_right = FilterLowPass(0.05);
 
     Timer _timeout_timer = Timer();
     WheelData wheel_data = WheelData();
@@ -86,8 +86,8 @@ private:
 
     // Position Control PIDs and Variables
     EMoveControlState _pos_ctrl_state = MOVE_CONTROL_START;
-    PID _pos_PID_left = PID(false,0.6,0.0,0.0,20);
-    PID _pos_PID_right = PID(false,0.6,0.0,0.0,20);
+    PID _pos_PID_left = PID(false,0.6,0.0,0.0,10);
+    PID _pos_PID_right = PID(false,0.6,0.0,0.0,10);
 
     const float _pos_PID_min_speed = 100.0;
     const float _pos_PID_max_speed = 200.0;
@@ -110,4 +110,5 @@ private:
     float _to_ang_set_pt = 0.0;
     float _to_ang_tol = 1.0;
 };
+
 #endif

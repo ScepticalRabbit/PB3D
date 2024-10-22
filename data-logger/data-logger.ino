@@ -9,6 +9,7 @@
 
 #include "RFDataLoggerRX.h"
 #include "PB3DTimer.h"
+#include "PB3DStateData.h"
 
 RFDataLoggerRX rfLogger;
 
@@ -16,13 +17,14 @@ RFDataLoggerRX rfLogger;
 // SETUP
 void setup(){
   Serial.begin(115200);
-  //while(!Serial){delay(10);}
+  while(!Serial){delay(10);}
+  
   rfLogger.begin();
   delay(1000);
 }
 
 //----------------------------------------------------------------------------
-// MAIN LOOP
+// LOOP
 void loop(){
   rfLogger.update();
 }

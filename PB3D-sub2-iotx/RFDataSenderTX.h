@@ -77,7 +77,7 @@ public:
       if (!_rf69.setFrequency(RF69_FREQ)) {
         Serial.println("RF TX: setFrequency failed");
       }
-      _rf69.setTxPower(20, true); // range from 14-20 for power, 2nd arg must be true for 69HCW
+      _rf69.setTxPower(15, true); // range from 14-20 for power, 2nd arg must be true for 69HCW
 
       // RF: Encryption
       /*
@@ -168,9 +168,9 @@ private:
 
     _radio_end = millis();
     //Serial.println();
-    //Serial.print("Radio time = ");
+    Serial.print("Radio time = ");
     Serial.print(_radio_end-_radio_start);
-    //Serial.println("ms");
+    Serial.println("ms");
     Serial.println();
 
     return send_status;

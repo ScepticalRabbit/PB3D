@@ -18,7 +18,7 @@
 #include <RHReliableDatagram.h>
 
 // Header for the state data packet
-#include "StateData.h"
+#include "PB3DStateData.h"
 
 //----------------------------------------------------------------------------
 // DEFINITIONS
@@ -137,7 +137,7 @@ private:
   bool _start_flag = true;
 
   // Declare instance of the packet to send
-  dataPacket_t _curr_state;
+  UDataPacket _curr_state;
 
   // Radio class and radio ackMsg manager class
   // RH_RF69_MAX_MESSAGE_LEN = 60
