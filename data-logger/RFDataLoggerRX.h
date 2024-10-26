@@ -23,7 +23,8 @@
 //----------------------------------------------------------------------------
 // DEFINITIONS
 //#define RFRX_DEBUG_PRINT
-//#define RFRX_DEBUG_SPEED
+#define RFRX_DEBUG_PRINT_ONLY
+//#define RFRX_DEBUG_LOG
 
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF69_FREQ 434.2
@@ -94,19 +95,17 @@ public:
         _buf[len] = 0; // zero out remaining string
 
         #if defined(RFRX_DEBUG_PRINT)
-        Serial.println();
-        Serial.print("Rec packet from #"); Serial.print(from);
-        Serial.print(" [RSSI :"); Serial.print(_rf69.lastRssi()); Serial.print("] : ");
+          Serial.println();
+          Serial.print("Rec packet from #"); Serial.print(from);
+          Serial.print(" [RSSI :"); Serial.print(_rf69.lastRssi()); Serial.print("] : ");
 
-        Serial.println();
-        Serial.println(F("REC DATA STRUCTURE:"));
-        _print_state_data(&_curr_state);
-        #endif
-
-        #if defined(RFRX_DEBUG_SPEED)
-        _DEBUG_PlotSpeed();
-        #else
-        _serial_log_data(&_curr_state);
+          Serial.println();
+          Serial.println(F("REC DATA STRUCTURE:"));
+          _print_state_data(&_curr_state);
+        #elif defined(RFRX_DEBUG_PRINT_ONLY)
+          _print_state_data(&_curr_state);
+        #elif defined(RFRX_DEBUG_LOG)
+          _serial_log_data(&_curr_state);
         #endif
 
         // end a reply back to the originator client

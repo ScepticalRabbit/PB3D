@@ -16,8 +16,8 @@
     // SELECT STATE DATA TYPE
     //#define STATEDATA_LASTCOL
     //#define STATEDATA_NAV
-    //#define STATEDATA_SPEED
-    #define STATEDATA_DEF
+    #define STATEDATA_SPEED
+    //#define STATEDATA_DEF
 
     #define STATEDATA_UPD_TIME 100 // milli-seconds
 
@@ -217,10 +217,20 @@
 
             float set_speed_left;
             float set_speed_right;
-            float set_forward_speed;
 
-            int8_t move_basic;
-            int8_t move_compound;
+            float wheel_speed_left_raw;
+            float wheel_speed_right_raw;
+
+            int32_t encoder_count_left;
+            int32_t encoder_count_right;
+
+            float pid_left_p;
+            float pid_left_i;
+            float pid_left_d;
+
+            float pid_right_p;
+            float pid_right_i;
+            float pid_right_d;
         };
 
         union UDataPacket{
@@ -231,30 +241,60 @@
         #define PACKET_SIZE sizeof(SStateData)
 
         void _init_state_data(UDataPacket* in_state){
-            in_state->state.on_time = 0;
+            in_state->state.on_time = 0.0;
 
-
-            in_state->state.set_forward_speed = 0.0;
             in_state->state.wheel_speed_left = 0.0;
             in_state->state.wheel_speed_right = 0.0;
 
-            in_state->state.move_basic = 0;
-            in_state->state.move_compound = 0;
+            in_state->state.set_speed_left = 0.0;
+            in_state->state.set_speed_right = 0.0;
 
+            in_state->state.wheel_speed_left_raw = 0.0;
+            in_state->state.wheel_speed_right_raw = 0.0;
+
+            in_state->state.encoder_count_left = 0;
+            in_state->state.encoder_count_right = 0;
+
+            in_state->state.pid_left_p = 0.0;
+            in_state->state.pid_left_i = 0.0;
+            in_state->state.pid_left_d = 0.0;
+
+            in_state->state.pid_right_p = 0.0;
+            in_state->state.pid_right_i = 0.0;
+            in_state->state.pid_right_d = 0.0;
         }
 
         void _print_state_data(UDataPacket* in_state){
             Serial.println();
             Serial.println(F("----------------------------------------"));
-
-            Serial.print(F("Time: ")); Serial.print(in_state->state.on_time); Serial.print(F("; "));
-            Serial.print(F("WSpeedL: ")); Serial.print(in_state->state.wheel_speed_left); Serial.print(F("; "));
-            Serial.print(F("WSpeedR: ")); Serial.print(in_state->state.wheel_speed_right); Serial.print(F("; "));
-
-            Serial.print(F("SetFwdSpeed: ")); Serial.print(in_state->state.set_forward_speed); Serial.print(F("; "));
-
+            Serial.print(F("time: ")); Serial.print(in_state->state.on_time); Serial.print(F("; "));
             Serial.println();
 
+            Serial.print(F("smooth_speed_l: ")); Serial.print(in_state->state.wheel_speed_left);
+            Serial.print(F("smooth_speed_r: ")); Serial.print(in_state->state.wheel_speed_right); Serial.print(F("; "));
+            Serial.println();
+
+            Serial.print(F("set_speed_l: ")); Serial.print(in_state->state.set_speed_left); Serial.print(F("; "));
+            Serial.print(F("set_speed_r: ")); Serial.print(in_state->state.set_speed_right); Serial.print(F("; "));
+            Serial.println();
+
+            Serial.print(F("raw_speed_l: ")); Serial.print(in_state->state.wheel_speed_left_raw); Serial.print(F("; "));
+            Serial.print(F("raw_speed_r: ")); Serial.print(in_state->state.wheel_speed_right_raw); Serial.print(F("; "));
+            Serial.println();
+
+            Serial.print(F("enc_count_l: ")); Serial.print(in_state->state.encoder_count_left); Serial.print(F("; "));
+            Serial.print(F("enc_count_r: ")); Serial.print(in_state->state.encoder_count_right); Serial.print(F("; "));
+            Serial.println();
+
+            Serial.print(F("pid_l_p: ")); Serial.print(in_state->state.pid_left_p); Serial.print(F("; "));
+            Serial.print(F("pid_l_p: ")); Serial.print(in_state->state.pid_left_i); Serial.print(F("; "));
+            Serial.print(F("pid_l_p: ")); Serial.print(in_state->state.pid_left_d); Serial.print(F("; "));
+            Serial.println();
+
+            Serial.print(F("pid_r_p: ")); Serial.print(in_state->state.pid_right_p); Serial.print(F("; "));
+            Serial.print(F("pid_r_i: ")); Serial.print(in_state->state.pid_right_i); Serial.print(F("; "));
+            Serial.print(F("pid_r_d: ")); Serial.print(in_state->state.pid_right_d); Serial.print(F("; "));
+            Serial.println();
 
             Serial.println(F("----------------------------------------"));
             Serial.println();
@@ -262,16 +302,27 @@
 
         void _serial_log_data(UDataPacket* in_state){
             Serial.print(in_state->state.on_time); Serial.print(F(","));
-
-            Serial.print(in_state->state.wheel_speed_left); Serial.print(F(","));
+            Serial.print(in_state->state.wheel_speed_left);
             Serial.print(in_state->state.wheel_speed_right); Serial.print(F(","));
 
-            Serial.print(in_state->state.set_forward_speed); Serial.print(F(","));
-            Serial.print(in_state->state.move_basic); Serial.print(F(","));
-            Serial.print(in_state->state.move_compound); Serial.print(F(","));
+            Serial.print(in_state->state.set_speed_left); Serial.print(F(","));
+            Serial.print(in_state->state.set_speed_right); Serial.print(F(","));
+
+            Serial.print(in_state->state.wheel_speed_left_raw); Serial.print(F(","));
+            Serial.print(in_state->state.wheel_speed_right_raw); Serial.print(F(","));
+
+            Serial.print(in_state->state.encoder_count_left); Serial.print(F(","));
+            Serial.print(in_state->state.encoder_count_right); Serial.print(F(","));
+
+            Serial.print(in_state->state.pid_left_p); Serial.print(F(","));
+            Serial.print(in_state->state.pid_left_i); Serial.print(F(","));
+            Serial.print(in_state->state.pid_left_d); Serial.print(F(","));
+
+            Serial.print(in_state->state.pid_right_p); Serial.print(F(","));
+            Serial.print(in_state->state.pid_right_i); Serial.print(F(","));
+            Serial.print(in_state->state.pid_right_d); Serial.print(F(","));
 
             Serial.println();
-
         }
 
     //---------------------------------------------------------------------------

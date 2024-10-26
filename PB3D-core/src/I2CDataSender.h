@@ -21,16 +21,10 @@
 #include "IMUSensor.h"
 #include "Navigation.h"
 
-// #ifndef STATEDATA_LASTCOL
-//     #define STATEDATA_LASTCOL
-//     //#define STATEDATA_NAV
-//     //#define STATEDATA_SPEED
-//     //#define STATEDATA_DEF
-// #endif
-
 
 // Debug flags
 //#define I2CDATASENDER_DEBUG_PRINT
+#define I2CDATASENDER_DEBUG_LOG
 
 //----------------------------------------------------------------------------
 // CLASS: I2CDataSender
@@ -87,6 +81,8 @@ public:
 
             Serial.println(F("SENT DATA STRUCTURE:"));
             _print_state_data(&_curr_state);
+        #elif defined(I2CDATASENDER_DEBUG_LOG)
+            _serial_log_data(&_curr_state);
         #endif
     }
   }
@@ -143,6 +139,29 @@ private:
         in_state->state.nav_vel_y = _navigator->get_vel_y();
         in_state->state.nav_vel_c = _navigator->get_vel_c();
         in_state->state.nav_head = _navigator->get_heading();
+
+    #elif defined(STATEDATA_SPEED)
+        in_state->state.on_time = millis();
+
+        in_state->state.wheel_speed_left = _move_manager->get_encoder_left()->get_smooth_speed_mmps();
+        in_state->state.wheel_speed_right = _move_manager->get_encoder_right()->get_smooth_speed_mmps();
+
+        in_state->state.set_speed_left = _move_manager->get_move_controller()->get_speed_PID_left()->get_set_point();
+        in_state->state.set_speed_right = _move_manager->get_move_controller()->get_speed_PID_right()->get_set_point();
+
+        in_state->state.wheel_speed_left_raw = _move_manager->get_encoder_left()->get_raw_speed_mmps();
+        in_state->state.wheel_speed_right_raw = _move_manager->get_encoder_right()->get_raw_speed_mmps();
+
+        in_state->state.encoder_count_left = _move_manager->get_encoder_left()->get_count();
+        in_state->state.encoder_count_right = _move_manager->get_encoder_right()->get_count();
+
+        in_state->state.pid_left_p = _move_manager->get_move_controller()->get_speed_PID_left()->get_prop_term();
+        in_state->state.pid_left_i = _move_manager->get_move_controller()->get_speed_PID_left()->get_int_term();
+        in_state->state.pid_left_d = _move_manager->get_move_controller()->get_speed_PID_left()->get_deriv_term();
+
+        in_state->state.pid_right_p = _move_manager->get_move_controller()->get_speed_PID_right()->get_prop_term();
+        in_state->state.pid_right_i = _move_manager->get_move_controller()->get_speed_PID_right()->get_int_term();
+        in_state->state.pid_right_d = _move_manager->get_move_controller()->get_speed_PID_right()->get_deriv_term();
 
     #else // Default STATE_DATA
         // TIME

@@ -45,11 +45,11 @@
 
 //------------------------------------------------------------------------------
 // DEBUG VARIABLES
-bool debug_collision_off = false;
+bool debug_collision_off = true;
 bool debug_force_mood = true;
 EMoodCode debug_mood_code = MOOD_NEUTRAL;
 bool debug_force_task = true;
-ETaskCode debug_taskCode = TASK_EXPLORE;
+ETaskCode debug_taskCode = TASK_TEST;
 bool debug_force_move = false;
 EMoveCompound debug_move_type = MOVE_C_CIRCLE;
 
@@ -177,7 +177,7 @@ TaskPause task_pause = TaskPause(&collision_manager,
 void setup() {
   Serial.begin(115200);
   // Only use below to stop start up until USB cable connected
-  // while(!Serial){}
+  while(!Serial){}
 
   // Initialize I2C communications for sensors and sub boards
   Wire.begin();  // Join I2C bus as leader
@@ -327,7 +327,7 @@ void loop(){
   // TEST CODE - SENSOR REPORTS
   if(test_report_timer.finished()){
     test_report_timer.start(test_report_time);
-    DEBUG_print_encoders();
+    //DEBUG_print_encoders();
     //DEBUG_col_check();
     //DEBUG_ranges();
     //DEBUG_col_with_ranges();
@@ -351,7 +351,7 @@ void loop(){
   // handling of collisions while these modes are active - should be able to
   // make this smarter so certain things can re-enable collision avoidance
   if(task_manager.get_task() == TASK_TEST){
-    DEBUG_speed_test(80.0,MOVE_B_FORWARD);
+    DEBUG_speed_test(270.0,MOVE_B_FORWARD);
   }
   else if(task_manager.get_task() == TASK_REST){
     task_rest.rest();
@@ -369,7 +369,7 @@ void loop(){
     escape_collision(); // SEE FUNCTION DEF BELOW MAIN
   }
   else if(collision_manager.get_detected() && !debug_collision_off){
-    DEBUG_col_check();
+    //DEBUG_col_check();
     detected_collision(); // SEE FUNCTION DEF BELOW MAIN
   }
   else if(task_manager.get_task() == TASK_DANCE){
@@ -472,14 +472,11 @@ void escape_collision(){
 }
 
 void detected_collision(){
-  // Turn on collision LEDs and set escape flags
   task_manager.task_LED_collision();
   collision_manager.set_escape_start();
 
-  // If we are moving in a circle or a spiral then switch direction
   move_manager.change_turn_dir();
 
-  // Reset the PIDs and stop the motors
   move_manager.stop();
 
   // If the bumper flag was tripped we need to go beep,beep!
