@@ -21,6 +21,13 @@
 #include "IMUSensor.h"
 #include "Navigation.h"
 
+// #ifndef STATEDATA_LASTCOL
+//     #define STATEDATA_LASTCOL
+//     //#define STATEDATA_NAV
+//     //#define STATEDATA_SPEED
+//     //#define STATEDATA_DEF
+// #endif
+
 
 // Debug flags
 //#define I2CDATASENDER_DEBUG_PRINT
@@ -31,8 +38,9 @@ class I2CDataSender{
 public:
   //---------------------------------------------------------------------------
   // CONSTRUCTOR: pass in pointers to main objects and other sensors
-  I2CDataSender(CollisionManager* inCollision, MoodManager* inMood, TaskManager* inTask, MoveManager* inMove,
-              IMUSensor* inIMU, Navigation* inNav){
+  I2CDataSender(CollisionManager* inCollision, MoodManager* inMood,
+                TaskManager* inTask, MoveManager* inMove,
+                IMUSensor* inIMU, Navigation* inNav){
       _collision_manager = inCollision;
       _mood_manager = inMood;
       _task_manager = inTask;
@@ -122,8 +130,8 @@ private:
         // TIME
         in_state->state.on_time = millis();
         // MOVE
-        in_state->state.wheel_speed_left = _move_manager->get_encoder_speed_left();
-        in_state->state.wheel_speed_right = _move_manager->get_encoder_speed_right();
+        in_state->state.wheel_speed_left = _move_manager->get_encoder_left()->get_smooth_speed_mmps();
+        in_state->state.wheel_speed_right = _move_manager->get_encoder_right()->get_smooth_speed_mmps();
         // IMU
         in_state->state.IMU_heading = _IMU->get_head_angle();
         in_state->state.IMU_pitch = _IMU->get_pitch_angle();
@@ -135,7 +143,8 @@ private:
         in_state->state.nav_vel_y = _navigator->get_vel_y();
         in_state->state.nav_vel_c = _navigator->get_vel_c();
         in_state->state.nav_head = _navigator->get_heading();
-    #else
+
+    #else // Default STATE_DATA
         // TIME
         in_state->state.on_time = millis();
         // MOOD
@@ -151,10 +160,17 @@ private:
             _move_manager->get_encoder_left()->get_smooth_speed_mmps();
         in_state->state.wheel_speed_right =
             _move_manager->get_encoder_right()->get_smooth_speed_mmps();
-        in_state->state.wheel_encoder_count_left =
-            _move_manager->get_encoder_left()->get_count();
-        in_state->state.wheel_encoder_count_right =
-            _move_manager->get_encoder_right()->get_count();
+
+        // COLLISION DETECTION / RANGING
+        for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
+            in_state->state.check_bumpers[ii] = _collision_manager->get_bumper_sensor()->get_collision_code(EBumpIndex(ii));
+        }
+        for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
+            in_state->state.check_lasers[ii] = _collision_manager->get_laser_manager()->get_collision_code(ELaserIndex(ii));
+        }
+        for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
+            in_state->state.laser_range_array[ii] = _collision_manager->get_laser_range(ELaserIndex(ii));
+        }
 
     #endif
   }

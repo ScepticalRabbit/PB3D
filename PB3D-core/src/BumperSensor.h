@@ -36,12 +36,12 @@ public:
 
     //---------------------------------------------------------------------------
     // Get, set and reset
-    bool get_bump_flag(){return _bumper_any_flag;}
+    bool get_bump_any(){return _bumper_any_flag;}
     bool get_bump_thres_check(){return (_bump_count >= _bump_thres);}
     int8_t get_bump_count(){return _bump_count;}
     void reset_bump_count(){_bump_count= 0;}
 
-    EDangerCode get_collision_code(EBumpCode bump_code);
+    EDangerCode get_collision_code(EBumpIndex bump_code);
 
     void reset();
 

@@ -18,7 +18,7 @@
 #include <RHReliableDatagram.h>
 
 // Header for the state data packet
-#include "PB3DStateData.h"
+#include <PB3DStateData.h>
 
 //----------------------------------------------------------------------------
 // DEFINITIONS

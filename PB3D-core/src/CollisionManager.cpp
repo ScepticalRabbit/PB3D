@@ -109,7 +109,7 @@ void CollisionManager::set_escape_start(){
     //--------------------------------------------------------------------------
     // Update last collision struct
     for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
-        _last_col.check_bumpers[ii] = _bumpers->get_collision_code(EBumpCode(ii));
+        _last_col.check_bumpers[ii] = _bumpers->get_collision_code(EBumpIndex(ii));
     }
 
     for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
@@ -151,7 +151,7 @@ EMoveBasic CollisionManager::get_escape_turn(){
 void CollisionManager::_check_and_latch(){
 
     for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
-        _check_bumpers[ii] = _bumpers->get_collision_code(EBumpCode(ii));
+        _check_bumpers[ii] = _bumpers->get_collision_code(EBumpIndex(ii));
 
         if(_check_bumpers[ii] >= DANGER_CLOSE){
             _collision_detected_latch = true;

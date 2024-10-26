@@ -68,7 +68,7 @@ public:
   bool get_beepbeep_flag(){return _collision_beepbeep_flag;}
   void set_beepbeep_flag(bool flag){_collision_beepbeep_flag = flag;}
 
-  bool get_bumper_flag(){return _bumpers->get_bump_flag();}
+  bool get_bumper_any(){return _bumpers->get_bump_any();}
 
   int16_t get_laser_range(ELaserIndex _ind){
     return _laser_manager->get_range(_ind);
@@ -76,6 +76,10 @@ public:
   SLastCollision* get_last_collision(){return &_last_col;}
 
   uint8_t get_col_check(uint8_t pos){return _check_lasers[pos];}
+
+  // Need to expose these to allow for data sending over I2C
+  LaserManager* get_laser_manager(){return _laser_manager;}
+  BumperSensor* get_bumper_sensor(){return _bumpers;}
 
   bool get_altitude_flag();
   void reset_unlatch();

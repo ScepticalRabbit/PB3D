@@ -484,7 +484,7 @@ void detected_collision(){
 
   // If the bumper flag was tripped we need to go beep,beep!
   collision_manager.set_beepbeep_flag(false);
-  if(collision_manager.get_bumper_flag()){
+  if(collision_manager.get_bumper_any()){
     collision_manager.set_beepbeep_flag(true);
 
     speaker.reset();
@@ -622,7 +622,7 @@ void DEBUG_PlotSpeedPID_R(){
   Serial.print(",");
   Serial.print(move_manager.get_move_controller()->get_speed_PID_right()->get_prop_term());
   Serial.print(",");
-  //Serial.print(move_manager.get_speed_PID_Iterm_right());
+  Serial.print(move_manager.get_move_controller()->get_speed_PID_right()->get_int_term());
   Serial.print(",");
   Serial.print(move_manager.get_move_controller()->get_speed_PID_right()->get_deriv_term());
   Serial.print(",");

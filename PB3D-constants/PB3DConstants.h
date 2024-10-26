@@ -174,7 +174,7 @@ enum ELEDs{
 
 //------------------------------------------------------------------------------
 // Sensors: Bumpers
-enum EBumpCode{
+enum EBumpIndex{
     BUMP_LEFT = 0,
     BUMP_RIGHT,
     BUMP_BACK,

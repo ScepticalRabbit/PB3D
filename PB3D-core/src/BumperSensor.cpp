@@ -45,7 +45,7 @@ void BumperSensor::update(){
 }
 
 
-EDangerCode BumperSensor::get_collision_code(EBumpCode bumpCode){
+EDangerCode BumperSensor::get_collision_code(EBumpIndex bumpCode){
     if(bumpCode >= _num_bumpers){
         return DANGER_NONE;
     }

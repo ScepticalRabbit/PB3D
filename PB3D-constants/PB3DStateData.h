@@ -14,10 +14,10 @@
     #include <PB3DConstants.h>
 
     // SELECT STATE DATA TYPE
-    #define STATEDATA_DEF
-    //#define STATEDATA_NAV
     //#define STATEDATA_LASTCOL
+    //#define STATEDATA_NAV
     //#define STATEDATA_SPEED
+    #define STATEDATA_DEF
 
     #define STATEDATA_UPD_TIME 100 // milli-seconds
 
@@ -69,13 +69,7 @@
             for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
                 Serial.print(" ");
                 Serial.print(in_state->state.check_bumpers[ii]);
-                Serial.print(",");
-            }
-            Serial.println("]");
-
-            Serial.print("laser_checks=[");
-            for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
-                Serial.print(" ");
+                Serial.print(",");//#define STATEDATA_DEF
                 Serial.print(in_state->state.check_lasers[ii]);
                 Serial.print(",");
             }
@@ -164,55 +158,125 @@
             Serial.println();
             Serial.println(F("----------------------------------------"));
 
-            Serial.print(F("Time: "));
-            Serial.print(in_state->state.on_time);
-            Serial.print(F("; "));
+            Serial.print(F("Time: ")); Serial.print(in_state->state.on_time); Serial.print(F("; "));
             Serial.println();
 
-            Serial.print(F("W_SpeedL: "));
-            Serial.print(in_state->state.wheel_speed_left);
-            Serial.print(F("; "));
-            Serial.print(F("W_SpeedR: "));
-            Serial.print(in_state->state.wheel_speed_right);
-            Serial.print(F("; "));
+            Serial.print(F("W_SpeedL: ")); Serial.print(in_state->state.wheel_speed_left); Serial.print(F("; "));
+            Serial.print(F("W_SpeedR: ")); Serial.print(in_state->state.wheel_speed_right); Serial.print(F("; "));
             Serial.println();
 
-            Serial.print(F("IMU,H: "));
-            Serial.print(in_state->state.IMU_heading);
-            Serial.print(F("; "));
-            Serial.print(F(" P: "));
-            Serial.print(in_state->state.IMU_pitch);
-            Serial.print(F("; "));
-            Serial.print(F(" R: "));
-            Serial.print(in_state->state.IMU_roll);
-            Serial.print(F("; "));
+            Serial.print(F("IMU,H: ")); Serial.print(in_state->state.IMU_heading); Serial.print(F("; "));
+            Serial.print(F(" P: ")); Serial.print(in_state->state.IMU_pitch); Serial.print(F("; "));
+            Serial.print(F(" R: ")); Serial.print(in_state->state.IMU_roll); Serial.print(F("; "));
             Serial.println();
 
-            Serial.print(F("NAV,PX: "));
-            Serial.print(in_state->state.nav_pos_x);
-            Serial.print(F("; "));
-            Serial.print(F(" PY: "));
-            Serial.print(in_state->state.nav_pos_x);
-            Serial.print(F("; "));
+            Serial.print(F("NAV,PX: ")); Serial.print(in_state->state.nav_pos_x); Serial.print(F("; "));
+            Serial.print(F(" PY: ")); Serial.print(in_state->state.nav_pos_x); Serial.print(F("; "));
             Serial.println();
 
-            Serial.print(F("NAV,VC: "));
-            Serial.print(in_state->state.nav_vel_c);
-            Serial.print(F("; "));
-            Serial.print(F(" VX: "));
-            Serial.print(in_state->state.nav_vel_x);
-            Serial.print(F("; "));
-            Serial.print(F(" VY: "));
-            Serial.print(in_state->state.nav_vel_x);
-            Serial.print(F("; "));
-
+            Serial.print(F("NAV,VC: ")); Serial.print(in_state->state.nav_vel_c); Serial.print(F("; "));
+            Serial.print(F(" VX: ")); Serial.print(in_state->state.nav_vel_x); Serial.print(F("; "));
+            Serial.print(F(" VY: ")); Serial.print(in_state->state.nav_vel_x); Serial.print(F("; "));
             Serial.println();
 
             Serial.println(F("----------------------------------------"));
             Serial.println();
         }
+
+        void _serial_log_data(UDataPacket* in_state){
+            Serial.print(in_state->state.on_time);
+            Serial.print(F(","));
+            Serial.print(in_state->state.wheel_speed_left);
+            Serial.print(F(","));
+            Serial.print(in_state->state.wheel_speed_right);
+            Serial.print(F(","));
+            Serial.print(in_state->state.IMU_heading);
+            Serial.print(F(","));
+            Serial.print(in_state->state.IMU_pitch);
+            Serial.print(F(","));
+            Serial.print(in_state->state.IMU_roll);
+            Serial.print(F(","));
+            Serial.print(in_state->state.nav_pos_x);
+            Serial.print(F(","));
+            Serial.print(in_state->state.nav_pos_x);
+            Serial.print(F(","));
+            Serial.print(in_state->state.nav_vel_c);
+            Serial.print(F(","));
+            Serial.print(in_state->state.nav_vel_x);
+            Serial.print(F(","));
+            Serial.print(in_state->state.nav_vel_x);
+            Serial.print(F(","));
+            Serial.println();
+        }
+    #elif defined(STATEDATA_SPEED)
+        struct SStateData{
+            uint32_t on_time;
+
+            float wheel_speed_left;
+            float wheel_speed_right;
+
+            float set_speed_left;
+            float set_speed_right;
+            float set_forward_speed;
+
+            int8_t move_basic;
+            int8_t move_compound;
+        };
+
+        union UDataPacket{
+            SStateData state;
+            byte data_packet[sizeof(SStateData)];
+        };
+
+        #define PACKET_SIZE sizeof(SStateData)
+
+        void _init_state_data(UDataPacket* in_state){
+            in_state->state.on_time = 0;
+
+
+            in_state->state.set_forward_speed = 0.0;
+            in_state->state.wheel_speed_left = 0.0;
+            in_state->state.wheel_speed_right = 0.0;
+
+            in_state->state.move_basic = 0;
+            in_state->state.move_compound = 0;
+
+        }
+
+        void _print_state_data(UDataPacket* in_state){
+            Serial.println();
+            Serial.println(F("----------------------------------------"));
+
+            Serial.print(F("Time: ")); Serial.print(in_state->state.on_time); Serial.print(F("; "));
+            Serial.print(F("WSpeedL: ")); Serial.print(in_state->state.wheel_speed_left); Serial.print(F("; "));
+            Serial.print(F("WSpeedR: ")); Serial.print(in_state->state.wheel_speed_right); Serial.print(F("; "));
+
+            Serial.print(F("SetFwdSpeed: ")); Serial.print(in_state->state.set_forward_speed); Serial.print(F("; "));
+
+            Serial.println();
+
+
+            Serial.println(F("----------------------------------------"));
+            Serial.println();
+        }
+
+        void _serial_log_data(UDataPacket* in_state){
+            Serial.print(in_state->state.on_time); Serial.print(F(","));
+
+            Serial.print(in_state->state.wheel_speed_left); Serial.print(F(","));
+            Serial.print(in_state->state.wheel_speed_right); Serial.print(F(","));
+
+            Serial.print(in_state->state.set_forward_speed); Serial.print(F(","));
+            Serial.print(in_state->state.move_basic); Serial.print(F(","));
+            Serial.print(in_state->state.move_compound); Serial.print(F(","));
+
+            Serial.println();
+
+        }
+
     //---------------------------------------------------------------------------
     #else // Default state data packet
+        // Currently = 54 bytes, max = 60 bytes
         struct SStateData{
             // TIME
             uint32_t on_time;
@@ -227,8 +291,6 @@
             float set_forward_speed;
             float wheel_speed_left;
             float wheel_speed_right;
-            int32_t wheel_encoder_count_left;
-            int32_t wheel_encoder_count_right;
             // COLLISON
             uint8_t check_bumpers[BUMP_COUNT];
             uint8_t check_lasers[LASER_COUNT];
@@ -256,14 +318,15 @@
             in_state->state.set_forward_speed = 0.0;
             in_state->state.wheel_speed_left = 0.0;
             in_state->state.wheel_speed_right = 0.0;
-            in_state->state.wheel_encoder_count_left = 0;
-            in_state->state.wheel_encoder_count_right = 0;
             // COLLISON
             for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
                 in_state->state.check_bumpers[ii] = DANGER_NONE;
             }
             for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
                 in_state->state.check_lasers[ii] = DANGER_NONE;
+            }
+            for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
+                in_state->state.laser_range_array[ii] = 0;
             }
         }
 
@@ -274,7 +337,7 @@
             Serial.print(F("Time: ")); Serial.print(in_state->state.on_time); Serial.print(F("; "));
             Serial.print(F("Mood: ")); Serial.print(in_state->state.mood); Serial.print(F("; "));
             Serial.print(F("MoodSc: ")); Serial.print(in_state->state.mood_score); Serial.print(F("; "));
-            Serial.print(F("TaskManager: ")); Serial.print(in_state->state.task); Serial.print(F("; "));
+            Serial.print(F("Task: ")); Serial.print(in_state->state.task); Serial.print(F("; "));
             Serial.println();
 
             Serial.print(F("MoveB: ")); Serial.print(in_state->state.move_basic); Serial.print(F("; "));
@@ -282,22 +345,58 @@
             Serial.println();
 
             Serial.print(F("FwdSpeed: ")); Serial.print(in_state->state.set_forward_speed); Serial.print(F("; "));
-            Serial.print(F("W_SpeedL: ")); Serial.print(in_state->state.wheel_speed_left); Serial.print(F("; "));
-            Serial.print(F("W_SpeedR: ")); Serial.print(in_state->state.wheel_speed_right); Serial.print(F("; "));
+            Serial.print(F("WSpeedL: ")); Serial.print(in_state->state.wheel_speed_left); Serial.print(F("; "));
+            Serial.print(F("WSpeedR: ")); Serial.print(in_state->state.wheel_speed_right); Serial.print(F("; "));
             Serial.println();
 
-            Serial.print(F("W_EncCL: ")); Serial.print(in_state->state.wheel_encoder_count_left); Serial.print(F("; "));
-            Serial.print(F("W_EncCR: ")); Serial.print(in_state->state.wheel_encoder_count_right); Serial.print(F("; "));
+            for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
+                Serial.print(F("BumpCheck, ")); Serial.print(ii); Serial.print(F(": "));
+                Serial.print(in_state->state.check_bumpers[ii]); Serial.print(F("; "));
+            }
             Serial.println();
 
-            //TODO: print laser collision codes and ranges
+            for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
+                Serial.print(F("LaserCheck, ")); Serial.print(ii); Serial.print(F(": "));
+                Serial.print(in_state->state.check_lasers[ii]); Serial.print(F("; "));
+            }
+            Serial.println();
+
+            for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
+                Serial.print(F("LaserRange, ")); Serial.print(ii); Serial.print(F(": "));
+                Serial.print(in_state->state.laser_range_array[ii]); Serial.print(F("; "));
+            }
+            Serial.println();
 
             Serial.println(F("----------------------------------------"));
             Serial.println();
         }
 
         void _serial_log_data(UDataPacket* in_state){
-        
+            Serial.print(in_state->state.on_time); Serial.print(F(","));
+            Serial.print(in_state->state.mood); Serial.print(F(","));
+            Serial.print(in_state->state.mood_score); Serial.print(F(","));
+            Serial.print(in_state->state.task); Serial.print(F(","));
+
+            Serial.print(in_state->state.move_basic); Serial.print(F(","));
+            Serial.print(in_state->state.move_compound); Serial.print(F(","));
+
+            Serial.print(in_state->state.set_forward_speed); Serial.print(F(","));
+            Serial.print(in_state->state.wheel_speed_left); Serial.print(F(","));
+            Serial.print(in_state->state.wheel_speed_right); Serial.print(F(","));
+
+            for(uint8_t ii=0 ; ii<BUMP_COUNT ; ii++){
+                Serial.print(in_state->state.check_bumpers[ii]); Serial.print(F(","));
+            }
+
+            for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
+                Serial.print(in_state->state.check_lasers[ii]); Serial.print(F(","));
+            }
+
+            for(uint8_t ii=0 ; ii<LASER_COUNT ; ii++){
+                Serial.print(in_state->state.laser_range_array[ii]); Serial.print(F(","));
+            }
+            Serial.println();
+
         }
     #endif
 #endif // STATEDATA_H
